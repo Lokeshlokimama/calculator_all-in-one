@@ -424,8 +424,16 @@ h1 {
     box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
 }
 
+.navbar nav a.active {
+    color: #fff;
+}
+
 /* Hide filtered items */
 .tool-demo-card.hidden {
+    display: none !important;
+}
+
+.ad-space.filter-hidden {
     display: none !important;
 }
 
@@ -434,6 +442,12 @@ h1 {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2rem;
     text-align: left;
+}
+
+.tools-grid.is-filtered {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 380px));
+    justify-content: center;
+    align-items: start;
 }
 
 /* Result Cards / Tool Demo Cards */

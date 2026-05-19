@@ -17,9 +17,9 @@
     <header class="navbar">
         <a href="#" onclick="window.location.reload(); return false;" class="logo" style="text-decoration: none;">Calculator All-in-One</a>
         <nav>
-            <a href="#tools" onclick="filterCategory('all')">All Tools</a>
-            <a href="#tools" onclick="filterCategory('finance')">Finance</a>
-            <a href="#tools" onclick="filterCategory('health')">Health</a>
+            <a href="#tools" data-category-link="all" onclick="filterCategory('all', event)">All Tools</a>
+            <a href="#tools" data-category-link="finance" onclick="filterCategory('finance', event)">Finance</a>
+            <a href="#tools" data-category-link="health" onclick="filterCategory('health', event)">Health</a>
             <a href="#donate">Donate</a>
         </nav>
     </header>
@@ -65,12 +65,12 @@
             <p class="section-subtitle scroll-reveal slide-up delay-1">Experience premium animations and instant feedback.</p>
             
             <div class="category-filter scroll-reveal slide-up delay-2">
-                <button class="cat-btn active" onclick="filterCategory('all')">All</button>
-                <button class="cat-btn" onclick="filterCategory('basic')">Basic</button>
-                <button class="cat-btn" onclick="filterCategory('finance')">Finance</button>
-                <button class="cat-btn" onclick="filterCategory('health')">Health</button>
-                <button class="cat-btn" onclick="filterCategory('education')">Education</button>
-                <button class="cat-btn" onclick="filterCategory('web')">Tech & Web</button>
+                <button class="cat-btn active" data-category-link="all" onclick="filterCategory('all', event)">All</button>
+                <button class="cat-btn" data-category-link="basic" onclick="filterCategory('basic', event)">Basic</button>
+                <button class="cat-btn" data-category-link="finance" onclick="filterCategory('finance', event)">Finance</button>
+                <button class="cat-btn" data-category-link="health" onclick="filterCategory('health', event)">Health</button>
+                <button class="cat-btn" data-category-link="education" onclick="filterCategory('education', event)">Education</button>
+                <button class="cat-btn" data-category-link="web" onclick="filterCategory('web', event)">Tech & Web</button>
             </div>
 
             <div class="tools-grid">

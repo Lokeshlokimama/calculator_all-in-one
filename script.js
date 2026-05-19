@@ -416,25 +416,43 @@ function generateRealQR() {
 window.generateRealQR = generateRealQR;
 
 // --- Category Filtering ---
-function filterCategory(category) {
-    // Update active button
-    document.querySelectorAll('.cat-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    event.target.classList.add('active');
+function filterCategory(category, sourceEvent) {
+    if (sourceEvent) sourceEvent.preventDefault();
 
-    // Filter cards
-    const cards = document.querySelectorAll('.tool-demo-card');
-    cards.forEach(card => {
-        if (category === 'all' || card.getAttribute('data-category') === category) {
-            card.classList.remove('hidden');
-            // Slight delay to trigger animation
+    const toolsSection = document.getElementById('tools');
+    const grid = document.querySelector('.tools-grid');
+    const isAll = category === 'all';
+
+    document.querySelectorAll('[data-category-link]').forEach(link => {
+        link.classList.toggle('active', link.dataset.categoryLink === category);
+    });
+
+    document.querySelectorAll('.ad-inline').forEach(ad => {
+        ad.classList.toggle('filter-hidden', !isAll);
+    });
+
+    grid?.classList.toggle('is-filtered', !isAll);
+
+    document.querySelectorAll('.tool-demo-card').forEach((card, index) => {
+        const shouldShow = isAll || card.dataset.category === category;
+        card.classList.toggle('hidden', !shouldShow);
+        card.setAttribute('aria-hidden', String(!shouldShow));
+
+        if (shouldShow) {
+            card.style.transitionDelay = prefersReducedMotion ? '0s' : `${Math.min(index, 8) * 0.04}s`;
             setTimeout(() => card.classList.add('active'), 10);
         } else {
-            card.classList.add('hidden');
+            card.style.transitionDelay = '0s';
             card.classList.remove('active');
         }
     });
+
+    if (sourceEvent && toolsSection && !toolsSection.contains(sourceEvent.currentTarget)) {
+        toolsSection.scrollIntoView({
+            behavior: prefersReducedMotion ? 'auto' : 'smooth',
+            block: 'start'
+        });
+    }
 }
 window.filterCategory = filterCategory;
 
@@ -1224,6 +1242,11 @@ window.closeFooterModal = closeFooterModal;
 // Initialize when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
     initHeroFloatingCards();
+
+    const initialCategory = new URLSearchParams(window.location.search).get('category');
+    if (['all', 'basic', 'finance', 'health', 'education', 'web'].includes(initialCategory)) {
+        filterCategory(initialCategory);
+    }
 
     if (new URLSearchParams(window.location.search).get('preview') === 'support') {
         setTimeout(() => {
