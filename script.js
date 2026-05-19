@@ -1164,6 +1164,8 @@ function initHeroFloatingCards() {
 }
 
 // --- Footer Modals & Popups ---
+const razorpayPaymentLink = "https://rzp.io/rzp/tpqo4et";
+
 const modalContent = {
     upi: {
         title: "Support via UPI",
@@ -1178,7 +1180,7 @@ const modalContent = {
         title: "Razorpay Payment",
         body: `<div style="text-align:center;">
                  <p style="margin-bottom: 1.5rem;">Securely pay via Razorpay using Cards, Netbanking, or Wallets.</p>
-                 <a href="https://rzp.io/rzp/tpqo4et" target="_blank" style="display:inline-block; background:var(--primary); color:#fff; padding:0.8rem 2rem; border-radius:30px; text-decoration:none; font-weight:bold;">Pay with Razorpay</a>
+                 <a href="${razorpayPaymentLink}" target="_blank" rel="noopener noreferrer" style="display:inline-block; background:var(--primary); color:#fff; padding:0.8rem 2rem; border-radius:30px; text-decoration:none; font-weight:bold;">Pay with Razorpay</a>
                </div>`
     },
     privacy: {
@@ -1206,13 +1208,24 @@ const modalContent = {
         title: "Enjoying the Calculators?",
         body: `<div style="text-align:center;">
                  <p style="margin-bottom: 1.5rem;">If you find these free tools helpful, kindly support us so we can keep the servers running and add more features!</p>
-                 <a href="https://rzp.io/rzp/tpqo4et" target="_blank" class="glowing-btn demo-btn ripple-btn" style="padding: 0.8rem 1.5rem; width: auto; margin: 0.5rem; text-decoration: none; display: inline-block;">Donate via Razorpay</a>
+                 <a href="${razorpayPaymentLink}" target="_blank" rel="noopener noreferrer" class="glowing-btn demo-btn ripple-btn" style="padding: 0.8rem 1.5rem; width: auto; margin: 0.5rem; text-decoration: none; display: inline-block;">Donate via Razorpay</a>
                </div>`
     }
 };
 
+function openRazorpay() {
+    const razorpayWindow = window.open(razorpayPaymentLink, '_blank', 'noopener,noreferrer');
+    if (razorpayWindow) razorpayWindow.opener = null;
+}
+
 function openFooterModal(type) {
     if (window.event) window.event.preventDefault(); // Prevent jump to top for anchor tags
+
+    if (type === 'razorpay' || type === 'donate') {
+        openRazorpay();
+        return;
+    }
+
     const overlay = document.getElementById('footer-modal');
     const titleEl = document.getElementById('modal-title');
     const bodyEl = document.getElementById('modal-body');
@@ -1238,6 +1251,7 @@ function closeFooterModal() {
 
 window.openFooterModal = openFooterModal;
 window.closeFooterModal = closeFooterModal;
+window.openRazorpay = openRazorpay;
 
 // Initialize when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
