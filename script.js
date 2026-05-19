@@ -717,27 +717,117 @@ function calcLeave() {
 }
 window.calcLeave = calcLeave;
 
+const CURRENCY_API_BASE = 'https://open.er-api.com/v6/latest';
+const CURRENCY_CACHE_PREFIX = 'daily-needs-currency-rates-';
+const CURRENCY_CACHE_TTL_MS = 12 * 60 * 60 * 1000;
+const currencyRateMemoryCache = new Map();
+
+function getCurrencyCache(base) {
+    const memoryCache = currencyRateMemoryCache.get(base);
+    if (memoryCache && memoryCache.expiresAt > Date.now()) return memoryCache;
+
+    try {
+        const saved = localStorage.getItem(CURRENCY_CACHE_PREFIX + base);
+        if (!saved) return null;
+
+        const parsed = JSON.parse(saved);
+        if (!parsed?.rates || parsed.expiresAt <= Date.now()) return null;
+
+        currencyRateMemoryCache.set(base, parsed);
+        return parsed;
+    } catch {
+        return null;
+    }
+}
+
+function saveCurrencyCache(base, payload) {
+    currencyRateMemoryCache.set(base, payload);
+
+    try {
+        localStorage.setItem(CURRENCY_CACHE_PREFIX + base, JSON.stringify(payload));
+    } catch {
+        // localStorage can be unavailable in strict privacy modes; memory cache still helps this session.
+    }
+}
+
+async function fetchCurrencyRates(base) {
+    const cached = getCurrencyCache(base);
+    if (cached) return { ...cached, fromCache: true };
+
+    const res = await fetch(`${CURRENCY_API_BASE}/${base}`);
+    if (!res.ok) throw new Error(`Currency API returned ${res.status}`);
+
+    const data = await res.json();
+    if (data.result !== 'success' || !data.rates) {
+        throw new Error(data['error-type'] || 'Currency API response failed');
+    }
+
+    const expiresAt = data.time_next_update_unix
+        ? data.time_next_update_unix * 1000
+        : Date.now() + CURRENCY_CACHE_TTL_MS;
+
+    const payload = {
+        base,
+        rates: data.rates,
+        updatedAt: data.time_last_update_utc || new Date().toUTCString(),
+        expiresAt,
+        provider: data.provider || 'https://www.exchangerate-api.com'
+    };
+
+    saveCurrencyCache(base, payload);
+    return { ...payload, fromCache: false };
+}
+
+function formatCurrencyValue(value, currency) {
+    try {
+        return new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency,
+            maximumFractionDigits: 2
+        }).format(value);
+    } catch {
+        return `${value.toFixed(2)} ${currency}`;
+    }
+}
+
+function updateCurrencyMeta(message) {
+    const meta = document.getElementById('curr-meta');
+    if (meta) meta.innerHTML = message;
+}
+
 async function calcCurrency() {
     const amt = parseFloat(document.getElementById('curr-amount').value);
     const from = document.getElementById('curr-from').value;
     const to = document.getElementById('curr-to').value;
     const btn = document.getElementById('curr-btn');
+    const resultEl = document.getElementById('curr-result');
 
     if (!amt) { showToast('Please enter amount'); return; }
 
     btn.innerText = "Fetching...";
+    btn.disabled = true;
+    updateCurrencyMeta('Fetching live exchange rate...');
+
     try {
-        const res = await fetch(`https://api.exchangerate-api.com/v4/latest/${from}`);
-        const data = await res.json();
+        const data = await fetchCurrencyRates(from);
         const rate = data.rates[to];
+
+        if (!rate) throw new Error(`Currency ${to} is not supported`);
+
         const result = amt * rate;
-        document.getElementById('curr-result').innerText = result.toFixed(2);
-        showToast('Converted Successfully!');
+        resultEl.innerText = formatCurrencyValue(result, to);
+
+        const sourceLabel = data.fromCache ? 'cached live rate' : 'live rate';
+        updateCurrencyMeta(`${sourceLabel} updated: ${data.updatedAt}<br><a href="https://www.exchangerate-api.com" target="_blank" rel="noopener">Rates by Exchange Rate API</a>`);
+        showToast(data.fromCache ? 'Converted using cached live rate' : 'Converted with live rate');
     } catch (e) {
-        document.getElementById('curr-result').innerText = 'Error';
-        showToast('API fetch failed');
+        resultEl.innerText = 'Unable to fetch live rate';
+        updateCurrencyMeta('Live currency API is unavailable. Please try again in a moment.');
+        showToast('Currency API fetch failed');
+    } finally {
+        btn.innerText = "Convert";
+        btn.disabled = false;
     }
-    btn.innerText = "Convert";
 }
 window.calcCurrency = calcCurrency;
 

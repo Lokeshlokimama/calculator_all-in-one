@@ -168,6 +168,11 @@ nav a:hover { color: #fff; }
 
 .glowing-btn:hover { transform: translateY(-3px) scale(1.02); }
 .glowing-btn:hover::before { opacity: 0.8; }
+.glowing-btn:disabled {
+    cursor: wait;
+    opacity: 0.72;
+    transform: none;
+}
 
 .pulse-btn {
     animation: button-pulse 2s infinite;
@@ -696,6 +701,26 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     justify-content: flex-end;
     overflow-x: auto;
 }
+
+.rate-source {
+    min-height: 34px;
+    margin: 0 0 0.85rem;
+    color: #a3a3a3;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    text-align: right;
+}
+
+.rate-source a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.rate-source a:hover {
+    color: #fff;
+    text-shadow: 0 0 12px rgba(14, 165, 233, 0.55);
+}
+
 .calc-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

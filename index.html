@@ -586,7 +586,10 @@
                                 <option value="GBP">GBP</option>
                             </select>
                         </div>
-                        <div class="calc-display" id="curr-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0.00</div>
+                        <div class="calc-display" id="curr-result" style="font-size:1.2rem; min-height:40px; margin-bottom:0.6rem;">0.00</div>
+                        <div class="rate-source" id="curr-meta" aria-live="polite">
+                            Live rates by <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener">ExchangeRate-API</a>
+                        </div>
                         <button class="glowing-btn demo-btn ripple-btn" id="curr-btn" onclick="calcCurrency()" style="width:100%;">Convert</button>
                     </div>
                 </div>
