@@ -429,11 +429,11 @@ h1 {
 }
 
 /* Hide filtered items */
-.tool-demo-card.hidden {
-    display: none !important;
+.tool-demo-card {
+    scroll-margin-top: 7rem;
 }
 
-.ad-space.filter-hidden {
+.tool-demo-card.hidden {
     display: none !important;
 }
 
@@ -448,6 +448,12 @@ h1 {
     grid-template-columns: repeat(auto-fit, minmax(300px, 380px));
     justify-content: center;
     align-items: start;
+}
+
+.tools-grid.is-filtered .ad-inline {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: min(100%, 760px);
 }
 
 /* Result Cards / Tool Demo Cards */

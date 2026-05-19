@@ -416,19 +416,34 @@ function generateRealQR() {
 window.generateRealQR = generateRealQR;
 
 // --- Category Filtering ---
+function scrollToVisibleCalculator(category) {
+    const selector = category === 'all'
+        ? '.tool-demo-card:not(.hidden)'
+        : `.tool-demo-card[data-category="${category}"]:not(.hidden)`;
+    const target = document.querySelector(selector) || document.getElementById('tools');
+
+    if (!target) return;
+
+    window.requestAnimationFrame(() => {
+        const navbar = document.querySelector('.navbar');
+        const offset = (navbar?.offsetHeight || 0) + 16;
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+
+        window.scrollTo({
+            top: Math.max(0, top),
+            behavior: prefersReducedMotion ? 'auto' : 'smooth'
+        });
+    });
+}
+
 function filterCategory(category, sourceEvent) {
     if (sourceEvent) sourceEvent.preventDefault();
 
-    const toolsSection = document.getElementById('tools');
     const grid = document.querySelector('.tools-grid');
     const isAll = category === 'all';
 
     document.querySelectorAll('[data-category-link]').forEach(link => {
         link.classList.toggle('active', link.dataset.categoryLink === category);
-    });
-
-    document.querySelectorAll('.ad-inline').forEach(ad => {
-        ad.classList.toggle('filter-hidden', !isAll);
     });
 
     grid?.classList.toggle('is-filtered', !isAll);
@@ -447,11 +462,8 @@ function filterCategory(category, sourceEvent) {
         }
     });
 
-    if (sourceEvent && toolsSection && !toolsSection.contains(sourceEvent.currentTarget)) {
-        toolsSection.scrollIntoView({
-            behavior: prefersReducedMotion ? 'auto' : 'smooth',
-            block: 'start'
-        });
+    if (sourceEvent) {
+        scrollToVisibleCalculator(category);
     }
 }
 window.filterCategory = filterCategory;
