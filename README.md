@@ -1,17 +1,5 @@
-# Daily Needs Calculator Static Landing Page
+# Calculator All-in-One
 
-This is a separate standalone daily tools and calculator landing page project.
+Static premium calculator landing page built in Antigravity.
 
-Open `index.html` directly in a browser. No build step or dependency install is required.
-
-Includes:
-
-- Animated gradient blobs and grid background
-- Floating hero mini tool cards
-- Typing badge effect
-- Animated counters
-- Scroll reveal and staggered card animations
-- Hover lift, glow borders, button shine, and CTA pulse
-- Calculator, QR preview, WhatsApp link, password, EMI, BMI, calorie needs, calories burned, and food nutrition interactions
-- Animated result cards, toasts, EMI bars, BMI progress, calorie macro bars, burned-calorie progress, and meal split bars
-- Reduced-motion support
+Open `index.html` directly in a browser. The page includes finance, health, education, web, and daily utility calculators with animated cards, ad slots, donation footer, and responsive styling.

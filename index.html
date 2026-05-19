@@ -1,543 +1,897 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Daily Needs Calculator | Free Everyday Tools</title>
-    <meta
-      name="description"
-      content="Daily Needs Calculator is a fast, modern tool website for calculator, QR code, WhatsApp link, EMI, BMI, calorie needs, calories burned, food nutrition, password generation, and instant daily utilities."
-    />
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <a class="skip-link" href="#main">Skip to content</a>
-
-    <header class="site-header" data-header>
-      <a class="brand" href="#top" aria-label="Daily Needs Calculator home">
-        <span class="brand-mark">DN</span>
-        <span class="brand-name">Daily Needs Calculator</span>
-      </a>
-      <nav class="desktop-nav" aria-label="Primary navigation">
-        <a href="#tools">Tools</a>
-        <a href="#workspace">Workspace</a>
-        <a href="#results">Results</a>
-        <a href="#faq">FAQ</a>
-      </nav>
-      <a class="nav-cta" href="#tools">Launch tools</a>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator All-in-One</title>
+    <meta name="description" content="A premium landing page with dynamic motion, glowing buttons, and animated counters.">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="particles"></div>
+    <div class="gradient-blob blob-1"></div>
+    <div class="gradient-blob blob-2"></div>
+    
+    <header class="navbar">
+        <a href="#" onclick="window.location.reload(); return false;" class="logo" style="text-decoration: none;">Calculator All-in-One</a>
+        <nav>
+            <a href="#tools" onclick="filterCategory('all')">All Tools</a>
+            <a href="#tools" onclick="filterCategory('finance')">Finance</a>
+            <a href="#tools" onclick="filterCategory('health')">Health</a>
+            <a href="#donate">Donate</a>
+        </nav>
     </header>
 
-    <main id="main">
-      <section id="top" class="hero section-shell">
-        <div class="hero-motion" aria-hidden="true">
-          <span class="blob blob-one"></span>
-          <span class="blob blob-two"></span>
-          <span class="blob blob-three"></span>
-          <span class="moving-light"></span>
-          <span class="particle p1"></span>
-          <span class="particle p2"></span>
-          <span class="particle p3"></span>
-          <span class="particle p4"></span>
-          <span class="particle p5"></span>
-          <span class="particle p6"></span>
-        </div>
-
-        <div class="hero-copy reveal">
-          <p class="eyebrow">
-            <span class="status-dot"></span>
-            <span id="typingText" aria-live="polite">Instant productivity tools</span>
-          </p>
-          <h1 class="hero-title">
-            All your daily calculators in one fast, free workspace.
-          </h1>
-          <p class="hero-subtitle">
-            Calculator, QR code, WhatsApp links, EMI, BMI, calorie needs, calories burned, food nutrition, and password utilities with instant results, smooth motion, and no login wall.
-          </p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#tools">
-              <span>Start instantly</span>
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
-            </a>
-            <a class="button button-secondary" href="#workspace">
-              <span>See workspace</span>
-            </a>
-          </div>
-        </div>
-
-        <div class="hero-panel reveal delay-1" aria-label="Daily Needs Calculator workspace mockup">
-          <div class="mockup-shell">
-            <div class="mockup-topbar">
-              <span></span>
-              <span></span>
-              <span></span>
-              <strong>Live tool workspace</strong>
-            </div>
-            <div class="mockup-grid">
-              <article class="mock-card active">
-                <small>Daily calories</small>
-                <strong>2,184</strong>
-                <span>Maintenance kcal</span>
-              </article>
-              <article class="mock-card">
-                <small>Calories burned</small>
-                <strong>294</strong>
-                <span>Workout estimate</span>
-              </article>
-              <article class="mock-card wide">
-                <small>QR generated</small>
-                <div class="mini-qr" aria-hidden="true">
-                  <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <div class="badge reveal-text">All-In-One Toolkit</div>
+                <h1 class="reveal-text delay-1">Your Daily <br><span class="highlight">Calculators</span></h1>
+                <p class="reveal-text delay-2">Solve everyday math and track health with <span class="typing-text"></span><span class="cursor">|</span></p>
+                <div class="btn-group reveal-text delay-3">
+                    <button class="glowing-btn pulse-btn ripple-btn" onclick="document.getElementById('tools').scrollIntoView({behavior: 'smooth'})">Start Calculating</button>
                 </div>
-                <span>Ready to download</span>
-              </article>
             </div>
-          </div>
+            <div class="hero-visual">
+                <div class="floating-cards-wrapper" id="hero-floating-cards">
+                    <!-- Cards will be dynamically injected here by JS -->
+                </div>
+            </div>
+        </section>
 
-          <div class="float-card card-a">
-            <span class="mini-icon calculator-icon"></span>
-            Calculator
-          </div>
-          <div class="float-card card-b">
-            <span class="mini-icon qr-icon"></span>
-            QR Code
-          </div>
-          <div class="float-card card-c">
-            <span class="mini-icon chat-icon"></span>
-            WhatsApp Link
-          </div>
-          <div class="float-card card-d">
-            <span class="mini-icon chart-icon"></span>
-            EMI
-          </div>
-          <div class="float-card card-e">
-            <span class="mini-icon health-icon"></span>
-            BMI Nutrition
-          </div>
-          <div class="float-card card-f">
-            <span class="mini-icon food-icon"></span>
-            Food Calories
-          </div>
-        </div>
+        <section id="stats" class="stats-section scroll-reveal slide-up">
 
-        <div class="counter-row reveal delay-2" aria-label="Daily Needs Calculator highlights">
-          <article class="counter-card">
-            <strong data-count="9" data-suffix="+">0</strong>
-            <span>Tools</span>
-          </article>
-          <article class="counter-card">
-            <strong data-count="100">0</strong>
-            <span>% Free</span>
-          </article>
-          <article class="counter-card">
-            <strong data-count="1">0</strong>
-            <span>Instant results</span>
-          </article>
-          <article class="counter-card">
-            <strong data-count="0">0</strong>
-            <span>No login required</span>
-          </article>
-        </div>
-      </section>
+            <div class="stat-item">
+                <h2 class="counter" data-target="100">0</h2><span>%</span>
+                <p>Free</p>
+            </div>
+            <div class="stat-item">
+                <h2 class="counter" data-target="0">0</h2><span>ms</span>
+                <p>Instant Results</p>
+            </div>
+            <div class="stat-item">
+                <h2>No</h2>
+                <p>Login Required</p>
+            </div>
+        </section>
 
-      <section id="tools" class="section-shell tools-section">
-        <div class="section-heading reveal">
-          <p class="eyebrow">Tool suite</p>
-          <h2>Lightweight utilities with premium product motion.</h2>
-          <p>Each card is built for fast action, subtle feedback, and smooth reveal animation on scroll.</p>
-        </div>
+        <section id="tools" class="tools-section">
+            <div class="ad-space ad-leaderboard scroll-reveal">
+                <!-- Paste Google AdSense Script Here -->
+            </div>
+            <h2 class="scroll-reveal slide-up">Interactive Tools</h2>
+            <p class="section-subtitle scroll-reveal slide-up delay-1">Experience premium animations and instant feedback.</p>
+            
+            <div class="category-filter scroll-reveal slide-up delay-2">
+                <button class="cat-btn active" onclick="filterCategory('all')">All</button>
+                <button class="cat-btn" onclick="filterCategory('basic')">Basic</button>
+                <button class="cat-btn" onclick="filterCategory('finance')">Finance</button>
+                <button class="cat-btn" onclick="filterCategory('health')">Health</button>
+                <button class="cat-btn" onclick="filterCategory('education')">Education</button>
+                <button class="cat-btn" onclick="filterCategory('web')">Tech & Web</button>
+            </div>
 
-        <div class="tool-grid">
-          <article class="tool-card reveal stagger">
-            <span class="tool-icon calculator-icon"></span>
-            <h3>Calculator</h3>
-            <p>Run quick arithmetic with a calm, distraction-free input surface.</p>
-            <button class="tool-button" data-tool-jump="calculator">Open calculator</button>
-          </article>
-          <article class="tool-card reveal stagger">
-            <span class="tool-icon qr-icon"></span>
-            <h3>QR Code</h3>
-            <p>Generate a professional QR preview for links, profiles, and campaigns.</p>
-            <button class="tool-button" data-tool-jump="qr">Generate QR</button>
-          </article>
-          <article class="tool-card reveal stagger">
-            <span class="tool-icon chat-icon"></span>
-            <h3>WhatsApp Link</h3>
-            <p>Create share-ready click-to-chat links with prefilled messages.</p>
-            <button class="tool-button" data-tool-jump="whatsapp">Create link</button>
-          </article>
-          <article class="tool-card reveal stagger">
-            <span class="tool-icon chart-icon"></span>
-            <h3>EMI</h3>
-            <p>Calculate EMI and compare principal versus interest visually.</p>
-            <button class="tool-button" data-tool-jump="emi">Calculate EMI</button>
-          </article>
-          <article class="tool-card reveal stagger">
-            <span class="tool-icon health-icon"></span>
-            <h3>BMI Nutrition</h3>
-            <p>Estimate BMI and animate a simple meal split plan.</p>
-            <button class="tool-button" data-tool-jump="bmi">Check BMI</button>
-          </article>
-          <article class="tool-card reveal stagger">
-            <span class="tool-icon health-icon"></span>
-            <h3>Calories Calculator</h3>
-            <p>Estimate daily calorie needs from age, size, activity, and body type.</p>
-            <button class="tool-button" data-tool-jump="calories">Calculate calories</button>
-          </article>
-          <article class="tool-card reveal stagger">
-            <span class="tool-icon flame-icon"></span>
-            <h3>Calories Burnt</h3>
-            <p>Estimate workout calories burned by activity, weight, and time.</p>
-            <button class="tool-button" data-tool-jump="burned">Check burned</button>
-          </article>
-          <article class="tool-card reveal stagger">
-            <span class="tool-icon food-icon"></span>
-            <h3>Food Nutrition</h3>
-            <p>Look up common foods with calories, protein, carbs, and fats.</p>
-            <button class="tool-button" data-tool-jump="food">View nutrition</button>
-          </article>
-          <article class="tool-card reveal stagger">
-            <span class="tool-icon lock-icon"></span>
-            <h3>Password</h3>
-            <p>Generate a secure sample password and copy it in one click.</p>
-            <button class="tool-button" data-tool-jump="password">Generate password</button>
-          </article>
-        </div>
-      </section>
+            <div class="tools-grid">
+                <!-- Standard Calculator -->
+                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="basic">
+                    <div class="card-glow"></div>
+                    <h3>Standard Calculator</h3>
+                    <p>Basic math for everyday use</p>
+                    <div class="tool-ui">
+                        <div class="calc-display" id="calc-display">0</div>
+                        <div class="calc-grid">
+                            <button class="calc-btn clear" onclick="clearCalc()">C</button>
+                            <button class="calc-btn op" onclick="appendCalc('/')">/</button>
+                            <button class="calc-btn op" onclick="appendCalc('*')">×</button>
+                            <button class="calc-btn op" onclick="appendCalc('-')">-</button>
+                            
+                            <button class="calc-btn" onclick="appendCalc('7')">7</button>
+                            <button class="calc-btn" onclick="appendCalc('8')">8</button>
+                            <button class="calc-btn" onclick="appendCalc('9')">9</button>
+                            <button class="calc-btn op" style="grid-row: span 2;" onclick="appendCalc('+')">+</button>
+                            
+                            <button class="calc-btn" onclick="appendCalc('4')">4</button>
+                            <button class="calc-btn" onclick="appendCalc('5')">5</button>
+                            <button class="calc-btn" onclick="appendCalc('6')">6</button>
+                            
+                            <button class="calc-btn" onclick="appendCalc('1')">1</button>
+                            <button class="calc-btn" onclick="appendCalc('2')">2</button>
+                            <button class="calc-btn" onclick="appendCalc('3')">3</button>
+                            <button class="calc-btn op equals" style="grid-row: span 2;" onclick="calculateResult()">=</button>
+                            
+                            <button class="calc-btn" style="grid-column: span 2;" onclick="appendCalc('0')">0</button>
+                            <button class="calc-btn" onclick="appendCalc('.')">.</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- BMI Tool -->
+                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="health">
+                    <div class="card-glow"></div>
+                    <h3>BMI Calculator</h3>
+                    <p>Calculate your Body Mass Index</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="bmi-height" placeholder="Height">
+                                <span class="input-suffix">cm</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="bmi-weight" placeholder="Weight">
+                                <span class="input-suffix">kg</span>
+                            </div>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-bar bmi-bar" id="bmi-progress"></div>
+                        </div>
+                        <div class="bar-labels">
+                            <span>Under</span>
+                            <span>Normal</span>
+                            <span>Over</span>
+                            <span>Obese</span>
+                        </div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="triggerTool('bmi', 'BMI Calculated!')">Calculate BMI</button>
+                    </div>
+                </div>
 
-      <section id="workspace" class="section-shell workspace-section">
-        <div class="section-heading reveal">
-          <p class="eyebrow">Interactive workspace</p>
-          <h2>Generate results with animated, professional feedback.</h2>
-        </div>
+                <!-- Inline Grid Ad -->
+                <div class="ad-space ad-inline scroll-reveal stagger-item">
+                    <!-- Paste Google AdSense Script Here -->
+                </div>
 
-        <div class="workspace-grid">
-          <article class="tool-form reveal" id="calculator">
-            <div class="form-title">
-              <span class="tool-icon calculator-icon"></span>
-              <div>
-                <h3>Calculator</h3>
-                <p>Type a safe expression like 24*12+90.</p>
-              </div>
-            </div>
-            <label for="calcInput">Expression</label>
-            <input id="calcInput" type="text" value="24*12+90" inputmode="decimal" />
-            <button class="button button-primary full" id="calcButton">Calculate</button>
-            <div class="result-card" id="calcResult">
-              <small>Result</small>
-              <strong>378</strong>
-            </div>
-          </article>
+                <!-- EMI Tool -->
+                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="finance">
+                    <div class="card-glow"></div>
+                    <h3>EMI Calculator</h3>
+                    <p>Visualize principal vs interest</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="emi-amount" placeholder="Loan Amount">
+                                <span class="input-suffix">₹</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="emi-rate" placeholder="Interest Rate">
+                                <span class="input-suffix">%</span>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <div class="chart-bar principal" id="emi-principal"></div>
+                            <div class="chart-bar interest" id="emi-interest"></div>
+                        </div>
+                        <div class="legend">
+                            <span class="dot dot-p"></span> Principal
+                            <span class="dot dot-i"></span> Interest
+                        </div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="triggerTool('emi', 'EMI Calculated!')">Calculate EMI</button>
+                    </div>
+                </div>
 
-          <article class="tool-form reveal" id="qr">
-            <div class="form-title">
-              <span class="tool-icon qr-icon"></span>
-              <div>
-                <h3>QR Code</h3>
-                <p>Generate a polished QR-style preview.</p>
-              </div>
-            </div>
-            <label for="qrInput">Link or text</label>
-            <input id="qrInput" type="url" value="https://dailyneedscalculator.app" />
-            <button class="button button-primary full" id="qrButton">Generate QR</button>
-            <div class="qr-result result-card" id="qrResult" aria-label="Generated QR preview">
-              <div class="qr-large">
-                <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-                <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-              </div>
-              <span>QR generated</span>
-            </div>
-          </article>
+                <!-- Calorie Calculator -->
+                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="health">
+                    <div class="card-glow"></div>
+                    <h3>Calorie & Macro</h3>
+                    <p>Track your daily food intake</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <select class="tool-input" id="food-select">
+                                <option value="" disabled selected>Select Food</option>
+                            </select>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="food-grams" placeholder="Weight">
+                                <span class="input-suffix">g</span>
+                            </div>
+                        </div>
+                        <button class="secondary-btn shine-btn" style="width:100%; margin-bottom:1rem; padding:0.5rem;" onclick="addFood()">Add Food</button>
+                        
+                        <div class="food-list" id="food-list">
+                            <!-- Foods will appear here -->
+                        </div>
 
-          <article class="tool-form reveal" id="whatsapp">
-            <div class="form-title">
-              <span class="tool-icon chat-icon"></span>
-              <div>
-                <h3>WhatsApp Link</h3>
-                <p>Build a quick click-to-chat URL.</p>
-              </div>
-            </div>
-            <label for="phoneInput">Phone number</label>
-            <input id="phoneInput" type="tel" value="919876543210" />
-            <label for="messageInput">Message</label>
-            <input id="messageInput" type="text" value="Hi, I want to know more." />
-            <button class="button button-secondary full" id="waButton">Create and copy</button>
-            <div class="result-card" id="waResult">
-              <small>Generated link</small>
-              <strong>wa.me/919876543210</strong>
-            </div>
-          </article>
+                        <div class="meal-split-container" id="meal-split">
+                            <div class="meal-bar carbs"><span>0%</span></div>
+                            <div class="meal-bar protein"><span>0%</span></div>
+                            <div class="meal-bar fat"><span>0%</span></div>
+                        </div>
+                        <div class="legend">
+                            <span class="dot dot-c"></span> Carbs
+                            <span class="dot dot-pr"></span> Protein
+                            <span class="dot dot-f"></span> Fat
+                        </div>
+                    </div>
+                </div>
 
-          <article class="tool-form reveal" id="password">
-            <div class="form-title">
-              <span class="tool-icon lock-icon"></span>
-              <div>
-                <h3>Password</h3>
-                <p>Generate a strong sample password.</p>
-              </div>
-            </div>
-            <button class="button button-primary full" id="passwordButton">Generate password</button>
-            <div class="result-card" id="passwordResult">
-              <small>Secure password</small>
-              <strong>Flow-94#Vista</strong>
-            </div>
-          </article>
-        </div>
-      </section>
+                <!-- WhatsApp Link Generator -->
+                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web">
+                    <div class="card-glow"></div>
+                    <h3>WhatsApp Link</h3>
+                    <p>Generate direct chat links</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <select class="tool-input" id="wa-country">
+                                <option value="91">+91 (IN)</option>
+                                <option value="1">+1 (US)</option>
+                                <option value="44">+44 (UK)</option>
+                                <option value="61">+61 (AU)</option>
+                                <option value="971">+971 (AE)</option>
+                            </select>
+                            <input type="number" class="tool-input" id="wa-phone" placeholder="Phone Number">
+                            <input type="text" class="tool-input" id="wa-msg" placeholder="Pre-filled message">
+                        </div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="generateWALink()">Create Link</button>
+                        <div style="margin-top: 1rem; text-align: center;">
+                            <a id="wa-result" href="#" target="_blank" style="color: var(--primary); font-size: 0.9rem; display: none; word-break: break-all;"></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Password Generator -->
+                <div id="calc-pass" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web">
+                    <div class="card-glow"></div>
+                    <h3>Password Generator</h3>
+                    <p>Create secure passwords</p>
+                    <div class="tool-ui">
+                        <div class="calc-display" id="pwd-result" style="font-size: 1rem; letter-spacing: 2px;">Click Generate</div>
+                        <div class="input-group">
+                            <label style="color:#a3a3a3; font-size:0.8rem; display:flex; justify-content:space-between; width:100%;">Length: <span id="pwd-len-display">12</span></label>
+                            <input type="range" id="pwd-length" min="8" max="32" value="12" oninput="document.getElementById('pwd-len-display').innerText=this.value" style="width:100%; margin-bottom:1rem;">
+                            
+                            <label style="color:#a3a3a3; font-size:0.8rem; display:flex; align-items:center; gap:0.5rem;">
+                                <input type="checkbox" id="pwd-upper" checked> Uppercase
+                            </label>
+                            <label style="color:#a3a3a3; font-size:0.8rem; display:flex; align-items:center; gap:0.5rem;">
+                                <input type="checkbox" id="pwd-numbers" checked> Numbers
+                            </label>
+                            <label style="color:#a3a3a3; font-size:0.8rem; display:flex; align-items:center; gap:0.5rem;">
+                                <input type="checkbox" id="pwd-symbols" checked> Symbols
+                            </label>
+                        </div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="generatePassword()" style="margin-top:1rem; width:100%;">Generate</button>
+                    </div>
+                </div>
 
-      <section id="results" class="section-shell result-section">
-        <div class="section-heading reveal">
-          <p class="eyebrow">Animated results</p>
-          <h2>Useful calculations with visual momentum.</h2>
-        </div>
+                <!-- Unit Converter -->
+                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web">
+                    <div class="card-glow"></div>
+                    <h3>Unit Converter</h3>
+                    <p>Convert common units</p>
+                    <div class="tool-ui">
+                        <div class="input-group" style="margin-bottom:1rem;">
+                            <select class="tool-input" id="unit-type" onchange="updateUnitOptions()">
+                                <option value="length">Length</option>
+                                <option value="weight">Weight</option>
+                            </select>
+                        </div>
+                        <div style="display:flex; gap:0.5rem; align-items:center; margin-bottom:1rem;">
+                            <input type="number" class="tool-input" id="unit-val-1" value="1" oninput="convertUnit(1)" style="flex:1;">
+                            <select class="tool-input" id="unit-sel-1" onchange="convertUnit(1)" style="flex:1;">
+                                <option value="m">Meters (m)</option>
+                                <option value="km">Kilometers (km)</option>
+                                <option value="ft">Feet (ft)</option>
+                                <option value="mi">Miles (mi)</option>
+                            </select>
+                        </div>
+                        <div style="text-align:center; color:var(--primary); margin-bottom:1rem;">=</div>
+                        <div style="display:flex; gap:0.5rem; align-items:center;">
+                            <input type="number" class="tool-input" id="unit-val-2" oninput="convertUnit(2)" style="flex:1;" readonly>
+                            <select class="tool-input" id="unit-sel-2" onchange="convertUnit(1)" style="flex:1;">
+                                <option value="km">Kilometers (km)</option>
+                                <option value="m">Meters (m)</option>
+                                <option value="ft">Feet (ft)</option>
+                                <option value="mi">Miles (mi)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="result-layout">
-          <article class="analysis-card reveal" id="calories">
-            <div class="form-title">
-              <span class="tool-icon health-icon"></span>
-              <div>
-                <h3>Calories calculator</h3>
-                <p>Estimate maintenance calories and daily macro guidance.</p>
-              </div>
-            </div>
-            <div class="compact-inputs">
-              <label>
-                Age
-                <input id="calorieAge" type="number" value="28" min="10" />
-              </label>
-              <label>
-                Weight kg
-                <input id="calorieWeight" type="number" value="68" min="20" />
-              </label>
-              <label>
-                Height cm
-                <input id="calorieHeight" type="number" value="172" min="80" />
-              </label>
-            </div>
-            <div class="compact-inputs two">
-              <label>
-                Body type
-                <select id="calorieSex">
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
-              </label>
-              <label>
-                Activity
-                <select id="activityLevel">
-                  <option value="1.2">Light</option>
-                  <option value="1.55" selected>Moderate</option>
-                  <option value="1.725">Active</option>
-                </select>
-              </label>
-            </div>
-            <button class="button button-primary full" id="calorieButton">Calculate calories</button>
-            <div class="result-card animated-result" id="calorieResult">
-              <small>Daily calorie needs</small>
-              <strong>2,184 kcal/day</strong>
-              <div class="split-bars" aria-label="Macro split chart">
-                <span style="--bar: 30%;">Protein 30%</span>
-                <span style="--bar: 45%;">Carbs 45%</span>
-                <span style="--bar: 25%;">Fats 25%</span>
-              </div>
-            </div>
-          </article>
+                <!-- BMR Calculator -->
+                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="health">
+                    <div class="card-glow"></div>
+                    <h3>BMR Calculator</h3>
+                    <p>Base metabolic rate</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <select class="tool-input" id="bmr-gender">
+                                <option value="m">Male</option>
+                                <option value="f">Female</option>
+                            </select>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="bmr-age" placeholder="Age">
+                                <span class="input-suffix">Yrs</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="bmr-weight" placeholder="Weight">
+                                <span class="input-suffix">kg</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="bmr-height" placeholder="Height">
+                                <span class="input-suffix">cm</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="bmr-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 kcal/day</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcBMR()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
 
-          <article class="analysis-card reveal" id="burned">
-            <div class="form-title">
-              <span class="tool-icon flame-icon"></span>
-              <div>
-                <h3>Calories burnt calculator</h3>
-                <p>Estimate calories burned from workout intensity and duration.</p>
-              </div>
-            </div>
-            <div class="compact-inputs">
-              <label>
-                Weight kg
-                <input id="burnWeight" type="number" value="68" min="20" />
-              </label>
-              <label>
-                Minutes
-                <input id="burnMinutes" type="number" value="30" min="1" />
-              </label>
-              <label>
-                Activity
-                <select id="burnActivity">
-                  <option value="3.5">Walking</option>
-                  <option value="6" selected>Cycling</option>
-                  <option value="8.3">Running</option>
-                  <option value="9.8">HIIT</option>
-                </select>
-              </label>
-            </div>
-            <button class="button button-primary full" id="burnButton">Calculate burned calories</button>
-            <div class="result-card animated-result" id="burnResult">
-              <small>Calories burned</small>
-              <strong>214 kcal</strong>
-              <div class="bmi-track"><span style="width: 50%;"></span></div>
-              <span>Moderate intensity estimate</span>
-            </div>
-          </article>
+                <!-- Water Intake Calculator -->
+                <div id="calc-water" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="health">
+                    <div class="card-glow"></div>
+                    <h3>Water Intake</h3>
+                    <p>Daily hydration needs</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="water-weight" placeholder="Weight">
+                                <span class="input-suffix">kg</span>
+                            </div>
+                            <select class="tool-input" id="water-activity">
+                                <option value="1">Light Activity</option>
+                                <option value="1.2">Moderate Activity</option>
+                                <option value="1.5">High Activity</option>
+                            </select>
+                        </div>
+                        <div class="calc-display" id="water-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 Liters</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcWater()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
 
-          <article class="analysis-card reveal" id="food">
-            <div class="form-title">
-              <span class="tool-icon food-icon"></span>
-              <div>
-                <h3>Food calories and nutrition</h3>
-                <p>Select a food to see calories and basic nutrition per serving.</p>
-              </div>
-            </div>
-            <label>
-              Food item
-              <select id="foodSelect">
-                <option value="banana">Banana</option>
-                <option value="rice">Cooked rice</option>
-                <option value="egg">Boiled egg</option>
-                <option value="chicken">Chicken breast</option>
-                <option value="oats">Oats</option>
-                <option value="paneer">Paneer</option>
-                <option value="almonds">Almonds</option>
-                <option value="dal">Dal</option>
-              </select>
-            </label>
-            <button class="button button-secondary full" id="foodButton">Show nutrition</button>
-            <div class="result-card animated-result" id="foodResult">
-              <small>Banana per medium serving</small>
-              <strong>105 kcal</strong>
-              <div class="nutrition-facts">
-                <span>Protein 1.3g</span>
-                <span>Carbs 27g</span>
-                <span>Fat 0.3g</span>
-              </div>
-            </div>
-          </article>
+                <!-- Ideal Weight Calculator -->
+                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="health">
+                    <div class="card-glow"></div>
+                    <h3>Ideal Weight</h3>
+                    <p>Healthy weight range</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <select class="tool-input" id="iw-gender">
+                                <option value="m">Male</option>
+                                <option value="f">Female</option>
+                            </select>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="iw-height" placeholder="Height">
+                                <span class="input-suffix">cm</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="iw-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 kg</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcIdealWeight()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+                
+                <!-- Protein Intake Calculator -->
+                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="health">
+                    <div class="card-glow"></div>
+                    <h3>Protein Intake</h3>
+                    <p>Daily protein needs</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="protein-weight" placeholder="Weight">
+                                <span class="input-suffix">kg</span>
+                            </div>
+                            <select class="tool-input" id="protein-goal">
+                                <option value="0.8">Sedentary (0.8g/kg)</option>
+                                <option value="1.2">Active (1.2g/kg)</option>
+                                <option value="1.6">Build Muscle (1.6g/kg)</option>
+                                <option value="2.0">Heavy Lifting (2.0g/kg)</option>
+                            </select>
+                        </div>
+                        <div class="calc-display" id="protein-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 g/day</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcProtein()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
 
-          <article class="analysis-card reveal" id="emi">
-            <div class="form-title">
-              <span class="tool-icon chart-icon"></span>
-              <div>
-                <h3>EMI calculator</h3>
-                <p>Principal versus interest is animated after every calculation.</p>
-              </div>
-            </div>
-            <div class="compact-inputs">
-              <label>
-                Loan amount
-                <input id="loanAmount" type="number" value="500000" />
-              </label>
-              <label>
-                Rate %
-                <input id="loanRate" type="number" value="10" />
-              </label>
-              <label>
-                Years
-                <input id="loanYears" type="number" value="3" />
-              </label>
-            </div>
-            <button class="button button-primary full" id="emiButton">Calculate EMI</button>
-            <div class="result-card animated-result" id="emiResult">
-              <small>Monthly EMI</small>
-              <strong>Rs 16,134</strong>
-              <div class="split-bars" aria-label="EMI split chart">
-                <span style="--bar: 82%;">Principal</span>
-                <span style="--bar: 18%;">Interest</span>
-              </div>
-            </div>
-          </article>
+                <!-- Body Fat Calculator -->
+                <div id="calc-bmi" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="health">
+                    <div class="card-glow"></div>
+                    <h3>Body Fat %</h3>
+                    <p>Estimate body fat percentage</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <select class="tool-input" id="bf-gender" onchange="document.getElementById('bf-hip-wrap').style.display = this.value==='f'?'block':'none'">
+                                <option value="m">Male</option>
+                                <option value="f">Female</option>
+                            </select>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="bf-height" placeholder="Height">
+                                <span class="input-suffix">cm</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="bf-neck" placeholder="Neck">
+                                <span class="input-suffix">cm</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="bf-waist" placeholder="Waist">
+                                <span class="input-suffix">cm</span>
+                            </div>
+                            <div id="bf-hip-wrap" style="display:none; width: 100%;">
+                                <div class="input-wrapper">
+                                    <input type="number" class="tool-input" id="bf-hip" placeholder="Hip" style="width: 100%;">
+                                    <span class="input-suffix">cm</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="bf-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 %</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcBodyFat()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+                <!-- SIP Calculator -->
+                <div id="calc-sip" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="finance">
+                    <div class="card-glow"></div>
+                    <h3>SIP Calculator</h3>
+                    <p>Systematic Investment Plan</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="sip-monthly" placeholder="Monthly Investment">
+                                <span class="input-suffix">₹</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="sip-rate" placeholder="Expected Return">
+                                <span class="input-suffix">%</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="sip-years" placeholder="Time Period">
+                                <span class="input-suffix">Yrs</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="sip-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">₹ 0</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcSIP()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
 
-          <article class="analysis-card reveal" id="bmi">
-            <div class="form-title">
-              <span class="tool-icon health-icon"></span>
-              <div>
-                <h3>BMI nutrition</h3>
-                <p>Includes animated BMI progress and meal split bars.</p>
-              </div>
-            </div>
-            <div class="compact-inputs two">
-              <label>
-                Height cm
-                <input id="heightInput" type="number" value="172" />
-              </label>
-              <label>
-                Weight kg
-                <input id="weightInput" type="number" value="68" />
-              </label>
-            </div>
-            <button class="button button-primary full" id="bmiButton">Calculate BMI</button>
-            <div class="result-card animated-result" id="bmiResult">
-              <small>BMI score</small>
-              <strong>23.0 Healthy</strong>
-              <div class="bmi-track"><span style="width: 48%;"></span></div>
-              <div class="meal-bars">
-                <span style="--bar: 35%;">Breakfast</span>
-                <span style="--bar: 40%;">Lunch</span>
-                <span style="--bar: 25%;">Dinner</span>
-              </div>
-            </div>
-          </article>
-        </div>
-      </section>
+                <!-- FD/SB Calculator -->
+                <div id="calc-fd" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="finance">
+                    <div class="card-glow"></div>
+                    <h3>FD / SB Calculator</h3>
+                    <p>Fixed & Savings Deposit</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="fd-principal" placeholder="Deposit Amount">
+                                <span class="input-suffix">₹</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="fd-rate" placeholder="Interest Rate">
+                                <span class="input-suffix">%</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="fd-years" placeholder="Time Period">
+                                <span class="input-suffix">Yrs</span>
+                            </div>
+                            <select class="tool-input" id="fd-citizen">
+                                <option value="0">Normal Citizen</option>
+                                <option value="0.5">Senior Citizen (+0.5% Interest)</option>
+                            </select>
+                        </div>
+                        <div class="calc-display" id="fd-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">₹ 0</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcFD()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
 
-      <section id="faq" class="section-shell faq-section">
-        <div class="section-heading reveal">
-          <p class="eyebrow">Details</p>
-          <h2>Built for speed, polish, and low distraction.</h2>
-        </div>
-        <div class="accordion reveal">
-          <button class="accordion-button" aria-expanded="true">
-            Are the animations lightweight?
-            <span></span>
-          </button>
-          <div class="accordion-panel open">
-            <p>Yes. Motion uses CSS transforms, opacity, and IntersectionObserver. No large videos, no heavy animation libraries, and reduced-motion support is included.</p>
-          </div>
-          <button class="accordion-button" aria-expanded="false">
-            Does it work on mobile?
-            <span></span>
-          </button>
-          <div class="accordion-panel">
-            <p>The layout, tool cards, buttons, and floating motion are responsive. Decorative motion is toned down on smaller screens.</p>
-          </div>
-          <button class="accordion-button" aria-expanded="false">
-            Is this separate from Wee9 fashion?
-            <span></span>
-          </button>
-          <div class="accordion-panel">
-            <p>Yes. This project lives in its own folder and does not replace or edit the existing Wee9 fashion eCommerce project.</p>
-          </div>
-        </div>
-      </section>
+                <!-- RD Calculator -->
+                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="finance">
+                    <div class="card-glow"></div>
+                    <h3>RD Calculator</h3>
+                    <p>Recurring Deposit</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="rd-monthly" placeholder="Monthly Deposit">
+                                <span class="input-suffix">₹</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="rd-rate" placeholder="Interest Rate">
+                                <span class="input-suffix">%</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="rd-months" placeholder="Time Period">
+                                <span class="input-suffix">Mos</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="rd-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">₹ 0</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcRD()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- GST Calculator -->
+                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="finance">
+                    <div class="card-glow"></div>
+                    <h3>GST Calculator</h3>
+                    <p>Add or Remove GST</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="gst-amount" placeholder="Amount">
+                                <span class="input-suffix">₹</span>
+                            </div>
+                            <select class="tool-input" id="gst-rate">
+                                <option value="5">5% GST</option>
+                                <option value="12">12% GST</option>
+                                <option value="18">18% GST</option>
+                                <option value="28">28% GST</option>
+                            </select>
+                            <select class="tool-input" id="gst-action">
+                                <option value="add">Add GST (Exclusive)</option>
+                                <option value="remove">Remove GST (Inclusive)</option>
+                            </select>
+                        </div>
+                        <div class="calc-display" id="gst-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">₹ 0</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcGST()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- Salary Calculator -->
+                <div id="calc-salary" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="finance">
+                    <div class="card-glow"></div>
+                    <h3>Salary Calculator</h3>
+                    <p>Estimate in-hand salary</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="sal-ctc" placeholder="Annual CTC">
+                                <span class="input-suffix">₹</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="sal-basic-pct" placeholder="Basic Salary">
+                                <span class="input-suffix">%</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="sal-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">₹ 0 / month</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcSalary()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- Leave Encashment -->
+                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="finance">
+                    <div class="card-glow"></div>
+                    <h3>Leave Encashment</h3>
+                    <p>Calculate payable leave</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="leave-basic" placeholder="Monthly Basic + DA">
+                                <span class="input-suffix">₹</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="leave-days" placeholder="Earned Leave">
+                                <span class="input-suffix">Days</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="leave-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">₹ 0</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcLeave()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- Currency Converter -->
+                <div id="calc-curr" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="finance">
+                    <div class="card-glow"></div>
+                    <h3>Currency Converter</h3>
+                    <p>Live exchange rates</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <input type="number" class="tool-input" id="curr-amount" value="1" placeholder="Amount">
+                        </div>
+                        <div style="display:flex; gap:0.5rem; align-items:center; margin-bottom:1rem;">
+                            <select class="tool-input" id="curr-from" style="flex:1;">
+                                <option value="USD">USD</option>
+                                <option value="INR" selected>INR</option>
+                                <option value="EUR">EUR</option>
+                                <option value="GBP">GBP</option>
+                            </select>
+                            <span style="color:#fff;">to</span>
+                            <select class="tool-input" id="curr-to" style="flex:1;">
+                                <option value="USD" selected>USD</option>
+                                <option value="INR">INR</option>
+                                <option value="EUR">EUR</option>
+                                <option value="GBP">GBP</option>
+                            </select>
+                        </div>
+                        <div class="calc-display" id="curr-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0.00</div>
+                        <button class="glowing-btn demo-btn ripple-btn" id="curr-btn" onclick="calcCurrency()" style="width:100%;">Convert</button>
+                    </div>
+                </div>
+
+                <!-- Age Calculator -->
+                <div id="calc-age" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="basic">
+                    <div class="card-glow"></div>
+                    <h3>Age Calculator</h3>
+                    <p>Calculate exact age</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <label style="color:#a3a3a3; font-size:0.8rem;">Date of Birth:</label>
+                            <input type="date" class="tool-input" id="age-dob" style="margin-bottom:1rem;">
+                        </div>
+                        <div class="calc-display" id="age-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 Yrs, 0 Mos, 0 Days</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcAge()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- Date Difference Calculator -->
+                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="basic">
+                    <div class="card-glow"></div>
+                    <h3>Date Difference</h3>
+                    <p>Days between two dates</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <label style="color:#a3a3a3; font-size:0.8rem;">Start Date:</label>
+                            <input type="date" class="tool-input" id="date-start" style="margin-bottom:0.5rem;">
+                            <label style="color:#a3a3a3; font-size:0.8rem;">End Date:</label>
+                            <input type="date" class="tool-input" id="date-end" style="margin-bottom:1rem;">
+                        </div>
+                        <div class="calc-display" id="date-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 Days</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcDateDiff()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- Time Calculator -->
+                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="basic">
+                    <div class="card-glow"></div>
+                    <h3>Time Calculator</h3>
+                    <p>Add/Subtract Time</p>
+                    <div class="tool-ui">
+                        <div class="input-group" style="display:flex; gap:0.5rem;">
+                            <div class="input-wrapper" style="flex:1;">
+                                <input type="number" class="tool-input" id="time-h1" placeholder="Hours">
+                                <span class="input-suffix">h</span>
+                            </div>
+                            <div class="input-wrapper" style="flex:1;">
+                                <input type="number" class="tool-input" id="time-m1" placeholder="Mins">
+                                <span class="input-suffix">m</span>
+                            </div>
+                        </div>
+                        <div class="input-group" style="margin: 0.5rem 0;">
+                            <select class="tool-input" id="time-op">
+                                <option value="+">Add (+)</option>
+                                <option value="-">Subtract (-)</option>
+                            </select>
+                        </div>
+                        <div class="input-group" style="display:flex; gap:0.5rem; margin-bottom:1rem;">
+                            <div class="input-wrapper" style="flex:1;">
+                                <input type="number" class="tool-input" id="time-h2" placeholder="Hours">
+                                <span class="input-suffix">h</span>
+                            </div>
+                            <div class="input-wrapper" style="flex:1;">
+                                <input type="number" class="tool-input" id="time-m2" placeholder="Mins">
+                                <span class="input-suffix">m</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="time-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">00h 00m</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcTime()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- Percentage Calculator -->
+                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="basic">
+                    <div class="card-glow"></div>
+                    <h3>Percentage Calculator</h3>
+                    <p>Find percentage</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div style="display:flex; align-items:center; gap:0.5rem;">
+                                <span style="color:#a3a3a3; width: 60px;">What is</span>
+                                <div class="input-wrapper">
+                                    <input type="number" class="tool-input" id="pct-a" placeholder="Percentage">
+                                    <span class="input-suffix">%</span>
+                                </div>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.5rem;">
+                                <span style="color:#a3a3a3; width: 60px;">of</span>
+                                <div class="input-wrapper">
+                                    <input type="number" class="tool-input" id="pct-b" placeholder="Value">
+                                    <span class="input-suffix">Val</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="pct-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem; margin-top:1rem;">0</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcPct()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- CGPA/SGPA Calculator -->
+                <div id="calc-cgpa" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="education">
+                    <div class="card-glow"></div>
+                    <h3>CGPA / SGPA</h3>
+                    <p>Calculate your grade point average</p>
+                    <div class="tool-ui">
+                        <div id="cgpa-inputs">
+                            <div class="input-group" style="display:flex; gap:0.5rem; margin-bottom:0.5rem;">
+                                <input type="number" class="tool-input cgpa-credit" placeholder="Credits" style="flex:1;">
+                                <input type="number" class="tool-input cgpa-grade" placeholder="Grade (1-10)" style="flex:1;">
+                            </div>
+                            <div class="input-group" style="display:flex; gap:0.5rem; margin-bottom:0.5rem;">
+                                <input type="number" class="tool-input cgpa-credit" placeholder="Credits" style="flex:1;">
+                                <input type="number" class="tool-input cgpa-grade" placeholder="Grade (1-10)" style="flex:1;">
+                            </div>
+                            <div class="input-group" style="display:flex; gap:0.5rem; margin-bottom:0.5rem;">
+                                <input type="number" class="tool-input cgpa-credit" placeholder="Credits" style="flex:1;">
+                                <input type="number" class="tool-input cgpa-grade" placeholder="Grade (1-10)" style="flex:1;">
+                            </div>
+                        </div>
+                        <button class="secondary-btn shine-btn" style="width:100%; margin-bottom:1rem; padding:0.5rem;" onclick="addCgpaRow()">Add Subject</button>
+                        <div class="calc-display" id="cgpa-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0.00 GPA</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcCGPA()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- Attendance Calculator -->
+                <div id="calc-att" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="education">
+                    <div class="card-glow"></div>
+                    <h3>Attendance Calc</h3>
+                    <p>Plan your classes smartly</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <input type="number" class="tool-input" id="att-total" placeholder="Total Classes Conducted">
+                            <input type="number" class="tool-input" id="att-present" placeholder="Classes Attended">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="att-target" placeholder="Target">
+                                <span class="input-suffix">%</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="att-result" style="font-size:1rem; min-height:40px; margin-bottom:1rem;">Result will appear here</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcAttendance()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- Word & Character Counter -->
+                <div id="calc-word" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web">
+                    <div class="card-glow"></div>
+                    <h3>Word & Char Count</h3>
+                    <p>Analyze your text in real-time</p>
+                    <div class="tool-ui">
+                        <textarea class="tool-input" id="text-counter-input" placeholder="Type or paste text here..." rows="4" style="width:100%; resize:none; margin-bottom:1rem;" oninput="updateCounts()"></textarea>
+                        <div style="display:flex; justify-content:space-between; color:#a3a3a3; font-size:0.9rem; margin-bottom:1rem;">
+                            <span>Words: <strong id="count-words" style="color:var(--primary);">0</strong></span>
+                            <span>Chars: <strong id="count-chars" style="color:var(--primary);">0</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Case Converter -->
+                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web">
+                    <div class="card-glow"></div>
+                    <h3>Case Converter</h3>
+                    <p>Format text instantly</p>
+                    <div class="tool-ui">
+                        <textarea class="tool-input" id="case-input" placeholder="Type text..." rows="3" style="width:100%; resize:none; margin-bottom:1rem;"></textarea>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; margin-bottom:1rem;">
+                            <button class="secondary-btn shine-btn" style="padding:0.5rem;" onclick="convertCase('upper')">UPPER</button>
+                            <button class="secondary-btn shine-btn" style="padding:0.5rem;" onclick="convertCase('lower')">lower</button>
+                            <button class="secondary-btn shine-btn" style="padding:0.5rem;" onclick="convertCase('title')">Title Case</button>
+                            <button class="secondary-btn shine-btn" style="padding:0.5rem;" onclick="convertCase('camel')">camelCase</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Base64 Encoder/Decoder -->
+                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web">
+                    <div class="card-glow"></div>
+                    <h3>Base64 Encode/Decode</h3>
+                    <p>Secure string conversion</p>
+                    <div class="tool-ui">
+                        <textarea class="tool-input" id="b64-input" placeholder="Enter text or Base64..." rows="2" style="width:100%; resize:none; margin-bottom:0.5rem;"></textarea>
+                        <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
+                            <button class="secondary-btn shine-btn" style="flex:1; padding:0.5rem;" onclick="processBase64('encode')">Encode</button>
+                            <button class="secondary-btn shine-btn" style="flex:1; padding:0.5rem;" onclick="processBase64('decode')">Decode</button>
+                        </div>
+                        <textarea class="tool-input" id="b64-output" placeholder="Result..." rows="2" style="width:100%; resize:none; margin-bottom:1rem;" readonly></textarea>
+                    </div>
+                </div>
+
+                <!-- Color Format Converter -->
+                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web">
+                    <div class="card-glow"></div>
+                    <h3>Color Converter</h3>
+                    <p>HEX to RGB & HSL</p>
+                    <div class="tool-ui">
+                        <div class="input-group" style="display:flex; align-items:center; gap:1rem; margin-bottom:1rem;">
+                            <input type="color" id="color-picker" style="height:40px; width:40px; border:none; background:none; cursor:pointer;" oninput="updateColorsFromPicker()">
+                            <input type="text" class="tool-input" id="color-hex" placeholder="#FFFFFF" style="flex:1;" oninput="updateColorsFromHex()">
+                        </div>
+                        <div class="calc-display" style="font-size:0.9rem; padding:1rem; margin-bottom:1rem;">
+                            <div style="width:100%; text-align:left;">
+                                <div style="margin-bottom:0.8rem;"><strong>RGB:</strong> <span id="color-rgb">rgb(0, 0, 0)</span></div>
+                                <div><strong>HSL:</strong> <span id="color-hsl">hsl(0, 0%, 0%)</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simple Stopwatch -->
+                <div id="calc-sw" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web">
+                    <div class="card-glow"></div>
+                    <h3>Stopwatch Timer</h3>
+                    <p>Track your tasks</p>
+                    <div class="tool-ui" style="text-align:center;">
+                        <div class="calc-display" id="stopwatch-display" style="font-size:2rem; font-family:monospace; min-height:60px; margin-bottom:1rem; letter-spacing:3px;">
+                            00:00:00.00
+                        </div>
+                        <div style="display:flex; gap:0.5rem;">
+                            <button class="secondary-btn shine-btn" id="sw-start" style="flex:1; padding:0.5rem;" onclick="startStopwatch()">Start</button>
+                            <button class="secondary-btn shine-btn" id="sw-reset" style="flex:1; padding:0.5rem;" onclick="resetStopwatch()">Reset</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Discount & Tax Calculator -->
+                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="finance">
+                    <div class="card-glow"></div>
+                    <h3>Discount & Tax</h3>
+                    <p>Find the final price</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="dt-price" placeholder="Original Price">
+                                <span class="input-suffix">₹</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="dt-discount" placeholder="Discount">
+                                <span class="input-suffix">%</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="dt-tax" placeholder="Tax">
+                                <span class="input-suffix">%</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="dt-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">₹ 0</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcDiscountTax()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div id="support-ad" class="ad-space ad-leaderboard scroll-reveal" style="margin-top: 4rem;">
+                <!-- Paste Google AdSense Script Here -->
+            </div>
+        </section>
+
+
     </main>
 
-    <footer class="site-footer">
-      <div class="footer-glow" aria-hidden="true"></div>
-      <div>
-        <a class="brand" href="#top">
-          <span class="brand-mark">DN</span>
-          <span class="brand-name">Daily Needs Calculator</span>
-        </a>
-        <p>Free, fast daily calculators with premium motion and instant feedback.</p>
-      </div>
-      <div class="footer-links">
-        <a href="#tools">Tools</a>
-        <a href="#workspace">Workspace</a>
-        <a href="#results">Results</a>
-        <a href="mailto:hello@dailyneedscalculator.app">Contact</a>
-      </div>
-      <div class="social-links" aria-label="Social links">
-        <a href="#" aria-label="Daily Needs Calculator on X">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4l16 16M20 4 4 20" /></svg>
-        </a>
-        <a href="#" aria-label="Daily Needs Calculator on LinkedIn">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v9M7 7v.1M11 19v-5a4 4 0 0 1 8 0v5" /></svg>
-        </a>
-        <a href="#" aria-label="Email Daily Needs Calculator">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4zM4 7l8 6 8-6" /></svg>
-        </a>
-      </div>
+    <footer class="site-footer scroll-reveal slide-up" id="donate">
+        <div class="footer-glow"></div>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="#" class="logo" style="text-decoration: none;">Calculator All-in-One</a>
+                <p style="font-size: 0.9rem; margin-top: 1rem;">For suggestions & complaints:<br><a href="mailto:support.aiagents@gmail.com" style="color: var(--primary); text-decoration: none;">support.aiagents@gmail.com</a></p>
+            </div>
+            <div class="donation-section" style="text-align: right;">
+                <p style="color: #fff; margin-bottom: 0.5rem; font-weight: 600;">Kindly Donate & Support</p>
+                <div style="display: inline-block; background: var(--glass-bg); padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(99, 102, 241, 0.3); text-align: center;">
+                    <div style="width: 60px; height: 60px; background: #fff; margin: 0 auto; display: flex; align-items: center; justify-content: center; border-radius: 4px; box-shadow: 0 0 10px rgba(255,255,255,0.1);">
+                        <span style="color: #000; font-size: 0.6rem; font-weight: bold;">UPI QR</span>
+                    </div>
+                    <p style="font-size: 1.1rem; color: #fff; margin-top: 0.8rem; font-family: 'Outfit', sans-serif; font-weight:600; letter-spacing: 1px;">klokeshcalculator@ybl</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-links" style="text-align: center; margin: 2rem 0; padding-top: 2rem; border-top: 1px solid var(--glass-border); display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem;">
+            <a href="#" onclick="openFooterModal('upi')">UPI QR & Button</a>
+            <a href="#" onclick="openFooterModal('razorpay')">Razorpay Link</a>
+            <a href="#" onclick="openFooterModal('privacy')">Privacy Policy</a>
+            <a href="#" onclick="openFooterModal('terms')">Terms</a>
+            <a href="#" onclick="openFooterModal('refund')">Refund Policy</a>
+            <a href="#" onclick="openFooterModal('shipping')">Shipping Policy</a>
+            <a href="#" onclick="openFooterModal('contact')">Contact Page</a>
+        </div>
+        
+        <p class="copyright">&copy; 2026 Calculator All-in-One. All rights reserved.</p>
     </footer>
 
-    <div class="toast-region" aria-live="polite" aria-atomic="true"></div>
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
 
-    <script src="./script.js"></script>
-  </body>
+    <!-- Generic Modal -->
+    <div id="footer-modal" class="modal-overlay" onclick="if(event.target===this) closeFooterModal()">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeFooterModal()">&times;</span>
+            <h2 id="modal-title">Title</h2>
+            <div id="modal-body" style="margin-top: 1rem; color: #a3a3a3;">
+                Content goes here.
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
 </html>
