@@ -1221,7 +1221,7 @@ function openRazorpay() {
 function openFooterModal(type) {
     if (window.event) window.event.preventDefault(); // Prevent jump to top for anchor tags
 
-    if (type === 'razorpay' || type === 'donate') {
+    if (type === 'razorpay') {
         openRazorpay();
         return;
     }
@@ -1267,4 +1267,8 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('support-ad')?.scrollIntoView({ behavior: 'auto', block: 'start' });
         }, 50);
     }
+
+    setTimeout(() => {
+        openFooterModal('donate');
+    }, 700);
 });
