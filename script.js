@@ -1287,11 +1287,13 @@ const modalContent = {
     },
     privacy: {
         title: "Privacy Policy",
-        body: "<p>We value your privacy. We do not store or share your personal data. All calculations are performed directly in your browser. Google Analytics or AdSense may collect standard usage data in accordance with their policies.</p>"
+        body: `<p>Calculator All-in-One is a free online utility platform. Most calculations run in your browser and do not require account registration.</p>
+               <p style="margin-top:1rem;"><a href="privacy.html" style="color:var(--primary);">Read the full Privacy Policy</a></p>`
     },
     terms: {
         title: "Terms & Conditions",
-        body: "<p>By using this website, you agree to these terms. The tools provided here are for informational purposes only and should not be considered professional financial or medical advice.</p>"
+        body: `<p>These educational/productivity tools are for informational estimates and convenience. They are not professional financial, medical, legal, or tax advice.</p>
+               <p style="margin-top:1rem;"><a href="terms.html" style="color:var(--primary);">Read the full Terms & Conditions</a></p>`
     },
     refund: {
         title: "Refund Policy",
@@ -1307,9 +1309,9 @@ const modalContent = {
                <p style="margin-top:1rem; font-size:1.2rem; color:var(--primary);">support.aiagents@gmail.com</p>`
     },
     donate: {
-        title: "Enjoying the Calculators?",
+        title: "Support The Platform",
         body: `<div style="text-align:center;">
-                 <p style="margin-bottom: 1.5rem;">If you find these free tools helpful, kindly support us so we can keep the servers running and add more features!</p>
+                 <p style="margin-bottom: 1.5rem;">Calculator All-in-One is a free online utility platform for educational/productivity tools. Support helps maintain hosting/API costs and future improvements.</p>
                  <a href="${razorpayPaymentLink}" target="_blank" rel="noopener noreferrer" class="glowing-btn demo-btn ripple-btn" style="padding: 0.8rem 1.5rem; width: auto; margin: 0.5rem; text-decoration: none; display: inline-block;">Fund Me via Razorpay</a>
                </div>`
     }
