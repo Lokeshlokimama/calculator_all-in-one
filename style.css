@@ -132,6 +132,53 @@ nav a {
 
 nav a:hover { color: #fff; }
 
+.mobile-menu {
+    display: none;
+    position: relative;
+}
+
+.mobile-menu summary {
+    list-style: none;
+    cursor: pointer;
+    border: 1px solid var(--glass-border);
+    background: rgba(15, 23, 42, 0.88);
+    color: #fff;
+    border-radius: 999px;
+    padding: 0.55rem 0.9rem;
+    font-weight: 700;
+}
+
+.mobile-menu summary::-webkit-details-marker {
+    display: none;
+}
+
+.mobile-menu-panel {
+    position: absolute;
+    top: calc(100% + 0.7rem);
+    right: 0;
+    width: min(78vw, 280px);
+    display: grid;
+    gap: 0.2rem;
+    padding: 0.75rem;
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.98);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+}
+
+.mobile-menu-panel a {
+    color: #e5e7eb;
+    text-decoration: none;
+    padding: 0.75rem;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.mobile-menu-panel a:hover {
+    background: rgba(14, 165, 233, 0.12);
+    color: #fff;
+}
+
 /* Static Info Pages */
 .page-main {
     min-height: 100vh;
@@ -1036,12 +1083,59 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 /* Responsive */
 @media (max-width: 900px) {
-    .hero { flex-direction: column; text-align: center; padding-top: 120px; }
+    .navbar {
+        padding: 0.9rem 5%;
+    }
+    .logo {
+        font-size: clamp(1.05rem, 5vw, 1.45rem);
+        max-width: 68vw;
+        line-height: 1.1;
+    }
+    .mobile-menu {
+        display: block;
+    }
+    .hero { flex-direction: column; text-align: center; padding-top: 110px; min-height: auto; }
     .hero-content { align-items: center; display: flex; flex-direction: column; }
-    .hero-visual { width: 100%; height: 400px; margin-top: 2rem; transform: scale(0.8); }
+    h1 { font-size: clamp(2.65rem, 13vw, 4rem); }
+    .hero-content p { font-size: 1rem; margin-bottom: 1.5rem; }
+    .hero-visual { width: 100%; height: 280px; margin-top: 1rem; transform: none; }
+    .floating-cards-wrapper { height: 240px; }
+    .tool-card { padding: 0.7rem 0.9rem; }
     .stats-section { flex-direction: column; gap: 3rem; }
+    .tools-section, .results-section { padding: 4rem 5%; }
+    .tools-section h2, .results-section h2 { font-size: 2.2rem; }
+    .category-filter { gap: 0.55rem; margin-bottom: 2rem; }
+    .cat-btn { padding: 0.55rem 0.95rem; }
+    .tools-grid, .results-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+    .result-card { max-width: none; padding: 1.35rem; border-radius: 18px; }
+    .tool-ui { padding: 1rem; }
+    .ad-leaderboard { height: 110px; }
+    .ad-inline { height: 180px; }
+    .footer-content { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+    .donation-section { text-align: left !important; width: 100%; }
+    .footer-links { justify-content: flex-start !important; text-align: left !important; gap: 1rem !important; }
     .info-strip,
     .content-grid { grid-template-columns: 1fr; }
     .page-main { padding-top: 7.5rem; }
+    .page-hero h1 { font-size: clamp(2.15rem, 11vw, 3.4rem); }
+    .particles { display: none; }
+    .gradient-blob { opacity: 0.35; filter: blur(95px); }
+    .bg-grid { animation: none; }
     nav { display: none; }
+}
+
+@media (max-width: 520px) {
+    .btn-group,
+    .page-actions {
+        width: 100%;
+    }
+    .glowing-btn,
+    .secondary-btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+    .stats-section { padding: 3.5rem 5%; }
+    .stat-item h2, .stat-item .counter { font-size: 2.8rem; }
+    .footer-links a { min-width: 44%; }
 }
