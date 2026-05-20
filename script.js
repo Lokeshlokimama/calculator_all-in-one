@@ -1295,7 +1295,7 @@ const modalContent = {
     },
     refund: {
         title: "Refund Policy",
-        body: "<p>As this is a free digital tool platform, any voluntary donations made to support the site are final and non-refundable.</p>"
+        body: "<p>As this is a free digital tool platform, any voluntary funding contributions made to support the site are final and non-refundable.</p>"
     },
     shipping: {
         title: "Shipping Policy",
@@ -1310,7 +1310,7 @@ const modalContent = {
         title: "Enjoying the Calculators?",
         body: `<div style="text-align:center;">
                  <p style="margin-bottom: 1.5rem;">If you find these free tools helpful, kindly support us so we can keep the servers running and add more features!</p>
-                 <a href="${razorpayPaymentLink}" target="_blank" rel="noopener noreferrer" class="glowing-btn demo-btn ripple-btn" style="padding: 0.8rem 1.5rem; width: auto; margin: 0.5rem; text-decoration: none; display: inline-block;">Donate via Razorpay</a>
+                 <a href="${razorpayPaymentLink}" target="_blank" rel="noopener noreferrer" class="glowing-btn demo-btn ripple-btn" style="padding: 0.8rem 1.5rem; width: auto; margin: 0.5rem; text-decoration: none; display: inline-block;">Fund Me via Razorpay</a>
                </div>`
     }
 };
