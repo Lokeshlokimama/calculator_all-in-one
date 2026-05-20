@@ -1312,7 +1312,7 @@ const modalContent = {
         title: "Support The Platform",
         body: `<div style="text-align:center;">
                  <p style="margin-bottom: 1.5rem;">Calculator All-in-One is a free online utility platform for educational/productivity tools. Support helps maintain hosting/API costs and future improvements.</p>
-                 <a href="${razorpayPaymentLink}" target="_blank" rel="noopener noreferrer" class="glowing-btn demo-btn ripple-btn" style="padding: 0.8rem 1.5rem; width: auto; margin: 0.5rem; text-decoration: none; display: inline-block;">Fund Me via Razorpay</a>
+                 <a href="${razorpayPaymentLink}" target="_blank" rel="noopener noreferrer" class="glowing-btn demo-btn ripple-btn" style="padding: 0.8rem 1.5rem; width: auto; margin: 0.5rem; text-decoration: none; display: inline-block;">Fund Me</a>
                </div>`
     }
 };
