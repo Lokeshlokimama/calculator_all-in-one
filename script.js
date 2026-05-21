@@ -257,6 +257,15 @@ function buildFoodSearchEntries() {
 }
 
 const foodSearchEntries = buildFoodSearchEntries();
+const USDA_FOOD_API_URL = 'https://api.nal.usda.gov/fdc/v1/foods/search';
+const USDA_API_KEY = 'DEMO_KEY';
+const nutritionApiCache = new Map();
+const usdaDataTypeScore = {
+    'Survey (FNDDS)': 60,
+    Foundation: 45,
+    'SR Legacy': 40,
+    Branded: 0
+};
 
 function initFoodSearch() {
     const dataList = document.getElementById('food-options');
@@ -293,9 +302,154 @@ function findFoodByQuery(query) {
     return includesMatch ? foodDatabase[includesMatch.id] : null;
 }
 
+function findExactLocalFoodByQuery(query) {
+    const normalizedQuery = normalizeFoodQuery(query);
+    if (!normalizedQuery) return null;
+
+    const exactMatch = foodSearchEntries.find(entry => entry.key === normalizedQuery);
+    return exactMatch ? foodDatabase[exactMatch.id] : null;
+}
+
+function scaleNutrition(per100, grams) {
+    const multiplier = grams / 100;
+    return {
+        name: per100.name,
+        source: per100.source,
+        calories: per100.calories * multiplier,
+        carbs: per100.carbs * multiplier,
+        protein: per100.protein * multiplier,
+        fat: per100.fat * multiplier
+    };
+}
+
+function getLocalNutritionEstimate(foodName, grams, exactOnly = false) {
+    const food = exactOnly ? findExactLocalFoodByQuery(foodName) : findFoodByQuery(foodName);
+    if (!food) return null;
+
+    const per100 = {
+        name: food.name,
+        source: 'Saved estimate',
+        calories: (food.carbs * 4) + (food.protein * 4) + (food.fat * 9),
+        carbs: food.carbs,
+        protein: food.protein,
+        fat: food.fat
+    };
+
+    return scaleNutrition(per100, grams);
+}
+
+function getUsdaNutrient(food, nutrientId, nameIncludes) {
+    const nutrients = food.foodNutrients || [];
+    const nutrient = nutrients.find(item => Number(item.nutrientId) === nutrientId)
+        || nutrients.find(item => normalizeFoodQuery(item.nutrientName).includes(nameIncludes));
+
+    if (!nutrient || Number.isNaN(Number(nutrient.value))) return 0;
+    return Number(nutrient.value);
+}
+
+function getUsdaCalories(food) {
+    const nutrients = food.foodNutrients || [];
+    const nutrient = nutrients.find(item => Number(item.nutrientId) === 1008)
+        || nutrients.find(item => normalizeFoodQuery(item.nutrientName) === 'energy');
+
+    if (!nutrient || Number.isNaN(Number(nutrient.value))) return 0;
+
+    const value = Number(nutrient.value);
+    return String(nutrient.unitName).toUpperCase() === 'KJ' ? value / 4.184 : value;
+}
+
+function scoreUsdaFood(food, query) {
+    const queryText = normalizeFoodQuery(query);
+    const description = normalizeFoodQuery(food.description);
+    const category = normalizeFoodQuery(food.foodCategory);
+    const queryWords = queryText.split(' ').filter(Boolean);
+
+    let score = usdaDataTypeScore[food.dataType] || 0;
+    if (description === queryText) score += 70;
+    else if (description.startsWith(queryText)) score += 35;
+    else if (description.includes(queryText)) score += 15;
+
+    queryWords.forEach(word => {
+        score += description.includes(word) ? 8 : -5;
+    });
+
+    if (queryWords.length === 1 && !description.startsWith(queryText)) score -= 20;
+    if (food.dataType === 'Branded') score -= 15;
+    if (/(seasoning|spice|masala|sauce|mix|powder)/.test(`${description} ${category}`)
+        && !/(seasoning|spice|masala|sauce|mix|powder)/.test(queryText)) {
+        score -= 35;
+    }
+
+    return score;
+}
+
+function chooseBestUsdaFood(foods, query) {
+    return (foods || [])
+        .filter(food => food.foodNutrients && food.foodNutrients.length)
+        .sort((a, b) => scoreUsdaFood(b, query) - scoreUsdaFood(a, query))[0] || null;
+}
+
+function buildUsdaNutrition(food) {
+    const protein = getUsdaNutrient(food, 1003, 'protein');
+    const fat = getUsdaNutrient(food, 1004, 'total lipid');
+    const carbs = getUsdaNutrient(food, 1005, 'carbohydrate');
+    const calories = getUsdaCalories(food) || ((carbs * 4) + (protein * 4) + (fat * 9));
+
+    if (!calories && !carbs && !protein && !fat) return null;
+
+    return {
+        name: food.description,
+        source: `USDA ${food.dataType || 'FoodData Central'}`,
+        calories,
+        carbs,
+        protein,
+        fat
+    };
+}
+
+async function fetchUsdaNutrition(foodName, grams) {
+    const cacheKey = normalizeFoodQuery(foodName);
+    if (nutritionApiCache.has(cacheKey)) {
+        return scaleNutrition(nutritionApiCache.get(cacheKey), grams);
+    }
+
+    const params = new URLSearchParams({
+        api_key: USDA_API_KEY,
+        query: foodName,
+        pageSize: '25'
+    });
+
+    const response = await fetch(`${USDA_FOOD_API_URL}?${params.toString()}`);
+    if (!response.ok) {
+        throw new Error(`USDA request failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const bestFood = chooseBestUsdaFood(data.foods, foodName);
+    if (!bestFood) throw new Error('No USDA food match');
+
+    const per100 = buildUsdaNutrition(bestFood);
+    if (!per100) throw new Error('No usable USDA nutrients');
+
+    nutritionApiCache.set(cacheKey, per100);
+    return scaleNutrition(per100, grams);
+}
+
+async function resolveFoodNutrition(foodName, grams) {
+    const exactLocalNutrition = getLocalNutritionEstimate(foodName, grams, true);
+    if (exactLocalNutrition) return exactLocalNutrition;
+
+    try {
+        return await fetchUsdaNutrition(foodName, grams);
+    } catch (error) {
+        console.warn(error);
+        return getLocalNutritionEstimate(foodName, grams);
+    }
+}
+
 let totalMacros = { carbs: 0, protein: 0, fat: 0 };
 
-function addFood() {
+async function addFood() {
     const foodInput = document.getElementById('food-search');
     const gramsInput = document.getElementById('food-grams');
     const foodName = foodInput.value.trim();
@@ -306,39 +460,42 @@ function addFood() {
         return;
     }
 
-    const food = findFoodByQuery(foodName);
-    if (!food) {
-        showToast('Dish not found. Try rice, roti, dosa, paneer, egg, chicken, banana, pizza.');
+    showToast('Checking nutrition data...');
+    const nutrition = await resolveFoodNutrition(foodName, grams);
+    if (!nutrition) {
+        showToast('Dish not found. Try a common dish name or ingredient.');
         return;
     }
 
-    const multiplier = grams / 100;
-
-    const addedCarbs = food.carbs * multiplier;
-    const addedProtein = food.protein * multiplier;
-    const addedFat = food.fat * multiplier;
-    const addedCalories = (addedCarbs * 4) + (addedProtein * 4) + (addedFat * 9);
-
-    totalMacros.carbs += addedCarbs;
-    totalMacros.protein += addedProtein;
-    totalMacros.fat += addedFat;
+    totalMacros.carbs += nutrition.carbs;
+    totalMacros.protein += nutrition.protein;
+    totalMacros.fat += nutrition.fat;
 
     // Add to UI list
     const foodList = document.getElementById('food-list');
     const item = document.createElement('div');
     item.className = 'food-item reveal-text';
 
-    item.innerHTML = `
-        <span>${food.name} (${grams}g)</span>
-        <span style="color:#a3a3a3">${Math.round(addedCalories)} kcal | ${Math.round(addedCarbs)}C | ${Math.round(addedProtein)}P | ${Math.round(addedFat)}F</span>
-    `;
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'food-name';
+    nameSpan.textContent = `${nutrition.name} (${grams}g)`;
+
+    const sourceSpan = document.createElement('small');
+    sourceSpan.textContent = nutrition.source;
+    nameSpan.appendChild(sourceSpan);
+
+    const macroSpan = document.createElement('span');
+    macroSpan.className = 'food-macros';
+    macroSpan.textContent = `${Math.round(nutrition.calories)} kcal | ${Math.round(nutrition.carbs)}C | ${Math.round(nutrition.protein)}P | ${Math.round(nutrition.fat)}F`;
+
+    item.append(nameSpan, macroSpan);
     foodList.appendChild(item);
 
     // Trigger reveal animation
     setTimeout(() => item.classList.add('active'), 50);
 
     updateMacroBars();
-    showToast(`${Math.round(addedCalories)} kcal calculated for ${food.name}!`);
+    showToast(`${Math.round(nutrition.calories)} kcal calculated from ${nutrition.source}.`);
 
     // Reset inputs
     foodInput.value = '';

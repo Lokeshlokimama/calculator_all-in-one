@@ -757,7 +757,20 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     border-left: 3px solid var(--primary);
 }
 
-.food-item span:last-child {
+.food-name {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.food-name small {
+    color: #8b8b8b;
+    font-size: 0.7rem;
+}
+
+.food-macros {
+    color: #a3a3a3;
     flex-shrink: 0;
     text-align: right;
 }
