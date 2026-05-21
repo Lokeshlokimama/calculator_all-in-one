@@ -218,50 +218,106 @@ const foodDatabase = {
     broccoli: { name: 'Broccoli', category: '🌐 Global Basics', carbs: 7, protein: 2.8, fat: 0.4 }
 };
 
-function initFoodSelect() {
-    const select = document.getElementById('food-select');
-    if (!select) return;
+const foodAliases = {
+    roti: ['chapati', 'phulka', 'wheat roti'],
+    dal: ['lentils', 'lentil curry', 'daal'],
+    rice: ['white rice', 'cooked rice', 'chawal'],
+    paneer: ['cottage cheese'],
+    dosa: ['plain dosa'],
+    idli: ['idly'],
+    fries: ['french fries'],
+    chicken: ['chicken breast', 'grilled chicken'],
+    egg: ['whole egg', 'boiled egg'],
+    milk: ['whole milk'],
+    broccoli: ['brocolli']
+};
 
-    const groups = {};
+function normalizeFoodQuery(value) {
+    return String(value || '')
+        .toLowerCase()
+        .replace(/\([^)]*\)/g, ' ')
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function buildFoodSearchEntries() {
+    const entries = [];
+
     for (const [id, food] of Object.entries(foodDatabase)) {
-        if (!groups[food.category]) groups[food.category] = [];
-        groups[food.category].push({ id, name: food.name });
+        entries.push({ id, label: food.name, key: normalizeFoodQuery(food.name) });
+        entries.push({ id, label: id, key: normalizeFoodQuery(id) });
+
+        (foodAliases[id] || []).forEach(alias => {
+            entries.push({ id, label: alias, key: normalizeFoodQuery(alias) });
+        });
     }
 
-    for (const [category, foods] of Object.entries(groups)) {
-        const optgroup = document.createElement('optgroup');
-        optgroup.label = category;
-        foods.forEach(f => {
+    return entries;
+}
+
+const foodSearchEntries = buildFoodSearchEntries();
+
+function initFoodSearch() {
+    const dataList = document.getElementById('food-options');
+    if (!dataList) return;
+
+    dataList.innerHTML = '';
+
+    Object.values(foodDatabase)
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .forEach(food => {
             const option = document.createElement('option');
-            option.value = f.id;
-            option.textContent = f.name;
-            optgroup.appendChild(option);
+            option.value = food.name;
+            option.label = food.category;
+            dataList.appendChild(option);
         });
-        select.appendChild(optgroup);
-    }
 }
 // Init immediately since script is loaded at the end of the body
-initFoodSelect();
+initFoodSearch();
+
+function findFoodByQuery(query) {
+    const normalizedQuery = normalizeFoodQuery(query);
+    if (!normalizedQuery) return null;
+
+    const exactMatch = foodSearchEntries.find(entry => entry.key === normalizedQuery);
+    if (exactMatch) return foodDatabase[exactMatch.id];
+
+    const startsWithMatch = foodSearchEntries.find(entry => entry.key.startsWith(normalizedQuery));
+    if (startsWithMatch) return foodDatabase[startsWithMatch.id];
+
+    const includesMatch = foodSearchEntries.find(entry => (
+        entry.key.includes(normalizedQuery) || normalizedQuery.includes(entry.key)
+    ));
+
+    return includesMatch ? foodDatabase[includesMatch.id] : null;
+}
 
 let totalMacros = { carbs: 0, protein: 0, fat: 0 };
 
 function addFood() {
-    const select = document.getElementById('food-select');
+    const foodInput = document.getElementById('food-search');
     const gramsInput = document.getElementById('food-grams');
-    const foodId = select.value;
+    const foodName = foodInput.value.trim();
     const grams = parseFloat(gramsInput.value);
 
-    if (!foodId || !grams || grams <= 0) {
-        showToast('Please select a food and enter a valid weight.');
+    if (!foodName || !grams || grams <= 0) {
+        showToast('Please enter a dish name and valid weight.');
         return;
     }
 
-    const food = foodDatabase[foodId];
+    const food = findFoodByQuery(foodName);
+    if (!food) {
+        showToast('Dish not found. Try rice, roti, dosa, paneer, egg, chicken, banana, pizza.');
+        return;
+    }
+
     const multiplier = grams / 100;
 
     const addedCarbs = food.carbs * multiplier;
     const addedProtein = food.protein * multiplier;
     const addedFat = food.fat * multiplier;
+    const addedCalories = (addedCarbs * 4) + (addedProtein * 4) + (addedFat * 9);
 
     totalMacros.carbs += addedCarbs;
     totalMacros.protein += addedProtein;
@@ -274,7 +330,7 @@ function addFood() {
 
     item.innerHTML = `
         <span>${food.name} (${grams}g)</span>
-        <span style="color:#a3a3a3">${Math.round(addedCarbs)}C | ${Math.round(addedProtein)}P | ${Math.round(addedFat)}F</span>
+        <span style="color:#a3a3a3">${Math.round(addedCalories)} kcal | ${Math.round(addedCarbs)}C | ${Math.round(addedProtein)}P | ${Math.round(addedFat)}F</span>
     `;
     foodList.appendChild(item);
 
@@ -282,10 +338,10 @@ function addFood() {
     setTimeout(() => item.classList.add('active'), 50);
 
     updateMacroBars();
-    showToast(`Added ${grams}g of ${food.name}!`);
+    showToast(`${Math.round(addedCalories)} kcal calculated for ${food.name}!`);
 
     // Reset inputs
-    select.value = '';
+    foodInput.value = '';
     gramsInput.value = '';
 }
 

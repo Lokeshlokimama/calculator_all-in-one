@@ -223,15 +223,14 @@
                     <p>Track your daily food intake</p>
                     <div class="tool-ui">
                         <div class="input-group">
-                            <select class="tool-input" id="food-select">
-                                <option value="" disabled selected>Select Food</option>
-                            </select>
+                            <input type="text" class="tool-input" id="food-search" list="food-options" placeholder="Enter dish name">
+                            <datalist id="food-options"></datalist>
                             <div class="input-wrapper">
                                 <input type="number" class="tool-input" id="food-grams" placeholder="Weight">
                                 <span class="input-suffix">g</span>
                             </div>
                         </div>
-                        <button class="secondary-btn shine-btn" style="width:100%; margin-bottom:1rem; padding:0.5rem;" onclick="addFood()">Add Food</button>
+                        <button class="secondary-btn shine-btn" style="width:100%; margin-bottom:1rem; padding:0.5rem;" onclick="addFood()">Calculate Nutrition</button>
                         
                         <div class="food-list" id="food-list">
                             <!-- Foods will appear here -->
