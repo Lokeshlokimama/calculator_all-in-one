@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator All-in-One | Free Online Utility Tools</title>
-    <meta name="description" content="Use Calculator All-in-One for free online calculators and educational/productivity tools including finance, health, BMI, EMI, currency conversion, QR, password, and text utilities.">
+    <meta name="description" content="Use Calculator All-in-One for free online calculators and educational/productivity tools including finance, health, electricity, solar, battery backup, BMI, EMI, currency conversion, QR, password, and text utilities.">
     <meta name="robots" content="index, follow">
     <meta name="author" content="Calculator All-in-One">
     <meta name="theme-color" content="#0f172a">
@@ -12,14 +12,15 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Calculator All-in-One">
     <meta property="og:title" content="Calculator All-in-One | Free Online Utility Tools">
-    <meta property="og:description" content="Free online utility platform for educational/productivity tools, daily calculators, finance estimators, health tools, QR, password, and text utilities.">
+    <meta property="og:description" content="Free online utility platform for educational/productivity tools, daily calculators, finance estimators, electricity tools, health tools, QR, password, and text utilities.">
     <meta property="og:url" content="https://calculatorsallinone.com/">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Calculator All-in-One | Free Online Utility Tools">
-    <meta name="twitter:description" content="Free online calculators and productivity utilities with instant results and no login required.">
+    <meta name="twitter:description" content="Free online calculators and productivity utilities for finance, electricity, health, and daily needs with instant results and no login required.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://pagead2.googlesyndication.com">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9409281508068005"
@@ -32,7 +33,7 @@
         "url": "https://calculatorsallinone.com/",
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "Any",
-        "description": "Free online utility platform for educational/productivity tools including finance, health, daily calculator, QR, password, and text utilities.",
+        "description": "Free online utility platform for educational/productivity tools including finance, electricity, solar, health, daily calculator, QR, password, and text utilities.",
         "offers": {
             "@type": "Offer",
             "price": "0",
@@ -52,6 +53,7 @@
         <nav>
             <a href="#tools" data-category-link="all" onclick="filterCategory('all', event)">All Tools</a>
             <a href="#tools" data-category-link="finance" onclick="filterCategory('finance', event)">Finance</a>
+            <a href="#tools" data-category-link="electricity" onclick="filterCategory('electricity', event)">Electricity</a>
             <a href="#tools" data-category-link="health" onclick="filterCategory('health', event)">Health</a>
             <a href="about.html">About</a>
             <a href="contact.html">Contact</a>
@@ -62,6 +64,7 @@
             <div class="mobile-menu-panel">
                 <a href="index.html#tools">All Tools</a>
                 <a href="index.html?category=finance#tools">Finance</a>
+                <a href="index.html?category=electricity#tools">Electricity</a>
                 <a href="index.html?category=health#tools">Health</a>
                 <a href="about.html">About</a>
                 <a href="contact.html">Contact</a>
@@ -116,6 +119,7 @@
                 <button class="cat-btn active" data-category-link="all" onclick="filterCategory('all', event)">All</button>
                 <button class="cat-btn" data-category-link="basic" onclick="filterCategory('basic', event)">Basic</button>
                 <button class="cat-btn" data-category-link="finance" onclick="filterCategory('finance', event)">Finance</button>
+                <button class="cat-btn" data-category-link="electricity" onclick="filterCategory('electricity', event)">Electricity</button>
                 <button class="cat-btn" data-category-link="health" onclick="filterCategory('health', event)">Health</button>
                 <button class="cat-btn" data-category-link="education" onclick="filterCategory('education', event)">Education</button>
                 <button class="cat-btn" data-category-link="web" onclick="filterCategory('web', event)">Tech & Web</button>
@@ -884,6 +888,256 @@
                         </div>
                         <div class="calc-display" id="dt-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">₹ 0</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcDiscountTax()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- Power Calculator -->
+                <div id="calc-power" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="electricity">
+                    <div class="card-glow"></div>
+                    <h3>Power Calculator</h3>
+                    <p>Voltage x current = watts</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="power-voltage" placeholder="Voltage">
+                                <span class="input-suffix">V</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="power-current" placeholder="Current">
+                                <span class="input-suffix">A</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="power-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 W</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcPower()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- Electricity Bill Calculator -->
+                <div id="calc-electricity-bill" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="electricity">
+                    <div class="card-glow"></div>
+                    <h3>Electricity Bill</h3>
+                    <p>Units/kWh x rate = bill</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="bill-units" placeholder="Units Used">
+                                <span class="input-suffix">kWh</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="bill-rate" placeholder="Rate">
+                                <span class="input-suffix">Rs</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="bill-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">Rs 0</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcElectricityBill()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- kWh Calculator -->
+                <div id="calc-kwh" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="electricity">
+                    <div class="card-glow"></div>
+                    <h3>kWh Calculator</h3>
+                    <p>Appliance watts x hours / 1000</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="kwh-watts" placeholder="Appliance Watts">
+                                <span class="input-suffix">W</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="kwh-hours" placeholder="Hours Used">
+                                <span class="input-suffix">h</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="kwh-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 kWh</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcKwh()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- Watt to Unit Calculator -->
+                <div id="calc-watt-unit" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="electricity">
+                    <div class="card-glow"></div>
+                    <h3>Watt to Unit</h3>
+                    <p>Convert watts usage into units</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="wattunit-watts" placeholder="Watts">
+                                <span class="input-suffix">W</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="wattunit-hours" placeholder="Hours/Day">
+                                <span class="input-suffix">h</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="wattunit-days" placeholder="Days" value="30">
+                                <span class="input-suffix">d</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="wattunit-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 units</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcWattToUnit()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- Solar Panel Calculator -->
+                <div id="calc-solar" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="electricity">
+                    <div class="card-glow"></div>
+                    <h3>Solar Panel Size</h3>
+                    <p>Daily usage to required panel size</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="solar-kwh" placeholder="Daily Usage">
+                                <span class="input-suffix">kWh</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="solar-sun" placeholder="Sun Hours" value="5">
+                                <span class="input-suffix">h</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="solar-efficiency" placeholder="Efficiency" value="80">
+                                <span class="input-suffix">%</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="solar-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 kW</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcSolarPanel()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- Inverter Battery Backup Calculator -->
+                <div id="calc-inverter" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="electricity">
+                    <div class="card-glow"></div>
+                    <h3>Inverter Backup</h3>
+                    <p>Battery Ah, voltage, load watts</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="inv-ah" placeholder="Battery Capacity">
+                                <span class="input-suffix">Ah</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="inv-voltage" placeholder="Battery Voltage" value="12">
+                                <span class="input-suffix">V</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="inv-load" placeholder="Load">
+                                <span class="input-suffix">W</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="inv-efficiency" placeholder="Efficiency" value="85">
+                                <span class="input-suffix">%</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="inv-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 hours</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcInverterBackup()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- UPS Backup Calculator -->
+                <div id="calc-ups" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="electricity">
+                    <div class="card-glow"></div>
+                    <h3>UPS Backup</h3>
+                    <p>For PC and server load planning</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="ups-ah" placeholder="Battery Capacity">
+                                <span class="input-suffix">Ah</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="ups-voltage" placeholder="Battery Voltage" value="12">
+                                <span class="input-suffix">V</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="ups-load" placeholder="PC/Server Load">
+                                <span class="input-suffix">W</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="ups-efficiency" placeholder="Efficiency" value="80">
+                                <span class="input-suffix">%</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="ups-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 minutes</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcUpsBackup()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- Ohm's Law Calculator -->
+                <div id="calc-ohm" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="electricity">
+                    <div class="card-glow"></div>
+                    <h3>Ohm's Law</h3>
+                    <p>Voltage, current, resistance, power</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="ohm-voltage" placeholder="Voltage">
+                                <span class="input-suffix">V</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="ohm-current" placeholder="Current">
+                                <span class="input-suffix">A</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="ohm-resistance" placeholder="Resistance">
+                                <span class="input-suffix">Ohm</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="ohm-power" placeholder="Power">
+                                <span class="input-suffix">W</span>
+                            </div>
+                        </div>
+                        <div class="calc-display electricity-result" id="ohm-result" style="font-size:1rem; min-height:64px; margin-bottom:1rem;">Enter any two values</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcOhmsLaw()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- Generator Size Calculator -->
+                <div id="calc-generator" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="electricity">
+                    <div class="card-glow"></div>
+                    <h3>Generator Size</h3>
+                    <p>Total load watts to required kVA</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="gen-load" placeholder="Total Load">
+                                <span class="input-suffix">W</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="gen-pf" placeholder="Power Factor" value="0.8" step="0.01">
+                                <span class="input-suffix">PF</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="gen-margin" placeholder="Safety Margin" value="25">
+                                <span class="input-suffix">%</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="gen-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 kVA</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcGeneratorSize()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- EV Charging Cost Calculator -->
+                <div id="calc-ev" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="electricity">
+                    <div class="card-glow"></div>
+                    <h3>EV Charging Cost</h3>
+                    <p>Battery capacity x electricity rate</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="ev-capacity" placeholder="Battery Capacity">
+                                <span class="input-suffix">kWh</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="ev-rate" placeholder="Rate">
+                                <span class="input-suffix">Rs</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="ev-percent" placeholder="Charge Needed" value="100">
+                                <span class="input-suffix">%</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="ev-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">Rs 0</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcEvChargingCost()" style="width:100%;">Calculate</button>
                     </div>
                 </div>
 

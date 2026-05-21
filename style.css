@@ -881,6 +881,15 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     overflow-x: auto;
 }
 
+.electricity-result {
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 0.2rem;
+    line-height: 1.35;
+    white-space: normal;
+}
+
 .rate-source {
     min-height: 34px;
     margin: 0 0 0.85rem;

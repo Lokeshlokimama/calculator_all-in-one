@@ -1353,6 +1353,222 @@ function calcDiscountTax() {
 }
 window.calcDiscountTax = calcDiscountTax;
 
+// --- Electricity & Power Tools ---
+function readCalcNumber(id) {
+    const value = parseFloat(document.getElementById(id)?.value);
+    return Number.isFinite(value) ? value : null;
+}
+
+function formatCalcNumber(value, digits = 2) {
+    if (!Number.isFinite(value)) return '0';
+    return Number(value.toFixed(digits)).toLocaleString('en-IN', {
+        maximumFractionDigits: digits
+    });
+}
+
+function formatRupees(value) {
+    return 'Rs ' + formatCalcNumber(value, 2);
+}
+
+function requirePositiveInputs(fields) {
+    const values = {};
+
+    for (const field of fields) {
+        const value = readCalcNumber(field.id);
+        if (value === null || value <= 0) {
+            showToast(`Please enter valid ${field.label}`);
+            return null;
+        }
+        values[field.id] = value;
+    }
+
+    return values;
+}
+
+function setResultText(id, text, toastMessage) {
+    document.getElementById(id).innerText = text;
+    showToast(toastMessage);
+}
+
+function calcPower() {
+    const values = requirePositiveInputs([
+        { id: 'power-voltage', label: 'voltage' },
+        { id: 'power-current', label: 'current' }
+    ]);
+    if (!values) return;
+
+    const watts = values['power-voltage'] * values['power-current'];
+    setResultText('power-result', `${formatCalcNumber(watts)} W`, 'Power calculated');
+}
+window.calcPower = calcPower;
+
+function calcElectricityBill() {
+    const values = requirePositiveInputs([
+        { id: 'bill-units', label: 'units/kWh' },
+        { id: 'bill-rate', label: 'rate' }
+    ]);
+    if (!values) return;
+
+    const bill = values['bill-units'] * values['bill-rate'];
+    setResultText('bill-result', formatRupees(bill), 'Electricity bill calculated');
+}
+window.calcElectricityBill = calcElectricityBill;
+
+function calcKwh() {
+    const values = requirePositiveInputs([
+        { id: 'kwh-watts', label: 'appliance watts' },
+        { id: 'kwh-hours', label: 'hours used' }
+    ]);
+    if (!values) return;
+
+    const units = (values['kwh-watts'] * values['kwh-hours']) / 1000;
+    setResultText('kwh-result', `${formatCalcNumber(units, 3)} kWh`, 'kWh calculated');
+}
+window.calcKwh = calcKwh;
+
+function calcWattToUnit() {
+    const values = requirePositiveInputs([
+        { id: 'wattunit-watts', label: 'watts' },
+        { id: 'wattunit-hours', label: 'hours per day' },
+        { id: 'wattunit-days', label: 'days' }
+    ]);
+    if (!values) return;
+
+    const units = (values['wattunit-watts'] * values['wattunit-hours'] * values['wattunit-days']) / 1000;
+    setResultText('wattunit-result', `${formatCalcNumber(units, 2)} units`, 'Electricity units calculated');
+}
+window.calcWattToUnit = calcWattToUnit;
+
+function calcSolarPanel() {
+    const values = requirePositiveInputs([
+        { id: 'solar-kwh', label: 'daily usage' },
+        { id: 'solar-sun', label: 'sun hours' },
+        { id: 'solar-efficiency', label: 'efficiency' }
+    ]);
+    if (!values) return;
+
+    const efficiency = values['solar-efficiency'] / 100;
+    const panelWatts = (values['solar-kwh'] * 1000) / (values['solar-sun'] * efficiency);
+    const panelKw = panelWatts / 1000;
+    setResultText('solar-result', `${formatCalcNumber(panelKw, 2)} kW (${formatCalcNumber(panelWatts, 0)} W)`, 'Solar panel size calculated');
+}
+window.calcSolarPanel = calcSolarPanel;
+
+function calcBackupHours(ah, voltage, load, efficiencyPercent) {
+    return (ah * voltage * (efficiencyPercent / 100)) / load;
+}
+
+function calcInverterBackup() {
+    const values = requirePositiveInputs([
+        { id: 'inv-ah', label: 'battery Ah' },
+        { id: 'inv-voltage', label: 'battery voltage' },
+        { id: 'inv-load', label: 'load watts' },
+        { id: 'inv-efficiency', label: 'efficiency' }
+    ]);
+    if (!values) return;
+
+    const hours = calcBackupHours(values['inv-ah'], values['inv-voltage'], values['inv-load'], values['inv-efficiency']);
+    setResultText('inv-result', `${formatCalcNumber(hours, 2)} hours (${formatCalcNumber(hours * 60, 0)} min)`, 'Inverter backup calculated');
+}
+window.calcInverterBackup = calcInverterBackup;
+
+function calcUpsBackup() {
+    const values = requirePositiveInputs([
+        { id: 'ups-ah', label: 'battery Ah' },
+        { id: 'ups-voltage', label: 'battery voltage' },
+        { id: 'ups-load', label: 'PC/server load' },
+        { id: 'ups-efficiency', label: 'efficiency' }
+    ]);
+    if (!values) return;
+
+    const hours = calcBackupHours(values['ups-ah'], values['ups-voltage'], values['ups-load'], values['ups-efficiency']);
+    setResultText('ups-result', `${formatCalcNumber(hours * 60, 0)} minutes (${formatCalcNumber(hours, 2)} hr)`, 'UPS backup calculated');
+}
+window.calcUpsBackup = calcUpsBackup;
+
+function calcOhmsLaw() {
+    let voltage = readCalcNumber('ohm-voltage');
+    let current = readCalcNumber('ohm-current');
+    let resistance = readCalcNumber('ohm-resistance');
+    let power = readCalcNumber('ohm-power');
+
+    const provided = [voltage, current, resistance, power].filter(value => value !== null && value > 0).length;
+    if (provided < 2) {
+        showToast('Enter any two positive Ohm law values');
+        return;
+    }
+
+    if (voltage > 0 && current > 0) {
+        resistance = voltage / current;
+        power = voltage * current;
+    } else if (voltage > 0 && resistance > 0) {
+        current = voltage / resistance;
+        power = voltage * current;
+    } else if (current > 0 && resistance > 0) {
+        voltage = current * resistance;
+        power = voltage * current;
+    } else if (power > 0 && voltage > 0) {
+        current = power / voltage;
+        resistance = voltage / current;
+    } else if (power > 0 && current > 0) {
+        voltage = power / current;
+        resistance = voltage / current;
+    } else if (power > 0 && resistance > 0) {
+        current = Math.sqrt(power / resistance);
+        voltage = current * resistance;
+    }
+
+    if (![voltage, current, resistance, power].every(value => Number.isFinite(value) && value > 0)) {
+        showToast('Please check the entered Ohm law values');
+        return;
+    }
+
+    document.getElementById('ohm-result').innerHTML = `
+        <span>V: ${formatCalcNumber(voltage, 2)} V</span>
+        <span>I: ${formatCalcNumber(current, 3)} A</span>
+        <span>R: ${formatCalcNumber(resistance, 2)} Ohm</span>
+        <span>P: ${formatCalcNumber(power, 2)} W</span>
+    `;
+    showToast('Ohm law calculated');
+}
+window.calcOhmsLaw = calcOhmsLaw;
+
+function calcGeneratorSize() {
+    const values = requirePositiveInputs([
+        { id: 'gen-load', label: 'total load watts' },
+        { id: 'gen-pf', label: 'power factor' }
+    ]);
+    if (!values) return;
+
+    const margin = readCalcNumber('gen-margin') ?? 0;
+    if (margin < 0) {
+        showToast('Please enter valid safety margin');
+        return;
+    }
+
+    const kva = (values['gen-load'] / (values['gen-pf'] * 1000)) * (1 + margin / 100);
+    setResultText('gen-result', `${formatCalcNumber(kva, 2)} kVA`, 'Generator size calculated');
+}
+window.calcGeneratorSize = calcGeneratorSize;
+
+function calcEvChargingCost() {
+    const values = requirePositiveInputs([
+        { id: 'ev-capacity', label: 'battery capacity' },
+        { id: 'ev-rate', label: 'electricity rate' }
+    ]);
+    if (!values) return;
+
+    const chargePercent = readCalcNumber('ev-percent') ?? 100;
+    if (chargePercent < 0 || chargePercent > 100) {
+        showToast('Charge needed must be between 0 and 100');
+        return;
+    }
+
+    const cost = values['ev-capacity'] * (chargePercent / 100) * values['ev-rate'];
+    setResultText('ev-result', formatRupees(cost), 'EV charging cost calculated');
+}
+window.calcEvChargingCost = calcEvChargingCost;
+
 // Global triggerTool for inline onclick handlers
 window.triggerTool = triggerTool;
 
@@ -1412,7 +1628,10 @@ const heroToolsDatabase = [
     { id: 'calc-att', category: 'education', icon: '📝', title: 'Attendance', desc: 'Class Planner' },
     { id: 'calc-water', category: 'health', icon: '💧', title: 'Water Intake', desc: 'Stay Hydrated' },
     { id: 'calc-salary', category: 'finance', icon: '💸', title: 'Salary', desc: 'Tax Estimator' },
-    { id: 'calc-pass', category: 'web', icon: '🔒', title: 'Password', desc: 'Generator' }
+    { id: 'calc-pass', category: 'web', icon: '🔒', title: 'Password', desc: 'Generator' },
+    { id: 'calc-power', category: 'electricity', icon: '⚡', title: 'Power', desc: 'Watts Calculator' },
+    { id: 'calc-solar', category: 'electricity', icon: '☀️', title: 'Solar', desc: 'Panel Sizing' },
+    { id: 'calc-ups', category: 'electricity', icon: '🔋', title: 'UPS Backup', desc: 'Runtime Planner' }
 ];
 
 function initHeroFloatingCards() {
@@ -1575,7 +1794,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initHeroFloatingCards();
 
     const initialCategory = new URLSearchParams(window.location.search).get('category');
-    if (['all', 'basic', 'finance', 'health', 'education', 'web'].includes(initialCategory)) {
+    if (['all', 'basic', 'finance', 'electricity', 'health', 'education', 'web'].includes(initialCategory)) {
         filterCategory(initialCategory);
     }
 
