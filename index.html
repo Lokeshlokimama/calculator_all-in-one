@@ -159,7 +159,7 @@
                     </div>
                 </div>
                 <!-- BMI Tool -->
-                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="health">
+                <div id="calc-bmi" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="health">
                     <div class="card-glow"></div>
                     <h3>BMI Calculator</h3>
                     <p>Calculate your Body Mass Index</p>
@@ -174,6 +174,8 @@
                                 <span class="input-suffix">kg</span>
                             </div>
                         </div>
+                        <div class="calc-display bmi-result-display" id="bmi-result">BMI 0.0</div>
+                        <div class="input-hint bmi-status" id="bmi-category">Enter height and weight</div>
                         <div class="progress-track">
                             <div class="progress-bar bmi-bar" id="bmi-progress"></div>
                         </div>
@@ -183,7 +185,7 @@
                             <span>Over</span>
                             <span>Obese</span>
                         </div>
-                        <button class="glowing-btn demo-btn ripple-btn" onclick="triggerTool('bmi', 'BMI Calculated!')">Calculate BMI</button>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcBMI()">Calculate BMI</button>
                     </div>
                 </div>
 
@@ -293,6 +295,23 @@
                         <div style="margin-top: 1rem; text-align: center;">
                             <a id="wa-result" href="#" target="_blank" style="color: var(--primary); font-size: 0.9rem; display: none; word-break: break-all;"></a>
                         </div>
+                    </div>
+                </div>
+
+                <!-- QR Code Generator -->
+                <div id="calc-qr" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web">
+                    <div class="card-glow"></div>
+                    <h3>QR Code</h3>
+                    <p>Create QR codes for links or text</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <input type="text" class="tool-input" id="qr-text" placeholder="Paste URL or text">
+                        </div>
+                        <div class="qr-result-preview" id="qr-result-container">
+                            <span id="qr-prompt">QR preview</span>
+                            <img id="qr-image" alt="Generated QR code" loading="lazy">
+                        </div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="generateRealQR()">Generate QR</button>
                     </div>
                 </div>
                 
@@ -451,7 +470,7 @@
                 </div>
 
                 <!-- Body Fat Calculator -->
-                <div id="calc-bmi" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="health">
+                <div id="calc-body-fat" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="health">
                     <div class="card-glow"></div>
                     <h3>Body Fat %</h3>
                     <p>Estimate body fat percentage</p>
@@ -504,7 +523,21 @@
                                 <span class="input-suffix">Yrs</span>
                             </div>
                         </div>
-                        <div class="calc-display" id="sip-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">₹ 0</div>
+                        <div class="calc-display" id="sip-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">Maturity: Rs 0</div>
+                        <div class="emi-summary compact-summary">
+                            <div>
+                                <span>Invested</span>
+                                <strong id="sip-invested">Rs 0</strong>
+                            </div>
+                            <div>
+                                <span>Est. Returns</span>
+                                <strong id="sip-returns">Rs 0</strong>
+                            </div>
+                            <div>
+                                <span>Total Value</span>
+                                <strong id="sip-total">Rs 0</strong>
+                            </div>
+                        </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcSIP()" style="width:100%;">Calculate</button>
                     </div>
                 </div>
@@ -533,7 +566,21 @@
                                 <option value="0.5">Senior Citizen (+0.5% Interest)</option>
                             </select>
                         </div>
-                        <div class="calc-display" id="fd-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">₹ 0</div>
+                        <div class="calc-display" id="fd-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">Maturity: Rs 0</div>
+                        <div class="emi-summary compact-summary">
+                            <div>
+                                <span>Principal</span>
+                                <strong id="fd-invested">Rs 0</strong>
+                            </div>
+                            <div>
+                                <span>Interest</span>
+                                <strong id="fd-interest">Rs 0</strong>
+                            </div>
+                            <div>
+                                <span>Maturity</span>
+                                <strong id="fd-total">Rs 0</strong>
+                            </div>
+                        </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcFD()" style="width:100%;">Calculate</button>
                     </div>
                 </div>
@@ -558,7 +605,21 @@
                                 <span class="input-suffix">Mos</span>
                             </div>
                         </div>
-                        <div class="calc-display" id="rd-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">₹ 0</div>
+                        <div class="calc-display" id="rd-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">Maturity: Rs 0</div>
+                        <div class="emi-summary compact-summary">
+                            <div>
+                                <span>Deposits</span>
+                                <strong id="rd-deposits">Rs 0</strong>
+                            </div>
+                            <div>
+                                <span>Interest</span>
+                                <strong id="rd-interest">Rs 0</strong>
+                            </div>
+                            <div>
+                                <span>Maturity</span>
+                                <strong id="rd-total">Rs 0</strong>
+                            </div>
+                        </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcRD()" style="width:100%;">Calculate</button>
                     </div>
                 </div>
@@ -585,7 +646,21 @@
                                 <option value="remove">Remove GST (Inclusive)</option>
                             </select>
                         </div>
-                        <div class="calc-display" id="gst-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">₹ 0</div>
+                        <div class="calc-display" id="gst-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">Final: Rs 0</div>
+                        <div class="emi-summary compact-summary">
+                            <div>
+                                <span>Base Amount</span>
+                                <strong id="gst-base">Rs 0</strong>
+                            </div>
+                            <div>
+                                <span>GST Amount</span>
+                                <strong id="gst-tax">Rs 0</strong>
+                            </div>
+                            <div>
+                                <span>Final Amount</span>
+                                <strong id="gst-total">Rs 0</strong>
+                            </div>
+                        </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcGST()" style="width:100%;">Calculate</button>
                     </div>
                 </div>
@@ -606,7 +681,21 @@
                                 <span class="input-suffix">%</span>
                             </div>
                         </div>
-                        <div class="calc-display" id="sal-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">₹ 0 / month</div>
+                        <div class="calc-display" id="sal-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">In-hand: Rs 0 / month</div>
+                        <div class="emi-summary compact-summary">
+                            <div>
+                                <span>Monthly CTC</span>
+                                <strong id="sal-monthly">Rs 0</strong>
+                            </div>
+                            <div>
+                                <span>PF Deduction</span>
+                                <strong id="sal-pf">Rs 0</strong>
+                            </div>
+                            <div>
+                                <span>Est. Tax</span>
+                                <strong id="sal-tax">Rs 0</strong>
+                            </div>
+                        </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcSalary()" style="width:100%;">Calculate</button>
                     </div>
                 </div>
@@ -627,7 +716,17 @@
                                 <span class="input-suffix">Days</span>
                             </div>
                         </div>
-                        <div class="calc-display" id="leave-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">₹ 0</div>
+                        <div class="calc-display" id="leave-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">Payable: Rs 0</div>
+                        <div class="emi-summary compact-summary">
+                            <div>
+                                <span>Daily Wage</span>
+                                <strong id="leave-daily">Rs 0</strong>
+                            </div>
+                            <div>
+                                <span>Leave Days</span>
+                                <strong id="leave-days-out">0 days</strong>
+                            </div>
+                        </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcLeave()" style="width:100%;">Calculate</button>
                     </div>
                 </div>
@@ -832,6 +931,8 @@
                             <button class="secondary-btn shine-btn" style="padding:0.5rem;" onclick="convertCase('title')">Title Case</button>
                             <button class="secondary-btn shine-btn" style="padding:0.5rem;" onclick="convertCase('camel')">camelCase</button>
                         </div>
+                        <textarea class="tool-input" id="case-output" placeholder="Converted result..." rows="3" style="width:100%; resize:none; margin-bottom:0.75rem;" readonly></textarea>
+                        <button class="secondary-btn shine-btn" style="width:100%; padding:0.5rem;" onclick="copyCaseResult()">Copy Result</button>
                     </div>
                 </div>
 
@@ -905,7 +1006,21 @@
                                 <span class="input-suffix">%</span>
                             </div>
                         </div>
-                        <div class="calc-display" id="dt-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">₹ 0</div>
+                        <div class="calc-display" id="dt-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">Final: Rs 0</div>
+                        <div class="emi-summary compact-summary">
+                            <div>
+                                <span>You Save</span>
+                                <strong id="dt-savings">Rs 0</strong>
+                            </div>
+                            <div>
+                                <span>Tax Added</span>
+                                <strong id="dt-tax-out">Rs 0</strong>
+                            </div>
+                            <div>
+                                <span>Final Price</span>
+                                <strong id="dt-total">Rs 0</strong>
+                            </div>
+                        </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcDiscountTax()" style="width:100%;">Calculate</button>
                     </div>
                 </div>

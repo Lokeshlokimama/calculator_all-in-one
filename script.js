@@ -150,9 +150,9 @@ function triggerTool(toolId, message) {
     showToast(message);
 
     if (toolId === 'bmi') {
-        const bar = document.getElementById('bmi-progress');
-        bar.style.width = '0%';
-        setTimeout(() => { bar.style.width = '65%'; }, 100);
+        if (typeof calcBMI === 'function') {
+            calcBMI();
+        }
     }
     else if (toolId === 'emi') {
         const principal = document.getElementById('emi-principal');
@@ -175,11 +175,14 @@ function triggerTool(toolId, message) {
 window.triggerTool = triggerTool;
 
 // --- EMI Calculator ---
-function formatReadableAmount(value) {
+function formatReadableAmount(value, fractionDigits = 0) {
     const numberValue = Number(value);
     if (!Number.isFinite(numberValue) || numberValue <= 0) return 'Rs 0';
 
-    return 'Rs ' + Math.round(numberValue).toLocaleString('en-IN');
+    return 'Rs ' + numberValue.toLocaleString('en-IN', {
+        minimumFractionDigits: fractionDigits,
+        maximumFractionDigits: fractionDigits
+    });
 }
 
 function formatLoanPreview() {
@@ -236,6 +239,40 @@ function calcEMI() {
     showToast(`Monthly EMI: ${formatReadableAmount(emi)}`);
 }
 window.calcEMI = calcEMI;
+
+// --- BMI Calculator ---
+function getBmiCategory(bmi) {
+    if (bmi < 18.5) return { label: 'Underweight', color: '#38bdf8' };
+    if (bmi < 25) return { label: 'Normal', color: '#22c55e' };
+    if (bmi < 30) return { label: 'Overweight', color: '#f59e0b' };
+    return { label: 'Obese', color: '#ef4444' };
+}
+
+function calcBMI() {
+    const height = parseFloat(document.getElementById('bmi-height').value);
+    const weight = parseFloat(document.getElementById('bmi-weight').value);
+    const result = document.getElementById('bmi-result');
+    const categoryEl = document.getElementById('bmi-category');
+    const bar = document.getElementById('bmi-progress');
+
+    if (!height || height <= 0 || !weight || weight <= 0) {
+        showToast('Please enter valid height and weight');
+        return;
+    }
+
+    const heightM = height / 100;
+    const bmi = weight / (heightM * heightM);
+    const category = getBmiCategory(bmi);
+    const barPercent = Math.max(4, Math.min(100, ((bmi - 12) / 28) * 100));
+
+    result.innerText = `BMI ${bmi.toFixed(1)}`;
+    categoryEl.innerHTML = `<strong style="color:${category.color};">${category.label}</strong> range result`;
+    bar.style.width = '0%';
+    setTimeout(() => { bar.style.width = `${barPercent}%`; }, 80);
+
+    showToast(`BMI ${bmi.toFixed(1)} - ${category.label}`);
+}
+window.calcBMI = calcBMI;
 
 // --- Calorie & Macro Calculator Logic ---
 const foodDatabase = {
@@ -673,17 +710,22 @@ function generateRealQR() {
     qrPrompt.style.display = 'block';
     qrContainer.style.background = 'var(--glass-bg)';
     qrContainer.style.border = '2px dashed #444';
+    qrContainer.classList.remove('generated');
 
     qrImage.onload = () => {
         qrPrompt.style.display = 'none';
         qrImage.style.display = 'block';
         qrContainer.style.background = '#fff';
         qrContainer.style.border = 'none';
+        qrContainer.classList.add('generated');
         showToast('QR Code Generated!');
     };
 
     qrImage.onerror = () => {
         qrPrompt.innerText = 'Error';
+        qrImage.style.display = 'none';
+        qrPrompt.style.display = 'block';
+        qrContainer.classList.remove('generated');
         showToast('Failed to generate QR. Check connection.');
     };
 
@@ -901,12 +943,19 @@ window.calcBodyFat = calcBodyFat;
 
 function calcSIP() {
     const P = parseFloat(document.getElementById('sip-monthly').value);
-    const r = parseFloat(document.getElementById('sip-rate').value) / 100 / 12;
+    const annualRate = parseFloat(document.getElementById('sip-rate').value);
+    const r = annualRate / 100 / 12;
     const n = parseFloat(document.getElementById('sip-years').value) * 12;
-    if (!P || !r || !n) { showToast('Please enter all values'); return; }
+    if (!P || P <= 0 || Number.isNaN(annualRate) || annualRate < 0 || !n || n <= 0) { showToast('Please enter all values'); return; }
 
-    const M = P * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
-    document.getElementById('sip-result').innerText = '₹ ' + Math.round(M).toLocaleString('en-IN');
+    const M = r === 0 ? P * n : P * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+    const invested = P * n;
+    const returns = Math.max(0, M - invested);
+
+    document.getElementById('sip-result').innerText = `Maturity: ${formatReadableAmount(M)}`;
+    document.getElementById('sip-invested').innerText = formatReadableAmount(invested);
+    document.getElementById('sip-returns').innerText = formatReadableAmount(returns);
+    document.getElementById('sip-total').innerText = formatReadableAmount(M);
     showToast('SIP Calculated!');
 }
 window.calcSIP = calcSIP;
@@ -917,26 +966,38 @@ function calcFD() {
     const citizenBump = parseFloat(document.getElementById('fd-citizen').value);
     const t = parseFloat(document.getElementById('fd-years').value);
 
-    if (!P || !r || !t) { showToast('Please enter all values'); return; }
+    if (!P || P <= 0 || Number.isNaN(r) || r < 0 || !t || t <= 0) { showToast('Please enter all values'); return; }
 
     r = (r + citizenBump) / 100;
     const n = 4; // Quarterly compounding
     const A = P * Math.pow((1 + r / n), n * t);
 
-    document.getElementById('fd-result').innerText = '₹ ' + Math.round(A).toLocaleString('en-IN');
+    const interest = Math.max(0, A - P);
+
+    document.getElementById('fd-result').innerText = `Maturity: ${formatReadableAmount(A)}`;
+    document.getElementById('fd-invested').innerText = formatReadableAmount(P);
+    document.getElementById('fd-interest').innerText = formatReadableAmount(interest);
+    document.getElementById('fd-total').innerText = formatReadableAmount(A);
     showToast('FD/SB Calculated!');
 }
 window.calcFD = calcFD;
 
 function calcRD() {
     const P = parseFloat(document.getElementById('rd-monthly').value);
-    const r = parseFloat(document.getElementById('rd-rate').value) / 100;
+    const annualRate = parseFloat(document.getElementById('rd-rate').value);
+    const r = annualRate / 100;
     const n = parseFloat(document.getElementById('rd-months').value);
 
-    if (!P || !r || !n) { showToast('Please enter all values'); return; }
+    if (!P || P <= 0 || Number.isNaN(annualRate) || annualRate < 0 || !n || n <= 0) { showToast('Please enter all values'); return; }
 
-    const maturity = P * n + P * (n * (n + 1) / 2) * (r / 12);
-    document.getElementById('rd-result').innerText = '₹ ' + Math.round(maturity).toLocaleString('en-IN');
+    const deposits = P * n;
+    const interest = P * (n * (n + 1) / 2) * (r / 12);
+    const maturity = deposits + interest;
+
+    document.getElementById('rd-result').innerText = `Maturity: ${formatReadableAmount(maturity)}`;
+    document.getElementById('rd-deposits').innerText = formatReadableAmount(deposits);
+    document.getElementById('rd-interest').innerText = formatReadableAmount(interest);
+    document.getElementById('rd-total').innerText = formatReadableAmount(maturity);
     showToast('RD Calculated!');
 }
 window.calcRD = calcRD;
@@ -955,7 +1016,14 @@ function calcGST() {
         result = amt / (1 + rate);
     }
 
-    document.getElementById('gst-result').innerText = '₹ ' + result.toFixed(2).toLocaleString('en-IN');
+    const baseAmount = action === 'add' ? amt : result;
+    const gstAmount = action === 'add' ? amt * rate : amt - result;
+    const finalAmount = action === 'add' ? result : amt;
+
+    document.getElementById('gst-result').innerText = `Final: ${formatReadableAmount(finalAmount, 2)}`;
+    document.getElementById('gst-base').innerText = formatReadableAmount(baseAmount, 2);
+    document.getElementById('gst-tax').innerText = formatReadableAmount(gstAmount, 2);
+    document.getElementById('gst-total').innerText = formatReadableAmount(finalAmount, 2);
     showToast('GST Calculated!');
 }
 window.calcGST = calcGST;
@@ -976,7 +1044,10 @@ function calcSalary() {
 
     const inHand = monthlyCTC - pf - tax;
 
-    document.getElementById('sal-result').innerText = '₹ ' + Math.round(inHand).toLocaleString('en-IN') + ' / month';
+    document.getElementById('sal-result').innerText = `${formatReadableAmount(inHand)} / month`;
+    document.getElementById('sal-monthly').innerText = formatReadableAmount(monthlyCTC);
+    document.getElementById('sal-pf').innerText = formatReadableAmount(pf);
+    document.getElementById('sal-tax').innerText = formatReadableAmount(tax);
     showToast('Salary Estimated!');
 }
 window.calcSalary = calcSalary;
@@ -988,7 +1059,9 @@ function calcLeave() {
 
     const dailyWage = basic / 30;
     const result = dailyWage * days;
-    document.getElementById('leave-result').innerText = '₹ ' + Math.round(result).toLocaleString('en-IN');
+    document.getElementById('leave-result').innerText = `Payable: ${formatReadableAmount(result)}`;
+    document.getElementById('leave-daily').innerText = formatReadableAmount(dailyWage);
+    document.getElementById('leave-days-out').innerText = `${days} days`;
     showToast('Leave Encashment Calculated!');
 }
 window.calcLeave = calcLeave;
@@ -1282,6 +1355,7 @@ window.updateCounts = updateCounts;
 // Text Case Converter
 function convertCase(type) {
     const input = document.getElementById('case-input');
+    const output = document.getElementById('case-output');
     const text = input.value;
     if (!text) { showToast('Enter some text first'); return; }
 
@@ -1292,10 +1366,29 @@ function convertCase(type) {
         case 'title': result = text.toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '); break;
         case 'camel': result = text.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase()); break;
     }
-    input.value = result;
+    output.value = result;
     showToast('Case converted!');
 }
 window.convertCase = convertCase;
+
+async function copyCaseResult() {
+    const output = document.getElementById('case-output');
+    if (!output.value) {
+        showToast('Convert text first');
+        return;
+    }
+
+    try {
+        await navigator.clipboard.writeText(output.value);
+    } catch {
+        output.select();
+        document.execCommand('copy');
+        output.setSelectionRange(0, 0);
+    }
+
+    showToast('Converted text copied!');
+}
+window.copyCaseResult = copyCaseResult;
 
 // Base64 Encode/Decode
 function processBase64(action) {
@@ -1410,8 +1503,13 @@ function calcDiscountTax() {
 
     const afterDiscount = price - (price * (discount / 100));
     const finalPrice = afterDiscount + (afterDiscount * (tax / 100));
+    const savings = price - afterDiscount;
+    const taxAdded = finalPrice - afterDiscount;
 
-    document.getElementById('dt-result').innerText = '₹ ' + finalPrice.toFixed(2).toLocaleString('en-IN');
+    document.getElementById('dt-result').innerText = `Final: ${formatReadableAmount(finalPrice, 2)}`;
+    document.getElementById('dt-savings').innerText = formatReadableAmount(savings, 2);
+    document.getElementById('dt-tax-out').innerText = formatReadableAmount(taxAdded, 2);
+    document.getElementById('dt-total').innerText = formatReadableAmount(finalPrice, 2);
     showToast('Final Price Calculated!');
 }
 window.calcDiscountTax = calcDiscountTax;
@@ -1685,7 +1783,9 @@ const heroToolsDatabase = [
     { id: 'calc-cgpa', category: 'education', icon: '🎓', title: 'CGPA / SGPA', desc: 'Grade Tracker' },
     { id: 'calc-curr', category: 'finance', icon: '💱', title: 'Currency', desc: 'Live Rates' },
     { id: 'calc-word', category: 'web', icon: '📝', title: 'Word Count', desc: 'Text Analysis' },
-    { id: 'calc-bmi', category: 'health', icon: '🥗', title: 'Body Fat', desc: 'Health Stats' },
+    { id: 'calc-bmi', category: 'health', icon: '🥗', title: 'BMI', desc: 'Health Stats' },
+    { id: 'calc-body-fat', category: 'health', icon: '📏', title: 'Body Fat', desc: 'Body Estimate' },
+    { id: 'calc-qr', category: 'web', icon: '▦', title: 'QR Code', desc: 'Quick Share' },
     { id: 'calc-fd', category: 'finance', icon: '🏦', title: 'FD / SB', desc: 'Interest Calc' },
     { id: 'calc-age', category: 'basic', icon: '📅', title: 'Age Calc', desc: 'Exact Age' },
     { id: 'calc-att', category: 'education', icon: '📝', title: 'Attendance', desc: 'Class Planner' },
