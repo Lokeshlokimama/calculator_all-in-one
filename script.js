@@ -755,6 +755,7 @@ window.downloadQR = downloadQR;
 // --- Category Filtering ---
 let currentCategory = 'all';
 let currentSearchTerm = '';
+let searchScrollTimer = null;
 
 function getNavbarOffset() {
     return (document.querySelector('.navbar')?.offsetHeight || 0) + 16;
@@ -786,6 +787,21 @@ function scrollToVisibleCalculator(category) {
             behavior: prefersReducedMotion ? 'auto' : 'smooth'
         });
     });
+}
+
+function scheduleSearchResultScroll(visibleCount) {
+    if (searchScrollTimer) window.clearTimeout(searchScrollTimer);
+
+    const hasSearch = currentSearchTerm.trim().length > 0;
+    if (!hasSearch) return;
+
+    searchScrollTimer = window.setTimeout(() => {
+        if (visibleCount > 0) {
+            scrollToVisibleCalculator(currentCategory);
+        } else {
+            scrollToTools();
+        }
+    }, prefersReducedMotion ? 0 : 120);
 }
 
 function updateSearchStatus(visibleCount) {
@@ -856,7 +872,8 @@ window.filterCategory = filterCategory;
 function searchTools(value) {
     currentSearchTerm = value || '';
     currentCategory = 'all';
-    applyToolFilters();
+    const visibleCount = applyToolFilters();
+    scheduleSearchResultScroll(visibleCount);
 }
 window.searchTools = searchTools;
 
