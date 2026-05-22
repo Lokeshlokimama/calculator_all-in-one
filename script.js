@@ -1872,22 +1872,26 @@ function calcElectricityBill() {
         const taxEst = bill * 0.18; // Mock 18% tax
         const fixedCharge = 50; // Mock fixed charge
         
-        window.elecChartInstance = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Usage', 'Tax/Duty', 'Fixed'],
-                datasets: [{
-                    data: [usageCost, taxEst, fixedCharge],
-                    backgroundColor: ['#facc15', '#ef4444', '#3b82f6'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                animation: { duration: 1500, animateScale: true },
-                plugins: { legend: { position: 'right', labels: { color: '#fff', font: { size: 10 } } } }
-            }
-        });
+        if (typeof Chart !== 'undefined') {
+            window.elecChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Usage', 'Tax/Duty', 'Fixed'],
+                    datasets: [{
+                        data: [usageCost, taxEst, fixedCharge],
+                        backgroundColor: ['#facc15', '#ef4444', '#3b82f6'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    animation: { duration: 1500, animateScale: true },
+                    plugins: { legend: { position: 'right', labels: { color: '#fff', font: { size: 10 } } } }
+                }
+            });
+        } else {
+            console.warn("Chart.js is not defined. Electricity pie chart skipped.");
+        }
     }
 
 }
@@ -2765,6 +2769,11 @@ function initHeroChart() {
     const ctx = document.getElementById('hero-live-chart');
     if (!ctx) return;
     
+    if (typeof Chart === 'undefined') {
+        console.warn("Chart.js is not defined. Hero chart skipped.");
+        return;
+    }
+    
     // Create animated gradient line chart
     new Chart(ctx, {
         type: 'line',
@@ -2855,6 +2864,11 @@ function plotGraph() {
     
     let xs = [-10, -5, 0, 5, 10];
     let ys = xs.map(x => (m * x) + b);
+    
+    if (typeof Chart === 'undefined') {
+        console.warn("Chart.js is not defined. Cannot plot equation plotter graph.");
+        return;
+    }
     
     window.plotChartInstance = new Chart(ctx, {
         type: 'line',
