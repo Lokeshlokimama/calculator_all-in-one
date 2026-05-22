@@ -2698,7 +2698,9 @@ window.closeFooterModal = closeFooterModal;
 window.openRazorpay = openRazorpay;
 
 // Initialize when DOM is fully loaded
-document.addEventListener('DOMContentLoaded', () => {\n    initLiveCounters();\n    initHeroChart();
+document.addEventListener('DOMContentLoaded', () => {
+    initLiveCounters();
+    initHeroChart();
     initHeroFloatingCards();
     populateCurrencySelects();
     initToolDefaults();
@@ -2720,7 +2722,7 @@ document.addEventListener('DOMContentLoaded', () => {\n    initLiveCounters();\n
         }, 50);
     }
 });
-\n
+
 // --- LIVE COUNTERS ---
 function initLiveCounters() {
     const counters = document.querySelectorAll('.counter');
