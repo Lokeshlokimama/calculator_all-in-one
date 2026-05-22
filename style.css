@@ -1854,3 +1854,181 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     }
 }
 
+/* --- AI ASSISTANT & ADDITIONAL PREMIUM ELEMENTS --- */
+
+/* Formula Explainer Accordion styling */
+.formula-explainer {
+    margin-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 0.5rem;
+    text-align: left;
+}
+
+.formula-explainer summary {
+    font-size: 0.85rem;
+    color: var(--primary);
+    cursor: pointer;
+    font-weight: 600;
+    user-select: none;
+    outline: none;
+    padding: 0.25rem 0;
+    transition: color 0.2s;
+}
+
+.formula-explainer summary:hover {
+    color: var(--secondary);
+}
+
+.formula-content {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: #cbd5e1;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    padding: 0.75rem;
+    line-height: 1.5;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.formula-content p {
+    margin-bottom: 0.4rem;
+}
+
+.formula-content p:last-child {
+    margin-bottom: 0;
+}
+
+.formula-content strong {
+    color: #fff;
+}
+
+.formula-content code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+    font-family: monospace;
+    color: #f43f5e;
+}
+
+/* AI Assistant Pulsing & Layouts */
+#ai-widget-btn:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 10px 40px rgba(14, 165, 233, 0.6);
+}
+
+#ai-widget-btn:active {
+    transform: scale(0.95);
+}
+
+.ai-widget-container {
+    filter: drop-shadow(0 10px 25px rgba(0,0,0,0.3));
+}
+
+.ai-chat-panel.active {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+    pointer-events: auto !important;
+}
+
+.ai-chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.ai-chat-messages::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.ai-chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 99px;
+}
+
+.ai-msg {
+    animation: messageSlideIn 0.3s ease forwards;
+}
+
+@keyframes messageSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ai-msg.user {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #fff;
+    padding: 0.6rem 0.8rem;
+    border-radius: 12px 12px 2px 12px;
+    align-self: flex-end;
+    max-width: 85%;
+    line-height: 1.4;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
+}
+
+.ai-msg.bot a {
+    color: var(--primary);
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.ai-msg.bot a:hover {
+    color: var(--secondary);
+}
+
+/* Focus highlighting pulse animation for routed elements */
+.pulse-highlight {
+    animation: cardPulseFocus 2s ease-in-out infinite alternate;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 30px rgba(14, 165, 233, 0.8) !important;
+}
+
+@keyframes cardPulseFocus {
+    0% {
+        box-shadow: 0 0 15px rgba(14, 165, 233, 0.3);
+    }
+    100% {
+        box-shadow: 0 0 35px rgba(14, 165, 233, 0.9);
+    }
+}
+
+/* Print CSS overrides for cleaner invoices & reports */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #invoice-report-wrapper, #invoice-report-wrapper * {
+        visibility: visible;
+    }
+    #invoice-report-wrapper {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: #fff !important;
+        color: #000 !important;
+        border: none !important;
+        padding: 2rem !important;
+    }
+    #invoice-report-wrapper strong, #invoice-report-wrapper span, #invoice-report-wrapper div {
+        color: #000 !important;
+    }
+}
+
+/* Invoice row details */
+.invoice-item-row input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    color: #fff;
+    padding: 0.5rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+}
+
+.invoice-item-row input:focus {
+    border-color: var(--primary);
+    outline: none;
+}
