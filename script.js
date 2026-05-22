@@ -2385,8 +2385,8 @@ const modalContent = {
     upi: {
         title: "Support via UPI",
         body: `<div style="text-align:center;">
-                 <div style="width: 150px; height: 150px; background: #fff; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
-                    <span style="color:#000; font-weight:bold;">UPI QR Code</span>
+                 <div style="width: 180px; height: 180px; background: #fff; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; border-radius: 8px; overflow:hidden;">
+                    <img src="assets/upi-qr.jpeg" alt="UPI QR code for platform support" width="180" height="180" style="width:100%; height:100%; object-fit:cover;">
                  </div>
                  <p style="font-size: 1.2rem; color: #fff; font-family: monospace;">klokeshcalculator@ybl</p>
                </div>`
