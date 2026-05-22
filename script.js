@@ -200,15 +200,15 @@ function calcEMI() {
     const months = parseFloat(document.getElementById('emi-tenure').value);
 
     if (!amount || amount <= 0) {
-        showToast('Please enter loan amount');
+        showFieldError('emi-amount', 'Enter loan amount');
         return;
     }
     if (annualRate === null || Number.isNaN(annualRate) || annualRate < 0) {
-        showToast('Please enter interest rate');
+        showFieldError('emi-rate', 'Enter interest rate');
         return;
     }
     if (!months || months <= 0) {
-        showToast('Please enter tenure in months');
+        showFieldError('emi-tenure', 'Enter tenure in months');
         return;
     }
 
@@ -256,7 +256,7 @@ function calcBMI() {
     const bar = document.getElementById('bmi-progress');
 
     if (!height || height <= 0 || !weight || weight <= 0) {
-        showToast('Please enter valid height and weight');
+        showFieldError(!height || height <= 0 ? 'bmi-height' : 'bmi-weight', 'Enter valid height and weight');
         return;
     }
 
@@ -733,7 +733,43 @@ function generateRealQR() {
 }
 window.generateRealQR = generateRealQR;
 
+function downloadQR() {
+    const qrImage = document.getElementById('qr-image');
+    if (!qrImage?.src) {
+        showToast('Generate a QR code first');
+        return;
+    }
+
+    const link = document.createElement('a');
+    link.href = qrImage.src;
+    link.download = 'calculator-all-in-one-qr.png';
+    link.target = '_blank';
+    link.rel = 'noopener';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    showToast('QR download started');
+}
+window.downloadQR = downloadQR;
+
 // --- Category Filtering ---
+let currentCategory = 'all';
+let currentSearchTerm = '';
+
+function getNavbarOffset() {
+    return (document.querySelector('.navbar')?.offsetHeight || 0) + 16;
+}
+
+function getToolSearchText(card) {
+    if (!card.dataset.searchText) {
+        const title = card.querySelector('h3')?.innerText || '';
+        const desc = card.querySelector('p')?.innerText || '';
+        card.dataset.searchText = `${title} ${desc} ${card.dataset.category || ''}`.toLowerCase();
+    }
+
+    return card.dataset.searchText;
+}
+
 function scrollToVisibleCalculator(category) {
     const selector = category === 'all'
         ? '.tool-demo-card:not(.hidden)'
@@ -743,9 +779,7 @@ function scrollToVisibleCalculator(category) {
     if (!target) return;
 
     window.requestAnimationFrame(() => {
-        const navbar = document.querySelector('.navbar');
-        const offset = (navbar?.offsetHeight || 0) + 16;
-        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        const top = target.getBoundingClientRect().top + window.scrollY - getNavbarOffset();
 
         window.scrollTo({
             top: Math.max(0, top),
@@ -754,24 +788,40 @@ function scrollToVisibleCalculator(category) {
     });
 }
 
-function filterCategory(category, sourceEvent) {
-    if (sourceEvent) sourceEvent.preventDefault();
+function updateSearchStatus(visibleCount) {
+    const status = document.getElementById('search-status');
+    if (!status) return;
 
+    if (currentSearchTerm) {
+        status.innerText = `${visibleCount} matching tool${visibleCount === 1 ? '' : 's'} for "${currentSearchTerm}".`;
+    } else if (currentCategory !== 'all') {
+        status.innerText = `Showing ${visibleCount} ${currentCategory} tool${visibleCount === 1 ? '' : 's'}.`;
+    } else {
+        status.innerText = 'Search all calculators instantly.';
+    }
+}
+
+function applyToolFilters(options = {}) {
     const grid = document.querySelector('.tools-grid');
-    const isAll = category === 'all';
+    const isAll = currentCategory === 'all';
+    const search = currentSearchTerm.trim().toLowerCase();
+    let visibleCount = 0;
 
     document.querySelectorAll('[data-category-link]').forEach(link => {
-        link.classList.toggle('active', link.dataset.categoryLink === category);
+        link.classList.toggle('active', link.dataset.categoryLink === currentCategory);
     });
 
-    grid?.classList.toggle('is-filtered', !isAll);
+    grid?.classList.toggle('is-filtered', !isAll || Boolean(search));
 
     document.querySelectorAll('.tool-demo-card').forEach((card, index) => {
-        const shouldShow = isAll || card.dataset.category === category;
+        const categoryMatches = isAll || card.dataset.category === currentCategory;
+        const searchMatches = !search || getToolSearchText(card).includes(search);
+        const shouldShow = categoryMatches && searchMatches;
         card.classList.toggle('hidden', !shouldShow);
         card.setAttribute('aria-hidden', String(!shouldShow));
 
         if (shouldShow) {
+            visibleCount++;
             card.style.transitionDelay = prefersReducedMotion ? '0s' : `${Math.min(index, 8) * 0.04}s`;
             setTimeout(() => card.classList.add('active'), 10);
         } else {
@@ -780,11 +830,53 @@ function filterCategory(category, sourceEvent) {
         }
     });
 
-    if (sourceEvent) {
-        scrollToVisibleCalculator(category);
+    const emptyState = document.getElementById('empty-tools-state');
+    if (emptyState) emptyState.hidden = visibleCount !== 0;
+    updateSearchStatus(visibleCount);
+
+    if (options.scroll) {
+        scrollToVisibleCalculator(currentCategory);
     }
+
+    return visibleCount;
+}
+
+function filterCategory(category, sourceEvent) {
+    if (sourceEvent) sourceEvent.preventDefault();
+    currentCategory = category;
+    if (sourceEvent) {
+        currentSearchTerm = '';
+        const searchInput = document.getElementById('tool-search');
+        if (searchInput) searchInput.value = '';
+    }
+    applyToolFilters({ scroll: Boolean(sourceEvent) });
 }
 window.filterCategory = filterCategory;
+
+function searchTools(value) {
+    currentSearchTerm = value || '';
+    currentCategory = 'all';
+    applyToolFilters();
+}
+window.searchTools = searchTools;
+
+function clearToolSearch() {
+    currentSearchTerm = '';
+    const searchInput = document.getElementById('tool-search');
+    if (searchInput) searchInput.value = '';
+    applyToolFilters({ scroll: true });
+}
+window.clearToolSearch = clearToolSearch;
+
+function jumpToTool(id, category = 'all') {
+    currentSearchTerm = '';
+    const searchInput = document.getElementById('tool-search');
+    if (searchInput) searchInput.value = '';
+    currentCategory = category;
+    applyToolFilters();
+    scrollToCalc(id, category);
+}
+window.jumpToTool = jumpToTool;
 
 // --- Phase 1: Web Tools ---
 
@@ -1537,7 +1629,7 @@ function requirePositiveInputs(fields) {
     for (const field of fields) {
         const value = readCalcNumber(field.id);
         if (value === null || value <= 0) {
-            showToast(`Please enter valid ${field.label}`);
+            showFieldError(field.id, `Enter valid ${field.label}`);
             return null;
         }
         values[field.id] = value;
@@ -1733,6 +1825,48 @@ window.calcEvChargingCost = calcEvChargingCost;
 // Global triggerTool for inline onclick handlers
 window.triggerTool = triggerTool;
 
+function scrollToTools() {
+    const tools = document.getElementById('tools');
+    if (!tools) return;
+
+    const top = tools.getBoundingClientRect().top + window.scrollY - getNavbarOffset();
+    window.scrollTo({
+        top: Math.max(0, top),
+        behavior: prefersReducedMotion ? 'auto' : 'smooth'
+    });
+}
+window.scrollToTools = scrollToTools;
+
+let scrollHelperTicking = false;
+
+function updateScrollHelpers() {
+    const progress = document.getElementById('scroll-progress');
+    const backButton = document.getElementById('back-to-tools');
+    const scrollable = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const percent = Math.min(100, Math.max(0, (window.scrollY / scrollable) * 100));
+
+    progress?.style.setProperty('--scroll-progress', `${percent}%`);
+
+    if (backButton) {
+        const shouldShow = window.scrollY > Math.max(420, window.innerHeight * 0.65);
+        backButton.hidden = false;
+        backButton.classList.toggle('is-visible', shouldShow);
+        backButton.setAttribute('aria-hidden', String(!shouldShow));
+        backButton.tabIndex = shouldShow ? 0 : -1;
+    }
+
+    scrollHelperTicking = false;
+}
+
+function initScrollHelpers() {
+    updateScrollHelpers();
+    window.addEventListener('scroll', () => {
+        if (scrollHelperTicking) return;
+        scrollHelperTicking = true;
+        window.requestAnimationFrame(updateScrollHelpers);
+    }, { passive: true });
+}
+
 // Scroll to specific calculator from hero
 function scrollToCalc(id, category) {
     // 1. Filter to the correct category first so it's visible
@@ -1742,8 +1876,12 @@ function scrollToCalc(id, category) {
     setTimeout(() => {
         const el = document.getElementById(id);
         if (el) {
-            // Scroll it into the center of the viewport
-            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const top = el.getBoundingClientRect().top + window.scrollY - getNavbarOffset();
+
+            window.scrollTo({
+                top: Math.max(0, top),
+                behavior: prefersReducedMotion ? 'auto' : 'smooth'
+            });
 
             // Add a temporary highlight effect
             const originalBorder = el.style.borderColor;
@@ -1762,6 +1900,8 @@ function scrollToCalc(id, category) {
 window.scrollToCalc = scrollToCalc;
 function showToast(message) {
     const container = document.getElementById('toast-container');
+    if (!container) return;
+
     const toast = document.createElement('div');
     toast.classList.add('toast');
     toast.textContent = message;
@@ -1775,6 +1915,384 @@ function showToast(message) {
         }, 500); // Wait for fade out animation
     }, 3000);
 }
+
+// --- Friendly Tool UX ---
+const RECENT_TOOLS_KEY = 'daily-needs-recent-tools';
+const SAVED_TOOLS_KEY = 'daily-needs-saved-tools';
+const SUPPORT_DISMISSED_KEY = 'daily-needs-support-dismissed';
+const TOOL_USE_COUNT_KEY = 'daily-needs-tool-use-count';
+const MAX_RECENT_TOOLS = 6;
+
+function slugifyToolTitle(text) {
+    return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+function readStoredList(key) {
+    try {
+        const parsed = JSON.parse(localStorage.getItem(key) || '[]');
+        return Array.isArray(parsed) ? parsed : [];
+    } catch {
+        return [];
+    }
+}
+
+function saveStoredList(key, list) {
+    try {
+        localStorage.setItem(key, JSON.stringify(list));
+    } catch {
+        // Storage may be blocked in private browsing; the site still works without persistence.
+    }
+}
+
+function getToolMeta(card) {
+    if (!card) return null;
+
+    if (!card.id) {
+        const title = card.querySelector('h3')?.innerText || 'tool';
+        card.id = `calc-${slugifyToolTitle(title)}`;
+    }
+
+    return {
+        id: card.id,
+        title: card.querySelector('h3')?.innerText?.trim() || 'Tool',
+        category: card.dataset.category || 'all'
+    };
+}
+
+function getCardByToolId(id) {
+    return id ? document.getElementById(id) : null;
+}
+
+function renderToolCollection(containerId, sectionId, storageKey) {
+    const container = document.getElementById(containerId);
+    const section = document.getElementById(sectionId);
+    if (!container || !section) return;
+
+    const tools = readStoredList(storageKey)
+        .map(item => ({ ...item, card: getCardByToolId(item.id) }))
+        .filter(item => item.card);
+
+    section.hidden = tools.length === 0;
+    container.innerHTML = tools.map(item => {
+        const meta = getToolMeta(item.card);
+        return `<button class="discovery-chip" onclick="jumpToTool('${meta.id}', '${meta.category}')">${meta.title}</button>`;
+    }).join('');
+}
+
+function renderStoredTools() {
+    renderToolCollection('recent-tools', 'recent-tools-section', RECENT_TOOLS_KEY);
+    renderToolCollection('saved-tools', 'saved-tools-section', SAVED_TOOLS_KEY);
+    updateSavedButtons();
+}
+
+function recordToolUse(card) {
+    const meta = getToolMeta(card);
+    if (!meta) return;
+
+    const recent = readStoredList(RECENT_TOOLS_KEY).filter(item => item.id !== meta.id);
+    recent.unshift(meta);
+    saveStoredList(RECENT_TOOLS_KEY, recent.slice(0, MAX_RECENT_TOOLS));
+    renderStoredTools();
+
+    const count = Number(sessionStorage.getItem(TOOL_USE_COUNT_KEY) || '0') + 1;
+    sessionStorage.setItem(TOOL_USE_COUNT_KEY, String(count));
+    if (count >= 3) showSupportNudge();
+}
+
+function clearRecentTools() {
+    saveStoredList(RECENT_TOOLS_KEY, []);
+    renderStoredTools();
+    showToast('Recent tools cleared');
+}
+window.clearRecentTools = clearRecentTools;
+
+function clearSavedTools() {
+    saveStoredList(SAVED_TOOLS_KEY, []);
+    renderStoredTools();
+    showToast('Saved tools cleared');
+}
+window.clearSavedTools = clearSavedTools;
+
+function isToolSaved(id) {
+    return readStoredList(SAVED_TOOLS_KEY).some(item => item.id === id);
+}
+
+function updateSavedButtons() {
+    document.querySelectorAll('.tool-action-btn[data-action="save"]').forEach(button => {
+        const card = button.closest('.tool-demo-card');
+        const meta = getToolMeta(card);
+        const saved = meta && isToolSaved(meta.id);
+        button.classList.toggle('is-saved', Boolean(saved));
+        button.innerText = saved ? 'Saved' : 'Save';
+    });
+}
+
+function toggleSaveTool(card) {
+    const meta = getToolMeta(card);
+    if (!meta) return;
+
+    let saved = readStoredList(SAVED_TOOLS_KEY);
+    if (saved.some(item => item.id === meta.id)) {
+        saved = saved.filter(item => item.id !== meta.id);
+        showToast('Removed from saved tools');
+    } else {
+        saved.unshift(meta);
+        showToast('Tool saved');
+    }
+    saveStoredList(SAVED_TOOLS_KEY, saved.slice(0, 12));
+    renderStoredTools();
+}
+
+async function copyText(text) {
+    if (!text) return false;
+
+    try {
+        await navigator.clipboard.writeText(text);
+        return true;
+    } catch {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        const copied = document.execCommand('copy');
+        textarea.remove();
+        return copied;
+    }
+}
+
+function getToolResultText(card) {
+    const title = card.querySelector('h3')?.innerText?.trim() || 'Tool';
+    const resultParts = [];
+    const prioritySelectors = [
+        '#wa-result',
+        '#case-output',
+        '#b64-output',
+        '#unit-val-2',
+        '.food-list',
+        '.calc-display'
+    ];
+
+    prioritySelectors.forEach(selector => {
+        card.querySelectorAll(selector).forEach(el => {
+            if (selector === '#wa-result' && getComputedStyle(el).display === 'none') return;
+            const value = ('value' in el ? el.value : el.innerText || el.textContent || '').trim();
+            if (value && value !== 'Click Generate' && !resultParts.includes(value)) {
+                resultParts.push(value);
+            }
+        });
+    });
+
+    const summary = [...card.querySelectorAll('.emi-summary div')]
+        .map(row => row.innerText.trim().replace(/\s+/g, ' '))
+        .filter(Boolean)
+        .join('\n');
+    if (summary) resultParts.push(summary);
+
+    const qrImage = card.querySelector('#qr-image');
+    if (qrImage?.src) resultParts.push(`QR image: ${qrImage.src}`);
+
+    return resultParts.length ? `${title}\n${resultParts.join('\n')}` : '';
+}
+
+async function copyToolResult(card) {
+    const text = getToolResultText(card);
+    if (!text) {
+        showToast('No result to copy yet');
+        return;
+    }
+
+    const copied = await copyText(text);
+    showToast(copied ? 'Result copied' : 'Copy failed');
+}
+
+async function shareToolResult(card) {
+    const text = getToolResultText(card);
+    if (!text) {
+        showToast('No result to share yet');
+        return;
+    }
+
+    const title = card.querySelector('h3')?.innerText?.trim() || 'Calculator result';
+    if (navigator.share) {
+        try {
+            await navigator.share({ title, text });
+            showToast('Share sheet opened');
+            return;
+        } catch {
+            // User may cancel share. Fall through to copy.
+        }
+    }
+
+    await copyToolResult(card);
+}
+
+function resetToolCard(card) {
+    if (!card) return;
+
+    card.querySelectorAll('input, textarea, select').forEach(el => {
+        if (el.type === 'checkbox') {
+            el.checked = el.dataset.defaultChecked === 'true';
+        } else {
+            el.value = el.dataset.defaultValue || '';
+        }
+        clearFieldError(el);
+    });
+
+    card.querySelectorAll('.calc-display, .input-hint, .emi-summary strong, .rate-source').forEach(el => {
+        if (el.dataset.defaultHtml !== undefined) el.innerHTML = el.dataset.defaultHtml;
+    });
+
+    card.querySelectorAll('.progress-bar, .meal-bar').forEach(el => {
+        el.style.width = '0%';
+        el.classList.remove('calculated');
+    });
+    card.querySelectorAll('.chart-bar').forEach(el => {
+        el.style.height = '0%';
+    });
+
+    const foodList = card.querySelector('#food-list');
+    if (foodList) {
+        foodList.innerHTML = '';
+        totalMacros = { carbs: 0, protein: 0, fat: 0 };
+    }
+
+    const qrImage = card.querySelector('#qr-image');
+    const qrPrompt = card.querySelector('#qr-prompt');
+    const qrContainer = card.querySelector('#qr-result-container');
+    if (qrImage && qrPrompt && qrContainer) {
+        qrImage.removeAttribute('src');
+        qrImage.style.display = 'none';
+        qrPrompt.style.display = 'block';
+        qrPrompt.innerText = 'QR preview';
+        qrContainer.classList.remove('generated');
+        qrContainer.removeAttribute('style');
+    }
+
+    const waResult = card.querySelector('#wa-result');
+    if (waResult) {
+        waResult.innerText = '';
+        waResult.href = '#';
+        waResult.style.display = 'none';
+    }
+
+    if (card.id === 'calc-standard') clearCalc();
+    if (card.id === 'calc-sw') resetStopwatch();
+    if (card.querySelector('#unit-type')) updateUnitOptions();
+
+    showToast('Tool reset');
+}
+
+function initToolDefaults() {
+    document.querySelectorAll('.tool-demo-card').forEach(card => {
+        getToolMeta(card);
+        card.querySelectorAll('input, textarea, select').forEach(el => {
+            el.dataset.defaultValue = el.value || '';
+            if (el.type === 'checkbox') el.dataset.defaultChecked = String(el.checked);
+        });
+        card.querySelectorAll('.calc-display, .input-hint, .emi-summary strong, .rate-source').forEach(el => {
+            el.dataset.defaultHtml = el.innerHTML;
+        });
+    });
+}
+
+function initToolActions() {
+    document.querySelectorAll('.tool-demo-card').forEach(card => {
+        const ui = card.querySelector('.tool-ui');
+        if (!ui || ui.querySelector('.tool-actions')) return;
+
+        const actions = document.createElement('div');
+        actions.className = 'tool-actions';
+        actions.innerHTML = `
+            <button type="button" class="tool-action-btn" data-action="copy">Copy</button>
+            <button type="button" class="tool-action-btn" data-action="share">Share</button>
+            <button type="button" class="tool-action-btn" data-action="save">Save</button>
+            <button type="button" class="tool-action-btn" data-action="reset">Reset</button>
+        `;
+        ui.appendChild(actions);
+    });
+
+    document.addEventListener('click', event => {
+        const actionButton = event.target.closest('.tool-action-btn');
+        if (actionButton) {
+            const card = actionButton.closest('.tool-demo-card');
+            const action = actionButton.dataset.action;
+            if (action === 'copy') copyToolResult(card);
+            if (action === 'share') shareToolResult(card);
+            if (action === 'save') toggleSaveTool(card);
+            if (action === 'reset') resetToolCard(card);
+            return;
+        }
+
+        const toolButton = event.target.closest('.tool-ui button');
+        if (!toolButton) return;
+        if (toolButton.classList.contains('calc-btn') && !toolButton.classList.contains('equals')) return;
+
+        const handler = toolButton.getAttribute('onclick') || '';
+        const isPrimaryToolAction = /(calc|generate|processBase64|convertCase|addFood|calculateResult)/i.test(handler)
+            && !/(download|copy|reset|clear|appendCalc|startStopwatch)/i.test(handler);
+
+        if (isPrimaryToolAction) {
+            recordToolUse(toolButton.closest('.tool-demo-card'));
+        }
+    });
+}
+
+function clearFieldError(input) {
+    if (!input) return;
+    input.classList.remove('has-error');
+    const wrapper = input.closest('.input-wrapper') || input.parentElement;
+    const error = wrapper?.querySelector(`.field-error[data-for="${input.id}"]`);
+    error?.remove();
+}
+
+function showFieldError(id, message) {
+    const input = document.getElementById(id);
+    if (!input) {
+        showToast(message);
+        return;
+    }
+
+    clearFieldError(input);
+    input.classList.add('has-error');
+
+    const wrapper = input.closest('.input-wrapper') || input.parentElement;
+    const error = document.createElement('div');
+    error.className = 'field-error';
+    error.dataset.for = id;
+    error.innerText = message;
+    wrapper?.appendChild(error);
+    showToast(message);
+}
+
+function initInlineValidationClearing() {
+    document.querySelectorAll('.tool-input').forEach(input => {
+        input.addEventListener('input', () => clearFieldError(input));
+        input.addEventListener('change', () => clearFieldError(input));
+    });
+}
+
+function showSupportNudge() {
+    if (localStorage.getItem(SUPPORT_DISMISSED_KEY) === 'true') return;
+
+    const nudge = document.getElementById('support-nudge');
+    if (!nudge || nudge.classList.contains('is-visible')) return;
+
+    nudge.hidden = false;
+    requestAnimationFrame(() => nudge.classList.add('is-visible'));
+}
+
+function dismissSupportNudge() {
+    const nudge = document.getElementById('support-nudge');
+    localStorage.setItem(SUPPORT_DISMISSED_KEY, 'true');
+    if (!nudge) return;
+
+    nudge.classList.remove('is-visible');
+    setTimeout(() => { nudge.hidden = true; }, 350);
+}
+window.dismissSupportNudge = dismissSupportNudge;
 
 // Database of calculators to show in hero floating cards
 const heroToolsDatabase = [
@@ -1906,7 +2424,8 @@ const modalContent = {
     donate: {
         title: "Support The Platform",
         body: `<div style="text-align:center;">
-                 <p style="margin-bottom: 1.5rem;">Calculator All-in-One is a free online utility platform for educational/productivity tools. Support helps maintain hosting/API costs and future improvements.</p>
+                 <p style="margin-bottom: 0.75rem;">Calculator All-in-One is a free online utility platform for educational/productivity tools.</p>
+                 <p style="margin-bottom: 1.5rem; color:#fff;">Optional support. Tools remain free. Support helps maintain hosting/API costs and future improvements.</p>
                  <a href="${razorpayPaymentLink}" target="_blank" rel="noopener noreferrer" class="glowing-btn demo-btn ripple-btn" style="padding: 0.8rem 1.5rem; width: auto; margin: 0.5rem; text-decoration: none; display: inline-block;">Fund Me</a>
                </div>`
     }
@@ -1955,10 +2474,17 @@ window.openRazorpay = openRazorpay;
 // Initialize when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
     initHeroFloatingCards();
+    initToolDefaults();
+    initToolActions();
+    initInlineValidationClearing();
+    initScrollHelpers();
+    renderStoredTools();
 
     const initialCategory = new URLSearchParams(window.location.search).get('category');
     if (['all', 'basic', 'finance', 'electricity', 'health', 'education', 'web'].includes(initialCategory)) {
         filterCategory(initialCategory);
+    } else {
+        applyToolFilters();
     }
 
     if (new URLSearchParams(window.location.search).get('preview') === 'support') {
@@ -1966,8 +2492,4 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('support-ad')?.scrollIntoView({ behavior: 'auto', block: 'start' });
         }, 50);
     }
-
-    setTimeout(() => {
-        openFooterModal('donate');
-    }, 700);
 });

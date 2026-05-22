@@ -43,6 +43,8 @@
     </script>
 </head>
 <body>
+    <a class="skip-link" href="#tools">Skip to calculators</a>
+    <div id="scroll-progress" class="scroll-progress" aria-hidden="true"></div>
     <div class="bg-grid"></div>
     <div class="particles"></div>
     <div class="gradient-blob blob-1"></div>
@@ -114,6 +116,46 @@
             </div>
             <h2 class="scroll-reveal slide-up">Interactive Tools</h2>
             <p class="section-subtitle scroll-reveal slide-up delay-1">Experience premium animations and instant feedback.</p>
+
+            <div class="tool-discovery scroll-reveal slide-up delay-2">
+                <div class="tool-search-panel">
+                    <label class="search-label" for="tool-search">Find a calculator</label>
+                    <div class="search-control">
+                        <input type="search" class="tool-input" id="tool-search" placeholder="Search EMI, BMI, QR, electricity bill..." oninput="searchTools(this.value)">
+                        <button class="secondary-btn search-clear" type="button" onclick="clearToolSearch()">Clear</button>
+                    </div>
+                    <p id="search-status" class="search-status">Search all calculators instantly.</p>
+                </div>
+                <div class="discovery-row">
+                    <div class="discovery-header">
+                        <span>Popular tools</span>
+                    </div>
+                    <div class="discovery-chips">
+                        <button class="discovery-chip" data-tool-id="calc-emi" data-category="finance" onclick="jumpToTool('calc-emi', 'finance')">EMI</button>
+                        <button class="discovery-chip" data-tool-id="calc-electricity-bill" data-category="electricity" onclick="jumpToTool('calc-electricity-bill', 'electricity')">Electricity Bill</button>
+                        <button class="discovery-chip" data-tool-id="calc-bmi" data-category="health" onclick="jumpToTool('calc-bmi', 'health')">BMI</button>
+                        <button class="discovery-chip" data-tool-id="calc-curr" data-category="finance" onclick="jumpToTool('calc-curr', 'finance')">Currency</button>
+                        <button class="discovery-chip" data-tool-id="calc-qr" data-category="web" onclick="jumpToTool('calc-qr', 'web')">QR Code</button>
+                        <button class="discovery-chip" data-tool-id="calc-pass" data-category="web" onclick="jumpToTool('calc-pass', 'web')">Password</button>
+                        <button class="discovery-chip" data-tool-id="calc-sip" data-category="finance" onclick="jumpToTool('calc-sip', 'finance')">SIP</button>
+                    </div>
+                </div>
+                <div class="discovery-row is-dynamic" id="saved-tools-section" hidden>
+                    <div class="discovery-header">
+                        <span>Saved tools</span>
+                        <button type="button" onclick="clearSavedTools()">Clear saved</button>
+                    </div>
+                    <div class="discovery-chips" id="saved-tools"></div>
+                </div>
+                <div class="discovery-row is-dynamic" id="recent-tools-section" hidden>
+                    <div class="discovery-header">
+                        <span>Recently used</span>
+                        <button type="button" onclick="clearRecentTools()">Clear recent</button>
+                    </div>
+                    <div class="discovery-chips" id="recent-tools"></div>
+                </div>
+                <p class="tool-disclaimer">Finance, health, electricity, and nutrition results are estimates. Please verify important decisions before acting.</p>
+            </div>
             
             <div class="category-filter scroll-reveal slide-up delay-2">
                 <button class="cat-btn active" data-category-link="all" onclick="filterCategory('all', event)">All</button>
@@ -127,7 +169,7 @@
 
             <div class="tools-grid">
                 <!-- Standard Calculator -->
-                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="basic">
+                <div id="calc-standard" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="basic">
                     <div class="card-glow"></div>
                     <h3>Standard Calculator</h3>
                     <p>Basic math for everyday use</p>
@@ -195,7 +237,7 @@
                 </div>
 
                 <!-- EMI Tool -->
-                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="finance">
+                <div id="calc-emi" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="finance">
                     <div class="card-glow"></div>
                     <h3>EMI Calculator</h3>
                     <p>Monthly payment with clear totals</p>
@@ -312,6 +354,7 @@
                             <img id="qr-image" alt="Generated QR code" loading="lazy">
                         </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="generateRealQR()">Generate QR</button>
+                        <button class="secondary-btn shine-btn" style="width:100%; margin-top:0.65rem; padding:0.55rem;" onclick="downloadQR()">Download QR</button>
                     </div>
                 </div>
                 
@@ -987,7 +1030,7 @@
                 </div>
 
                 <!-- Discount & Tax Calculator -->
-                <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="finance">
+                <div id="calc-discount-tax" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="finance">
                     <div class="card-glow"></div>
                     <h3>Discount & Tax</h3>
                     <p>Find the final price</p>
@@ -1276,6 +1319,12 @@
                 </div>
 
             </div>
+
+            <div class="empty-tools-state" id="empty-tools-state" hidden>
+                <h3>No matching tools found</h3>
+                <p>Try searching for EMI, BMI, currency, QR, password, or electricity.</p>
+                <button class="secondary-btn shine-btn" onclick="clearToolSearch()">Show all tools</button>
+            </div>
             
             <div id="support-ad" class="ad-space ad-leaderboard scroll-reveal" style="margin-top: 4rem;">
                 <!-- Paste Google AdSense Script Here -->
@@ -1320,7 +1369,19 @@
     </footer>
 
     <!-- Toast Container -->
-    <div id="toast-container" class="toast-container"></div>
+    <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+    <button id="back-to-tools" class="back-to-tools" type="button" onclick="scrollToTools()" aria-label="Back to calculators" hidden>Tools</button>
+
+    <div id="support-nudge" class="support-nudge" hidden>
+        <div>
+            <strong>Optional support</strong>
+            <p>Tools stay free. Support helps maintain hosting/API costs.</p>
+        </div>
+        <div class="support-nudge-actions">
+            <a href="https://rzp.io/rzp/tpqo4et" target="_blank" rel="noopener noreferrer" onclick="dismissSupportNudge()">Fund Me</a>
+            <button type="button" onclick="dismissSupportNudge()">Maybe later</button>
+        </div>
+    </div>
 
     <!-- Generic Modal -->
     <div id="footer-modal" class="modal-overlay" onclick="if(event.target===this) closeFooterModal()">
