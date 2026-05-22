@@ -1664,6 +1664,36 @@ function calcElectricityBill() {
 
     const bill = values['bill-units'] * values['bill-rate'];
     setResultText('bill-result', formatRupees(bill), 'Electricity bill calculated');
+
+    // --- Electricity Pie Chart ---
+    const chartContainer = document.getElementById('electricity-pie-container');
+    if (chartContainer) {
+        chartContainer.style.display = 'block';
+        const ctx = document.getElementById('electricity-pie-chart').getContext('2d');
+        if (window.elecChartInstance) window.elecChartInstance.destroy();
+        
+        const usageCost = bill;
+        const taxEst = bill * 0.18; // Mock 18% tax
+        const fixedCharge = 50; // Mock fixed charge
+        
+        window.elecChartInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Usage', 'Tax/Duty', 'Fixed'],
+                datasets: [{
+                    data: [usageCost, taxEst, fixedCharge],
+                    backgroundColor: ['#facc15', '#ef4444', '#3b82f6'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                animation: { duration: 1500, animateScale: true },
+                plugins: { legend: { position: 'right', labels: { color: '#fff', font: { size: 10 } } } }
+            }
+        });
+    }
+
 }
 window.calcElectricityBill = calcElectricityBill;
 
@@ -2472,7 +2502,7 @@ window.closeFooterModal = closeFooterModal;
 window.openRazorpay = openRazorpay;
 
 // Initialize when DOM is fully loaded
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {\n    initLiveCounters();\n    initHeroChart();
     initHeroFloatingCards();
     initToolDefaults();
     initToolActions();
@@ -2493,3 +2523,191 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 50);
     }
 });
+\n
+// --- LIVE COUNTERS ---
+function initLiveCounters() {
+    const counters = document.querySelectorAll('.counter');
+    const speed = 200; 
+
+    const animateCounters = () => {
+        counters.forEach(counter => {
+            const updateCount = () => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const inc = target / speed;
+                
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + inc);
+                    setTimeout(updateCount, 10);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+            updateCount();
+        });
+    };
+    
+    // Intersection Observer to trigger when visible
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting) {
+                animateCounters();
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    const statsSection = document.getElementById('stats');
+    if (statsSection) observer.observe(statsSection);
+}
+
+// --- HERO CHART.JS ---
+function initHeroChart() {
+    const ctx = document.getElementById('hero-live-chart');
+    if (!ctx) return;
+    
+    // Create animated gradient line chart
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+            datasets: [{
+                label: 'Growth',
+                data: [10, 25, 40, 55, 90, 120, 150],
+                borderColor: '#0ea5e9',
+                backgroundColor: 'rgba(14, 165, 233, 0.1)',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true,
+                pointRadius: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+                duration: 3000,
+                easing: 'easeInOutQuart'
+            },
+            scales: {
+                x: { display: false },
+                y: { display: false, min: 0 }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false }
+            }
+        }
+    });
+}
+
+
+// --- GEOMETRY TOOLS ---
+function calcCircle() {
+    const r = parseFloat(document.getElementById('circle-radius').value);
+    if (!r || r < 0) return showFieldError('circle-radius', 'Enter valid radius');
+    const area = Math.PI * r * r;
+    const circ = 2 * Math.PI * r;
+    setResultText('circle-result', `Area: ${formatCalcNumber(area, 2)}`, `Circumference: ${formatCalcNumber(circ, 2)}`);
+}
+window.calcCircle = calcCircle;
+
+function calcTriangle() {
+    const b = parseFloat(document.getElementById('tri-base').value);
+    const h = parseFloat(document.getElementById('tri-height').value);
+    if (!b || b < 0) return showFieldError('tri-base', 'Enter base');
+    if (!h || h < 0) return showFieldError('tri-height', 'Enter height');
+    const area = 0.5 * b * h;
+    setResultText('triangle-result', `Area: ${formatCalcNumber(area, 2)}`, 'Triangle area calculated');
+}
+window.calcTriangle = calcTriangle;
+
+function calcPythagorean() {
+    const a = parseFloat(document.getElementById('pyth-a').value);
+    const b = parseFloat(document.getElementById('pyth-b').value);
+    if (!a || a < 0) return showFieldError('pyth-a', 'Enter Side A');
+    if (!b || b < 0) return showFieldError('pyth-b', 'Enter Side B');
+    const c = Math.sqrt(a*a + b*b);
+    setResultText('pythagorean-result', `Hypotenuse: ${formatCalcNumber(c, 2)}`, 'Calculated via a² + b² = c²');
+}
+window.calcPythagorean = calcPythagorean;
+
+
+// --- TECH TOOLS ---
+function explainFormula() {
+    const formula = document.getElementById('formula-select').value;
+    const el = document.getElementById('formula-explanation');
+    if (formula === 'einstein') {
+        el.innerHTML = "<strong>E = mc²</strong><br><br><span style='color:#0ea5e9'>E</span> = Energy (Joules)<br><span style='color:#facc15'>m</span> = Mass (kg)<br><span style='color:#ef4444'>c</span> = Speed of light (3×10^8 m/s)<br><em>Shows mass and energy are interchangeable.</em>";
+    } else if (formula === 'compound') {
+        el.innerHTML = "<strong>A = P(1 + r/n)^(nt)</strong><br><br><span style='color:#10b981'>P</span> = Principal amount<br><span style='color:#0ea5e9'>r</span> = Annual interest rate<br><span style='color:#facc15'>n</span> = Compounds per year<br><span style='color:#ef4444'>t</span> = Time (years)";
+    } else if (formula === 'newton') {
+        el.innerHTML = "<strong>F = G(m1*m2/r²)</strong><br><br><span style='color:#0ea5e9'>F</span> = Gravitational Force<br><span style='color:#10b981'>G</span> = Gravitational Constant<br><span style='color:#facc15'>m1, m2</span> = Masses<br><span style='color:#ef4444'>r</span> = Distance between centers";
+    }
+}
+window.explainFormula = explainFormula;
+
+function plotGraph() {
+    const m = parseFloat(document.getElementById('plot-m').value) || 0;
+    const b = parseFloat(document.getElementById('plot-b').value) || 0;
+    const ctx = document.getElementById('plotter-chart').getContext('2d');
+    
+    if (window.plotChartInstance) window.plotChartInstance.destroy();
+    
+    let xs = [-10, -5, 0, 5, 10];
+    let ys = xs.map(x => (m * x) + b);
+    
+    window.plotChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: xs,
+            datasets: [{
+                label: `y = ${m}x + ${b}`,
+                data: ys,
+                borderColor: '#a855f7',
+                borderWidth: 3,
+                tension: 0
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            animation: { duration: 500 },
+            scales: { x: { display: true, grid: { color: '#333' } }, y: { display: true, grid: { color: '#333' } } }
+        }
+    });
+}
+window.plotGraph = plotGraph;
+document.addEventListener('DOMContentLoaded', () => { setTimeout(plotGraph, 1000); });
+
+function convertImage() {
+    const fileInput = document.getElementById('img-upload');
+    const formatSelect = document.getElementById('img-format').value;
+    if (!fileInput.files || !fileInput.files[0]) {
+        return showToast('Please select an image file first.', 'error');
+    }
+    
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            const canvas = document.getElementById('img-canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            
+            const dataUrl = canvas.toDataURL(formatSelect, 0.9);
+            const link = document.createElement('a');
+            link.download = `converted-image.${formatSelect.split('/')[1]}`;
+            link.href = dataUrl;
+            link.click();
+            showToast('Image converted and downloading!');
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+window.convertImage = convertImage;
+

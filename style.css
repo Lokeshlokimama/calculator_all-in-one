@@ -1806,3 +1806,38 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     .stat-item h2, .stat-item .counter { font-size: 2.8rem; }
     .footer-links a { min-width: 44%; }
 }
+
+
+/* --- PREMIUM HERO ANIMATIONS --- */
+.premium-hero {
+    background: radial-gradient(circle at center, rgba(30,58,138,0.2) 0%, transparent 70%);
+    position: relative;
+}
+
+.math-particles .particle {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.4);
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+    user-select: none;
+    pointer-events: none;
+    animation: floatParticle 15s infinite linear;
+}
+
+.particle.p1 { top: 10%; left: 10%; animation-duration: 25s; font-size: 1.8rem; }
+.particle.p2 { top: 70%; left: 80%; animation-duration: 18s; font-size: 2.5rem; color: rgba(14, 165, 233, 0.4); }
+.particle.p3 { top: 40%; left: 50%; animation-duration: 22s; font-size: 2rem; }
+.particle.p4 { top: 80%; left: 20%; animation-duration: 20s; font-size: 1.5rem; color: rgba(139, 92, 246, 0.4); }
+.particle.p5 { top: 20%; left: 70%; animation-duration: 16s; font-size: 2.2rem; }
+.particle.p6 { top: 50%; left: 10%; animation-duration: 24s; font-size: 1.4rem; }
+.particle.p7 { top: 15%; left: 90%; animation-duration: 19s; font-size: 1.6rem; color: rgba(14, 165, 233, 0.4); }
+
+@keyframes floatParticle {
+    0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 0; }
+    10% { opacity: 0.8; }
+    50% { transform: translateY(-50px) rotate(180deg) scale(1.2); }
+    90% { opacity: 0.8; }
+    100% { transform: translateY(-100px) rotate(360deg) scale(1); opacity: 0; }
+}

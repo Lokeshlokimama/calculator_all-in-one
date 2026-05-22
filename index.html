@@ -56,6 +56,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   gtag('js', new Date());
   gtag('config', 'G-MRCMVF9545');
 </script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -84,7 +85,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <a href="#tools" data-category-link="finance" onclick="filterCategory('finance', event)">Finance</a>
             <a href="#tools" data-category-link="electricity" onclick="filterCategory('electricity', event)">Electricity</a>
             <a href="#tools" data-category-link="health" onclick="filterCategory('health', event)">Health</a>
-            <a href="about.html">About</a>
+            <a href="#tools" data-category-link="geometry" onclick="filterCategory('geometry', event)">Geometry</a>
+            <a href="/?category=geometry#tools">Geometry</a>
+                <a href="about.html">About</a>
             <a href="contact.html">Contact</a>
             <a href="https://rzp.io/rzp/tpqo4et" target="_blank" rel="noopener noreferrer">Fund Me</a>
         </nav>
@@ -95,6 +98,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <a href="/?category=finance#tools">Finance</a>
                 <a href="/?category=electricity#tools">Electricity</a>
                 <a href="/?category=health#tools">Health</a>
+                <a href="/?category=geometry#tools">Geometry</a>
                 <a href="about.html">About</a>
                 <a href="contact.html">Contact</a>
                 <a href="privacy.html">Privacy</a>
@@ -114,9 +118,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <button class="glowing-btn pulse-btn ripple-btn" onclick="document.getElementById('tools').scrollIntoView({behavior: 'smooth'})">Start Calculating</button>
                 </div>
             </div>
-            <div class="hero-visual">
-                <div class="floating-cards-wrapper" id="hero-floating-cards">
-                    <!-- Cards will be dynamically injected here by JS -->
+            <div class="hero-visual premium-hero" style="position: relative; overflow: hidden; min-height: 400px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+                <div class="hero-chart-container" style="position: absolute; width: 100%; height: 100%; z-index: 1;">
+                    <canvas id="hero-live-chart"></canvas>
+                </div>
+                <div class="math-particles" id="math-particles-container" style="position: absolute; width: 100%; height: 100%; z-index: 2;">
+                    <span class="particle p1">E=mc²</span>
+                    <span class="particle p2">∫</span>
+                    <span class="particle p3">∑</span>
+                    <span class="particle p4">π</span>
+                    <span class="particle p5">√</span>
+                    <span class="particle p6">A=πr²</span>
+                    <span class="particle p7">a²+b²=c²</span>
                 </div>
             </div>
         </section>
@@ -1375,7 +1388,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         
         <div class="footer-links" style="text-align: center; margin: 2rem 0; padding-top: 2rem; border-top: 1px solid var(--glass-border); display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem;">
-            <a href="about.html">About Us</a>
+            <a href="/?category=geometry#tools">Geometry</a>
+                <a href="about.html">About Us</a>
             <a href="contact.html">Contact Us</a>
             <a href="privacy.html">Privacy Policy</a>
             <a href="terms.html">Terms & Conditions</a>
