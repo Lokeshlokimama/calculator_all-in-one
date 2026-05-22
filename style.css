@@ -613,6 +613,36 @@ h1 {
     border-bottom: 1px solid var(--glass-border);
 }
 
+.header-search {
+    flex: 1;
+    max-width: 400px;
+    margin: 0 2rem;
+    position: relative;
+}
+
+.header-search .search-control {
+    display: flex;
+    width: 100%;
+}
+
+.header-search .tool-input {
+    width: 100%;
+    min-height: 40px;
+    padding: 0 1rem;
+    border-radius: 99px;
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.header-search .tool-input:focus {
+    border-color: var(--primary);
+    background: rgba(15, 23, 42, 0.8);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
 .stat-item { text-align: center; }
 .stat-item h2, .stat-item .counter {
     font-size: 3.5rem;
@@ -1673,6 +1703,13 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 @media (max-width: 900px) {
     .navbar {
         padding: 0.9rem 5%;
+        flex-wrap: wrap;
+    }
+    .header-search {
+        order: 3;
+        flex: 1 1 100%;
+        max-width: 100%;
+        margin: 0.8rem 0 0 0;
     }
     .logo {
         font-size: clamp(1.05rem, 5vw, 1.45rem);

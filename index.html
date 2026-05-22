@@ -71,6 +71,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     
     <header class="navbar">
         <a href="/" class="logo" style="text-decoration: none;">Calculator All-in-One</a>
+        
+        <div class="header-search">
+            <div class="search-control">
+                <input type="search" class="tool-input" id="tool-search" placeholder="Search calculators..." oninput="searchTools(this.value)">
+                <button class="secondary-btn search-clear" type="button" onclick="clearToolSearch()" style="padding: 0 0.8rem; min-height: 40px; font-size: 0.8rem; border-radius: 99px; display: none;">Clear</button>
+            </div>
+        </div>
+
         <nav>
             <a href="#tools" data-category-link="all" onclick="filterCategory('all', event)">All Tools</a>
             <a href="#tools" data-category-link="finance" onclick="filterCategory('finance', event)">Finance</a>
@@ -137,14 +145,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p class="section-subtitle scroll-reveal slide-up delay-1">Experience premium animations and instant feedback.</p>
 
             <div class="tool-discovery scroll-reveal slide-up delay-2">
-                <div class="tool-search-panel">
-                    <label class="search-label" for="tool-search">Find a calculator</label>
-                    <div class="search-control">
-                        <input type="search" class="tool-input" id="tool-search" placeholder="Search EMI, BMI, QR, electricity bill..." oninput="searchTools(this.value)">
-                        <button class="secondary-btn search-clear" type="button" onclick="clearToolSearch()">Clear</button>
-                    </div>
-                    <p id="search-status" class="search-status">Search all calculators instantly.</p>
-                </div>
+
                 <div class="discovery-row">
                     <div class="discovery-header">
                         <span>Popular tools</span>
