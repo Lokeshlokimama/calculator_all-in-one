@@ -196,16 +196,35 @@
                 <div class="result-card tool-demo-card scroll-reveal stagger-item" data-category="finance">
                     <div class="card-glow"></div>
                     <h3>EMI Calculator</h3>
-                    <p>Visualize principal vs interest</p>
+                    <p>Monthly payment with clear totals</p>
                     <div class="tool-ui">
                         <div class="input-group">
                             <div class="input-wrapper">
-                                <input type="number" class="tool-input" id="emi-amount" placeholder="Loan Amount">
+                                <input type="number" class="tool-input" id="emi-amount" placeholder="Loan Amount" oninput="formatLoanPreview()">
                                 <span class="input-suffix">₹</span>
                             </div>
                             <div class="input-wrapper">
                                 <input type="number" class="tool-input" id="emi-rate" placeholder="Interest Rate">
                                 <span class="input-suffix">%</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="emi-tenure" placeholder="Tenure">
+                                <span class="input-suffix">months</span>
+                            </div>
+                        </div>
+                        <div class="input-hint" id="emi-amount-preview">Enter loan amount</div>
+                        <div class="emi-summary">
+                            <div>
+                                <span>Monthly EMI</span>
+                                <strong id="emi-monthly-result">Rs 0</strong>
+                            </div>
+                            <div>
+                                <span>Total Interest</span>
+                                <strong id="emi-interest-result">Rs 0</strong>
+                            </div>
+                            <div>
+                                <span>Total Payable</span>
+                                <strong id="emi-total-result">Rs 0</strong>
                             </div>
                         </div>
                         <div class="chart-container">
@@ -216,7 +235,7 @@
                             <span class="dot dot-p"></span> Principal
                             <span class="dot dot-i"></span> Interest
                         </div>
-                        <button class="glowing-btn demo-btn ripple-btn" onclick="triggerTool('emi', 'EMI Calculated!')">Calculate EMI</button>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcEMI()">Calculate EMI</button>
                     </div>
                 </div>
 

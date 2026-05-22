@@ -174,6 +174,69 @@ function triggerTool(toolId, message) {
 // Global triggerTool for inline onclick handlers
 window.triggerTool = triggerTool;
 
+// --- EMI Calculator ---
+function formatReadableAmount(value) {
+    const numberValue = Number(value);
+    if (!Number.isFinite(numberValue) || numberValue <= 0) return 'Rs 0';
+
+    return 'Rs ' + Math.round(numberValue).toLocaleString('en-IN');
+}
+
+function formatLoanPreview() {
+    const amount = parseFloat(document.getElementById('emi-amount')?.value);
+    const preview = document.getElementById('emi-amount-preview');
+    if (!preview) return;
+
+    preview.innerText = amount > 0 ? `Loan amount: ${formatReadableAmount(amount)}` : 'Enter loan amount';
+}
+window.formatLoanPreview = formatLoanPreview;
+
+function calcEMI() {
+    const amount = parseFloat(document.getElementById('emi-amount').value);
+    const annualRate = parseFloat(document.getElementById('emi-rate').value);
+    const months = parseFloat(document.getElementById('emi-tenure').value);
+
+    if (!amount || amount <= 0) {
+        showToast('Please enter loan amount');
+        return;
+    }
+    if (annualRate === null || Number.isNaN(annualRate) || annualRate < 0) {
+        showToast('Please enter interest rate');
+        return;
+    }
+    if (!months || months <= 0) {
+        showToast('Please enter tenure in months');
+        return;
+    }
+
+    const monthlyRate = annualRate / 100 / 12;
+    const emi = monthlyRate === 0
+        ? amount / months
+        : amount * monthlyRate * Math.pow(1 + monthlyRate, months) / (Math.pow(1 + monthlyRate, months) - 1);
+    const totalPayable = emi * months;
+    const totalInterest = Math.max(0, totalPayable - amount);
+    const principalPercent = totalPayable > 0 ? (amount / totalPayable) * 100 : 0;
+    const interestPercent = totalPayable > 0 ? (totalInterest / totalPayable) * 100 : 0;
+
+    document.getElementById('emi-monthly-result').innerText = formatReadableAmount(emi);
+    document.getElementById('emi-interest-result').innerText = formatReadableAmount(totalInterest);
+    document.getElementById('emi-total-result').innerText = formatReadableAmount(totalPayable);
+    formatLoanPreview();
+
+    const principal = document.getElementById('emi-principal');
+    const interest = document.getElementById('emi-interest');
+    principal.style.height = '0%';
+    interest.style.height = '0%';
+
+    setTimeout(() => {
+        principal.style.height = `${Math.max(8, principalPercent)}%`;
+        interest.style.height = `${Math.max(totalInterest > 0 ? 8 : 0, interestPercent)}%`;
+    }, 80);
+
+    showToast(`Monthly EMI: ${formatReadableAmount(emi)}`);
+}
+window.calcEMI = calcEMI;
+
 // --- Calorie & Macro Calculator Logic ---
 const foodDatabase = {
     // 🇮🇳 Indian Diet

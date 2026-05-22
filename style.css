@@ -795,6 +795,44 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     font-size: 0.75rem; color: #666;
 }
 
+/* EMI Summary */
+.input-hint {
+    width: 100%;
+    color: #8b8b8b;
+    font-size: 0.78rem;
+    line-height: 1.35;
+    text-align: right;
+    margin-top: -0.35rem;
+}
+
+.emi-summary {
+    display: grid;
+    gap: 0.55rem;
+    margin: 0.9rem 0 1rem;
+}
+
+.emi-summary div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.emi-summary span {
+    color: #a3a3a3;
+    font-size: 0.78rem;
+}
+
+.emi-summary strong {
+    color: #fff;
+    font-size: 0.98rem;
+    text-align: right;
+}
+
 /* EMI Chart */
 .chart-container {
     height: 60px; width: 100%;
