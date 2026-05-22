@@ -1341,6 +1341,128 @@
                     </div>
                 </div>
 
+                <!-- Geometry Tools -->
+                <div id="calc-circle" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="geometry">
+                    <div class="card-glow"></div>
+                    <h3>Circle Area & Circumference</h3>
+                    <p>Calculate area and boundary of a circle</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="circle-radius" placeholder="Radius (r)">
+                                <span class="input-suffix">r</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="circle-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">Area: 0</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcCircle()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <div id="calc-triangle" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="geometry">
+                    <div class="card-glow"></div>
+                    <h3>Triangle Area</h3>
+                    <p>Calculate area from base and height</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="tri-base" placeholder="Base (b)">
+                                <span class="input-suffix">b</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="tri-height" placeholder="Height (h)">
+                                <span class="input-suffix">h</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="triangle-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">Area: 0</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcTriangle()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <div id="calc-pythagorean" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="geometry">
+                    <div class="card-glow"></div>
+                    <h3>Pythagorean Theorem</h3>
+                    <p>Solve a² + b² = c² for hypotenuse</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="pyth-a" placeholder="Side A">
+                                <span class="input-suffix">a</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="pyth-b" placeholder="Side B">
+                                <span class="input-suffix">b</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="pythagorean-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">Hypotenuse: 0</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcPythagorean()" style="width:100%;">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- Education & Tech Tools -->
+                <div id="calc-formula-explainer" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="education">
+                    <div class="card-glow"></div>
+                    <h3>Formula Explainer</h3>
+                    <p>Interactive breakdown of famous equations</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper" style="width:100%;">
+                                <select class="tool-input" id="formula-select" onchange="explainFormula()" style="width: 100%; padding: 0.75rem; border-radius: 8px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--glass-border);">
+                                    <option value="einstein">Einstein's Mass-Energy Equivalence (E=mc²)</option>
+                                    <option value="compound">Compound Interest Formula</option>
+                                    <option value="newton">Newton's Law of Universal Gravitation</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="formula-display" id="formula-explanation" style="font-size:0.95rem; min-height:100px; padding: 1rem; border-radius: 8px; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); margin-top: 1rem; line-height: 1.6; text-align: left; color:#e5e5e5;">
+                            <strong>E = mc²</strong><br><br><span style='color:#0ea5e9'>E</span> = Energy (Joules)<br><span style='color:#facc15'>m</span> = Mass (kg)<br><span style='color:#ef4444'>c</span> = Speed of light (3×10^8 m/s)<br><em>Shows mass and energy are interchangeable.</em>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="calc-equation-plotter" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="education">
+                    <div class="card-glow"></div>
+                    <h3>Equation Plotter</h3>
+                    <p>Live plot of linear equation y = mx + b</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="plot-m" value="2" placeholder="Slope (m)" oninput="plotGraph()">
+                                <span class="input-suffix">m</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="plot-b" value="5" placeholder="Y-Intercept (b)" oninput="plotGraph()">
+                                <span class="input-suffix">b</span>
+                            </div>
+                        </div>
+                        <div style="position: relative; height: 180px; width: 100%; margin-top: 1rem; margin-bottom: 1rem; background: rgba(0,0,0,0.1); border-radius: 8px; padding: 5px;">
+                            <canvas id="plotter-chart"></canvas>
+                        </div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="plotGraph()" style="width:100%;">Re-plot Graph</button>
+                    </div>
+                </div>
+
+                <div id="calc-image-converter" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web">
+                    <div class="card-glow"></div>
+                    <h3>Image Format Converter</h3>
+                    <p>Convert images to PNG, JPG, or WEBP in-browser</p>
+                    <div class="tool-ui">
+                        <div class="input-group" style="flex-direction: column; gap: 0.75rem; width: 100%;">
+                            <div class="input-wrapper" style="width:100%;">
+                                <input type="file" class="tool-input" id="img-upload" accept="image/*" style="padding: 0.5rem; background: rgba(255,255,255,0.05); color: #fff; width:100%;">
+                            </div>
+                            <div class="input-wrapper" style="width:100%;">
+                                <select class="tool-input" id="img-format" style="width: 100%; padding: 0.75rem; border-radius: 8px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--glass-border);">
+                                    <option value="image/png">PNG</option>
+                                    <option value="image/jpeg">JPEG</option>
+                                    <option value="image/webp">WEBP</option>
+                                </select>
+                            </div>
+                        </div>
+                        <canvas id="img-canvas" style="display: none;"></canvas>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="convertImage()" style="margin-top: 1rem; width:100%;">Convert & Download</button>
+                    </div>
+                </div>
+
             </div>
 
             <div class="empty-tools-state" id="empty-tools-state" hidden>
