@@ -725,22 +725,53 @@ h1 {
 }
 
 .discovery-chip {
-    border: 1px solid var(--glass-border);
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 999px;
-    background: rgba(14, 165, 233, 0.08);
-    color: #dbeafe;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #e2e8f0;
     cursor: pointer;
     font: inherit;
-    font-size: 0.84rem;
+    font-size: 0.85rem;
     font-weight: 600;
-    padding: 0.5rem 0.85rem;
-    transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    padding: 0.6rem 1.2rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.discovery-chip::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(45deg, var(--primary), var(--secondary), transparent, transparent);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
 }
 
 .discovery-chip:hover {
-    transform: translateY(-2px);
-    border-color: var(--primary);
-    background: rgba(14, 165, 233, 0.16);
+    transform: translateY(-3px) scale(1.02);
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(139, 92, 246, 0.1));
+    color: #fff;
+    box-shadow: 0 8px 25px rgba(14, 165, 233, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.discovery-chip:hover::before {
+    opacity: 1;
+    background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+    animation: rotateGradient 3s linear infinite;
+}
+
+@keyframes rotateGradient {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
 }
 
 .tool-disclaimer {
@@ -756,24 +787,57 @@ h1 {
     flex-wrap: wrap;
 }
 .cat-btn {
-    background: transparent;
-    border: 1px solid var(--glass-border);
-    color: #a3a3a3;
-    padding: 0.5rem 1.5rem;
-    border-radius: 50px;
+    position: relative;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #94a3b8;
+    padding: 0.65rem 1.75rem;
+    border-radius: 999px;
     font-weight: 600;
+    letter-spacing: 0.02em;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
 }
+
+.cat-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 0; height: 0;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    transition: width 0.4s ease, height 0.4s ease;
+    z-index: 0;
+}
+
+.cat-btn > span {
+    position: relative;
+    z-index: 1;
+}
+
 .cat-btn:hover {
     color: #fff;
-    border-color: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 8px 20px rgba(0, 0, 0, 0.3);
 }
+
+.cat-btn:hover::after {
+    width: 200px;
+    height: 200px;
+}
+
 .cat-btn.active {
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
     color: #fff;
-    border-color: var(--primary);
-    box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+    border-color: transparent;
+    box-shadow: 0 10px 30px rgba(14, 165, 233, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+    transform: translateY(-3px) scale(1.05);
 }
 
 .navbar nav a.active {
@@ -865,6 +929,89 @@ h1 {
 
 .result-card h3 { font-size: 1.4rem; margin-bottom: 0.5rem; position: relative; z-index: 1; letter-spacing: -0.5px; }
 .result-card p { color: #a3a3a3; font-size: 1rem; position: relative; z-index: 1; margin-bottom: 1.5rem; }
+
+/* Electricity UI Polish */
+.result-card[data-category="electricity"] {
+    border: 1px solid rgba(250, 204, 21, 0.15);
+    box-shadow: 0 4px 20px rgba(250, 204, 21, 0.05);
+    background: linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.8) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.result-card[data-category="electricity"]::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, #facc15, transparent);
+    opacity: 0.5;
+}
+
+.result-card[data-category="electricity"]:hover {
+    border-color: rgba(250, 204, 21, 0.4);
+    box-shadow: 0 10px 40px rgba(250, 204, 21, 0.15), inset 0 0 20px rgba(250, 204, 21, 0.05);
+    transform: translateY(-5px);
+}
+
+.result-card[data-category="electricity"] .card-glow {
+    background: radial-gradient(circle at top right, rgba(250, 204, 21, 0.12) 0%, transparent 70%);
+}
+
+.result-card[data-category="electricity"] h3 {
+    color: #fef08a;
+    text-shadow: 0 0 15px rgba(250, 204, 21, 0.4);
+}
+
+.result-card[data-category="electricity"] .calc-display {
+    background: rgba(10, 10, 15, 0.9);
+    border: 1px solid rgba(250, 204, 21, 0.3);
+    color: #fef08a;
+    text-shadow: 0 0 10px rgba(250, 204, 21, 0.6);
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 800;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+.result-card[data-category="electricity"] .calc-display::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -100%; width: 50%; height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(250, 204, 21, 0.15), transparent);
+    transform: rotate(25deg);
+    animation: zap 4s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes zap {
+    0% { left: -100%; }
+    15% { left: 200%; }
+    100% { left: 200%; }
+}
+
+.result-card[data-category="electricity"] .tool-input {
+    background: rgba(0, 0, 0, 0.2);
+    border-color: rgba(250, 204, 21, 0.2);
+}
+
+.result-card[data-category="electricity"] .tool-input:focus {
+    border-color: #facc15;
+    box-shadow: 0 0 15px rgba(250, 204, 21, 0.2);
+    background: rgba(250, 204, 21, 0.03);
+}
+
+.result-card[data-category="electricity"] .demo-btn {
+    background: linear-gradient(135deg, #eab308, #ca8a04);
+    color: #0f172a;
+    font-weight: 800;
+    box-shadow: 0 4px 15px rgba(234, 179, 8, 0.3);
+    border: 1px solid #fef08a;
+}
+
+.result-card[data-category="electricity"] .demo-btn:hover {
+    box-shadow: 0 8px 25px rgba(234, 179, 8, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.5);
+    background: linear-gradient(135deg, #facc15, #eab308);
+}
 
 /* Mock Tool UI */
 .tool-ui {
