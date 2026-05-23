@@ -1708,7 +1708,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .close-modal:hover { color: var(--accent); }
 
 /* Responsive */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
     .navbar {
         padding: 0.9rem 5%;
         flex-wrap: wrap;
@@ -1851,17 +1851,20 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 /* Navbar adjustments for intermediate screen widths to prevent wrapping/overflow */
-@media (max-width: 1250px) and (min-width: 1025px) {
+@media (max-width: 1350px) and (min-width: 1201px) {
     nav {
-        gap: 0.8rem;
+        gap: 0.6rem;
     }
     nav a {
-        font-size: 0.88rem;
+        font-size: 0.85rem;
     }
     .header-search {
         margin: 0 0.8rem;
-        max-width: 240px;
-        min-width: 140px;
+        max-width: 200px;
+        min-width: 130px;
+    }
+    .logo {
+        font-size: 1.5rem;
     }
 }
 
