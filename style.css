@@ -169,14 +169,21 @@ textarea:focus-visible {
     background: linear-gradient(to right, var(--primary), var(--secondary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    white-space: nowrap;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
 }
 
 nav a {
     color: #a3a3a3;
     text-decoration: none;
-    margin: 0 1.5rem;
     font-weight: 600;
     transition: color 0.3s;
+    white-space: nowrap;
 }
 
 nav a:hover { color: #fff; }
@@ -615,8 +622,9 @@ h1 {
 
 .header-search {
     flex: 1;
-    max-width: 400px;
-    margin: 0 2rem;
+    max-width: 360px;
+    min-width: 160px; /* Prevent shrinking to a tiny vertical capsule */
+    margin: 0 1.5rem;
     position: relative;
 }
 
@@ -1700,7 +1708,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .close-modal:hover { color: var(--accent); }
 
 /* Responsive */
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .navbar {
         padding: 0.9rem 5%;
         flex-wrap: wrap;
@@ -1843,14 +1851,17 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 /* Navbar adjustments for intermediate screen widths to prevent wrapping/overflow */
-@media (max-width: 1250px) and (min-width: 901px) {
+@media (max-width: 1250px) and (min-width: 1025px) {
+    nav {
+        gap: 0.8rem;
+    }
     nav a {
-        margin: 0 0.7rem;
         font-size: 0.88rem;
     }
     .header-search {
         margin: 0 0.8rem;
-        max-width: 250px;
+        max-width: 240px;
+        min-width: 140px;
     }
 }
 
