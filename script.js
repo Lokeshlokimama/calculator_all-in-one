@@ -3457,7 +3457,7 @@ function sendAIMessage() {
             { keys: ['invoice', 'billing', 'bill generator', 'pdf receipt'], target: 'calc-invoice', label: 'Invoice Generator' },
             { keys: ['scientific', 'trig', 'sine', 'cosine', 'logarithm', 'ln', 'exponent'], target: 'calc-scientific', label: 'Scientific Calculator' },
             { keys: ['timezone', 'gmt', 'utc', 'est', 'ist', 'pst', 'compare time'], target: 'calc-timezone', label: 'Time Zone Converter' },
-            { keys: ['mileage', 'fuel efficiency', 'mpg', 'km/l', 'l/100km', 'petrol', 'diesel'], target: 'calc-mileage', label: 'Mileage Converter' },
+            { keys: ['mileage', 'fuel efficiency', 'mpg', 'km/l', 'l/100km', 'petrol', 'diesel', 'cng', 'lpg', 'ev', 'electric vehicle', 'km/kwh'], target: 'calc-mileage', label: 'Mileage Converter' },
             { keys: ['uuid', 'guid', 'v4', 'v1', 'identifier', 'unique id'], target: 'calc-uuid', label: 'UUID Generator' },
             { keys: ['bmi', 'body mass', 'fat', 'obesity', 'overweight'], target: 'calc-bmi', label: 'BMI Calculator' },
             { keys: ['emi', 'loan', 'interest', 'monthly payment', 'mortgage'], target: 'calc-emi', label: 'EMI Calculator' },
@@ -3646,33 +3646,120 @@ function convertTimeZone() {
 }
 window.convertTimeZone = convertTimeZone;
 
-function convertMileage() {
+const mileageFuelProfiles = {
+    petrol: { label: 'Petrol', unit: 'L', priceSuffix: '/L', defaultUnit: 'kml' },
+    diesel: { label: 'Diesel', unit: 'L', priceSuffix: '/L', defaultUnit: 'kml' },
+    cng: { label: 'CNG', unit: 'kg', priceSuffix: '/kg', defaultUnit: 'kmkg' },
+    lpg: { label: 'LPG', unit: 'kg', priceSuffix: '/kg', defaultUnit: 'kmkg' },
+    ev: { label: 'EV', unit: 'kWh', priceSuffix: '/kWh', defaultUnit: 'kmkwh' }
+};
+
+function getMileageEfficiency(value, unit) {
+    let efficiency = value;
+    let unitLabel = 'L';
+
+    if (unit === 'l100') efficiency = 100 / value;
+    if (unit === 'mpg-us') efficiency = value / 2.352145833;
+    if (unit === 'mpg-uk') efficiency = value / 2.824809363;
+    if (unit === 'kmkg') unitLabel = 'kg';
+    if (unit === 'kmkwh') unitLabel = 'kWh';
+    if (unit === 'kwh100') {
+        efficiency = 100 / value;
+        unitLabel = 'kWh';
+    }
+
+    return { efficiency, unitLabel };
+}
+
+function updateMileageFuelMode(shouldConvert = false) {
+    const fuelSelect = document.getElementById('mileage-fuel-type');
+    const unitSelect = document.getElementById('mileage-unit');
+    const priceUnit = document.getElementById('mileage-price-unit');
+    const batteryField = document.getElementById('mileage-battery-field');
+    const costHint = document.getElementById('mileage-cost-hint');
+    if (!fuelSelect) return;
+
+    const profile = mileageFuelProfiles[fuelSelect.value] || mileageFuelProfiles.petrol;
+    const energyUnits = ['kmkg', 'kmkwh', 'kwh100'];
+
+    if (unitSelect && shouldConvert) {
+        const needsFuelUnit = fuelSelect.value === 'cng' || fuelSelect.value === 'lpg';
+        const needsEvUnit = fuelSelect.value === 'ev';
+        if (needsFuelUnit && unitSelect.value !== 'kmkg') unitSelect.value = 'kmkg';
+        if (needsEvUnit && !['kmkwh', 'kwh100'].includes(unitSelect.value)) unitSelect.value = 'kmkwh';
+        if (!needsFuelUnit && !needsEvUnit && energyUnits.includes(unitSelect.value)) unitSelect.value = profile.defaultUnit;
+    }
+
+    if (priceUnit) priceUnit.textContent = profile.priceSuffix;
+    if (batteryField) batteryField.hidden = fuelSelect.value !== 'ev';
+    if (costHint) costHint.textContent = fuelSelect.value === 'ev' ? 'Charging' : profile.label;
+    if (shouldConvert) convertMileage(false);
+}
+window.updateMileageFuelMode = updateMileageFuelMode;
+
+function convertMileage(showSuccess = true) {
     const value = parseFloat(document.getElementById('mileage-value')?.value);
     const unit = document.getElementById('mileage-unit')?.value || 'kml';
     const result = document.getElementById('mileage-result');
+    const costOutput = document.getElementById('mileage-cost-output');
 
     if (!result) return;
     if (!value || value <= 0) {
-        showFieldError('mileage-value', 'Enter mileage above 0');
+        result.innerHTML = 'Enter mileage to see all fuel-efficiency units.';
+        if (costOutput) costOutput.textContent = 'Add mileage, distance, and price to estimate cost per trip.';
+        if (showSuccess) showFieldError('mileage-value', 'Enter mileage above 0');
         return;
     }
 
-    let kmPerLiter = value;
-    if (unit === 'l100') kmPerLiter = 100 / value;
-    if (unit === 'mpg-us') kmPerLiter = value / 2.352145833;
-    if (unit === 'mpg-uk') kmPerLiter = value / 2.824809363;
+    const { efficiency, unitLabel } = getMileageEfficiency(value, unit);
+    if (!efficiency || efficiency <= 0) {
+        if (showSuccess) showFieldError('mileage-value', 'Enter mileage above 0');
+        return;
+    }
 
-    const litersPer100Km = 100 / kmPerLiter;
-    const mpgUs = kmPerLiter * 2.352145833;
-    const mpgUk = kmPerLiter * 2.824809363;
+    const fuelType = document.getElementById('mileage-fuel-type')?.value || 'petrol';
+    const profile = mileageFuelProfiles[fuelType] || mileageFuelProfiles.petrol;
+    const kmPerLiter = unitLabel === 'L' ? efficiency : null;
+    const litersPer100Km = kmPerLiter ? 100 / kmPerLiter : null;
+    const mpgUs = kmPerLiter ? kmPerLiter * 2.352145833 : null;
+    const mpgUk = kmPerLiter ? kmPerLiter * 2.824809363 : null;
+    const per100 = 100 / efficiency;
 
-    result.innerHTML = `
-        <div class="mileage-metric"><b>km/L</b><span>${kmPerLiter.toFixed(2)}</span></div>
-        <div class="mileage-metric"><b>L/100km</b><span>${litersPer100Km.toFixed(2)}</span></div>
-        <div class="mileage-metric"><b>US MPG</b><span>${mpgUs.toFixed(2)}</span></div>
-        <div class="mileage-metric"><b>UK MPG</b><span>${mpgUk.toFixed(2)}</span></div>
-    `;
-    showToast('Mileage converted successfully!');
+    const metrics = [
+        `<div class="mileage-metric"><b>Efficiency</b><span>${efficiency.toFixed(2)} km/${unitLabel}</span></div>`,
+        `<div class="mileage-metric"><b>${unitLabel}/100km</b><span>${per100.toFixed(2)}</span></div>`
+    ];
+
+    if (kmPerLiter) {
+        metrics.push(`<div class="mileage-metric"><b>US MPG</b><span>${mpgUs.toFixed(2)}</span></div>`);
+        metrics.push(`<div class="mileage-metric"><b>UK MPG</b><span>${mpgUk.toFixed(2)}</span></div>`);
+    } else {
+        metrics.push(`<div class="mileage-metric"><b>Fuel type</b><span>${profile.label}</span></div>`);
+    }
+
+    result.innerHTML = metrics.join('');
+
+    const distance = parseFloat(document.getElementById('mileage-distance')?.value);
+    const price = parseFloat(document.getElementById('mileage-price')?.value);
+    if (costOutput) {
+        if (distance > 0 && price > 0) {
+            const usage = distance / efficiency;
+            const tripCost = usage * price;
+            const costPerKm = tripCost / distance;
+            const battery = parseFloat(document.getElementById('mileage-battery')?.value);
+            const batteryRange = fuelType === 'ev' && battery > 0 ? battery * efficiency : null;
+            costOutput.innerHTML = `
+                <div class="mileage-metric"><b>${distance.toFixed(1)} km uses</b><span>${usage.toFixed(2)} ${unitLabel}</span></div>
+                <div class="mileage-metric"><b>Trip cost</b><span>${tripCost.toFixed(2)}</span></div>
+                <div class="mileage-metric"><b>Cost per km</b><span>${costPerKm.toFixed(2)}</span></div>
+                ${batteryRange ? `<div class="mileage-metric"><b>Full battery range</b><span>${batteryRange.toFixed(1)} km</span></div>` : ''}
+            `;
+        } else {
+            costOutput.textContent = `Add distance and ${profile.priceSuffix} price to estimate ${profile.label} cost.`;
+        }
+    }
+
+    if (showSuccess) showToast('Mileage converted successfully!');
 }
 window.convertMileage = convertMileage;
 
@@ -3883,6 +3970,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (btn.getAttribute('onclick')?.includes("'csv'")) btn.textContent = 'CSV';
     });
 
+    if (document.getElementById('calc-mileage')) updateMileageFuelMode(false);
     if (document.getElementById('calc-invoice')) calculateInvoice();
 });
 

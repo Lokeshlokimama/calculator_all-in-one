@@ -2008,34 +2008,66 @@
                 </div>
 
                 <!-- Mileage Converter -->
-                <div id="calc-mileage" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="basic" style="max-width: 420px;">
+                <div id="calc-mileage" class="result-card tool-demo-card scroll-reveal stagger-item mileage-converter-card" data-category="basic" style="max-width: 760px; grid-column: span 2;">
                     <div class="card-glow"></div>
                     <h3>Mileage Converter</h3>
-                    <p>Convert km/L, L/100km, US MPG, and UK MPG</p>
+                    <p>Convert mileage and estimate petrol, diesel, CNG, LPG, or EV trip cost</p>
                     <div class="tool-ui">
-                        <div class="input-group">
+                        <div class="input-group mileage-main-inputs">
                             <div class="input-wrapper">
-                                <input type="number" class="tool-input" id="mileage-value" placeholder="Mileage value" step="0.01" min="0">
+                                <input type="number" class="tool-input" id="mileage-value" placeholder="Mileage value" step="0.01" min="0" oninput="convertMileage(false)">
                                 <span class="input-suffix">rate</span>
                             </div>
-                            <select class="tool-input" id="mileage-unit" style="width: 100%; padding: 0.75rem; border-radius: 8px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--glass-border);">
+                            <select class="tool-input" id="mileage-unit" onchange="convertMileage(false)" style="width: 100%; padding: 0.75rem; border-radius: 8px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--glass-border);">
                                 <option value="kml">km/L</option>
                                 <option value="l100">L/100km</option>
                                 <option value="mpg-us">MPG (US)</option>
                                 <option value="mpg-uk">MPG (UK)</option>
+                                <option value="kmkg">km/kg (CNG/LPG)</option>
+                                <option value="kmkwh">km/kWh (EV)</option>
+                                <option value="kwh100">kWh/100km (EV)</option>
                             </select>
                         </div>
                         <div class="calc-display mileage-results" id="mileage-result" style="font-size:0.95rem; min-height:68px; margin-bottom: 1rem; display: grid; gap: 0.35rem; padding: 0.8rem; text-align: left;">
                             Enter mileage to see all fuel-efficiency units.
+                        </div>
+
+                        <div class="mileage-cost-panel">
+                            <div class="mileage-panel-title">
+                                <span>Trip cost</span>
+                                <small id="mileage-cost-hint">Optional</small>
+                            </div>
+                            <div class="mileage-cost-grid">
+                                <select class="tool-input" id="mileage-fuel-type" onchange="updateMileageFuelMode(true)" aria-label="Fuel or energy type">
+                                    <option value="petrol">Petrol</option>
+                                    <option value="diesel">Diesel</option>
+                                    <option value="cng">CNG</option>
+                                    <option value="lpg">LPG</option>
+                                    <option value="ev">EV</option>
+                                </select>
+                                <div class="input-wrapper">
+                                    <input type="number" class="tool-input" id="mileage-distance" placeholder="Distance" value="100" min="0" step="0.1" oninput="convertMileage(false)">
+                                    <span class="input-suffix">km</span>
+                                </div>
+                                <div class="input-wrapper">
+                                    <input type="number" class="tool-input" id="mileage-price" placeholder="Price" min="0" step="0.01" oninput="convertMileage(false)">
+                                    <span class="input-suffix" id="mileage-price-unit">/L</span>
+                                </div>
+                                <div class="input-wrapper mileage-battery-field" id="mileage-battery-field" hidden>
+                                    <input type="number" class="tool-input" id="mileage-battery" placeholder="Battery size" min="0" step="0.1" oninput="convertMileage(false)">
+                                    <span class="input-suffix">kWh</span>
+                                </div>
+                            </div>
+                            <div class="mileage-cost-output" id="mileage-cost-output">Add distance and price to estimate cost per trip.</div>
                         </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="convertMileage()" style="width:100%;">Convert Mileage</button>
                     </div>
                     <details class="formula-explainer">
                         <summary>Formula & Explanation</summary>
                         <div class="formula-content">
-                            <p><strong>Formula:</strong> L/100km = 100 / km/L, US MPG = km/L x 2.35215, UK MPG = km/L x 2.82481.</p>
-                            <p><strong>Explanation:</strong> Converts fuel efficiency between distance-per-fuel and fuel-per-distance formats.</p>
-                            <p><strong>Example:</strong> 20 km/L = 5.00 L/100km = 47.04 US MPG.</p>
+                            <p><strong>Formula:</strong> L/100km = 100 / km/L, US MPG = km/L x 2.35215, UK MPG = km/L x 2.82481. Trip cost = distance / efficiency x unit price.</p>
+                            <p><strong>Explanation:</strong> Converts fuel efficiency between distance-per-fuel and fuel-per-distance formats, then estimates petrol, diesel, CNG, LPG, or EV energy cost.</p>
+                            <p><strong>Example:</strong> 20 km/L for 100 km uses 5.00 L. At 100 per L, trip cost is 500.</p>
                         </div>
                     </details>
                 </div>
