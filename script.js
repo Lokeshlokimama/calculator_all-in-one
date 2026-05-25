@@ -993,13 +993,25 @@ function calcWater() {
 }
 window.calcWater = calcWater;
 
+function updateIdealHeightUnit() {
+    const unit = document.getElementById('iw-height-unit')?.value || 'cm';
+    const suffix = document.getElementById('iw-height-suffix');
+    const input = document.getElementById('iw-height');
+
+    if (suffix) suffix.textContent = unit === 'in' ? 'in' : 'cm';
+    if (input) input.placeholder = unit === 'in' ? 'Height in inches' : 'Height in cm';
+}
+window.updateIdealHeightUnit = updateIdealHeightUnit;
+
 function calcIdealWeight() {
     const g = document.getElementById('iw-gender').value;
     const h = parseFloat(document.getElementById('iw-height').value);
-    if (!h) { showToast('Please enter height'); return; }
+    const unit = document.getElementById('iw-height-unit')?.value || 'cm';
+    if (!h || h <= 0) { showToast('Please enter height'); return; }
 
     const baseWeight = g === 'm' ? 50 : 45.5;
-    const extraInches = (h / 2.54) - 60;
+    const heightInches = unit === 'in' ? h : h / 2.54;
+    const extraInches = heightInches - 60;
 
     if (extraInches <= 0) {
         document.getElementById('iw-result').innerText = baseWeight + ' kg';
@@ -3970,6 +3982,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (btn.getAttribute('onclick')?.includes("'csv'")) btn.textContent = 'CSV';
     });
 
+    if (document.getElementById('calc-ideal-weight')) updateIdealHeightUnit();
     if (document.getElementById('calc-mileage')) updateMileageFuelMode(false);
     if (document.getElementById('calc-invoice')) calculateInvoice();
 });

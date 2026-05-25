@@ -622,8 +622,12 @@
                             </select>
                             <div class="input-wrapper">
                                 <input type="number" class="tool-input" id="iw-height" placeholder="Height">
-                                <span class="input-suffix">cm</span>
+                                <span class="input-suffix" id="iw-height-suffix">cm</span>
                             </div>
+                            <select class="tool-input" id="iw-height-unit" onchange="updateIdealHeightUnit()" aria-label="Height unit">
+                                <option value="cm">Centimeters (cm)</option>
+                                <option value="in">Inches (in)</option>
+                            </select>
                         </div>
                         <div class="calc-display" id="iw-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 kg</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcIdealWeight()" style="width:100%;">Calculate</button>
@@ -633,7 +637,8 @@
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
             <p><strong>Formula:</strong> <code>Male: 50.0 + 2.3×((Height_cm / 2.54) - 60) | Female: 45.5 + 2.3×((Height_cm / 2.54) - 60)</code></p>
-            <p><strong>Explanation:</strong> Devine Formula. Calculates standard ideal body weight based on height over 5 feet (152.4 cm).</p>
+            <p><strong>Inches:</strong> Select Inches to use the entered height directly as Height_in.</p>
+            <p><strong>Explanation:</strong> Devine Formula. Calculates standard ideal body weight from centimeters or inches based on height over 5 feet (60 in / 152.4 cm).</p>
             <p><strong>Example:</strong> Male of height 175cm (~69 in) = 50.0 + 2.3 × 9 = 70.7 kg</p>
         </div>
     </details>
