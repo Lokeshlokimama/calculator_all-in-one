@@ -2050,7 +2050,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 #calc-invoice.invoice-generator-card {
     width: min(100%, 1080px);
-    padding: 1.65rem 1.5rem;
+    padding: 1.35rem 1.25rem;
 }
 
 #calc-invoice.result-card h3 {
@@ -2064,13 +2064,46 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 #calc-invoice .invoice-layout {
     display: grid;
     grid-template-columns: minmax(430px, 1.18fr) minmax(300px, 0.82fr);
-    gap: 0.85rem;
+    gap: 0.75rem;
     align-items: start;
-    padding: 0.85rem;
+    padding: 0.7rem;
 }
 
 #calc-invoice .card-glow {
     right: 0;
+}
+
+#calc-invoice .invoice-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.3rem;
+}
+
+#calc-invoice .invoice-section-heading h4 {
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+#calc-invoice .invoice-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.18rem;
+    min-width: 0;
+}
+
+#calc-invoice .invoice-field label {
+    color: #cbd5e1;
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1.1;
+}
+
+#calc-invoice .invoice-field .tool-input {
+    min-height: 38px;
+    padding: 0.55rem 0.75rem;
 }
 
 #calc-invoice .invoice-editor-column,
@@ -2085,19 +2118,29 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 #calc-invoice #invoice-report-wrapper {
     margin-top: 0 !important;
-    padding: 0.85rem !important;
+    padding: 0.7rem !important;
 }
 
 #calc-invoice .invoice-client-fields {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.5rem !important;
-    margin-bottom: 0.75rem;
+    gap: 0.42rem !important;
+    margin-bottom: 0.55rem;
 }
 
 #calc-invoice .invoice-items-editor {
-    margin-top: 0.7rem !important;
-    padding-top: 0.7rem !important;
+    margin-top: 0.5rem !important;
+    padding-top: 0.5rem !important;
+}
+
+#calc-invoice .invoice-items-head {
+    display: grid;
+    grid-template-columns: minmax(150px, 1.8fr) minmax(58px, 0.55fr) minmax(90px, 0.85fr) 38px;
+    gap: 0.4rem;
+    margin-bottom: 0.25rem;
+    color: #94a3b8;
+    font-size: 0.72rem;
+    font-weight: 700;
 }
 
 #calc-invoice .invoice-item-row {
@@ -2110,6 +2153,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 #calc-invoice .invoice-item-row .secondary-btn {
     width: 38px;
     min-width: 38px;
+    min-height: 38px !important;
+    padding: 0 !important;
 }
 
 #calc-invoice .input-group[style*="margin-top: 1rem"] {
@@ -2119,16 +2164,34 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 #calc-invoice .invoice-adjustments {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    margin-top: 0.75rem !important;
+    margin-top: 0.35rem !important;
+}
+
+#calc-invoice .invoice-adjustments .tool-input {
+    padding-right: 2.1rem;
+}
+
+#calc-invoice .invoice-adjustment-heading {
+    display: none;
+}
+
+#calc-invoice .invoice-adjustments .input-suffix {
+    top: auto;
+    bottom: 0.52rem;
+    transform: none;
 }
 
 #calc-invoice .invoice-actions {
-    margin-top: 0.75rem !important;
+    margin-top: 0.55rem !important;
 }
 
 #calc-invoice .formula-explainer {
-    margin-top: 0.55rem;
-    padding-top: 0.3rem;
+    margin-top: 0.35rem;
+    padding-top: 0.2rem;
+}
+
+#calc-invoice .formula-explainer summary {
+    font-size: 0.78rem;
 }
 
 @media (max-width: 980px) {
@@ -2143,6 +2206,10 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
     #calc-invoice .invoice-client-fields {
         grid-template-columns: 1fr;
+    }
+
+    #calc-invoice .invoice-items-head {
+        grid-template-columns: minmax(0, 1fr) 56px 78px 36px;
     }
 
     #calc-invoice .invoice-item-row {
@@ -2160,6 +2227,11 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 @media (max-width: 520px) {
+    #calc-invoice .invoice-items-head {
+        grid-template-columns: minmax(0, 1fr) minmax(54px, 0.4fr) minmax(74px, 0.6fr) 36px;
+        font-size: 0.68rem;
+    }
+
     #calc-invoice .invoice-item-row {
         grid-template-columns: minmax(0, 1fr) minmax(54px, 0.4fr) minmax(74px, 0.6fr) 36px;
     }

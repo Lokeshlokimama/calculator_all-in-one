@@ -3767,10 +3767,10 @@ function addInvoiceRow() {
     row.style.cssText = 'display: flex; gap: 0.4rem; margin-bottom: 0.4rem; width:100%;';
     
     row.innerHTML = `
-        <input type="text" class="tool-input inv-item-desc" placeholder="Description" style="flex: 2; min-width: 0;" value="Item Description">
-        <input type="number" class="tool-input inv-item-qty" placeholder="Qty" style="flex: 0.7; min-width: 0;" value="1" oninput="calculateInvoice()">
-        <input type="number" class="tool-input inv-item-price" placeholder="Price" style="flex: 1.2; min-width: 0;" value="100" oninput="calculateInvoice()">
-        <button class="secondary-btn" onclick="removeInvoiceRow(this)" style="padding: 0 0.5rem; min-height:40px; border-radius:8px; margin:0; flex: 0.4;">×</button>
+        <input type="text" class="tool-input inv-item-desc" placeholder="Description" aria-label="Item description" style="flex: 2; min-width: 0;" value="Item Description" oninput="calculateInvoice()">
+        <input type="number" class="tool-input inv-item-qty" placeholder="Qty" aria-label="Quantity" min="0" step="1" style="flex: 0.7; min-width: 0;" value="1" oninput="calculateInvoice()">
+        <input type="number" class="tool-input inv-item-price" placeholder="Rate" aria-label="Rate" min="0" step="0.01" style="flex: 1.2; min-width: 0;" value="100" oninput="calculateInvoice()">
+        <button class="secondary-btn invoice-remove-item" onclick="removeInvoiceRow(this)" aria-label="Remove item" style="padding: 0 0.5rem; min-height:40px; border-radius:8px; margin:0; flex: 0.4;">&times;</button>
     `;
     container.appendChild(row);
     calculateInvoice();
@@ -3801,7 +3801,11 @@ function calculateInvoice() {
         // Add to preview UI
         const itemEl = document.createElement('div');
         itemEl.style.cssText = 'display:flex; justify-content:space-between; font-size:0.8rem;';
-        itemEl.innerHTML = `<span>${desc} (x${qty})</span><span>₹${total.toFixed(2)}</span>`;
+        const descEl = document.createElement('span');
+        const totalEl = document.createElement('span');
+        descEl.textContent = `${desc} (x${qty})`;
+        totalEl.textContent = `₹${total.toFixed(2)}`;
+        itemEl.append(descEl, totalEl);
         previewItems.appendChild(itemEl);
     });
     
@@ -3837,6 +3841,7 @@ function exportInvoice(format) {
         triggerPDFDownload('invoice-report-wrapper', 'invoice-' + document.getElementById('inv-number').value + '.pdf');
     } else if (format === 'csv') {
         const rows = document.querySelectorAll('.invoice-item-row');
+        const csvCell = value => `"${String(value).replace(/"/g, '""')}"`;
         let csvContent = "Description,Quantity,Price,Total\n";
         
         rows.forEach(row => {
@@ -3844,7 +3849,7 @@ function exportInvoice(format) {
             const qty = row.querySelector('.inv-item-qty').value || 0;
             const price = row.querySelector('.inv-item-price').value || 0;
             const total = parseFloat(qty) * parseFloat(price);
-            csvContent += `${desc},${qty},${price},${total}\n`;
+            csvContent += `${csvCell(desc)},${csvCell(qty)},${csvCell(price)},${csvCell(total)}\n`;
         });
         
         csvContent += `\nSubtotal,,${document.getElementById('inv-preview-subtotal').innerText.replace('₹', '')}\n`;
@@ -3866,6 +3871,19 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const invDateInput = document.getElementById('inv-date');
     if (invDateInput) invDateInput.value = now.toISOString().split('T')[0];
+
+    document.querySelectorAll('#calc-invoice .invoice-remove-item, #calc-invoice .invoice-item-row .secondary-btn').forEach(btn => {
+        btn.setAttribute('aria-label', 'Remove item');
+        btn.innerHTML = '&times;';
+    });
+
+    document.querySelectorAll('#calc-invoice .invoice-actions button[onclick*="exportInvoice"]').forEach(btn => {
+        if (btn.getAttribute('onclick')?.includes("'pdf'")) btn.textContent = 'PDF';
+        if (btn.getAttribute('onclick')?.includes("'png'")) btn.textContent = 'PNG';
+        if (btn.getAttribute('onclick')?.includes("'csv'")) btn.textContent = 'CSV';
+    });
+
+    if (document.getElementById('calc-invoice')) calculateInvoice();
 });
 
 
