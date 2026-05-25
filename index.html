@@ -2099,19 +2099,20 @@
                 </div>
 
                 <!-- Invoice Generator -->
-                <div id="calc-invoice" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="finance" style="max-width: 480px; grid-column: span 1;">
+                <div id="calc-invoice" class="result-card tool-demo-card scroll-reveal stagger-item invoice-generator-card" data-category="finance" style="max-width: 1080px; grid-column: 1 / -1;">
                     <div class="card-glow"></div>
                     <h3>Invoice Generator</h3>
                     <p>Generate professional, exportable invoices</p>
-                    <div class="tool-ui">
-                        <div class="input-group" style="flex-direction: column; gap: 0.5rem;">
+                    <div class="tool-ui invoice-layout">
+                        <div class="invoice-editor-column">
+                        <div class="input-group invoice-client-fields" style="flex-direction: column; gap: 0.5rem;">
                             <input type="text" class="tool-input" id="inv-from" placeholder="Your Name / Company" value="Acme Corp">
                             <input type="text" class="tool-input" id="inv-to" placeholder="Client Name" value="John Doe">
                             <input type="text" class="tool-input" id="inv-number" placeholder="Invoice Number" value="INV-001">
                             <input type="date" class="tool-input" id="inv-date">
                         </div>
                         
-                        <div style="margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+                        <div class="invoice-items-editor" style="margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
                             <h4 style="color:#fff; font-size: 0.9rem; margin-bottom: 0.5rem;">Items</h4>
                             <div id="invoice-items-container">
                                 <div class="invoice-item-row" style="display: flex; gap: 0.4rem; margin-bottom: 0.4rem; width:100%;">
@@ -2124,7 +2125,7 @@
                             <button class="secondary-btn shine-btn" onclick="addInvoiceRow()" style="width: 100%; padding: 0.4rem; font-size: 0.85rem; border-radius: 8px; margin-top: 0.5rem; margin-bottom: 0;">+ Add Item</button>
                         </div>
                         
-                        <div class="input-group" style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                        <div class="input-group invoice-adjustments" style="margin-top: 1rem; display: flex; gap: 0.5rem;">
                             <div class="input-wrapper" style="flex: 1;">
                                 <input type="number" class="tool-input" id="invoice-tax" placeholder="Tax Rate" value="18" oninput="calculateInvoice()">
                                 <span class="input-suffix">%</span>
@@ -2135,6 +2136,9 @@
                             </div>
                         </div>
 
+                        </div>
+
+                        <div class="invoice-preview-column">
                         <div id="invoice-report-wrapper" style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1rem; margin-top: 1.2rem; text-align: left; font-size: 0.85rem; color:#e2e8f0;">
                             <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem;">
                                 <strong id="inv-preview-from" style="color:var(--primary);">Acme Corp</strong>
@@ -2155,13 +2159,14 @@
                             </div>
                         </div>
 
-                        <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                        <div class="invoice-actions" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
                             <div style="display: flex; gap: 0.4rem;">
                                 <button class="secondary-btn" onclick="exportInvoice('pdf')" style="flex:1; font-size:0.8rem; padding:0.5rem; margin:0; border-radius:8px; min-height:36px;">PDF 📄</button>
                                 <button class="secondary-btn" onclick="exportInvoice('png')" style="flex:1; font-size:0.8rem; padding:0.5rem; margin:0; border-radius:8px; min-height:36px;">PNG 🖼️</button>
                                 <button class="secondary-btn" onclick="exportInvoice('csv')" style="flex:1; font-size:0.8rem; padding:0.5rem; margin:0; border-radius:8px; min-height:36px;">CSV 📊</button>
                             </div>
                             <button class="glowing-btn demo-btn ripple-btn" onclick="calculateInvoice()" style="width:100%; margin-top:0.25rem;">Calculate Invoice</button>
+                        </div>
                         </div>
                     </div>
                     <details class="formula-explainer">
