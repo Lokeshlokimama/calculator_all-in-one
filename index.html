@@ -1899,6 +1899,34 @@
 
                 <div id="calc-image-converter" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web">
                     <div class="card-glow"></div>
+                    <h3>Image Format Converter</h3>
+                    <p>Convert images to PNG, JPG, or WEBP in-browser</p>
+                    <div class="tool-ui">
+                        <div class="input-group" style="flex-direction: column; gap: 0.75rem; width: 100%;">
+                            <div class="input-wrapper" style="width:100%;">
+                                <input type="file" class="tool-input" id="img-upload" accept="image/*" style="padding: 0.5rem; background: rgba(255,255,255,0.05); color: #fff; width:100%;">
+                            </div>
+                            <div class="input-wrapper" style="width:100%;">
+                                <select class="tool-input" id="img-format" style="width: 100%; padding: 0.75rem; border-radius: 8px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--glass-border);">
+                                    <option value="image/png">PNG</option>
+                                    <option value="image/jpeg">JPEG</option>
+                                    <option value="image/webp">WEBP</option>
+                                </select>
+                            </div>
+                        </div>
+                        <canvas id="img-canvas" style="display: none;"></canvas>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="convertImage()" style="margin-top: 1rem; width:100%;">Convert & Download</button>
+                    </div>
+                    <details class="formula-explainer">
+                        <summary>Formula & Explanation</summary>
+                        <div class="formula-content">
+                            <p><strong>Formula:</strong> <code>In-browser canvas compression & export</code></p>
+                            <p><strong>Explanation:</strong> Uses the HTML5 Canvas API to load image matrices and export them in PNG, JPEG, or WEBP.</p>
+                            <p><strong>Example:</strong> upload JPG -> download WEBP</p>
+                        </div>
+                    </details>
+                </div>
+
                 <!-- UUID Generator -->
                 <div id="calc-uuid" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web">
                     <div class="card-glow"></div>
@@ -2144,35 +2172,6 @@
                         </div>
                     </details>
                 </div>
-
-                    <h3>Image Format Converter</h3>
-                    <p>Convert images to PNG, JPG, or WEBP in-browser</p>
-                    <div class="tool-ui">
-                        <div class="input-group" style="flex-direction: column; gap: 0.75rem; width: 100%;">
-                            <div class="input-wrapper" style="width:100%;">
-                                <input type="file" class="tool-input" id="img-upload" accept="image/*" style="padding: 0.5rem; background: rgba(255,255,255,0.05); color: #fff; width:100%;">
-                            </div>
-                            <div class="input-wrapper" style="width:100%;">
-                                <select class="tool-input" id="img-format" style="width: 100%; padding: 0.75rem; border-radius: 8px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--glass-border);">
-                                    <option value="image/png">PNG</option>
-                                    <option value="image/jpeg">JPEG</option>
-                                    <option value="image/webp">WEBP</option>
-                                </select>
-                            </div>
-                        </div>
-                        <canvas id="img-canvas" style="display: none;"></canvas>
-                        <button class="glowing-btn demo-btn ripple-btn" onclick="convertImage()" style="margin-top: 1rem; width:100%;">Convert & Download</button>
-                    </div>
-                
-    <details class="formula-explainer">
-        <summary>Formula & Explanation</summary>
-        <div class="formula-content">
-            <p><strong>Formula:</strong> <code>In-browser canvas compression & export</code></p>
-            <p><strong>Explanation:</strong> Uses the HTML5 Canvas API to load image matrices and export them in PNG, JPEG, or WEBP.</p>
-            <p><strong>Example:</strong> upload JPG -> download WEBP</p>
-        </div>
-    </details>
-</div>
 
             </div>
 
