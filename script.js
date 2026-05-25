@@ -631,119 +631,6 @@ window.addFood = addFood;
 
 // --- Standard Calculator Logic ---
 let calcExpression = '';
-let scientificExpression = '';
-
-let suiteExpression = '1200*5';
-let suiteJustCalculated = true;
-
-function formatSuiteNumber(value) {
-    const numericValue = Number(value);
-    if (!Number.isFinite(numericValue)) return '0';
-
-    return numericValue.toLocaleString('en-IN', {
-        maximumFractionDigits: 4
-    });
-}
-
-function renderSuiteCalculator(resultOverride) {
-    const expressionEl = document.getElementById('suite-calc-expression');
-    const resultEl = document.getElementById('suite-calc-result');
-    if (!expressionEl || !resultEl) return;
-
-    expressionEl.innerText = suiteExpression
-        ? suiteExpression.replace(/\*/g, ' x ')
-            .replace(/\//g, ' / ')
-            .replace(/\+/g, ' + ')
-            .replace(/-/g, ' - ')
-            .replace(/\s+/g, ' ')
-            .trim()
-        : 'Ready';
-
-    if (resultOverride !== undefined) {
-        resultEl.innerText = resultOverride;
-        return;
-    }
-
-    try {
-        const result = new Function('return ' + suiteExpression)();
-        resultEl.innerText = formatSuiteNumber(result);
-    } catch {
-        resultEl.innerText = '0';
-    }
-}
-
-function initSuiteCalculator() {
-    renderSuiteCalculator();
-
-    document.querySelectorAll('[data-suite-key]').forEach(button => {
-        button.addEventListener('click', () => {
-            const key = button.dataset.suiteKey;
-            const operators = ['+', '-', '*', '/'];
-
-            if (key === 'clear') {
-                suiteExpression = '';
-                suiteJustCalculated = false;
-                renderSuiteCalculator('0');
-                return;
-            }
-
-            if (key === 'toggle') {
-                if (!suiteExpression) return;
-                suiteExpression = suiteExpression.startsWith('-')
-                    ? suiteExpression.slice(1)
-                    : `-${suiteExpression}`;
-                renderSuiteCalculator();
-                return;
-            }
-
-            if (key === '%') {
-                try {
-                    const value = new Function('return ' + suiteExpression)();
-                    suiteExpression = String(Number(value) / 100);
-                    renderSuiteCalculator();
-                } catch {
-                    renderSuiteCalculator('Error');
-                }
-                return;
-            }
-
-            if (key === '=') {
-                try {
-                    const result = new Function('return ' + suiteExpression)();
-                    suiteExpression = String(Math.round(result * 10000) / 10000);
-                    suiteJustCalculated = true;
-                    renderSuiteCalculator();
-                } catch {
-                    suiteExpression = '';
-                    suiteJustCalculated = false;
-                    renderSuiteCalculator('Error');
-                }
-                return;
-            }
-
-            if (operators.includes(key)) {
-                if (!suiteExpression) return;
-                if (operators.includes(suiteExpression.slice(-1))) {
-                    suiteExpression = suiteExpression.slice(0, -1) + key;
-                } else {
-                    suiteExpression += key;
-                }
-                suiteJustCalculated = false;
-                renderSuiteCalculator();
-                return;
-            }
-
-            if (suiteJustCalculated) {
-                suiteExpression = '';
-                suiteJustCalculated = false;
-            }
-
-            if (key === '.' && suiteExpression.split(/[+\-*/]/).pop().includes('.')) return;
-            suiteExpression += key;
-            renderSuiteCalculator();
-        });
-    });
-}
 
 function appendCalc(value) {
     const display = document.getElementById('calc-display');
@@ -868,7 +755,7 @@ window.downloadQR = downloadQR;
 // --- Category Filtering ---
 let currentCategory = 'all';
 let currentSearchTerm = '';
-let focusedToolId = '';
+let searchScrollTimer = null;
 
 function getNavbarOffset() {
     return (document.querySelector('.navbar')?.offsetHeight || 0) + 16;
@@ -902,62 +789,39 @@ function scrollToVisibleCalculator(category) {
     });
 }
 
-function scrollCalculatorPageTop() {
-    const pages = document.querySelector('.calculator-pages');
-    const workbench = document.querySelector('.calculator-workbench');
+function scheduleSearchResultScroll(visibleCount) {
+    if (searchScrollTimer) window.clearTimeout(searchScrollTimer);
 
-    if (workbench) {
-        const top = workbench.getBoundingClientRect().top + window.scrollY - getNavbarOffset();
-        window.scrollTo({
-            top: Math.max(0, top),
-            behavior: prefersReducedMotion ? 'auto' : 'smooth'
-        });
-    }
+    const hasSearch = currentSearchTerm.trim().length > 0;
+    if (!hasSearch) return;
 
-    pages?.scrollTo({
-        top: 0,
-        behavior: prefersReducedMotion ? 'auto' : 'smooth'
-    });
+    searchScrollTimer = window.setTimeout(() => {
+        if (visibleCount > 0) {
+            scrollToVisibleCalculator(currentCategory);
+        } else {
+            scrollToTools();
+        }
+    }, prefersReducedMotion ? 0 : 120);
 }
 
 function updateSearchStatus(visibleCount) {
     const status = document.getElementById('search-status');
-    const globalStatus = document.getElementById('global-search-status');
-    let message = '';
+    if (!status) return;
 
     if (currentSearchTerm) {
-        message = `${visibleCount} match${visibleCount === 1 ? '' : 'es'} for "${currentSearchTerm}"`;
+        status.innerText = `${visibleCount} matching tool${visibleCount === 1 ? '' : 's'} for "${currentSearchTerm}".`;
     } else if (currentCategory !== 'all') {
-        message = `${visibleCount} ${currentCategory} tool${visibleCount === 1 ? '' : 's'}`;
+        status.innerText = `Showing ${visibleCount} ${currentCategory} tool${visibleCount === 1 ? '' : 's'}.`;
     } else {
-        message = 'All calculators';
+        status.innerText = 'Search all calculators instantly.';
     }
-
-    if (status) status.innerText = message;
-    if (globalStatus) globalStatus.innerText = message;
-}
-
-function syncSearchInputs(value) {
-    document.querySelectorAll('[data-tool-search-input]').forEach(input => {
-        if (input.value !== value) input.value = value;
-    });
 }
 
 function applyToolFilters(options = {}) {
     const grid = document.querySelector('.tools-grid');
     const isAll = currentCategory === 'all';
     const search = currentSearchTerm.trim().toLowerCase();
-    const cards = [...document.querySelectorAll('.tool-demo-card')];
-    const matchingCards = cards.filter(card => {
-        const categoryMatches = isAll || card.dataset.category === currentCategory;
-        const searchMatches = !search || getToolSearchText(card).includes(search);
-        return categoryMatches && searchMatches;
-    });
-    let visibleCount = matchingCards.length;
-
-    if (!focusedToolId || !matchingCards.some(card => card.id === focusedToolId)) {
-        focusedToolId = matchingCards[0]?.id || '';
-    }
+    let visibleCount = 0;
 
     document.querySelectorAll('[data-category-link]').forEach(link => {
         link.classList.toggle('active', link.dataset.categoryLink === currentCategory);
@@ -965,15 +829,15 @@ function applyToolFilters(options = {}) {
 
     grid?.classList.toggle('is-filtered', !isAll || Boolean(search));
 
-    cards.forEach((card, index) => {
-        const matches = matchingCards.includes(card);
-        const shouldShow = matches && card.id === focusedToolId;
-        card.dataset.filterMatch = String(matches);
+    document.querySelectorAll('.tool-demo-card').forEach((card, index) => {
+        const categoryMatches = isAll || card.dataset.category === currentCategory;
+        const searchMatches = !search || getToolSearchText(card).includes(search);
+        const shouldShow = categoryMatches && searchMatches;
         card.classList.toggle('hidden', !shouldShow);
-        card.classList.toggle('is-book-page-active', shouldShow);
         card.setAttribute('aria-hidden', String(!shouldShow));
 
         if (shouldShow) {
+            visibleCount++;
             card.style.transitionDelay = prefersReducedMotion ? '0s' : `${Math.min(index, 8) * 0.04}s`;
             setTimeout(() => card.classList.add('active'), 10);
         } else {
@@ -981,9 +845,6 @@ function applyToolFilters(options = {}) {
             card.classList.remove('active');
         }
     });
-
-    updateBookIndexVisibility();
-    setActiveBookIndexTool(focusedToolId);
 
     const emptyState = document.getElementById('empty-tools-state');
     if (emptyState) emptyState.hidden = visibleCount !== 0;
@@ -993,20 +854,16 @@ function applyToolFilters(options = {}) {
         scrollToVisibleCalculator(currentCategory);
     }
 
-    if (options.scrollPanel) {
-        scrollCalculatorPageTop();
-    }
-
     return visibleCount;
 }
 
 function filterCategory(category, sourceEvent) {
     if (sourceEvent) sourceEvent.preventDefault();
     currentCategory = category;
-    focusedToolId = '';
     if (sourceEvent) {
         currentSearchTerm = '';
-        syncSearchInputs('');
+        const searchInput = document.getElementById('tool-search');
+        if (searchInput) searchInput.value = '';
     }
     applyToolFilters({ scroll: Boolean(sourceEvent) });
 }
@@ -1015,25 +872,24 @@ window.filterCategory = filterCategory;
 function searchTools(value) {
     currentSearchTerm = value || '';
     currentCategory = 'all';
-    focusedToolId = '';
-    syncSearchInputs(currentSearchTerm);
-    applyToolFilters();
+    const visibleCount = applyToolFilters();
+    scheduleSearchResultScroll(visibleCount);
 }
 window.searchTools = searchTools;
 
 function clearToolSearch() {
     currentSearchTerm = '';
-    focusedToolId = '';
-    syncSearchInputs('');
+    const searchInput = document.getElementById('tool-search');
+    if (searchInput) searchInput.value = '';
     applyToolFilters({ scroll: true });
 }
 window.clearToolSearch = clearToolSearch;
 
 function jumpToTool(id, category = 'all') {
     currentSearchTerm = '';
-    syncSearchInputs('');
+    const searchInput = document.getElementById('tool-search');
+    if (searchInput) searchInput.value = '';
     currentCategory = category;
-    focusedToolId = id;
     applyToolFilters();
     scrollToCalc(id, category);
 }
@@ -1323,6 +1179,185 @@ const CURRENCY_API_BASE = 'https://open.er-api.com/v6/latest';
 const CURRENCY_CACHE_PREFIX = 'daily-needs-currency-rates-';
 const CURRENCY_CACHE_TTL_MS = 12 * 60 * 60 * 1000;
 const currencyRateMemoryCache = new Map();
+const CURRENCY_OPTIONS = Object.freeze([
+    { code: 'AED', name: 'UAE Dirham' },
+    { code: 'AFN', name: 'Afghan Afghani' },
+    { code: 'ALL', name: 'Albanian Lek' },
+    { code: 'AMD', name: 'Armenian Dram' },
+    { code: 'ANG', name: 'Netherlands Antillean Guilder' },
+    { code: 'AOA', name: 'Angolan Kwanza' },
+    { code: 'ARS', name: 'Argentine Peso' },
+    { code: 'AUD', name: 'Australian Dollar' },
+    { code: 'AWG', name: 'Aruban Florin' },
+    { code: 'AZN', name: 'Azerbaijani Manat' },
+    { code: 'BAM', name: 'Bosnia-Herzegovina Convertible Mark' },
+    { code: 'BBD', name: 'Barbadian Dollar' },
+    { code: 'BDT', name: 'Bangladeshi Taka' },
+    { code: 'BGN', name: 'Bulgarian Lev' },
+    { code: 'BHD', name: 'Bahraini Dinar' },
+    { code: 'BIF', name: 'Burundian Franc' },
+    { code: 'BMD', name: 'Bermudian Dollar' },
+    { code: 'BND', name: 'Brunei Dollar' },
+    { code: 'BOB', name: 'Bolivian Boliviano' },
+    { code: 'BRL', name: 'Brazilian Real' },
+    { code: 'BSD', name: 'Bahamian Dollar' },
+    { code: 'BTN', name: 'Bhutanese Ngultrum' },
+    { code: 'BWP', name: 'Botswana Pula' },
+    { code: 'BYN', name: 'Belarusian Ruble' },
+    { code: 'BZD', name: 'Belize Dollar' },
+    { code: 'CAD', name: 'Canadian Dollar' },
+    { code: 'CDF', name: 'Congolese Franc' },
+    { code: 'CHF', name: 'Swiss Franc' },
+    { code: 'CLP', name: 'Chilean Peso' },
+    { code: 'CNY', name: 'Chinese Yuan' },
+    { code: 'COP', name: 'Colombian Peso' },
+    { code: 'CRC', name: 'Costa Rican Colon' },
+    { code: 'CUP', name: 'Cuban Peso' },
+    { code: 'CVE', name: 'Cape Verdean Escudo' },
+    { code: 'CZK', name: 'Czech Koruna' },
+    { code: 'DJF', name: 'Djiboutian Franc' },
+    { code: 'DKK', name: 'Danish Krone' },
+    { code: 'DOP', name: 'Dominican Peso' },
+    { code: 'DZD', name: 'Algerian Dinar' },
+    { code: 'EGP', name: 'Egyptian Pound' },
+    { code: 'ERN', name: 'Eritrean Nakfa' },
+    { code: 'ETB', name: 'Ethiopian Birr' },
+    { code: 'EUR', name: 'Euro' },
+    { code: 'FJD', name: 'Fijian Dollar' },
+    { code: 'FKP', name: 'Falkland Islands Pound' },
+    { code: 'FOK', name: 'Faroese Krona' },
+    { code: 'GBP', name: 'British Pound' },
+    { code: 'GEL', name: 'Georgian Lari' },
+    { code: 'GGP', name: 'Guernsey Pound' },
+    { code: 'GHS', name: 'Ghanaian Cedi' },
+    { code: 'GIP', name: 'Gibraltar Pound' },
+    { code: 'GMD', name: 'Gambian Dalasi' },
+    { code: 'GNF', name: 'Guinean Franc' },
+    { code: 'GTQ', name: 'Guatemalan Quetzal' },
+    { code: 'GYD', name: 'Guyanese Dollar' },
+    { code: 'HKD', name: 'Hong Kong Dollar' },
+    { code: 'HNL', name: 'Honduran Lempira' },
+    { code: 'HRK', name: 'Croatian Kuna' },
+    { code: 'HTG', name: 'Haitian Gourde' },
+    { code: 'HUF', name: 'Hungarian Forint' },
+    { code: 'IDR', name: 'Indonesian Rupiah' },
+    { code: 'ILS', name: 'Israeli New Shekel' },
+    { code: 'IMP', name: 'Isle of Man Pound' },
+    { code: 'INR', name: 'Indian Rupee' },
+    { code: 'IQD', name: 'Iraqi Dinar' },
+    { code: 'IRR', name: 'Iranian Rial' },
+    { code: 'ISK', name: 'Icelandic Krona' },
+    { code: 'JEP', name: 'Jersey Pound' },
+    { code: 'JMD', name: 'Jamaican Dollar' },
+    { code: 'JOD', name: 'Jordanian Dinar' },
+    { code: 'JPY', name: 'Japanese Yen' },
+    { code: 'KES', name: 'Kenyan Shilling' },
+    { code: 'KGS', name: 'Kyrgyzstani Som' },
+    { code: 'KHR', name: 'Cambodian Riel' },
+    { code: 'KID', name: 'Kiribati Dollar' },
+    { code: 'KMF', name: 'Comorian Franc' },
+    { code: 'KRW', name: 'South Korean Won' },
+    { code: 'KWD', name: 'Kuwaiti Dinar' },
+    { code: 'KYD', name: 'Cayman Islands Dollar' },
+    { code: 'KZT', name: 'Kazakhstani Tenge' },
+    { code: 'LAK', name: 'Lao Kip' },
+    { code: 'LBP', name: 'Lebanese Pound' },
+    { code: 'LKR', name: 'Sri Lankan Rupee' },
+    { code: 'LRD', name: 'Liberian Dollar' },
+    { code: 'LSL', name: 'Lesotho Loti' },
+    { code: 'LYD', name: 'Libyan Dinar' },
+    { code: 'MAD', name: 'Moroccan Dirham' },
+    { code: 'MDL', name: 'Moldovan Leu' },
+    { code: 'MGA', name: 'Malagasy Ariary' },
+    { code: 'MKD', name: 'Macedonian Denar' },
+    { code: 'MMK', name: 'Myanmar Kyat' },
+    { code: 'MNT', name: 'Mongolian Tugrik' },
+    { code: 'MOP', name: 'Macanese Pataca' },
+    { code: 'MRU', name: 'Mauritanian Ouguiya' },
+    { code: 'MUR', name: 'Mauritian Rupee' },
+    { code: 'MVR', name: 'Maldivian Rufiyaa' },
+    { code: 'MWK', name: 'Malawian Kwacha' },
+    { code: 'MXN', name: 'Mexican Peso' },
+    { code: 'MYR', name: 'Malaysian Ringgit' },
+    { code: 'MZN', name: 'Mozambican Metical' },
+    { code: 'NAD', name: 'Namibian Dollar' },
+    { code: 'NGN', name: 'Nigerian Naira' },
+    { code: 'NIO', name: 'Nicaraguan Cordoba' },
+    { code: 'NOK', name: 'Norwegian Krone' },
+    { code: 'NPR', name: 'Nepalese Rupee' },
+    { code: 'NZD', name: 'New Zealand Dollar' },
+    { code: 'OMR', name: 'Omani Rial' },
+    { code: 'PAB', name: 'Panamanian Balboa' },
+    { code: 'PEN', name: 'Peruvian Sol' },
+    { code: 'PGK', name: 'Papua New Guinean Kina' },
+    { code: 'PHP', name: 'Philippine Peso' },
+    { code: 'PKR', name: 'Pakistani Rupee' },
+    { code: 'PLN', name: 'Polish Zloty' },
+    { code: 'PYG', name: 'Paraguayan Guarani' },
+    { code: 'QAR', name: 'Qatari Riyal' },
+    { code: 'RON', name: 'Romanian Leu' },
+    { code: 'RSD', name: 'Serbian Dinar' },
+    { code: 'RUB', name: 'Russian Ruble' },
+    { code: 'RWF', name: 'Rwandan Franc' },
+    { code: 'SAR', name: 'Saudi Riyal' },
+    { code: 'SBD', name: 'Solomon Islands Dollar' },
+    { code: 'SCR', name: 'Seychellois Rupee' },
+    { code: 'SDG', name: 'Sudanese Pound' },
+    { code: 'SEK', name: 'Swedish Krona' },
+    { code: 'SGD', name: 'Singapore Dollar' },
+    { code: 'SHP', name: 'Saint Helena Pound' },
+    { code: 'SLE', name: 'Sierra Leonean Leone' },
+    { code: 'SLL', name: 'Old Sierra Leonean Leone' },
+    { code: 'SOS', name: 'Somali Shilling' },
+    { code: 'SRD', name: 'Surinamese Dollar' },
+    { code: 'SSP', name: 'South Sudanese Pound' },
+    { code: 'STN', name: 'Sao Tome and Principe Dobra' },
+    { code: 'SYP', name: 'Syrian Pound' },
+    { code: 'SZL', name: 'Swazi Lilangeni' },
+    { code: 'THB', name: 'Thai Baht' },
+    { code: 'TJS', name: 'Tajikistani Somoni' },
+    { code: 'TMT', name: 'Turkmenistani Manat' },
+    { code: 'TND', name: 'Tunisian Dinar' },
+    { code: 'TOP', name: 'Tongan Paanga' },
+    { code: 'TRY', name: 'Turkish Lira' },
+    { code: 'TTD', name: 'Trinidad and Tobago Dollar' },
+    { code: 'TVD', name: 'Tuvaluan Dollar' },
+    { code: 'TWD', name: 'New Taiwan Dollar' },
+    { code: 'TZS', name: 'Tanzanian Shilling' },
+    { code: 'UAH', name: 'Ukrainian Hryvnia' },
+    { code: 'UGX', name: 'Ugandan Shilling' },
+    { code: 'USD', name: 'United States Dollar' },
+    { code: 'UYU', name: 'Uruguayan Peso' },
+    { code: 'UZS', name: 'Uzbekistani Som' },
+    { code: 'VES', name: 'Venezuelan Bolivar' },
+    { code: 'VND', name: 'Vietnamese Dong' },
+    { code: 'VUV', name: 'Vanuatu Vatu' },
+    { code: 'WST', name: 'Samoan Tala' },
+    { code: 'XAF', name: 'Central African CFA Franc' },
+    { code: 'XCD', name: 'East Caribbean Dollar' },
+    { code: 'XDR', name: 'Special Drawing Rights' },
+    { code: 'XOF', name: 'West African CFA Franc' },
+    { code: 'XPF', name: 'CFP Franc' },
+    { code: 'YER', name: 'Yemeni Rial' },
+    { code: 'ZAR', name: 'South African Rand' },
+    { code: 'ZMW', name: 'Zambian Kwacha' },
+    { code: 'ZWL', name: 'Zimbabwean Dollar' }
+]);
+
+function populateCurrencySelects() {
+    document.querySelectorAll('#curr-from, #curr-to').forEach(select => {
+        const selectedCurrency = select.dataset.defaultCurrency || select.value || (select.id === 'curr-from' ? 'INR' : 'USD');
+        select.innerHTML = '';
+
+        CURRENCY_OPTIONS.forEach(({ code, name }) => {
+            const option = document.createElement('option');
+            option.value = code;
+            option.textContent = `${code} - ${name}`;
+            option.selected = code === selectedCurrency;
+            select.appendChild(option);
+        });
+    });
+}
 
 function getCurrencyCache(base) {
     const memoryCache = currencyRateMemoryCache.get(base);
@@ -1503,193 +1538,6 @@ function calcTime() {
     showToast('Time Calculated!');
 }
 window.calcTime = calcTime;
-
-function formatDateTimeLocal(date = new Date()) {
-    const pad = value => String(value).padStart(2, '0');
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
-}
-
-function getTimeZoneParts(date, timeZone) {
-    const formatter = new Intl.DateTimeFormat('en-US', {
-        timeZone,
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-    });
-    const parts = formatter.formatToParts(date).reduce((acc, part) => {
-        if (part.type !== 'literal') acc[part.type] = part.value;
-        return acc;
-    }, {});
-
-    return {
-        year: Number(parts.year),
-        month: Number(parts.month),
-        day: Number(parts.day),
-        hour: Number(parts.hour === '24' ? '0' : parts.hour),
-        minute: Number(parts.minute),
-        second: Number(parts.second)
-    };
-}
-
-function getTimeZoneOffset(date, timeZone) {
-    const parts = getTimeZoneParts(date, timeZone);
-    const utcFromParts = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second);
-    return utcFromParts - date.getTime();
-}
-
-function zonedWallTimeToDate(value, timeZone) {
-    const match = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/);
-    if (!match) return null;
-
-    const [, year, month, day, hour, minute] = match.map(Number);
-    const utcGuess = Date.UTC(year, month - 1, day, hour, minute, 0);
-    let offset = getTimeZoneOffset(new Date(utcGuess), timeZone);
-    let utcTime = utcGuess - offset;
-    offset = getTimeZoneOffset(new Date(utcTime), timeZone);
-    utcTime = utcGuess - offset;
-
-    return new Date(utcTime);
-}
-
-function formatZonedDate(date, timeZone) {
-    return new Intl.DateTimeFormat('en-US', {
-        timeZone,
-        weekday: 'short',
-        year: 'numeric',
-        month: 'short',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        timeZoneName: 'short'
-    }).format(date);
-}
-
-function setTimeZoneNow() {
-    const input = document.getElementById('tz-datetime');
-    if (!input) return;
-    input.value = formatDateTimeLocal();
-    convertTimeZone();
-}
-window.setTimeZoneNow = setTimeZoneNow;
-
-function convertTimeZone() {
-    const value = document.getElementById('tz-datetime')?.value;
-    const fromZone = document.getElementById('tz-from')?.value || 'UTC';
-    const toZone = document.getElementById('tz-to')?.value || 'UTC';
-    const result = document.getElementById('tz-result');
-    const sourceDate = zonedWallTimeToDate(value, fromZone);
-
-    if (!sourceDate) {
-        showFieldError('tz-datetime', 'Select date and time');
-        return;
-    }
-
-    const fromText = formatZonedDate(sourceDate, fromZone);
-    const toText = formatZonedDate(sourceDate, toZone);
-    result.innerHTML = `
-        <strong>${escapeHTML(toText)}</strong>
-        <span>From ${escapeHTML(fromText)}</span>
-    `;
-    showToast('Time zone converted');
-}
-window.convertTimeZone = convertTimeZone;
-
-function renderScientific() {
-    const display = document.getElementById('sci-display');
-    if (display) display.innerText = scientificExpression || '0';
-}
-
-function appendScientific(value) {
-    if (scientificExpression === 'Error') scientificExpression = '';
-    scientificExpression += value;
-    renderScientific();
-}
-window.appendScientific = appendScientific;
-
-function clearScientific() {
-    scientificExpression = '';
-    renderScientific();
-}
-window.clearScientific = clearScientific;
-
-function backspaceScientific() {
-    scientificExpression = scientificExpression.slice(0, -1);
-    renderScientific();
-}
-window.backspaceScientific = backspaceScientific;
-
-function calculateScientific() {
-    if (!scientificExpression) return;
-
-    const angleMode = document.getElementById('sci-angle-mode')?.value || 'deg';
-    const toRadians = value => angleMode === 'deg' ? value * Math.PI / 180 : value;
-    const safeExpression = scientificExpression
-        .replace(/\^/g, '**')
-        .replace(/\bln\(/g, 'log(');
-
-    if (!/^[0-9+\-*/().\sA-Za-z_*]+$/.test(safeExpression)) {
-        scientificExpression = 'Error';
-        renderScientific();
-        showToast('Invalid scientific expression');
-        return;
-    }
-
-    try {
-        const result = new Function('sin', 'cos', 'tan', 'log', 'log10', 'sqrt', 'PI', 'E', `"use strict"; return (${safeExpression});`)(
-            value => Math.sin(toRadians(value)),
-            value => Math.cos(toRadians(value)),
-            value => Math.tan(toRadians(value)),
-            Math.log,
-            Math.log10,
-            Math.sqrt,
-            Math.PI,
-            Math.E
-        );
-
-        if (!Number.isFinite(result)) throw new Error('Math Error');
-        scientificExpression = Number(result.toPrecision(12)).toString();
-        renderScientific();
-        showToast('Scientific result ready');
-    } catch {
-        scientificExpression = 'Error';
-        renderScientific();
-        showToast('Invalid scientific expression');
-    }
-}
-window.calculateScientific = calculateScientific;
-
-function convertMileage() {
-    const value = parseFloat(document.getElementById('mileage-value')?.value);
-    const unit = document.getElementById('mileage-unit')?.value || 'kml';
-    const result = document.getElementById('mileage-result');
-
-    if (!value || value <= 0) {
-        showFieldError('mileage-value', 'Enter mileage above 0');
-        return;
-    }
-
-    let kmPerLiter = value;
-    if (unit === 'l100') kmPerLiter = 100 / value;
-    if (unit === 'mpg-us') kmPerLiter = value * 0.425143707;
-    if (unit === 'mpg-uk') kmPerLiter = value * 0.35400619;
-
-    const litersPer100Km = 100 / kmPerLiter;
-    const mpgUs = kmPerLiter * 2.35214583;
-    const mpgUk = kmPerLiter * 2.82480936;
-
-    result.innerHTML = `
-        <div class="mileage-metric"><b>km/L</b><span>${kmPerLiter.toFixed(2)}</span></div>
-        <div class="mileage-metric"><b>L/100km</b><span>${litersPer100Km.toFixed(2)}</span></div>
-        <div class="mileage-metric"><b>US MPG</b><span>${mpgUs.toFixed(2)}</span></div>
-        <div class="mileage-metric"><b>UK MPG</b><span>${mpgUk.toFixed(2)}</span></div>
-    `;
-    showToast('Mileage converted');
-}
-window.convertMileage = convertMileage;
 
 function calcPct() {
     const a = parseFloat(document.getElementById('pct-a').value);
@@ -2012,6 +1860,40 @@ function calcElectricityBill() {
 
     const bill = values['bill-units'] * values['bill-rate'];
     setResultText('bill-result', formatRupees(bill), 'Electricity bill calculated');
+
+    // --- Electricity Pie Chart ---
+    const chartContainer = document.getElementById('electricity-pie-container');
+    if (chartContainer) {
+        chartContainer.style.display = 'block';
+        const ctx = document.getElementById('electricity-pie-chart').getContext('2d');
+        if (window.elecChartInstance) window.elecChartInstance.destroy();
+        
+        const usageCost = bill;
+        const taxEst = bill * 0.18; // Mock 18% tax
+        const fixedCharge = 50; // Mock fixed charge
+        
+        if (typeof Chart !== 'undefined') {
+            window.elecChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Usage', 'Tax/Duty', 'Fixed'],
+                    datasets: [{
+                        data: [usageCost, taxEst, fixedCharge],
+                        backgroundColor: ['#facc15', '#ef4444', '#3b82f6'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    animation: { duration: 1500, animateScale: true },
+                    plugins: { legend: { position: 'right', labels: { color: '#fff', font: { size: 10 } } } }
+                }
+            });
+        } else {
+            console.warn("Chart.js is not defined. Electricity pie chart skipped.");
+        }
+    }
+
 }
 window.calcElectricityBill = calcElectricityBill;
 
@@ -2189,10 +2071,19 @@ let scrollHelperTicking = false;
 
 function updateScrollHelpers() {
     const progress = document.getElementById('scroll-progress');
+    const backButton = document.getElementById('back-to-tools');
     const scrollable = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     const percent = Math.min(100, Math.max(0, (window.scrollY / scrollable) * 100));
 
     progress?.style.setProperty('--scroll-progress', `${percent}%`);
+
+    if (backButton) {
+        const shouldShow = window.scrollY > Math.max(420, window.innerHeight * 0.65);
+        backButton.hidden = false;
+        backButton.classList.toggle('is-visible', shouldShow);
+        backButton.setAttribute('aria-hidden', String(!shouldShow));
+        backButton.tabIndex = shouldShow ? 0 : -1;
+    }
 
     scrollHelperTicking = false;
 }
@@ -2208,12 +2099,10 @@ function initScrollHelpers() {
 
 // Scroll to specific calculator from hero
 function scrollToCalc(id, category) {
-    currentCategory = category || 'all';
-    currentSearchTerm = '';
-    focusedToolId = id;
-    syncSearchInputs('');
-    applyToolFilters();
+    // 1. Filter to the correct category first so it's visible
+    filterCategory(category);
 
+    // 2. Wait a tiny bit for the DOM filter to apply, then scroll
     setTimeout(() => {
         const el = document.getElementById(id);
         if (el) {
@@ -2260,6 +2149,8 @@ function showToast(message) {
 // --- Friendly Tool UX ---
 const RECENT_TOOLS_KEY = 'daily-needs-recent-tools';
 const SAVED_TOOLS_KEY = 'daily-needs-saved-tools';
+const SUPPORT_DISMISSED_KEY = 'daily-needs-support-dismissed';
+const TOOL_USE_COUNT_KEY = 'daily-needs-tool-use-count';
 const MAX_RECENT_TOOLS = 6;
 
 function slugifyToolTitle(text) {
@@ -2281,15 +2172,6 @@ function saveStoredList(key, list) {
     } catch {
         // Storage may be blocked in private browsing; the site still works without persistence.
     }
-}
-
-function escapeHTML(value = '') {
-    return String(value)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
 }
 
 function getToolMeta(card) {
@@ -2333,119 +2215,6 @@ function renderStoredTools() {
     updateSavedButtons();
 }
 
-function getCategoryLabel(category) {
-    const labels = {
-        basic: 'Basic',
-        finance: 'Finance',
-        electricity: 'Electricity',
-        health: 'Health',
-        education: 'Education',
-        web: 'Tech & Web'
-    };
-
-    return labels[category] || 'Tool';
-}
-
-function setActiveBookIndexTool(id) {
-    document.querySelectorAll('.book-index-item').forEach(button => {
-        button.classList.toggle('is-active', button.dataset.toolId === id);
-    });
-    scrollActiveBookIndexIntoView(id);
-}
-
-function scrollActiveBookIndexIntoView(id) {
-    const list = document.getElementById('calculator-book-list');
-    const active = id ? list?.querySelector(`.book-index-item[data-tool-id="${id}"]`) : null;
-    if (!list || !active || active.hidden) return;
-
-    window.requestAnimationFrame(() => {
-        const visibleItems = [...list.querySelectorAll('.book-index-item')].filter(item => !item.hidden);
-        const activeIndex = visibleItems.indexOf(active);
-        const previous = activeIndex > 0 ? visibleItems[activeIndex - 1] : active;
-        const targetTop = Math.max(0, previous.offsetTop - list.offsetTop);
-
-        list.scrollTo({
-            top: targetTop,
-            left: Math.max(0, previous.offsetLeft - list.offsetLeft),
-            behavior: prefersReducedMotion ? 'auto' : 'smooth'
-        });
-    });
-}
-
-function updateBookIndexVisibility() {
-    const list = document.getElementById('calculator-book-list');
-    if (!list) return;
-
-    const visibleItems = [...list.querySelectorAll('.book-index-item')].filter(button => {
-        const card = document.getElementById(button.dataset.toolId);
-        const visible = Boolean(card && card.dataset.filterMatch !== 'false');
-        button.hidden = !visible;
-        return visible;
-    });
-
-    visibleItems.forEach((button, index) => {
-        const number = button.querySelector('.book-index-number');
-        if (number) number.innerText = String(index + 1).padStart(2, '0');
-    });
-
-    const count = document.getElementById('book-index-count');
-    if (count) {
-        count.innerText = `${visibleItems.length} calculator${visibleItems.length === 1 ? '' : 's'}`;
-    }
-}
-
-function buildCalculatorBookIndex() {
-    const list = document.getElementById('calculator-book-list');
-    if (!list) return;
-
-    const cards = [...document.querySelectorAll('.tool-demo-card')];
-    list.innerHTML = cards.map((card, index) => {
-        const meta = getToolMeta(card);
-        const number = String(index + 1).padStart(2, '0');
-        return `
-            <button class="book-index-item" type="button" data-tool-id="${meta.id}" data-category="${meta.category}">
-                <span class="book-index-number">${number}</span>
-                <span class="book-index-copy">
-                    <strong>${meta.title}</strong>
-                    <span>${getCategoryLabel(meta.category)}</span>
-                </span>
-            </button>
-        `;
-    }).join('');
-
-    list.addEventListener('click', event => {
-        const button = event.target.closest('.book-index-item');
-        if (!button) return;
-
-        focusedToolId = button.dataset.toolId;
-        applyToolFilters({ scrollPanel: true });
-    });
-
-    updateBookIndexVisibility();
-    focusedToolId = focusedToolId || cards[0]?.id || '';
-    setActiveBookIndexTool(focusedToolId);
-}
-
-function initBookPageObserver() {
-    const list = document.getElementById('calculator-book-list');
-    if (!list || prefersReducedMotion) return;
-
-    const observer = new IntersectionObserver(entries => {
-        const visible = entries
-            .filter(entry => entry.isIntersecting && !entry.target.classList.contains('hidden'))
-            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-
-        if (visible?.target?.id) {
-            setActiveBookIndexTool(visible.target.id);
-        }
-    }, {
-        threshold: [0.35, 0.6],
-        rootMargin: '-20% 0px -45% 0px'
-    });
-
-    document.querySelectorAll('.tool-demo-card').forEach(card => observer.observe(card));
-}
-
 function recordToolUse(card) {
     const meta = getToolMeta(card);
     if (!meta) return;
@@ -2454,6 +2223,10 @@ function recordToolUse(card) {
     recent.unshift(meta);
     saveStoredList(RECENT_TOOLS_KEY, recent.slice(0, MAX_RECENT_TOOLS));
     renderStoredTools();
+
+    const count = Number(sessionStorage.getItem(TOOL_USE_COUNT_KEY) || '0') + 1;
+    sessionStorage.setItem(TOOL_USE_COUNT_KEY, String(count));
+    if (count >= 3) showSupportNudge();
 }
 
 function clearRecentTools() {
@@ -2731,6 +2504,26 @@ function initInlineValidationClearing() {
     });
 }
 
+function showSupportNudge() {
+    if (localStorage.getItem(SUPPORT_DISMISSED_KEY) === 'true') return;
+
+    const nudge = document.getElementById('support-nudge');
+    if (!nudge || nudge.classList.contains('is-visible')) return;
+
+    nudge.hidden = false;
+    requestAnimationFrame(() => nudge.classList.add('is-visible'));
+}
+
+function dismissSupportNudge() {
+    const nudge = document.getElementById('support-nudge');
+    localStorage.setItem(SUPPORT_DISMISSED_KEY, 'true');
+    if (!nudge) return;
+
+    nudge.classList.remove('is-visible');
+    setTimeout(() => { nudge.hidden = true; }, 350);
+}
+window.dismissSupportNudge = dismissSupportNudge;
+
 // Database of calculators to show in hero floating cards
 const heroToolsDatabase = [
     { id: 'calc-sip', category: 'finance', icon: '📈', title: 'SIP', desc: 'Wealth Planner' },
@@ -2815,107 +2608,6 @@ function initHeroFloatingCards() {
     `;
 }
 
-// --- Floating AI Assistant ---
-function toggleAIAssistant() {
-    const panel = document.getElementById('ai-chat-window');
-    const button = document.getElementById('ai-widget-btn');
-    const input = document.getElementById('ai-chat-input');
-    if (!panel || !button) return;
-
-    const isActive = panel.classList.toggle('active');
-    panel.setAttribute('aria-hidden', String(!isActive));
-    button.setAttribute('aria-expanded', String(isActive));
-
-    if (isActive) {
-        setTimeout(() => input?.focus(), 80);
-    }
-}
-window.toggleAIAssistant = toggleAIAssistant;
-
-function appendAIMessage(content, sender = 'bot') {
-    const log = document.getElementById('ai-chat-log');
-    if (!log) return;
-
-    const message = document.createElement('div');
-    message.className = `ai-msg ${sender}`;
-
-    if (sender === 'bot') {
-        message.innerHTML = content;
-    } else {
-        message.textContent = content;
-    }
-
-    log.appendChild(message);
-    log.scrollTop = log.scrollHeight;
-}
-
-function scoreAITool(meta, query) {
-    const normalized = query.toLowerCase();
-    const haystack = `${meta.title} ${meta.category} ${meta.card?.querySelector('p')?.innerText || ''}`.toLowerCase();
-    let score = 0;
-
-    normalized.split(/\s+/).filter(Boolean).forEach(token => {
-        if (haystack.includes(token)) score += token.length;
-    });
-
-    const directMatches = [
-        { words: ['timezone', 'time zone', 'world time', 'meeting'], id: 'calc-time-zone' },
-        { words: ['scientific', 'sin', 'cos', 'tan', 'log', 'root', 'power'], id: 'calc-scientific' },
-        { words: ['mileage', 'fuel', 'mpg', 'km/l', 'petrol', 'diesel'], id: 'calc-mileage' },
-        { words: ['emi', 'loan'], id: 'calc-emi' },
-        { words: ['electricity', 'bill', 'unit'], id: 'calc-electricity-bill' },
-        { words: ['currency', 'exchange'], id: 'calc-curr' },
-        { words: ['bmi', 'weight'], id: 'calc-bmi' }
-    ];
-
-    directMatches.forEach(match => {
-        if (match.id === meta.id && match.words.some(word => normalized.includes(word))) score += 50;
-    });
-
-    return score;
-}
-
-function getAIRecommendations(query) {
-    return getAllToolMetas()
-        .map(meta => ({ ...meta, score: scoreAITool(meta, query) }))
-        .filter(meta => meta.score > 0)
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 4);
-}
-
-function jumpToAIRecommendation(id) {
-    const card = getCardByToolId(id);
-    const meta = getToolMeta(card);
-    if (!meta) return;
-    jumpToTool(meta.id, meta.category);
-}
-window.jumpToAIRecommendation = jumpToAIRecommendation;
-
-function sendAIMessage() {
-    const input = document.getElementById('ai-chat-input');
-    const query = input?.value.trim() || '';
-    if (!query) return;
-
-    appendAIMessage(query, 'user');
-    input.value = '';
-
-    const matches = getAIRecommendations(query);
-    if (!matches.length) {
-        appendAIMessage('I could not find an exact calculator. Try EMI, mileage, time zone, scientific, BMI, currency, QR, or electricity bill.');
-        return;
-    }
-
-    const items = matches.map(meta => `
-        <button type="button" class="ai-tool-suggestion" onclick="jumpToAIRecommendation('${meta.id}')">
-            <strong>${escapeHTML(meta.title)}</strong>
-            <span>${escapeHTML(getCategoryLabel(meta.category))}</span>
-        </button>
-    `).join('');
-
-    appendAIMessage(`<span class="ai-reply-title">Best matches</span>${items}`);
-}
-window.sendAIMessage = sendAIMessage;
-
 // --- Footer Modals & Popups ---
 const razorpayPaymentLink = "https://rzp.io/rzp/tpqo4et";
 
@@ -2923,17 +2615,17 @@ const modalContent = {
     upi: {
         title: "Support via UPI",
         body: `<div style="text-align:center;">
-                 <div class="support-qr-frame support-qr-frame-large">
-                    <img src="assets/upi-qr.jpeg" alt="UPI QR code for platform support" width="168" height="168">
+                 <div style="width: 180px; height: 180px; background: #fff; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; border-radius: 8px; overflow:hidden;">
+                    <img src="assets/upi-qr.jpeg" alt="UPI QR code for platform support" width="180" height="180" style="width:100%; height:100%; object-fit:cover;">
                  </div>
                  <p style="font-size: 1.2rem; color: #fff; font-family: monospace;">klokeshcalculator@ybl</p>
                </div>`
     },
     razorpay: {
-        title: "Fund Me",
+        title: "Razorpay Payment",
         body: `<div style="text-align:center;">
-                 <p style="margin-bottom: 1.5rem;">Optional support helps maintain hosting/API costs and keeps these free tools online.</p>
-                 <a href="${razorpayPaymentLink}" target="_blank" rel="noopener noreferrer" style="display:inline-block; background:var(--primary); color:#fff; padding:0.8rem 2rem; border-radius:30px; text-decoration:none; font-weight:bold;">Fund Me</a>
+                 <p style="margin-bottom: 1.5rem;">Securely pay via Razorpay using Cards, Netbanking, or Wallets.</p>
+                 <a href="${razorpayPaymentLink}" target="_blank" rel="noopener noreferrer" style="display:inline-block; background:var(--primary); color:#fff; padding:0.8rem 2rem; border-radius:30px; text-decoration:none; font-weight:bold;">Pay with Razorpay</a>
                </div>`
     },
     privacy: {
@@ -3011,14 +2703,14 @@ window.openRazorpay = openRazorpay;
 
 // Initialize when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
+    initLiveCounters();
+    initHeroChart();
     initHeroFloatingCards();
+    populateCurrencySelects();
     initToolDefaults();
-    buildCalculatorBookIndex();
-    initBookPageObserver();
     initToolActions();
     initInlineValidationClearing();
     initScrollHelpers();
-    initSuiteCalculator();
     renderStoredTools();
 
     const initialCategory = new URLSearchParams(window.location.search).get('category');
@@ -3034,3 +2726,1498 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 50);
     }
 });
+
+// --- LIVE COUNTERS ---
+function initLiveCounters() {
+    const counters = document.querySelectorAll('.counter');
+    const speed = 200; 
+
+    const animateCounters = () => {
+        counters.forEach(counter => {
+            const updateCount = () => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const inc = target / speed;
+                
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + inc);
+                    setTimeout(updateCount, 10);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+            updateCount();
+        });
+    };
+    
+    // Intersection Observer to trigger when visible
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting) {
+                animateCounters();
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    const statsSection = document.getElementById('stats');
+    if (statsSection) observer.observe(statsSection);
+}
+
+// --- HERO CHART.JS ---
+function initHeroChart() {
+    const ctx = document.getElementById('hero-live-chart');
+    if (!ctx) return;
+    
+    if (typeof Chart === 'undefined') {
+        console.warn("Chart.js is not defined. Hero chart skipped.");
+        return;
+    }
+    
+    // Create animated gradient line chart
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+            datasets: [{
+                label: 'Growth',
+                data: [10, 25, 40, 55, 90, 120, 150],
+                borderColor: '#0ea5e9',
+                backgroundColor: 'rgba(14, 165, 233, 0.1)',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true,
+                pointRadius: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+                duration: 3000,
+                easing: 'easeInOutQuart'
+            },
+            scales: {
+                x: { display: false },
+                y: { display: false, min: 0 }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false }
+            }
+        }
+    });
+}
+
+
+// --- GEOMETRY TOOLS ---
+function calcCircle() {
+    const r = parseFloat(document.getElementById('circle-radius').value);
+    if (!r || r < 0) return showFieldError('circle-radius', 'Enter valid radius');
+    const area = Math.PI * r * r;
+    const circ = 2 * Math.PI * r;
+    setResultText('circle-result', `Area: ${formatCalcNumber(area, 2)}`, `Circumference: ${formatCalcNumber(circ, 2)}`);
+}
+window.calcCircle = calcCircle;
+
+function calcTriangle() {
+    const b = parseFloat(document.getElementById('tri-base').value);
+    const h = parseFloat(document.getElementById('tri-height').value);
+    if (!b || b < 0) return showFieldError('tri-base', 'Enter base');
+    if (!h || h < 0) return showFieldError('tri-height', 'Enter height');
+    const area = 0.5 * b * h;
+    setResultText('triangle-result', `Area: ${formatCalcNumber(area, 2)}`, 'Triangle area calculated');
+}
+window.calcTriangle = calcTriangle;
+
+function calcPythagorean() {
+    const a = parseFloat(document.getElementById('pyth-a').value);
+    const b = parseFloat(document.getElementById('pyth-b').value);
+    if (!a || a < 0) return showFieldError('pyth-a', 'Enter Side A');
+    if (!b || b < 0) return showFieldError('pyth-b', 'Enter Side B');
+    const c = Math.sqrt(a*a + b*b);
+    setResultText('pythagorean-result', `Hypotenuse: ${formatCalcNumber(c, 2)}`, 'Calculated via a² + b² = c²');
+}
+window.calcPythagorean = calcPythagorean;
+
+
+// --- TECH TOOLS ---
+function explainFormula() {
+    const formula = document.getElementById('formula-select').value;
+    const el = document.getElementById('formula-explanation');
+    if (formula === 'einstein') {
+        el.innerHTML = "<strong>E = mc²</strong><br><br><span style='color:#0ea5e9'>E</span> = Energy (Joules)<br><span style='color:#facc15'>m</span> = Mass (kg)<br><span style='color:#ef4444'>c</span> = Speed of light (3×10^8 m/s)<br><em>Shows mass and energy are interchangeable.</em>";
+    } else if (formula === 'compound') {
+        el.innerHTML = "<strong>A = P(1 + r/n)^(nt)</strong><br><br><span style='color:#10b981'>P</span> = Principal amount<br><span style='color:#0ea5e9'>r</span> = Annual interest rate<br><span style='color:#facc15'>n</span> = Compounds per year<br><span style='color:#ef4444'>t</span> = Time (years)";
+    } else if (formula === 'newton') {
+        el.innerHTML = "<strong>F = G(m1*m2/r²)</strong><br><br><span style='color:#0ea5e9'>F</span> = Gravitational Force<br><span style='color:#10b981'>G</span> = Gravitational Constant<br><span style='color:#facc15'>m1, m2</span> = Masses<br><span style='color:#ef4444'>r</span> = Distance between centers";
+    }
+}
+window.explainFormula = explainFormula;
+
+function plotGraph() {
+    const m = parseFloat(document.getElementById('plot-m').value) || 0;
+    const b = parseFloat(document.getElementById('plot-b').value) || 0;
+    const ctx = document.getElementById('plotter-chart').getContext('2d');
+    
+    if (window.plotChartInstance) window.plotChartInstance.destroy();
+    
+    let xs = [-10, -5, 0, 5, 10];
+    let ys = xs.map(x => (m * x) + b);
+    
+    if (typeof Chart === 'undefined') {
+        console.warn("Chart.js is not defined. Cannot plot equation plotter graph.");
+        return;
+    }
+    
+    window.plotChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: xs,
+            datasets: [{
+                label: `y = ${m}x + ${b}`,
+                data: ys,
+                borderColor: '#a855f7',
+                borderWidth: 3,
+                tension: 0
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            animation: { duration: 500 },
+            scales: { x: { display: true, grid: { color: '#333' } }, y: { display: true, grid: { color: '#333' } } }
+        }
+    });
+}
+window.plotGraph = plotGraph;
+document.addEventListener('DOMContentLoaded', () => { setTimeout(plotGraph, 1000); });
+
+function convertImage() {
+    const fileInput = document.getElementById('img-upload');
+    const formatSelect = document.getElementById('img-format').value;
+    if (!fileInput.files || !fileInput.files[0]) {
+        return showToast('Please select an image file first.', 'error');
+    }
+    
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            const canvas = document.getElementById('img-canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            
+            const dataUrl = canvas.toDataURL(formatSelect, 0.9);
+            const link = document.createElement('a');
+            link.download = `converted-image.${formatSelect.split('/')[1]}`;
+            link.href = dataUrl;
+            link.click();
+            showToast('Image converted and downloading!');
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+window.convertImage = convertImage;
+
+
+
+// ==========================================
+// --- PREMIUM FEATURE UPGRADES & CALCULATORS ---
+// ==========================================
+
+// Global Chart Instances
+let sipChartInstance = null;
+let fdChartInstance = null;
+let rdChartInstance = null;
+let calorieChartInstance = null;
+
+// --- CHART.JS FINANCE & HEALTH GRAPH UPGRADES ---
+
+// Upgrade SIP Calculator calculation to render wealth growth chart
+const originalCalcSIP = window.calcSIP;
+window.calcSIP = function() {
+    // Call original calculation first
+    const P = parseFloat(document.getElementById('sip-monthly').value);
+    const annualRate = parseFloat(document.getElementById('sip-rate').value);
+    const years = parseFloat(document.getElementById('sip-years').value);
+    
+    if (!P || P <= 0 || Number.isNaN(annualRate) || annualRate < 0 || !years || years <= 0) {
+        showToast('Please enter all values', 'error');
+        return;
+    }
+    
+    const r = annualRate / 100 / 12;
+    const n = years * 12;
+    
+    const M = r === 0 ? P * n : P * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+    const invested = P * n;
+    const estReturns = Math.max(0, M - invested);
+    
+    document.getElementById('sip-result').innerText = `Maturity: ${formatReadableAmount(M)}`;
+    document.getElementById('sip-invested').innerText = formatReadableAmount(invested);
+    document.getElementById('sip-returns').innerText = formatReadableAmount(estReturns);
+    document.getElementById('sip-total').innerText = formatReadableAmount(M);
+    
+    showToast('SIP Wealth Growth Computed!');
+
+    // Show Chart container
+    const chartContainer = document.getElementById('sip-chart-container');
+    if (chartContainer) chartContainer.style.display = 'block';
+    
+    // Generate data for line chart
+    const labels = [];
+    const investedData = [];
+    const totalData = [];
+    
+    for (let y = 1; y <= years; y++) {
+        labels.push(`Yr ${y}`);
+        const months = y * 12;
+        const totalVal = r === 0 ? P * months : P * ((Math.pow(1 + r, months) - 1) / r) * (1 + r);
+        investedData.push(P * months);
+        totalData.push(Math.round(totalVal));
+    }
+    
+    const ctx = document.getElementById('sip-chart');
+    if (ctx) {
+        if (sipChartInstance) sipChartInstance.destroy();
+        sipChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Total Value (Maturity)',
+                        data: totalData,
+                        borderColor: '#0ea5e9',
+                        backgroundColor: 'rgba(14, 165, 233, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Invested Capital',
+                        data: investedData,
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        borderDash: [5, 5]
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: true, labels: { color: '#cbd5e1', font: { size: 10 } } }
+                },
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } }
+                }
+            }
+        });
+    }
+};
+
+// Upgrade FD/SB Calculator calculation to render wealth growth chart
+const originalCalcFD = window.calcFD;
+window.calcFD = function() {
+    const P = parseFloat(document.getElementById('fd-principal').value);
+    let r = parseFloat(document.getElementById('fd-rate').value);
+    const citizenBump = parseFloat(document.getElementById('fd-citizen').value);
+    const years = parseFloat(document.getElementById('fd-years').value);
+    
+    if (!P || P <= 0 || Number.isNaN(r) || r < 0 || !years || years <= 0) {
+        showToast('Please enter all values', 'error');
+        return;
+    }
+    
+    const totalRate = (r + citizenBump) / 100;
+    const compoundFrequency = 4; // quarterly
+    const A = P * Math.pow((1 + totalRate / compoundFrequency), compoundFrequency * years);
+    const interest = Math.max(0, A - P);
+    
+    document.getElementById('fd-result').innerText = `Maturity: ${formatReadableAmount(A)}`;
+    document.getElementById('fd-invested').innerText = formatReadableAmount(P);
+    document.getElementById('fd-interest').innerText = formatReadableAmount(interest);
+    document.getElementById('fd-total').innerText = formatReadableAmount(A);
+    
+    showToast('FD Wealth Compound Computed!');
+
+    // Show Chart container
+    const chartContainer = document.getElementById('fd-chart-container');
+    if (chartContainer) chartContainer.style.display = 'block';
+    
+    // Generate labels and data
+    const labels = [];
+    const maturityData = [];
+    const principalData = [];
+    
+    for (let y = 1; y <= years; y++) {
+        labels.push(`Yr ${y}`);
+        const maturityVal = P * Math.pow((1 + totalRate / compoundFrequency), compoundFrequency * y);
+        maturityData.push(Math.round(maturityVal));
+        principalData.push(P);
+    }
+    
+    const ctx = document.getElementById('fd-chart');
+    if (ctx) {
+        if (fdChartInstance) fdChartInstance.destroy();
+        fdChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Maturity Wealth',
+                        data: maturityData,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Principal Deposit',
+                        data: principalData,
+                        borderColor: '#64748b',
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        borderDash: [5, 5]
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: true, labels: { color: '#cbd5e1', font: { size: 10 } } }
+                },
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } }
+                }
+            }
+        });
+    }
+};
+
+// Upgrade RD Calculator calculation to render wealth growth chart
+const originalCalcRD = window.calcRD;
+window.calcRD = function() {
+    const P = parseFloat(document.getElementById('rd-monthly').value);
+    const annualRate = parseFloat(document.getElementById('rd-rate').value);
+    const months = parseFloat(document.getElementById('rd-months').value);
+    
+    if (!P || P <= 0 || Number.isNaN(annualRate) || annualRate < 0 || !months || months <= 0) {
+        showToast('Please enter all values', 'error');
+        return;
+    }
+    
+    const r = annualRate / 100;
+    const deposits = P * months;
+    const interest = P * (months * (months + 1) / 2) * (r / 12);
+    const maturity = deposits + interest;
+    
+    document.getElementById('rd-result').innerText = `Maturity: ${formatReadableAmount(maturity)}`;
+    document.getElementById('rd-deposits').innerText = formatReadableAmount(deposits);
+    document.getElementById('rd-interest').innerText = formatReadableAmount(interest);
+    document.getElementById('rd-total').innerText = formatReadableAmount(maturity);
+    
+    showToast('RD Maturity Interest Computed!');
+
+    // Show Chart container
+    const chartContainer = document.getElementById('rd-chart-container');
+    if (chartContainer) chartContainer.style.display = 'block';
+    
+    // Generate data for line chart
+    const labels = [];
+    const depositsData = [];
+    const totalData = [];
+    
+    // Divide months into reasonable intervals
+    const steps = Math.min(months, 12);
+    const stepSize = Math.max(1, Math.floor(months / steps));
+    
+    for (let m = stepSize; m <= months; m += stepSize) {
+        labels.push(`${m} Mo`);
+        const deps = P * m;
+        const intr = P * (m * (m + 1) / 2) * (r / 12);
+        depositsData.push(deps);
+        totalData.push(Math.round(deps + intr));
+    }
+    
+    // Add final point if not present
+    if (totalData.length < steps || (months % stepSize !== 0)) {
+        labels.push(`${months} Mo`);
+        depositsData.push(deposits);
+        totalData.push(Math.round(maturity));
+    }
+    
+    const ctx = document.getElementById('rd-chart');
+    if (ctx) {
+        if (rdChartInstance) rdChartInstance.destroy();
+        rdChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Total Value',
+                        data: totalData,
+                        borderColor: '#f43f5e',
+                        backgroundColor: 'rgba(244, 63, 94, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Accumulated Deposits',
+                        data: depositsData,
+                        borderColor: '#cbd5e1',
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        borderDash: [5, 5]
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: true, labels: { color: '#cbd5e1', font: { size: 10 } } }
+                },
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } }
+                }
+            }
+        });
+    }
+};
+
+// Upgrade Calories & Macronutrients calculation to render Doughnut Chart
+const originalUpdateMacroBars = window.updateMacroBars;
+window.updateMacroBars = function() {
+    const total = totalMacros.carbs + totalMacros.protein + totalMacros.fat;
+    if (total === 0) return;
+    
+    const pCarbs = (totalMacros.carbs / total) * 100;
+    const pProtein = (totalMacros.protein / total) * 100;
+    const pFat = (totalMacros.fat / total) * 100;
+    
+    // Display Chart container
+    const chartContainer = document.getElementById('calorie-chart-container');
+    if (chartContainer) chartContainer.style.display = 'block';
+    
+    const ctx = document.getElementById('calorie-chart');
+    if (ctx) {
+        if (calorieChartInstance) calorieChartInstance.destroy();
+        calorieChartInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Carbs', 'Protein', 'Fat'],
+                datasets: [{
+                    data: [Math.round(totalMacros.carbs), Math.round(totalMacros.protein), Math.round(totalMacros.fat)],
+                    backgroundColor: ['#0ea5e9', '#10b981', '#8b5cf6'],
+                    borderWidth: 1,
+                    borderColor: 'rgba(15, 23, 42, 0.95)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { color: '#cbd5e1', font: { size: 11 } }
+                    }
+                }
+            }
+        });
+    }
+};
+
+
+// --- PREMIUM DATA EXPORT UTILITIES (PDF, PNG, CSV) ---
+
+// Generic PNG downloader
+function triggerPNGDownload(elementId, filename) {
+    const element = document.getElementById(elementId);
+    if (!element) {
+        showToast('Element to export not found!', 'error');
+        return;
+    }
+    
+    showToast('Generating Image... Please wait.');
+    
+    html2canvas(element, {
+        backgroundColor: '#0f172a',
+        scale: 2, // high quality
+        useCORS: true
+    }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        showToast('Image exported successfully!');
+    }).catch(err => {
+        console.error(err);
+        showToast('Failed to export Image.', 'error');
+    });
+}
+
+// Generic PDF downloader
+function triggerPDFDownload(elementId, filename) {
+    const element = document.getElementById(elementId);
+    if (!element) {
+        showToast('Element to export not found!', 'error');
+        return;
+    }
+    
+    showToast('Generating PDF... Please wait.');
+    
+    html2canvas(element, {
+        backgroundColor: '#0f172a',
+        scale: 2,
+        useCORS: true
+    }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgWidth = 210; // A4 size width in mm
+        const pageHeight = 295;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 0;
+        
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+        
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
+        pdf.save(filename);
+        showToast('PDF exported successfully!');
+    }).catch(err => {
+        console.error(err);
+        showToast('Failed to export PDF.', 'error');
+    });
+}
+
+// BMI Export Callbacks
+function exportBMI(format) {
+    const bmiVal = document.getElementById('bmi-result').innerText;
+    if (bmiVal === '0.00' || bmiVal.includes('Result')) {
+        showToast('Please calculate BMI first.', 'error');
+        return;
+    }
+    
+    if (format === 'png') {
+        triggerPNGDownload('calc-bmi', 'bmi-report.png');
+    } else if (format === 'pdf') {
+        triggerPDFDownload('calc-bmi', 'bmi-report.pdf');
+    } else if (format === 'csv') {
+        // Simple CSV construction
+        const weight = document.getElementById('bmi-weight').value;
+        const height = document.getElementById('bmi-height').value;
+        const csvContent = "Parameter,Value\nHeight (cm)," + height + "\nWeight (kg)," + weight + "\nBMI Score," + bmiVal + "\nDate," + new Date().toLocaleDateString();
+        downloadCSV(csvContent, 'bmi-report.csv');
+    }
+}
+window.exportBMI = exportBMI;
+
+// EMI Export Callbacks
+function exportEMI(format) {
+    const emiResult = document.getElementById('emi-result').innerText;
+    if (emiResult === 'EMI: Rs 0' || emiResult.includes('Result')) {
+        showToast('Please calculate EMI first.', 'error');
+        return;
+    }
+    
+    if (format === 'png') {
+        triggerPNGDownload('calc-emi', 'emi-report.png');
+    } else if (format === 'pdf') {
+        triggerPDFDownload('calc-emi', 'emi-report.pdf');
+    } else if (format === 'csv') {
+        const principal = document.getElementById('emi-amount').value;
+        const rate = document.getElementById('emi-rate').value;
+        const years = document.getElementById('emi-years').value;
+        const totalInt = document.getElementById('emi-interest').innerText;
+        const totalPay = document.getElementById('emi-total').innerText;
+        
+        let csvContent = "Parameter,Value\nLoan Amount," + principal + "\nInterest Rate," + rate + "%\nTenure," + years + " Yrs\nMonthly EMI," + emiResult.replace('EMI: ', '') + "\nTotal Interest," + totalInt + "\nTotal Payment," + totalPay + "\n";
+        downloadCSV(csvContent, 'emi-report.csv');
+    }
+}
+window.exportEMI = exportEMI;
+
+// Electricity Bill Export Callbacks
+function exportElectricity(format) {
+    const elecResult = document.getElementById('electricity-result').innerText;
+    if (elecResult === 'Result will appear here' || elecResult.includes('Result')) {
+        showToast('Please calculate electricity bill first.', 'error');
+        return;
+    }
+    
+    if (format === 'png') {
+        triggerPNGDownload('calc-electricity-bill', 'electricity-report.png');
+    } else if (format === 'pdf') {
+        triggerPDFDownload('calc-electricity-bill', 'electricity-report.pdf');
+    } else if (format === 'csv') {
+        const state = document.getElementById('elec-state').value;
+        const units = document.getElementById('elec-units').value;
+        const phase = document.getElementById('elec-phase').value;
+        
+        let csvContent = "Parameter,Value\nState," + state + "\nConsumed Units," + units + "\nPhase Type," + phase + "\nCalculated Bill," + elecResult.replace(/\r?\n/g, ' ') + "\n";
+        downloadCSV(csvContent, 'electricity-report.csv');
+    }
+}
+window.exportElectricity = exportElectricity;
+
+// Helper to trigger CSV file download in browser
+function downloadCSV(csvContent, filename) {
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showToast('CSV exported successfully!');
+    }
+}
+
+
+// --- FLOATING AI ASSISTANT WIDGET & FUZZY MATCH ENGINE ---
+
+// Open/Close widget
+function toggleAIAssistant() {
+    const chatWindow = document.getElementById('ai-chat-window');
+    if (!chatWindow) return;
+    
+    const isActive = chatWindow.classList.toggle('active');
+    
+    if (isActive) {
+        document.getElementById('ai-chat-input').focus();
+    }
+}
+window.toggleAIAssistant = toggleAIAssistant;
+
+// Append a message bubble to log
+function appendAIMessage(text, sender) {
+    const chatLog = document.getElementById('ai-chat-log');
+    if (!chatLog) return;
+    
+    const msg = document.createElement('div');
+    msg.className = `ai-msg ${sender}`;
+    msg.style.lineHeight = '1.4';
+    
+    if (sender === 'user') {
+        msg.textContent = text;
+    } else {
+        msg.innerHTML = text;
+    }
+    
+    chatLog.appendChild(msg);
+    chatLog.scrollTop = chatLog.scrollHeight;
+}
+
+// Send user message and match query
+function sendAIMessage() {
+    const input = document.getElementById('ai-chat-input');
+    if (!input) return;
+    
+    const query = input.value.strip ? input.value.strip() : input.value.trim();
+    if (!query) return;
+    
+    // Add user bubble
+    appendAIMessage(query, 'user');
+    input.value = '';
+    
+    // Processing / Match
+    setTimeout(() => {
+        const normalized = query.toLowerCase();
+        
+        // Define fuzzy matching rules
+        const rules = [
+            { keys: ['invoice', 'billing', 'bill generator', 'pdf receipt'], target: 'calc-invoice', label: 'Invoice Generator' },
+            { keys: ['scientific', 'trig', 'sine', 'cosine', 'logarithm', 'ln', 'exponent'], target: 'calc-scientific', label: 'Scientific Calculator' },
+            { keys: ['timezone', 'gmt', 'utc', 'est', 'ist', 'pst', 'compare time'], target: 'calc-timezone', label: 'Time Zone Converter' },
+            { keys: ['mileage', 'fuel efficiency', 'mpg', 'km/l', 'l/100km', 'petrol', 'diesel'], target: 'calc-mileage', label: 'Mileage Converter' },
+            { keys: ['uuid', 'guid', 'v4', 'v1', 'identifier', 'unique id'], target: 'calc-uuid', label: 'UUID Generator' },
+            { keys: ['bmi', 'body mass', 'fat', 'obesity', 'overweight'], target: 'calc-bmi', label: 'BMI Calculator' },
+            { keys: ['emi', 'loan', 'interest', 'monthly payment', 'mortgage'], target: 'calc-emi', label: 'EMI Calculator' },
+            { keys: ['electricity', 'power consumption', 'watts', 'kwh', 'ac usage', 'bill rates'], target: 'calc-electricity-bill', label: 'Electricity Bill Calculator' },
+            { keys: ['sip', 'mutual fund', 'invest', 'wealth growth', 'compounding'], target: 'calc-sip', label: 'SIP Calculator' },
+            { keys: ['fd', 'fixed deposit', 'sb', 'savings account', 'senior citizen'], target: 'calc-fd', label: 'FD / SB Calculator' },
+            { keys: ['rd', 'recurring deposit'], target: 'calc-rd', label: 'RD Calculator' },
+            { keys: ['gst', 'sales tax', 'taxation', 'cgst', 'sgst'], target: 'calc-gst', label: 'GST Calculator' },
+            { keys: ['calorie', 'macros', 'nutrition', 'carbs', 'protein', 'food log'], target: 'calc-calorie', label: 'Calorie & Macro' },
+            { keys: ['password', 'generate pwd', 'secure', 'passphrase'], target: 'calc-pass', label: 'Password Generator' },
+            { keys: ['qr', 'quick response', 'barcode', 'scan code'], target: 'calc-qr', label: 'QR Code Generator' },
+            { keys: ['unit', 'meters', 'grams', 'inches', 'miles', 'conversion'], target: 'calc-unit', label: 'Unit Converter' },
+            { keys: ['age', 'birthday', 'how old', 'date difference'], target: 'calc-age', label: 'Age Calculator' }
+        ];
+        
+        let bestMatch = null;
+        for (const rule of rules) {
+            for (const key of rule.keys) {
+                if (normalized.includes(key)) {
+                    bestMatch = rule;
+                    break;
+                }
+            }
+            if (bestMatch) break;
+        }
+        
+        if (bestMatch) {
+            // Scroll to the card
+            const targetEl = document.getElementById(bestMatch.target);
+            if (targetEl) {
+                // Expand details drawer if present
+                const details = targetEl.querySelector('details');
+                if (details) details.open = true;
+                
+                // Show in viewport
+                targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Apply temporary glow effect
+                targetEl.classList.add('pulse-highlight');
+                setTimeout(() => {
+                    targetEl.classList.remove('pulse-highlight');
+                }, 3000);
+                
+                appendAIMessage(`Found it! I have routed you to the <strong><a href="#" onclick="jumpToTool('${bestMatch.target}'); return false;">${bestMatch.label}</a></strong> card and highlighted it with a neon glow.`, 'bot');
+                showToast(`Navigated to ${bestMatch.label}`);
+            } else {
+                appendAIMessage(`I found a match for "${bestMatch.label}" but the card is currently hidden. Try selecting "All" categories first!`, 'bot');
+            }
+        } else {
+            appendAIMessage(`I couldn't find a direct calculator match for "${query}". Try searching for popular topics like "EMI", "Invoice", "AC electricity", or "Timezone"!`, 'bot');
+        }
+    }, 400);
+}
+window.sendAIMessage = sendAIMessage;
+
+
+// --- MISSING CALCULATORS IMPLEMENTATION ---
+
+// 1. UUID Generator
+function generateUUIDs() {
+    const version = document.getElementById('uuid-version').value;
+    const count = parseInt(document.getElementById('uuid-count').value) || 1;
+    const out = document.getElementById('uuid-output');
+    
+    if (count < 1 || count > 100) {
+        showToast('Count must be between 1 and 100.', 'error');
+        return;
+    }
+    
+    let uuids = [];
+    for (let i = 0; i < count; i++) {
+        if (version === '4') {
+            // Standard RFC4122 v4 UUID
+            uuids.push('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            }));
+        } else {
+            // RFC4122 v1 UUID (mock time-based using timestamp)
+            const d = new Date().getTime();
+            const uuid = 'xxxxxxxx-xxxx-1xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = (d + Math.random()*16)%16 | 0;
+                return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+            });
+            uuids.push(uuid);
+        }
+    }
+    
+    out.value = uuids.join('\n');
+    showToast('UUIDs Generated!');
+}
+window.generateUUIDs = generateUUIDs;
+
+function copyUUIDs() {
+    const out = document.getElementById('uuid-output');
+    if (!out.value) {
+        showToast('Generate UUIDs first.', 'error');
+        return;
+    }
+    
+    navigator.clipboard.writeText(out.value).then(() => {
+        showToast('UUIDs copied to clipboard!');
+    }).catch(err => {
+        console.error(err);
+        showToast('Failed to copy to clipboard.', 'error');
+    });
+}
+window.copyUUIDs = copyUUIDs;
+
+
+// 2. Time Zone Converter
+function getTimeZoneParts(date, timeZone) {
+    const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hourCycle: 'h23'
+    });
+
+    return formatter.formatToParts(date).reduce((parts, part) => {
+        if (part.type !== 'literal') parts[part.type] = Number(part.value);
+        return parts;
+    }, {});
+}
+
+function getTimeZoneOffset(date, timeZone) {
+    const parts = getTimeZoneParts(date, timeZone);
+    const utcFromParts = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second);
+    return utcFromParts - date.getTime();
+}
+
+function zonedWallTimeToDate(value, timeZone) {
+    const match = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/);
+    if (!match) return null;
+
+    const [, year, month, day, hour, minute] = match.map(Number);
+    const utcGuess = Date.UTC(year, month - 1, day, hour, minute, 0);
+    let offset = getTimeZoneOffset(new Date(utcGuess), timeZone);
+    let utcTime = utcGuess - offset;
+    offset = getTimeZoneOffset(new Date(utcTime), timeZone);
+    utcTime = utcGuess - offset;
+
+    return new Date(utcTime);
+}
+
+function formatZonedDate(date, timeZone) {
+    return new Intl.DateTimeFormat('en-US', {
+        timeZone,
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZoneName: 'short'
+    }).format(date);
+}
+
+function convertTimeZone() {
+    const timeStr = document.getElementById('tz-input-time')?.value;
+    const fromZone = document.getElementById('tz-from')?.value;
+    const toZone = document.getElementById('tz-to')?.value;
+    const resultEl = document.getElementById('tz-result');
+
+    if (!timeStr || !fromZone || !toZone || !resultEl) {
+        showToast('Please select a starting time.', 'error');
+        return;
+    }
+
+    const sourceDate = zonedWallTimeToDate(timeStr, fromZone);
+    if (!sourceDate || isNaN(sourceDate.getTime())) {
+        showToast('Invalid time format.', 'error');
+        return;
+    }
+
+    resultEl.innerHTML = `
+        <div style="font-weight: 700; color:var(--primary);">${formatZonedDate(sourceDate, toZone)}</div>
+        <div style="font-size:0.75rem; color:#a3a3a3; margin-top:0.25rem;">From ${formatZonedDate(sourceDate, fromZone)}</div>
+    `;
+
+    showToast('Time converted successfully!');
+}
+window.convertTimeZone = convertTimeZone;
+
+function convertMileage() {
+    const value = parseFloat(document.getElementById('mileage-value')?.value);
+    const unit = document.getElementById('mileage-unit')?.value || 'kml';
+    const result = document.getElementById('mileage-result');
+
+    if (!result) return;
+    if (!value || value <= 0) {
+        showFieldError('mileage-value', 'Enter mileage above 0');
+        return;
+    }
+
+    let kmPerLiter = value;
+    if (unit === 'l100') kmPerLiter = 100 / value;
+    if (unit === 'mpg-us') kmPerLiter = value / 2.352145833;
+    if (unit === 'mpg-uk') kmPerLiter = value / 2.824809363;
+
+    const litersPer100Km = 100 / kmPerLiter;
+    const mpgUs = kmPerLiter * 2.352145833;
+    const mpgUk = kmPerLiter * 2.824809363;
+
+    result.innerHTML = `
+        <div class="mileage-metric"><b>km/L</b><span>${kmPerLiter.toFixed(2)}</span></div>
+        <div class="mileage-metric"><b>L/100km</b><span>${litersPer100Km.toFixed(2)}</span></div>
+        <div class="mileage-metric"><b>US MPG</b><span>${mpgUs.toFixed(2)}</span></div>
+        <div class="mileage-metric"><b>UK MPG</b><span>${mpgUk.toFixed(2)}</span></div>
+    `;
+    showToast('Mileage converted successfully!');
+}
+window.convertMileage = convertMileage;
+
+
+// 3. Scientific Calculator
+let sciExpression = '';
+function appendSci(val) {
+    const display = document.getElementById('sci-display');
+    const history = document.getElementById('sci-history');
+    
+    if (sciExpression === '0' || sciExpression === 'Error') {
+        sciExpression = '';
+    }
+    
+    sciExpression += val;
+    display.innerText = sciExpression;
+}
+window.appendSci = appendSci;
+
+function clearSci() {
+    sciExpression = '';
+    document.getElementById('sci-display').innerText = '0';
+    document.getElementById('sci-history').innerText = '';
+}
+window.clearSci = clearSci;
+
+function backspaceSci() {
+    const display = document.getElementById('sci-display');
+    if (sciExpression.length > 0) {
+        sciExpression = sciExpression.slice(0, -1);
+        display.innerText = sciExpression || '0';
+    }
+}
+window.backspaceSci = backspaceSci;
+
+function factorialSci() {
+    const display = document.getElementById('sci-display');
+    const num = parseFloat(sciExpression);
+    if (isNaN(num) || num < 0 || num % 1 !== 0) {
+        showToast('Factorial requires positive integer.', 'error');
+        return;
+    }
+    
+    let fact = 1;
+    for (let i = 2; i <= num; i++) fact *= i;
+    
+    document.getElementById('sci-history').innerText = `${num}!`;
+    sciExpression = fact.toString();
+    display.innerText = sciExpression;
+}
+window.factorialSci = factorialSci;
+
+function calculateSci() {
+    const display = document.getElementById('sci-display');
+    const history = document.getElementById('sci-history');
+    
+    if (!sciExpression) return;
+    
+    try {
+        // Map common mathematical commands to JavaScript Math equivalents
+        let processed = sciExpression
+            .replace(/sin\(/g, 'Math.sin(')
+            .replace(/cos\(/g, 'Math.cos(')
+            .replace(/tan\(/g, 'Math.tan(')
+            .replace(/log\(/g, 'Math.log10(')
+            .replace(/ln\(/g, 'Math.log(')
+            .replace(/sqrt\(/g, 'Math.sqrt(')
+            .replace(/\^/g, '**');
+            
+        // Safe evaluation of the math expression
+        const result = new Function('return ' + processed)();
+        if (!isFinite(result)) throw new Error('Infinity');
+        
+        history.innerText = sciExpression + ' =';
+        sciExpression = (Math.round(result * 1000000) / 1000000).toString();
+        display.innerText = sciExpression;
+        showToast('Calculation Complete');
+    } catch(e) {
+        display.innerText = 'Error';
+        sciExpression = '';
+        showToast('Invalid scientific expression.', 'error');
+    }
+}
+window.calculateSci = calculateSci;
+
+
+// 4. Invoice Generator
+function addInvoiceRow() {
+    const container = document.getElementById('invoice-items-container');
+    const row = document.createElement('div');
+    row.className = 'invoice-item-row';
+    row.style.cssText = 'display: flex; gap: 0.4rem; margin-bottom: 0.4rem; width:100%;';
+    
+    row.innerHTML = `
+        <input type="text" class="tool-input inv-item-desc" placeholder="Description" style="flex: 2; min-width: 0;" value="Item Description">
+        <input type="number" class="tool-input inv-item-qty" placeholder="Qty" style="flex: 0.7; min-width: 0;" value="1" oninput="calculateInvoice()">
+        <input type="number" class="tool-input inv-item-price" placeholder="Price" style="flex: 1.2; min-width: 0;" value="100" oninput="calculateInvoice()">
+        <button class="secondary-btn" onclick="removeInvoiceRow(this)" style="padding: 0 0.5rem; min-height:40px; border-radius:8px; margin:0; flex: 0.4;">×</button>
+    `;
+    container.appendChild(row);
+    calculateInvoice();
+}
+window.addInvoiceRow = addInvoiceRow;
+
+function removeInvoiceRow(btn) {
+    const row = btn.parentElement;
+    row.remove();
+    calculateInvoice();
+}
+window.removeInvoiceRow = removeInvoiceRow;
+
+function calculateInvoice() {
+    const rows = document.querySelectorAll('.invoice-item-row');
+    let subtotal = 0;
+    
+    const previewItems = document.getElementById('inv-preview-items');
+    previewItems.innerHTML = '';
+    
+    rows.forEach(row => {
+        const desc = row.querySelector('.inv-item-desc').value || 'Item';
+        const qty = parseFloat(row.querySelector('.inv-item-qty').value) || 0;
+        const price = parseFloat(row.querySelector('.inv-item-price').value) || 0;
+        const total = qty * price;
+        subtotal += total;
+        
+        // Add to preview UI
+        const itemEl = document.createElement('div');
+        itemEl.style.cssText = 'display:flex; justify-content:space-between; font-size:0.8rem;';
+        itemEl.innerHTML = `<span>${desc} (x${qty})</span><span>₹${total.toFixed(2)}</span>`;
+        previewItems.appendChild(itemEl);
+    });
+    
+    const taxRate = parseFloat(document.getElementById('invoice-tax').value) || 0;
+    const discountRate = parseFloat(document.getElementById('invoice-discount').value) || 0;
+    
+    const tax = subtotal * (taxRate / 100);
+    const discount = subtotal * (discountRate / 100);
+    const totalDue = subtotal + tax - discount;
+    
+    // Update live previews
+    document.getElementById('inv-preview-from').innerText = document.getElementById('inv-from').value || 'Sender';
+    document.getElementById('inv-preview-to').innerText = document.getElementById('inv-to').value || 'Client';
+    document.getElementById('inv-preview-num').innerText = document.getElementById('inv-number').value || 'INV-001';
+    
+    const invDate = document.getElementById('inv-date').value;
+    document.getElementById('inv-preview-date').innerText = invDate || new Date().toISOString().split('T')[0];
+    
+    document.getElementById('inv-preview-subtotal').innerText = '₹' + subtotal.toFixed(2);
+    document.getElementById('inv-preview-tax').innerText = '₹' + tax.toFixed(2);
+    document.getElementById('inv-preview-discount').innerText = '₹' + discount.toFixed(2);
+    document.getElementById('inv-preview-total').innerText = '₹' + totalDue.toFixed(2);
+}
+window.calculateInvoice = calculateInvoice;
+
+// Export Invoice handler
+function exportInvoice(format) {
+    calculateInvoice(); // refresh values
+    
+    if (format === 'png') {
+        triggerPNGDownload('invoice-report-wrapper', 'invoice-' + document.getElementById('inv-number').value + '.png');
+    } else if (format === 'pdf') {
+        triggerPDFDownload('invoice-report-wrapper', 'invoice-' + document.getElementById('inv-number').value + '.pdf');
+    } else if (format === 'csv') {
+        const rows = document.querySelectorAll('.invoice-item-row');
+        let csvContent = "Description,Quantity,Price,Total\n";
+        
+        rows.forEach(row => {
+            const desc = row.querySelector('.inv-item-desc').value || 'Item';
+            const qty = row.querySelector('.inv-item-qty').value || 0;
+            const price = row.querySelector('.inv-item-price').value || 0;
+            const total = parseFloat(qty) * parseFloat(price);
+            csvContent += `${desc},${qty},${price},${total}\n`;
+        });
+        
+        csvContent += `\nSubtotal,,${document.getElementById('inv-preview-subtotal').innerText.replace('₹', '')}\n`;
+        csvContent += `Tax,,${document.getElementById('inv-preview-tax').innerText.replace('₹', '')}\n`;
+        csvContent += `Discount,,${document.getElementById('inv-preview-discount').innerText.replace('₹', '')}\n`;
+        csvContent += `Total,,${document.getElementById('inv-preview-total').innerText.replace('₹', '')}\n`;
+        
+        downloadCSV(csvContent, 'invoice-' + document.getElementById('inv-number').value + '.csv');
+    }
+}
+window.exportInvoice = exportInvoice;
+
+// Initialize datetime default for Timezone and Invoice Date
+document.addEventListener('DOMContentLoaded', () => {
+    const now = new Date();
+    const localISO = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    const tzInput = document.getElementById('tz-input-time');
+    if (tzInput) tzInput.value = localISO;
+    
+    const invDateInput = document.getElementById('inv-date');
+    if (invDateInput) invDateInput.value = now.toISOString().split('T')[0];
+});
+
+
+// --- MULTILINGUAL LOCALIZATION SUPPORT (EN, ES, FR, DE, HI) ---
+
+const localizationDict = {
+    en: {
+        title: "Calculator All-in-One",
+        subtitle: "Premium productivity & mathematical suite",
+        hero_tag: "45+ PREMIUM CALCULATORS",
+        hero_title: "Calculate Everything, Instantly",
+        hero_desc: "The ultimate responsive tools suite featuring financial planning, electrical physics, healthcare, math, and daily utilities.",
+        nav_fund: "Fund Me",
+        nav_about: "About",
+        nav_contact: "Contact",
+        nav_privacy: "Privacy",
+        calc_bmi: "BMI Calculator",
+        calc_emi: "EMI Calculator",
+        calc_electricity: "Electricity Bill Calculator",
+        calc_standard: "Standard Calculator",
+        calc_sip: "SIP Calculator",
+        calc_fd: "FD / SB Calculator",
+        calc_rd: "RD Calculator",
+        calc_gst: "GST Calculator",
+        calc_salary: "Salary Calculator",
+        calc_calorie: "Calorie & Macro",
+        calc_water: "Water Intake",
+        calc_water_desc: "Estimate daily hydration needs",
+        calc_ideal_weight: "Ideal Weight",
+        calc_protein: "Protein Intake",
+        calc_body_fat: "Body Fat %",
+        calc_age: "Age Calculator",
+        calc_time: "Time Calculator",
+        calc_cgpa: "CGPA / SGPA",
+        calc_att: "Attendance Calc",
+        calc_word: "Word & Char Count",
+        calc_base64: "Base64 Encode/Decode",
+        calc_color: "Color Converter",
+        calc_sw: "Stopwatch Timer",
+        calc_discount_tax: "Discount & Tax",
+        calc_power: "Power Calculator",
+        calc_kwh: "kWh Calculator",
+        calc_watt_unit: "Watt to Unit",
+        calc_solar: "Solar Panel Size",
+        calc_inverter: "Inverter Backup",
+        calc_ups: "UPS Backup",
+        calc_ohm: "Ohm's Law",
+        calc_generator: "Generator Size",
+        calc_ev: "EV Charging Cost",
+        calc_circle: "Circle Area & Circumference",
+        calc_triangle: "Triangle Area",
+        calc_pythagorean: "Pythagorean Theorem",
+        calc_formula_explainer: "Formula Explainer",
+        calc_equation_plotter: "Equation Plotter",
+        calc_image_converter: "Image Converter",
+        calc_uuid: "UUID Generator",
+        calc_timezone: "Time Zone Converter",
+        calc_mileage: "Mileage Converter",
+        calc_scientific: "Scientific Calculator",
+        calc_invoice: "Invoice Generator"
+    },
+    es: {
+        title: "Calculadoras Todo en Uno",
+        subtitle: "Suite matemática y de productividad premium",
+        hero_tag: "MÁS DE 45 CALCULADORAS PREMIUM",
+        hero_title: "Calcula todo, al instante",
+        hero_desc: "La última suite de herramientas receptivas que incluye planificación financiera, física eléctrica, salud, matemáticas y utilidades diarias.",
+        nav_fund: "Donar",
+        nav_about: "Sobre nosotros",
+        nav_contact: "Contacto",
+        nav_privacy: "Privacidad",
+        calc_bmi: "Calculadora de IMC",
+        calc_emi: "Calculadora de EMI",
+        calc_electricity: "Calculadora de Factura de Electricidad",
+        calc_standard: "Calculadora Estándar",
+        calc_sip: "Calculadora de SIP",
+        calc_fd: "Calculadora de FD / SB",
+        calc_rd: "Calculadora de RD",
+        calc_gst: "Calculadora de GST",
+        calc_salary: "Calculadora de Salario",
+        calc_calorie: "Calorías y Macros",
+        calc_water: "Consumo de Agua",
+        calc_water_desc: "Estimar las necesidades diarias de hidratación",
+        calc_ideal_weight: "Peso Ideal",
+        calc_protein: "Ingesta de Proteínas",
+        calc_body_fat: "Porcentaje de Grasa Corporal",
+        calc_age: "Calculadora de Edad",
+        calc_time: "Calculadora de Tiempo",
+        calc_cgpa: "CGPA / SGPA",
+        calc_att: "Calculadora de Asistencia",
+        calc_word: "Contador de palabras",
+        calc_base64: "Codificar/Decodificar Base64",
+        calc_color: "Convertidor de Color",
+        calc_sw: "Cronómetro",
+        calc_discount_tax: "Descuento e Impuestos",
+        calc_power: "Calculadora de Potencia",
+        calc_kwh: "Calculadora de kWh",
+        calc_watt_unit: "Vatio a Unidad",
+        calc_solar: "Tamaño del Panel Solar",
+        calc_inverter: "Respaldo de Inversor",
+        calc_ups: "Respaldo de UPS",
+        calc_ohm: "Ley de Ohm",
+        calc_generator: "Tamaño del Generador",
+        calc_ev: "Costo de Carga EV",
+        calc_circle: "Área y Circunferencia del Círculo",
+        calc_triangle: "Área del Triángulo",
+        calc_pythagorean: "Teorema de Pitágoras",
+        calc_formula_explainer: "Explicador de Fórmulas",
+        calc_equation_plotter: "Graficador de Ecuaciones",
+        calc_image_converter: "Convertidor de Imagen",
+        calc_uuid: "Generador de UUID",
+        calc_timezone: "Convertidor de Zona Horaria",
+        calc_mileage: "Mileage Converter",
+        calc_scientific: "Calculadora Científica",
+        calc_invoice: "Generador de Facturas"
+    },
+    fr: {
+        title: "Calculatrice Tout-en-Un",
+        subtitle: "Suite mathématique et productivité premium",
+        hero_tag: "PLUS DE 45 CALCULATRICES PREMIUM",
+        hero_title: "Calculez tout, instantanément",
+        hero_desc: "La suite ultime d'outils réactifs comprenant la planification financière, la physique électrique, la santé, les mathématiques et les utilités quotidiennes.",
+        nav_fund: "Financer",
+        nav_about: "À propos",
+        nav_contact: "Contact",
+        nav_privacy: "Confidentialité",
+        calc_bmi: "Calculateur d'IMC",
+        calc_emi: "Calculateur d'EMI",
+        calc_electricity: "Calculateur de Facture d'Électricité",
+        calc_standard: "Calculatrice Standard",
+        calc_sip: "Calculateur de SIP",
+        calc_fd: "Calculateur de FD / SB",
+        calc_rd: "Calculateur de RD",
+        calc_gst: "Calculateur de TPS",
+        calc_salary: "Calculateur de Salaire",
+        calc_calorie: "Calories et Macros",
+        calc_water: "Consommation d'Eau",
+        calc_water_desc: "Estimer les besoins quotidiens en eau",
+        calc_ideal_weight: "Poids Idéal",
+        calc_protein: "Apport Protéique",
+        calc_body_fat: "Masse Grasse %",
+        calc_age: "Calculateur d'Âge",
+        calc_time: "Calculateur de Temps",
+        calc_cgpa: "CGPA / SGPA",
+        calc_att: "Calculateur d'Assiduité",
+        calc_word: "Compteur de Mots",
+        calc_base64: "Encodage/Décodage Base64",
+        calc_color: "Convertisseur de Couleur",
+        calc_sw: "Chronomètre",
+        calc_discount_tax: "Remise et Taxe",
+        calc_power: "Calculateur de Puissance",
+        calc_kwh: "Calculateur de kWh",
+        calc_watt_unit: "Watt à Unité",
+        calc_solar: "Taille du Panneau Solaire",
+        calc_inverter: "Sauvegarde de l'Onduleur",
+        calc_ups: "Sauvegarde de l'Alimentation Sans Coupure",
+        calc_ohm: "Loi d'Ohm",
+        calc_generator: "Taille du Générateur",
+        calc_ev: "Coût de Charge VE",
+        calc_circle: "Aire et Circonférence du Cercle",
+        calc_triangle: "Aire du Triangle",
+        calc_pythagorean: "Théorème de Pythagore",
+        calc_formula_explainer: "Explication de Formules",
+        calc_equation_plotter: "Traceur d'Équations",
+        calc_image_converter: "Convertisseur d'Image",
+        calc_uuid: "Générateur d'UUID",
+        calc_timezone: "Convertisseur de Fuseau Horaire",
+        calc_mileage: "Mileage Converter",
+        calc_scientific: "Calculatrice Scientifique",
+        calc_invoice: "Générateur de Facture"
+    },
+    de: {
+        title: "All-in-One Rechner",
+        subtitle: "Premium Produktivitäts- & Mathematik-Suite",
+        hero_tag: "45+ PREMIUM RECHNER",
+        hero_title: "Alles sofort berechnen",
+        hero_desc: "Die ultimative Suite reaktionsschneller Tools mit Finanzplanung, Elektrophysik, Gesundheit, Mathematik und alltäglichen Dienstprogrammen.",
+        nav_fund: "Finanzieren",
+        nav_about: "Über uns",
+        nav_contact: "Kontakt",
+        nav_privacy: "Datenschutz",
+        calc_bmi: "BMI Rechner",
+        calc_emi: "EMI Rechner",
+        calc_electricity: "Stromrechner",
+        calc_standard: "Standardrechner",
+        calc_sip: "SIP Rechner",
+        calc_fd: "FD / SB Rechner",
+        calc_rd: "RD Rechner",
+        calc_gst: "MwSt Rechner",
+        calc_salary: "Gehaltsrechner",
+        calc_calorie: "Kalorien & Makros",
+        calc_water: "Wasserbedarf",
+        calc_water_desc: "Täglichen Wasserbedarf schätzen",
+        calc_ideal_weight: "Idealgewicht",
+        calc_protein: "Proteinzufuhr",
+        calc_body_fat: "Körperfettanteil %",
+        calc_age: "Altersrechner",
+        calc_time: "Zeitrechner",
+        calc_cgpa: "CGPA / SGPA",
+        calc_att: "Anwesenheitsrechner",
+        calc_word: "Wort- & Zeichenzähler",
+        calc_base64: "Base64 De-/Kodierung",
+        calc_color: "Farbumrechner",
+        calc_sw: "Stoppuhr",
+        calc_discount_tax: "Rabatt & Steuer",
+        calc_power: "Leistungsrechner",
+        calc_kwh: "kWh Rechner",
+        calc_watt_unit: "Watt in Einheiten",
+        calc_solar: "Solarpanel-Größe",
+        calc_inverter: "Wechselrichter-Backup",
+        calc_ups: "USV-Backup",
+        calc_ohm: "Ohmsches Gesetz",
+        calc_generator: "Generatorgröße",
+        calc_ev: "E-Auto Ladekosten",
+        calc_circle: "Kreisfläche & Umfang",
+        calc_triangle: "Dreiecksfläche",
+        calc_pythagorean: "Satz des Pythagoras",
+        calc_formula_explainer: "Formelerklärer",
+        calc_equation_plotter: "Gleichungsplotter",
+        calc_image_converter: "Bildkonverter",
+        calc_uuid: "UUID Generator",
+        calc_timezone: "Zeitzonen-Konverter",
+        calc_mileage: "Mileage Converter",
+        calc_scientific: "Wissenschaftlicher Rechner",
+        calc_invoice: "Rechnungsersteller"
+    },
+    hi: {
+        title: "कैलकुलेटर ऑल-इन-वन",
+        subtitle: "प्रीमियम उत्पादकता और गणितीय सूट",
+        hero_tag: "45+ प्रीमियम कैलकुलेटर",
+        hero_title: "सब कुछ तुरंत गणना करें",
+        hero_desc: "वित्तीय योजना, विद्युत भौतिकी, स्वास्थ्य सेवा, गणित और दैनिक उपयोगिताओं की विशेषता वाला अंतिम उत्तरदायी उपकरण सूट।",
+        nav_fund: "फंड दें",
+        nav_about: "बारे में",
+        nav_contact: "संपर्क",
+        nav_privacy: "गोपनीयता",
+        calc_bmi: "बीएमआई कैलकुलेटर",
+        calc_emi: "ईएमआई कैलकुलेटर",
+        calc_electricity: "बिजली बिल कैलकुलेटर",
+        calc_standard: "मानक कैलकुलेटर",
+        calc_sip: "एसआईपी कैलकुलेटर",
+        calc_fd: "एफडी / एसबी कैलकुलेटर",
+        calc_rd: "आरडी कैलकुलेटर",
+        calc_gst: "जीएसटी कैलकुलेटर",
+        calc_salary: "सैलरी कैलकुलेटर",
+        calc_calorie: "कैलोरी और मैक्रो",
+        calc_water: "पानी की खपत",
+        calc_water_desc: "दैनिक पानी की आवश्यकता का अनुमान लगाएं",
+        calc_ideal_weight: "आदर्श वजन",
+        calc_protein: "प्रोटीन की मात्रा",
+        calc_body_fat: "बॉडी फैट %",
+        calc_age: "उम्र कैलकुलेटर",
+        calc_time: "समय कैलकुलेटर",
+        calc_cgpa: "सीजीपीए / एसजीपीए",
+        calc_att: "उपस्थिति कैलकुलेटर",
+        calc_word: "शब्द और वर्ण गणना",
+        calc_base64: "बेस64 एनकोड/डिकोड",
+        calc_color: "कलर कन्वर्टर",
+        calc_sw: "स्टॉपवॉच टाइमर",
+        calc_discount_tax: "छूट और कर",
+        calc_power: "पावर कैलकुलेटर",
+        calc_kwh: "किलोवाट घंटा कैलकुलेटर",
+        calc_watt_unit: "वाट से यूनिट",
+        calc_solar: "सौर पैनल आकार",
+        calc_inverter: "इन्वर्टर बैकअप",
+        calc_ups: "यूपीएस बैकअप",
+        calc_ohm: "ओम का नियम",
+        calc_generator: "जेनरेटर आकार",
+        calc_ev: "ईवी चार्जिंग लागत",
+        calc_circle: "वृत्त क्षेत्रफल और परिधि",
+        calc_triangle: "त्रिकोण क्षेत्रफल",
+        calc_pythagorean: "पाइथागोरस प्रमेय",
+        calc_formula_explainer: "सूत्र व्याख्याता",
+        calc_equation_plotter: "समीकरण आलेखक",
+        calc_image_converter: "छवि कनवर्टर",
+        calc_uuid: "यूयूआईडी जेनरेटर",
+        calc_timezone: "समय क्षेत्र कनवर्टर",
+        calc_mileage: "Mileage Converter",
+        calc_scientific: "वैज्ञानिक कैलकुलेटर",
+        calc_invoice: "इनवॉइस जेनरेटर"
+    }
+};
+
+function changeLanguage(lang) {
+    if (!localizationDict[lang]) return;
+    
+    // Set selects values
+    const navSelect = document.getElementById('lang-select');
+    const mobSelect = document.getElementById('mobile-lang-select');
+    if (navSelect) navSelect.value = lang;
+    if (mobSelect) mobSelect.value = lang;
+    
+    const dict = localizationDict[lang];
+    
+    // Update main titles
+    const titleEl = document.querySelector('.logo');
+    if (titleEl) titleEl.innerText = dict.title;
+    
+    const heroTag = document.querySelector('.badge');
+    if (heroTag) heroTag.innerText = dict.hero_tag;
+    
+    const heroTitle = document.querySelector('.hero-content h1');
+    if (heroTitle) {
+        // preserve the gradient highlight word if possible
+        if (lang === 'en') {
+            heroTitle.innerHTML = 'Calculate Everything, <span class="highlight">Instantly</span>';
+        } else if (lang === 'es') {
+            heroTitle.innerHTML = 'Calcula todo, <span class="highlight">al instante</span>';
+        } else if (lang === 'fr') {
+            heroTitle.innerHTML = 'Calculez tout, <span class="highlight">instantanément</span>';
+        } else if (lang === 'de') {
+            heroTitle.innerHTML = 'Alles sofort <span class="highlight">berechnen</span>';
+        } else if (lang === 'hi') {
+            heroTitle.innerHTML = 'सब कुछ तुरंत <span class="highlight">गणना करें</span>';
+        } else {
+            heroTitle.innerText = dict.hero_title;
+        }
+    }
+    
+    const heroDesc = document.querySelector('.hero-content p:not(.typing-container)');
+    if (heroDesc) heroDesc.innerText = dict.hero_desc;
+    
+    // Update Card Titles
+    for (const [key, val] of Object.entries(dict)) {
+        if (key.startsWith('calc_')) {
+            const cardId = key.replace('calc_', 'calc-');
+            const card = document.getElementById(cardId);
+            if (card) {
+                const cardHeader = card.querySelector('h3');
+                if (cardHeader) cardHeader.innerText = val;
+            }
+        }
+    }
+    
+    // Save language preference in LocalStorage
+    try {
+        localStorage.setItem('calculator-lang-preference', lang);
+    } catch(e) {}
+    
+    showToast(`Language switched to ${lang.toUpperCase()}`);
+}
+window.changeLanguage = changeLanguage;
+
+// Trigger preference load on start
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        const savedLang = localStorage.getItem('calculator-lang-preference');
+        if (savedLang && localizationDict[savedLang]) {
+            setTimeout(() => {
+                changeLanguage(savedLang);
+            }, 100);
+        }
+    } catch(e) {}
+});
+
