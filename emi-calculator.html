@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MRCMVF9545"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MRCMVF9545');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMI Calculator Online | Monthly Loan EMI Calculator</title>
+    <meta name="description" content="Free EMI calculator to estimate monthly loan EMI, total interest, and total repayment for home, car, personal, and business loans.">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Calculator All-in-One">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="canonical" href="https://calculatorsallinone.com/emi-calculator.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Calculator All-in-One">
+    <meta property="og:title" content="EMI Calculator Online">
+    <meta property="og:description" content="Calculate monthly EMI, total interest, and total payable amount instantly.">
+    <meta property="og:url" content="https://calculatorsallinone.com/emi-calculator.html">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="EMI Calculator Online">
+    <meta name="twitter:description" content="Estimate monthly EMI and total loan repayment with a free online calculator.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9409281508068005" crossorigin="anonymous"></script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"WebApplication","name":"EMI Calculator","url":"https://calculatorsallinone.com/emi-calculator.html","applicationCategory":"FinanceApplication","operatingSystem":"Any","description":"Free EMI calculator to estimate monthly loan EMI, total interest, and total repayment.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"publisher":{"@type":"Organization","name":"Calculator All-in-One"}}
+    </script>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="particles"></div>
+    <div class="gradient-blob blob-1"></div>
+    <div class="gradient-blob blob-2"></div>
+    <header class="navbar">
+        <a href="index.html" class="logo" style="text-decoration: none;">Calculator All-in-One</a>
+        <form class="header-search calculator-search" role="search" data-site-search>
+            <input type="search" name="search" placeholder="Search calculators..." aria-label="Search calculators">
+            <button type="submit">Search</button>
+            <small>Search all calculators</small>
+        </form>
+        <nav>
+            <a href="index.html#tools">All Tools</a>
+            <a href="index.html?category=finance#tools">Finance</a>
+            <a href="index.html?category=health#tools">Health</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <details class="mobile-menu">
+            <summary>Menu</summary>
+            <div class="mobile-menu-panel">
+                <a href="index.html#tools">All Tools</a>
+                <a href="emi-calculator.html">EMI Calculator</a>
+                <a href="loan-calculator.html">Loan Calculator</a>
+                <a href="sip-calculator.html">SIP Calculator</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </div>
+        </details>
+    </header>
+
+    <main class="calculator-page-main">
+        <section class="calculator-page-layout">
+            <div class="calculator-page-hero">
+                <div class="page-kicker">Finance Calculator</div>
+                <h1>EMI Calculator</h1>
+                <p>Estimate your monthly loan payment, total interest, and full repayment amount before you commit to a borrowing plan.</p>
+            </div>
+
+            <aside class="calculator-tool-card">
+                <h2>Calculate EMI</h2>
+                <form class="calculator-page-form" data-calculator-form="emi">
+                    <div class="input-group">
+                        <div class="input-wrapper"><input class="tool-input" id="emi-amount" type="number" min="1" placeholder="Loan amount"><span class="input-suffix">Rs</span></div>
+                        <div class="input-wrapper"><input class="tool-input" id="emi-rate" type="number" min="0" step="0.01" placeholder="Annual interest rate"><span class="input-suffix">%</span></div>
+                        <div class="input-wrapper"><input class="tool-input" id="emi-tenure" type="number" min="1" placeholder="Tenure"><span class="input-suffix">months</span></div>
+                    </div>
+                    <p class="calculator-error" id="calculator-error" aria-live="polite"></p>
+                    <button class="glowing-btn demo-btn ripple-btn" type="submit">Calculate EMI</button>
+                </form>
+                <div class="calculator-result-grid">
+                    <div><span>Monthly EMI</span><strong id="emi-result">Rs 0</strong></div>
+                    <div><span>Total Interest</span><strong id="emi-interest">Rs 0</strong></div>
+                    <div><span>Total Payable</span><strong id="emi-total">Rs 0</strong></div>
+                </div>
+            </aside>
+
+            <section class="calculator-copy">
+                <article class="calculator-copy-card">
+                    <h2>What this EMI calculator does</h2>
+                    <p>An EMI, or equated monthly installment, is the fixed amount you pay every month toward a loan. This calculator helps you quickly compare loan choices by showing the estimated monthly payment, total interest cost, and total amount payable over the full tenure. It is useful for home loans, car loans, education loans, personal loans, appliance finance, and other installment-based borrowing.</p>
+                    <p>Use the loan amount as the principal borrowed, enter the annual interest rate offered by your lender, and add the tenure in months. A longer tenure usually reduces the monthly EMI but increases total interest because the loan remains outstanding for more time. A shorter tenure usually raises the monthly EMI but can reduce overall interest. Testing different values before applying can make the repayment plan easier to understand.</p>
+                    <p>The result is an estimate. Actual lender calculations can vary because of processing fees, insurance, prepayment rules, reset dates, rounding, floating interest rates, and taxes. Treat this calculator as a planning tool, then confirm the final repayment schedule with your bank or financial institution. For better decisions, compare EMI with your monthly income, emergency fund, existing commitments, and future expenses.</p>
+                </article>
+                <article class="calculator-copy-card formula-box">
+                    <h2>EMI formula</h2>
+                    <p>EMI = P x r x (1 + r)^n / ((1 + r)^n - 1), where P is loan principal, r is monthly interest rate, and n is number of monthly installments.</p>
+                </article>
+                <article class="calculator-copy-card example-box">
+                    <h2>Example calculation</h2>
+                    <p>For a Rs 5,00,000 loan at 10% annual interest for 60 months, the estimated EMI is about Rs 10,624. Total repayment is about Rs 6,37,411 and total interest is about Rs 1,37,411.</p>
+                </article>
+                <article class="calculator-copy-card">
+                    <h2>FAQs</h2>
+                    <div class="faq-list">
+                        <details><summary>Is EMI the same every month?</summary><p>For a fixed-rate loan, EMI generally stays the same. Floating-rate loans can change when the lender resets the rate.</p></details>
+                        <details><summary>Does a lower EMI always mean a better loan?</summary><p>No. A lower EMI may come from a longer tenure, which can increase total interest paid over the loan life.</p></details>
+                        <details><summary>Can I use this for home loans?</summary><p>Yes. It works for home loans, car loans, personal loans, and other loans with monthly repayment schedules.</p></details>
+                        <details><summary>Are fees included?</summary><p>No. Add processing fees, insurance, and taxes separately when comparing lender offers.</p></details>
+                    </div>
+                </article>
+                <article class="calculator-copy-card">
+                    <h2>Related calculators</h2>
+                    <div class="related-calculators">
+                        <a href="loan-calculator.html">Loan Calculator</a>
+                        <a href="sip-calculator.html">SIP Calculator</a>
+                        <a href="gst-calculator.html">GST Calculator</a>
+                        <a href="index.html">Back to Homepage</a>
+                    </div>
+                </article>
+            </section>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-links" style="text-align: center; margin: 0 0 2rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem;">
+            <a href="privacy.html">Privacy Policy</a><a href="about.html">About Us</a><a href="contact.html">Contact Us</a><a href="terms.html">Terms & Conditions</a><a href="disclaimer.html">Disclaimer</a>
+        </div>
+        <p class="copyright">&copy; 2026 Calculator All-in-One. All rights reserved.</p>
+    </footer>
+    <script src="calculator-pages.js" defer></script>
+</body>
+</html>

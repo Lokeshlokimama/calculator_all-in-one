@@ -2725,9 +2725,15 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollHelpers();
     renderStoredTools();
 
-    const initialCategory = new URLSearchParams(window.location.search).get('category');
+    const params = new URLSearchParams(window.location.search);
+    const initialCategory = params.get('category');
+    const initialSearch = params.get('search');
     if (['all', 'basic', 'finance', 'electricity', 'health', 'education', 'web'].includes(initialCategory)) {
         filterCategory(initialCategory);
+    } else if (initialSearch) {
+        const searchInput = document.getElementById('tool-search');
+        if (searchInput) searchInput.value = initialSearch;
+        searchTools(initialSearch);
     } else {
         applyToolFilters();
     }
