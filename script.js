@@ -3454,12 +3454,188 @@ function appendAIMessage(text, sender) {
     chatLog.scrollTop = chatLog.scrollHeight;
 }
 
+const AI_SHORT_QUERY_TOKENS = new Set(['ac', 'qr', 'fd', 'rd', 'ev', 'gst', 'sip', 'bmi', 'bmr', 'ups', 'wa', 'id', 'kw', 'kwh']);
+const AI_STOP_WORDS = new Set(['a', 'an', 'and', 'are', 'can', 'do', 'for', 'from', 'how', 'i', 'in', 'is', 'it', 'me', 'my', 'need', 'of', 'on', 'or', 'please', 'the', 'to', 'tool', 'want', 'what', 'with']);
+
+const AI_TOOL_RULES = [
+    { target: 'calc-standard', label: 'Standard Calculator', category: 'basic', keys: ['basic calculator', 'standard calculator', 'addition', 'subtraction', 'multiply', 'divide', 'simple math'], tip: 'Use it for quick everyday arithmetic.' },
+    { target: 'calc-scientific', label: 'Scientific Calculator', category: 'basic', keys: ['scientific', 'trig', 'sine', 'cosine', 'tan', 'logarithm', 'ln', 'exponent', 'square root', 'bodmas', 'pemdas'], tip: 'Use it for complex expressions, trigonometry, logs, powers, and roots.' },
+    { target: 'calc-bmi', label: 'BMI Calculator', category: 'health', keys: ['bmi', 'body mass', 'obesity', 'overweight', 'underweight', 'healthy weight'], tip: 'Enter height and weight to estimate BMI. Treat health results as guidance, not medical advice.' },
+    { target: 'calc-bmr', label: 'BMR Calculator', category: 'health', keys: ['bmr', 'basal metabolic', 'metabolism', 'maintenance calories'], tip: 'Use it to estimate baseline daily calories from age, sex, height, and weight.' },
+    { target: 'calc-water', label: 'Water Intake', category: 'health', keys: ['water', 'hydration', 'drink water', 'daily water', 'liters per day'], tip: 'Use it to estimate daily hydration needs.' },
+    { target: 'calc-ideal-weight', label: 'Ideal Weight', category: 'health', keys: ['ideal weight', 'healthy weight range', 'target weight'], tip: 'Use it to estimate a healthy weight range from height and sex.' },
+    { target: 'calc-protein', label: 'Protein Intake', category: 'health', keys: ['protein', 'protein intake', 'daily protein', 'muscle protein'], tip: 'Use it to estimate protein needs from body weight and activity goal.' },
+    { target: 'calc-body-fat', label: 'Body Fat Calculator', category: 'health', keys: ['body fat', 'fat percentage', 'waist neck hip', 'body fat percent'], tip: 'Use it to estimate body fat percentage from body measurements.' },
+    { target: 'calc-calorie', label: 'Calorie & Macro', category: 'health', keys: ['calorie', 'calories', 'macro', 'macros', 'nutrition', 'food log', 'carbs', 'protein', 'fat', 'diet'], tip: 'Use it to total calories and macros for foods.' },
+    { target: 'calc-emi', label: 'EMI Calculator', category: 'finance', keys: ['emi', 'loan', 'home loan', 'car loan', 'monthly payment', 'mortgage', 'interest rate', 'tenure'], tip: 'Enter loan amount, annual interest, and tenure to estimate monthly EMI.' },
+    { target: 'calc-sip', label: 'SIP Calculator', category: 'finance', keys: ['sip', 'mutual fund', 'investment', 'invest', 'wealth growth', 'compounding', 'monthly investment'], tip: 'Use it to project monthly investment growth over time.' },
+    { target: 'calc-fd', label: 'FD / SB Calculator', category: 'finance', keys: ['fd', 'fixed deposit', 'sb', 'savings account', 'deposit interest', 'senior citizen'], tip: 'Use it to estimate maturity value for fixed deposits or savings interest.' },
+    { target: 'calc-rd', label: 'RD Calculator', category: 'finance', keys: ['rd', 'recurring deposit', 'monthly deposit'], tip: 'Use it to estimate recurring deposit maturity.' },
+    { target: 'calc-gst', label: 'GST Calculator', category: 'finance', keys: ['gst', 'sales tax', 'tax', 'cgst', 'sgst', 'add gst', 'remove gst'], tip: 'Use it to add or remove GST from an amount.' },
+    { target: 'calc-salary', label: 'Salary Calculator', category: 'finance', keys: ['salary', 'take home', 'in hand', 'hra', 'pf', 'ctc'], tip: 'Use it to estimate monthly in-hand salary from salary components.' },
+    { target: 'calc-leave', label: 'Leave Encashment', category: 'finance', keys: ['leave encashment', 'unused leave', 'paid leave', 'leave salary'], tip: 'Use it to estimate pay for unused leave days.' },
+    { target: 'calc-curr', label: 'Currency Converter', category: 'finance', keys: ['currency', 'exchange rate', 'usd', 'inr', 'eur', 'convert money', 'forex'], tip: 'Use it to convert currencies with the latest available rate loaded by the site.' },
+    { target: 'calc-discount-tax', label: 'Discount & Tax', category: 'finance', keys: ['discount', 'sale price', 'tax included', 'tax excluded', 'final price'], tip: 'Use it for discount and tax price calculations.' },
+    { target: 'calc-invoice', label: 'Invoice Generator', category: 'finance', keys: ['invoice', 'billing', 'bill generator', 'receipt', 'pdf invoice', 'customer invoice'], tip: 'Use it to create a simple invoice with items, tax, discount, and preview.' },
+    { target: 'calc-power', label: 'Power Calculator', category: 'electricity', keys: ['power', 'watts', 'wattage', 'voltage', 'current', 'ampere', 'amps'], tip: 'Use it for P = V x I electrical power estimates.' },
+    { target: 'calc-electricity-bill', label: 'Electricity Bill', category: 'electricity', keys: ['electricity', 'electric bill', 'power consumption', 'ac usage', 'bill rates', 'monthly units', 'kwh cost'], tip: 'Use it to estimate electricity cost from appliance wattage, hours, days, and tariff.' },
+    { target: 'calc-kwh', label: 'kWh Calculator', category: 'electricity', keys: ['kwh', 'kilowatt hour', 'energy use', 'unit consumption'], tip: 'Use it to convert watts and usage time into kWh.' },
+    { target: 'calc-watt-unit', label: 'Watt to Unit', category: 'electricity', keys: ['watt to unit', 'watts to units', 'unit from watts', 'electric unit'], tip: 'Use it to estimate electricity units from wattage and usage.' },
+    { target: 'calc-solar', label: 'Solar Panel Size', category: 'electricity', keys: ['solar', 'solar panel', 'panel size', 'solar array', 'sun hours'], tip: 'Use it to estimate required solar array size from daily usage.' },
+    { target: 'calc-inverter', label: 'Inverter Backup', category: 'electricity', keys: ['inverter', 'battery backup', 'backup time', 'ah battery'], tip: 'Use it to estimate inverter backup time from battery capacity and load.' },
+    { target: 'calc-ups', label: 'UPS Backup', category: 'electricity', keys: ['ups', 'ups backup', 'computer backup'], tip: 'Use it to estimate UPS runtime.' },
+    { target: 'calc-ohm', label: "Ohm's Law", category: 'electricity', keys: ['ohm', 'ohms law', 'resistance', 'voltage current resistance', 'v ir'], tip: 'Use it to solve voltage, current, resistance, or power when two values are known.' },
+    { target: 'calc-generator', label: 'Generator Size', category: 'electricity', keys: ['generator', 'generator size', 'kva', 'load generator'], tip: 'Use it to estimate generator kVA size from load.' },
+    { target: 'calc-ev', label: 'EV Charging Cost', category: 'electricity', keys: ['ev', 'electric vehicle', 'charging cost', 'ev charging', 'battery charging'], tip: 'Use it to estimate EV charging cost from battery size and tariff.' },
+    { target: 'calc-wa', label: 'WhatsApp Link', category: 'web', keys: ['whatsapp', 'wa link', 'chat link', 'direct chat', 'message link'], tip: 'Use it to generate a direct WhatsApp chat link.' },
+    { target: 'calc-qr', label: 'QR Code', category: 'web', keys: ['qr', 'qr code', 'barcode', 'scan code', 'quick response'], tip: 'Use it to generate a QR code for links or text.' },
+    { target: 'calc-pass', label: 'Password Generator', category: 'web', keys: ['password', 'pwd', 'secure password', 'generate password', 'passphrase'], tip: 'Use it to create a stronger random password.' },
+    { target: 'calc-unit', label: 'Unit Converter', category: 'web', keys: ['unit', 'unit converter', 'meters', 'grams', 'inches', 'miles', 'length conversion', 'weight conversion'], tip: 'Use it for common length and weight conversions.' },
+    { target: 'calc-word', label: 'Word & Char Count', category: 'web', keys: ['word count', 'character count', 'text count', 'count words'], tip: 'Use it to count words and characters in text.' },
+    { target: 'calc-case', label: 'Case Converter', category: 'web', keys: ['case converter', 'uppercase', 'lowercase', 'title case', 'sentence case'], tip: 'Use it to convert text casing.' },
+    { target: 'calc-base64', label: 'Base64 Encode/Decode', category: 'web', keys: ['base64', 'encode', 'decode', 'base 64'], tip: 'Use it to encode plain text or decode Base64.' },
+    { target: 'calc-color', label: 'Color Converter', category: 'web', keys: ['color', 'hex', 'rgb', 'color converter', 'palette'], tip: 'Use it to convert between HEX and RGB color values.' },
+    { target: 'calc-image-converter', label: 'Image Format Converter', category: 'web', keys: ['image', 'image converter', 'jpg', 'png', 'webp', 'format converter'], tip: 'Use it to convert image formats in the browser.' },
+    { target: 'calc-uuid', label: 'UUID Generator', category: 'web', keys: ['uuid', 'guid', 'unique id', 'identifier', 'id generator'], tip: 'Use it to generate UUID identifiers.' },
+    { target: 'calc-timezone', label: 'Time Zone Converter', category: 'web', keys: ['timezone', 'time zone', 'gmt', 'utc', 'est', 'ist', 'pst', 'compare time'], tip: 'Use it to compare a time across time zones.' },
+    { target: 'calc-age', label: 'Age Calculator', category: 'basic', keys: ['age', 'birthday', 'date of birth', 'how old'], tip: 'Use it to calculate exact age from a birth date.' },
+    { target: 'calc-date-diff', label: 'Date Difference', category: 'basic', keys: ['date difference', 'days between', 'between dates', 'date range'], tip: 'Use it to count days between two dates.' },
+    { target: 'calc-time', label: 'Time Calculator', category: 'basic', keys: ['time calculator', 'hours minutes', 'add time', 'subtract time'], tip: 'Use it to add or subtract time values.' },
+    { target: 'calc-pct', label: 'Percentage Calculator', category: 'basic', keys: ['percentage', 'percent', 'increase', 'decrease', 'percent change'], tip: 'Use it for percentage, increase, and decrease calculations.' },
+    { target: 'calc-mileage', label: 'Mileage Converter', category: 'basic', keys: ['mileage', 'fuel efficiency', 'mpg', 'km/l', 'l/100km', 'petrol', 'diesel', 'cng', 'lpg', 'km/kwh'], tip: 'Use it to compare fuel efficiency units and running cost.' },
+    { target: 'calc-sw', label: 'Stopwatch Timer', category: 'web', keys: ['stopwatch', 'timer', 'lap time'], tip: 'Use it for quick timing and laps.' },
+    { target: 'calc-cgpa', label: 'CGPA / SGPA', category: 'education', keys: ['cgpa', 'sgpa', 'gpa', 'grade point', 'semester grade'], tip: 'Use it to calculate GPA from credits and grades.' },
+    { target: 'calc-att', label: 'Attendance Calc', category: 'education', keys: ['attendance', 'class attendance', 'bunk', 'required attendance'], tip: 'Use it to estimate attendance percentage and classes needed.' },
+    { target: 'calc-formula-explainer', label: 'Formula Explainer', category: 'education', keys: ['formula', 'explain formula', 'formula explainer', 'how formula works'], tip: 'Use it to read short explanations for common formulas.' },
+    { target: 'calc-equation-plotter', label: 'Equation Plotter', category: 'education', keys: ['equation', 'plot', 'graph', 'line equation', 'slope'], tip: 'Use it to plot a straight-line equation.' },
+    { target: 'calc-circle', label: 'Circle Area & Circumference', category: 'geometry', keys: ['circle', 'area of circle', 'circumference', 'radius'], tip: 'Use it to calculate circle area and circumference.' },
+    { target: 'calc-triangle', label: 'Triangle Area', category: 'geometry', keys: ['triangle', 'area of triangle', 'base height'], tip: 'Use it to calculate triangle area.' },
+    { target: 'calc-pythagorean', label: 'Pythagorean Theorem', category: 'geometry', keys: ['pythagorean', 'hypotenuse', 'right triangle', 'a2 b2 c2'], tip: 'Use it to solve the hypotenuse of a right triangle.' }
+];
+
+function escapeAIHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    }[char]));
+}
+
+function normalizeAIText(value) {
+    return String(value)
+        .toLowerCase()
+        .replace(/&/g, ' and ')
+        .replace(/[^a-z0-9%/.+-]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function getAITokens(value) {
+    return normalizeAIText(value)
+        .split(' ')
+        .filter(token => token && !AI_STOP_WORDS.has(token) && (token.length > 2 || AI_SHORT_QUERY_TOKENS.has(token)));
+}
+
+function scoreAliasMatch(normalizedQuery, queryTokens, alias) {
+    const normalizedAlias = normalizeAIText(alias);
+    if (!normalizedAlias) return 0;
+
+    if (normalizedQuery === normalizedAlias) return 120 + normalizedAlias.length;
+    if (` ${normalizedQuery} `.includes(` ${normalizedAlias} `)) return 70 + normalizedAlias.length;
+
+    const aliasTokens = getAITokens(normalizedAlias);
+    if (!aliasTokens.length) return 0;
+
+    const hits = aliasTokens.filter(token => queryTokens.has(token)).length;
+    if (hits === aliasTokens.length) return 35 + (hits * 6);
+    if (hits > 0 && aliasTokens.length <= 2) return hits * 10;
+    return hits * 4;
+}
+
+function getAIRuleCategory(rule) {
+    return rule.category || document.getElementById(rule.target)?.dataset.category || 'all';
+}
+
+function getAIGeneralResponse(normalizedQuery) {
+    const greeting = ['hi', 'hello', 'hey', 'help'].some(word => ` ${normalizedQuery} `.includes(` ${word} `));
+    const asksCapabilities = ['what can you do', 'available tools', 'list tools', 'all calculators', 'which calculators'].some(phrase => normalizedQuery.includes(phrase));
+
+    if (!greeting && !asksCapabilities) return null;
+
+    return 'I can help you find the right calculator and open it for you. Try questions like <strong>monthly EMI for a loan</strong>, <strong>AC electricity bill</strong>, <strong>BMI from height and weight</strong>, <strong>days between dates</strong>, or <strong>generate a QR code</strong>.';
+}
+
+function getAICategoryIntent(normalizedQuery) {
+    const categories = [
+        { category: 'all', label: 'all tools', keys: ['all tools', 'all calculators', 'show all'] },
+        { category: 'finance', label: 'finance tools', keys: ['finance', 'financial', 'money', 'loan calculators'] },
+        { category: 'electricity', label: 'electricity tools', keys: ['electricity', 'electrical', 'power tools'] },
+        { category: 'health', label: 'health tools', keys: ['health', 'fitness', 'body calculators'] },
+        { category: 'geometry', label: 'geometry tools', keys: ['geometry', 'area calculators'] },
+        { category: 'education', label: 'education tools', keys: ['education', 'study', 'student tools'] },
+        { category: 'web', label: 'tech and web tools', keys: ['web tools', 'tech tools', 'text tools'] }
+    ];
+
+    const asksToShow = ['show', 'open', 'list', 'find', 'go to'].some(word => ` ${normalizedQuery} `.includes(` ${word} `));
+    const asksForGroup = ['tool', 'tools', 'calculator', 'calculators'].some(word => ` ${normalizedQuery} `.includes(` ${word} `));
+    if (!asksToShow && !asksForGroup) return null;
+
+    return categories.find(item => item.keys.some(key => normalizedQuery.includes(key))) || null;
+}
+
+function findAIToolMatch(query) {
+    const normalizedQuery = normalizeAIText(query);
+    const queryTokens = new Set(getAITokens(query));
+    let best = null;
+
+    AI_TOOL_RULES.forEach(rule => {
+        const card = document.getElementById(rule.target);
+        const title = card?.querySelector('h3')?.innerText || rule.label;
+        const description = card?.querySelector('p')?.innerText || '';
+        const aliases = [rule.label, title, description, getAIRuleCategory(rule), ...(rule.keys || [])];
+
+        let score = 0;
+        aliases.forEach(alias => {
+            score = Math.max(score, scoreAliasMatch(normalizedQuery, queryTokens, alias));
+        });
+
+        if (!best || score > best.score) {
+            best = { ...rule, score };
+        }
+    });
+
+    return best && best.score >= 18 ? best : null;
+}
+
+function routeAIToTool(rule) {
+    const category = getAIRuleCategory(rule);
+    const targetEl = document.getElementById(rule.target);
+
+    if (!targetEl) {
+        appendAIMessage(`I know about <strong>${escapeAIHTML(rule.label)}</strong>, but I could not find that card on this page.`, 'bot');
+        return;
+    }
+
+    jumpToTool(rule.target, category);
+
+    const details = targetEl.querySelector('details');
+    if (details) details.open = true;
+
+    targetEl.classList.add('pulse-highlight');
+    window.setTimeout(() => targetEl.classList.remove('pulse-highlight'), 3200);
+
+    appendAIMessage(`Best match: <strong>${escapeAIHTML(rule.label)}</strong>.<br>${escapeAIHTML(rule.tip || 'I opened the matching calculator for you.')}<br><button type="button" class="ai-tool-action" onclick="jumpToTool('${rule.target}', '${category}')">Open ${escapeAIHTML(rule.label)}</button>`, 'bot');
+    showToast(`Opened ${rule.label}`);
+}
+
 // Send user message and match query
 function sendAIMessage() {
     const input = document.getElementById('ai-chat-input');
     if (!input) return;
     
-    const query = input.value.strip ? input.value.strip() : input.value.trim();
+    const query = input.value.trim();
     if (!query) return;
     
     // Add user bubble
@@ -3468,64 +3644,28 @@ function sendAIMessage() {
     
     // Processing / Match
     setTimeout(() => {
-        const normalized = query.toLowerCase();
+        const normalized = normalizeAIText(query);
+        const categoryIntent = getAICategoryIntent(normalized);
+        const generalResponse = getAIGeneralResponse(normalized);
         
-        // Define fuzzy matching rules
-        const rules = [
-            { keys: ['invoice', 'billing', 'bill generator', 'pdf receipt'], target: 'calc-invoice', label: 'Invoice Generator' },
-            { keys: ['scientific', 'trig', 'sine', 'cosine', 'logarithm', 'ln', 'exponent'], target: 'calc-scientific', label: 'Scientific Calculator' },
-            { keys: ['timezone', 'gmt', 'utc', 'est', 'ist', 'pst', 'compare time'], target: 'calc-timezone', label: 'Time Zone Converter' },
-            { keys: ['mileage', 'fuel efficiency', 'mpg', 'km/l', 'l/100km', 'petrol', 'diesel', 'cng', 'lpg', 'ev', 'electric vehicle', 'km/kwh'], target: 'calc-mileage', label: 'Mileage Converter' },
-            { keys: ['uuid', 'guid', 'v4', 'v1', 'identifier', 'unique id'], target: 'calc-uuid', label: 'UUID Generator' },
-            { keys: ['bmi', 'body mass', 'fat', 'obesity', 'overweight'], target: 'calc-bmi', label: 'BMI Calculator' },
-            { keys: ['emi', 'loan', 'interest', 'monthly payment', 'mortgage'], target: 'calc-emi', label: 'EMI Calculator' },
-            { keys: ['electricity', 'power consumption', 'watts', 'kwh', 'ac usage', 'bill rates'], target: 'calc-electricity-bill', label: 'Electricity Bill Calculator' },
-            { keys: ['sip', 'mutual fund', 'invest', 'wealth growth', 'compounding'], target: 'calc-sip', label: 'SIP Calculator' },
-            { keys: ['fd', 'fixed deposit', 'sb', 'savings account', 'senior citizen'], target: 'calc-fd', label: 'FD / SB Calculator' },
-            { keys: ['rd', 'recurring deposit'], target: 'calc-rd', label: 'RD Calculator' },
-            { keys: ['gst', 'sales tax', 'taxation', 'cgst', 'sgst'], target: 'calc-gst', label: 'GST Calculator' },
-            { keys: ['calorie', 'macros', 'nutrition', 'carbs', 'protein', 'food log'], target: 'calc-calorie', label: 'Calorie & Macro' },
-            { keys: ['password', 'generate pwd', 'secure', 'passphrase'], target: 'calc-pass', label: 'Password Generator' },
-            { keys: ['qr', 'quick response', 'barcode', 'scan code'], target: 'calc-qr', label: 'QR Code Generator' },
-            { keys: ['unit', 'meters', 'grams', 'inches', 'miles', 'conversion'], target: 'calc-unit', label: 'Unit Converter' },
-            { keys: ['age', 'birthday', 'how old', 'date difference'], target: 'calc-age', label: 'Age Calculator' }
-        ];
-        
-        let bestMatch = null;
-        for (const rule of rules) {
-            for (const key of rule.keys) {
-                if (normalized.includes(key)) {
-                    bestMatch = rule;
-                    break;
-                }
-            }
-            if (bestMatch) break;
+        if (categoryIntent) {
+            filterCategory(categoryIntent.category);
+            scrollToVisibleCalculator(categoryIntent.category);
+            appendAIMessage(`Showing <strong>${escapeAIHTML(categoryIntent.label)}</strong>. You can also ask me for a specific task, like <strong>loan EMI</strong>, <strong>UPS backup</strong>, or <strong>word count</strong>.`, 'bot');
+            return;
         }
-        
+
+        if (generalResponse) {
+            appendAIMessage(generalResponse, 'bot');
+            return;
+        }
+
+        const bestMatch = findAIToolMatch(query);
+
         if (bestMatch) {
-            // Scroll to the card
-            const targetEl = document.getElementById(bestMatch.target);
-            if (targetEl) {
-                // Expand details drawer if present
-                const details = targetEl.querySelector('details');
-                if (details) details.open = true;
-                
-                // Show in viewport
-                targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                
-                // Apply temporary glow effect
-                targetEl.classList.add('pulse-highlight');
-                setTimeout(() => {
-                    targetEl.classList.remove('pulse-highlight');
-                }, 3000);
-                
-                appendAIMessage(`Found it! I have routed you to the <strong><a href="#" onclick="jumpToTool('${bestMatch.target}'); return false;">${bestMatch.label}</a></strong> card and highlighted it with a neon glow.`, 'bot');
-                showToast(`Navigated to ${bestMatch.label}`);
-            } else {
-                appendAIMessage(`I found a match for "${bestMatch.label}" but the card is currently hidden. Try selecting "All" categories first!`, 'bot');
-            }
+            routeAIToTool(bestMatch);
         } else {
-            appendAIMessage(`I couldn't find a direct calculator match for "${query}". Try searching for popular topics like "EMI", "Invoice", "AC electricity", or "Timezone"!`, 'bot');
+            appendAIMessage(`I could not find a direct calculator match for <strong>${escapeAIHTML(query)}</strong>. Try <strong>EMI</strong>, <strong>AC electricity bill</strong>, <strong>body fat</strong>, <strong>date difference</strong>, <strong>QR code</strong>, or <strong>invoice</strong>.`, 'bot');
         }
     }, 400);
 }

@@ -602,19 +602,24 @@ h1 {
     align-items: center;
     gap: 0.8rem;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+    outline: 1px solid transparent;
+    outline-offset: 0;
+    transition: border-color 0.24s ease, box-shadow 0.24s ease, outline-color 0.24s ease, outline-offset 0.24s ease, transform 0.24s ease;
     width: max-content;
 }
 
 .tool-card:hover {
-    transform: scale(1.05);
-    border-color: var(--primary);
-    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3), 0 15px 30px rgba(0, 0, 0, 0.5);
+    transform: translateY(-2px);
+    border-color: rgba(56, 189, 248, 0.9);
+    outline-color: rgba(56, 189, 248, 0.55);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.16), 0 18px 36px rgba(0, 0, 0, 0.46), 0 0 34px rgba(14, 165, 233, 0.34);
     z-index: 10;
 }
 
 .tool-card:hover .icon {
-    animation: bounce 0.5s ease;
+    animation: none;
+    box-shadow: 0 0 18px rgba(14, 165, 233, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 @keyframes bounce {
@@ -965,8 +970,10 @@ h1 {
     min-width: 0;
     margin: 0 auto;
     isolation: isolate;
+    outline: 1px solid transparent;
+    outline-offset: 0;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045);
-    transition: background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease;
+    transition: background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease, outline-color 0.22s ease, outline-offset 0.22s ease, transform 0.22s ease;
 }
 
 .result-card::before {
@@ -974,7 +981,9 @@ h1 {
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: linear-gradient(135deg, rgba(14, 165, 233, 0.14), transparent 38%, rgba(139, 92, 246, 0.12));
+    background:
+        radial-gradient(circle at 85% 0%, rgba(56, 189, 248, 0.28) 0%, transparent 34%),
+        linear-gradient(135deg, rgba(14, 165, 233, 0.24), transparent 38%, rgba(139, 92, 246, 0.18) 70%, rgba(236, 72, 153, 0.14));
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.22s ease;
@@ -983,22 +992,27 @@ h1 {
 
 .result-card.active:hover,
 .result-card:focus-within {
-    transform: translateY(-2px);
-    border-color: rgba(14, 165, 233, 0.68);
-    box-shadow: 0 18px 46px rgba(0, 0, 0, 0.34), 0 0 0 1px rgba(14, 165, 233, 0.24), 0 0 28px rgba(14, 165, 233, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.075);
+    transform: translateY(-3px);
+    border-color: rgba(56, 189, 248, 0.95);
+    outline-color: rgba(56, 189, 248, 0.65);
+    outline-offset: 4px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.42), 0 0 0 2px rgba(14, 165, 233, 0.34), 0 0 46px rgba(14, 165, 233, 0.34), 0 0 96px rgba(139, 92, 246, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.09);
+    z-index: 3;
+    animation: cardHoverBreath 1.9s ease-in-out infinite;
 }
 
 .result-card.active:hover::before,
 .result-card:focus-within::before {
-    opacity: 1;
+    opacity: 0.92;
 }
 
 .card-glow {
     position: absolute;
     top: -50px; right: -50px;
-    width: 150px; height: 150px;
-    background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
-    opacity: 0.2;
+    width: 170px; height: 170px;
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.62) 0%, rgba(139, 92, 246, 0.28) 42%, transparent 72%);
+    filter: blur(1px);
+    opacity: 0.18;
     border-radius: 50%;
     transition: transform 0.5s ease, opacity 0.5s ease;
     pointer-events: none;
@@ -1007,12 +1021,27 @@ h1 {
 
 .result-card:hover .card-glow,
 .result-card:focus-within .card-glow {
-    transform: scale(1.25) translate(-4px, 4px);
-    opacity: 0.26;
+    transform: scale(2.05) translate(-6px, 6px);
+    opacity: 0.48;
 }
 
 .result-card h3 { font-size: 1.4rem; margin-bottom: 0.5rem; position: relative; z-index: 1; letter-spacing: -0.5px; }
 .result-card p { color: #a3a3a3; font-size: 1rem; position: relative; z-index: 1; margin-bottom: 1.5rem; }
+
+.result-card.active:hover h3,
+.result-card:focus-within h3 {
+    color: #f8fbff;
+    text-shadow: 0 0 18px rgba(56, 189, 248, 0.45);
+}
+
+@keyframes cardHoverBreath {
+    0%, 100% {
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.42), 0 0 0 2px rgba(14, 165, 233, 0.34), 0 0 46px rgba(14, 165, 233, 0.34), 0 0 96px rgba(139, 92, 246, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.09);
+    }
+    50% {
+        box-shadow: 0 26px 64px rgba(0, 0, 0, 0.46), 0 0 0 2px rgba(14, 165, 233, 0.42), 0 0 62px rgba(14, 165, 233, 0.46), 0 0 110px rgba(139, 92, 246, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.11);
+    }
+}
 
 /* Electricity UI Polish */
 .result-card[data-category="electricity"] {
@@ -1035,9 +1064,17 @@ h1 {
 
 .result-card[data-category="electricity"]:hover,
 .result-card[data-category="electricity"]:focus-within {
-    border-color: rgba(250, 204, 21, 0.5);
-    box-shadow: 0 16px 42px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(250, 204, 21, 0.16), 0 0 24px rgba(250, 204, 21, 0.14), inset 0 0 20px rgba(250, 204, 21, 0.05);
-    transform: translateY(-2px);
+    border-color: rgba(250, 204, 21, 0.82);
+    outline-color: rgba(250, 204, 21, 0.52);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(250, 204, 21, 0.24), 0 0 48px rgba(250, 204, 21, 0.3), inset 0 0 24px rgba(250, 204, 21, 0.07);
+    transform: translateY(-3px);
+}
+
+.result-card[data-category="electricity"]:hover::before,
+.result-card[data-category="electricity"]:focus-within::before {
+    background:
+        radial-gradient(circle at 86% 0%, rgba(250, 204, 21, 0.28) 0%, transparent 34%),
+        linear-gradient(135deg, rgba(250, 204, 21, 0.18), transparent 44%, rgba(14, 165, 233, 0.1));
 }
 
 .result-card[data-category="electricity"] .card-glow {
@@ -1103,10 +1140,25 @@ h1 {
 /* Mock Tool UI */
 .tool-ui {
     background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255, 255, 255, 0.04);
     border-radius: 12px;
     padding: 1.5rem;
     position: relative;
     z-index: 1;
+    transition: background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.result-card.active:hover .tool-ui,
+.result-card:focus-within .tool-ui {
+    background: rgba(2, 6, 23, 0.46);
+    border-color: rgba(56, 189, 248, 0.32);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0 0 1px rgba(14, 165, 233, 0.12);
+}
+
+.result-card[data-category="electricity"]:hover .tool-ui,
+.result-card[data-category="electricity"]:focus-within .tool-ui {
+    border-color: rgba(250, 204, 21, 0.28);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0 0 1px rgba(250, 204, 21, 0.12);
 }
 
 /* Tool Inputs */
@@ -1519,9 +1571,48 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     .cat-btn.active,
     .result-card.active:hover,
     .result-card[data-category="electricity"]:hover,
+    .tool-card:hover,
     .tool-action-btn:hover,
     .calc-btn:hover {
+        animation: none;
+        outline-offset: 0;
         transform: none;
+    }
+
+    .tool-card:hover {
+        border-color: var(--glass-border);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        outline-color: transparent;
+    }
+
+    .result-card.active:hover {
+        border-color: var(--glass-border);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045);
+        outline-color: transparent;
+    }
+
+    .result-card[data-category="electricity"]:hover {
+        border-color: rgba(250, 204, 21, 0.15);
+        box-shadow: 0 4px 20px rgba(250, 204, 21, 0.05);
+        outline-color: transparent;
+    }
+
+    .result-card.active:hover::before,
+    .result-card:focus-within::before {
+        opacity: 0;
+    }
+
+    .result-card:hover .card-glow,
+    .result-card:focus-within .card-glow {
+        opacity: 0.18;
+        transform: none;
+    }
+
+    .result-card.active:hover .tool-ui,
+    .result-card:focus-within .tool-ui {
+        background: rgba(0,0,0,0.3);
+        border-color: rgba(255, 255, 255, 0.04);
+        box-shadow: none;
     }
 }
 
@@ -2059,6 +2150,17 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
 }
 
+.ai-msg.bot {
+    align-self: flex-start;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px 12px 12px 2px;
+    color: #e2e8f0;
+    line-height: 1.45;
+    max-width: 88%;
+    padding: 0.68rem 0.82rem;
+}
+
 .ai-msg.bot a {
     color: var(--primary);
     text-decoration: underline;
@@ -2067,6 +2169,27 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 .ai-msg.bot a:hover {
     color: var(--secondary);
+}
+
+.ai-tool-action {
+    background: rgba(14, 165, 233, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.45);
+    border-radius: 999px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-top: 0.55rem;
+    padding: 0.38rem 0.66rem;
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ai-tool-action:hover {
+    background: rgba(14, 165, 233, 0.22);
+    border-color: rgba(56, 189, 248, 0.85);
+    box-shadow: 0 0 18px rgba(14, 165, 233, 0.24);
 }
 
 /* Focus highlighting pulse animation for routed elements */
