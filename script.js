@@ -174,17 +174,137 @@ function triggerTool(toolId, message) {
 // Global triggerTool for inline onclick handlers
 window.triggerTool = triggerTool;
 
-// --- EMI Calculator ---
+// --- Money Display Preferences ---
+const DISPLAY_CURRENCY_STORAGE_KEY = 'calculator-display-currency';
+const CURRENCY_SYMBOL_CACHE = new Map();
+const MONEY_INPUT_IDS = new Set([
+    'emi-amount',
+    'sip-monthly',
+    'fd-principal',
+    'rd-monthly',
+    'gst-amount',
+    'sal-ctc',
+    'leave-basic',
+    'dt-price',
+    'bill-rate',
+    'ev-rate'
+]);
+let selectedDisplayCurrency = 'USD';
+
+function getStoredDisplayCurrency() {
+    try {
+        return localStorage.getItem(DISPLAY_CURRENCY_STORAGE_KEY) || '';
+    } catch {
+        return '';
+    }
+}
+
+function saveStoredDisplayCurrency(currency) {
+    try {
+        localStorage.setItem(DISPLAY_CURRENCY_STORAGE_KEY, currency);
+    } catch {
+        // Currency selection still works for this session if localStorage is blocked.
+    }
+}
+
+function getDisplayCurrency() {
+    return selectedDisplayCurrency || getStoredDisplayCurrency() || 'USD';
+}
+
+function getDisplayCurrencySymbol(currency = getDisplayCurrency()) {
+    if (CURRENCY_SYMBOL_CACHE.has(currency)) return CURRENCY_SYMBOL_CACHE.get(currency);
+
+    let symbol = currency;
+    try {
+        const parts = new Intl.NumberFormat(undefined, {
+            style: 'currency',
+            currency,
+            currencyDisplay: 'narrowSymbol',
+            maximumFractionDigits: 0
+        }).formatToParts(0);
+        symbol = parts.find(part => part.type === 'currency')?.value || currency;
+    } catch {
+        symbol = currency;
+    }
+
+    CURRENCY_SYMBOL_CACHE.set(currency, symbol);
+    return symbol;
+}
+
 function formatReadableAmount(value, fractionDigits = 0) {
     const numberValue = Number(value);
-    if (!Number.isFinite(numberValue) || numberValue <= 0) return 'Rs 0';
+    const safeValue = Number.isFinite(numberValue) ? numberValue : 0;
+    const currency = getDisplayCurrency();
 
-    return 'Rs ' + numberValue.toLocaleString('en-IN', {
-        minimumFractionDigits: fractionDigits,
-        maximumFractionDigits: fractionDigits
+    try {
+        return new Intl.NumberFormat(undefined, {
+            style: 'currency',
+            currency,
+            currencyDisplay: 'narrowSymbol',
+            minimumFractionDigits: fractionDigits,
+            maximumFractionDigits: fractionDigits
+        }).format(safeValue);
+    } catch {
+        return `${getDisplayCurrencySymbol(currency)} ${safeValue.toLocaleString(undefined, {
+            minimumFractionDigits: fractionDigits,
+            maximumFractionDigits: fractionDigits
+        })}`;
+    }
+}
+
+function setMoneyText(id, value, options = {}) {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    const digits = Number.isFinite(options.digits) ? options.digits : 0;
+    el.dataset.moneyValue = String(Number.isFinite(Number(value)) ? Number(value) : 0);
+    el.dataset.moneyDigits = String(digits);
+    el.dataset.moneyPrefix = options.prefix || '';
+    el.dataset.moneySuffix = options.suffix || '';
+    el.innerText = `${el.dataset.moneyPrefix}${formatReadableAmount(Number(el.dataset.moneyValue), digits)}${el.dataset.moneySuffix}`;
+}
+
+function refreshMoneyOutputs() {
+    document.querySelectorAll('[data-money-value]').forEach(el => {
+        const value = Number(el.dataset.moneyValue || 0);
+        const digits = Number(el.dataset.moneyDigits || 0);
+        el.innerText = `${el.dataset.moneyPrefix || ''}${formatReadableAmount(value, digits)}${el.dataset.moneySuffix || ''}`;
     });
 }
 
+function updateCurrencyAffixes() {
+    const symbol = getDisplayCurrencySymbol();
+    document.querySelectorAll('.input-suffix').forEach(suffix => {
+        const text = suffix.textContent.trim();
+        const inputId = suffix.parentElement?.querySelector('.tool-input')?.id;
+        if (MONEY_INPUT_IDS.has(inputId)) {
+            suffix.textContent = symbol;
+            return;
+        }
+        if (['Rs', 'Rs.', '\u20b9', 'â‚¹'].includes(text)) {
+            suffix.textContent = symbol;
+        }
+    });
+
+    const preview = document.getElementById('global-currency-preview');
+    if (preview) preview.textContent = `${getDisplayCurrency()} ${formatReadableAmount(0, 2)}`;
+}
+
+function changeDisplayCurrency(currency) {
+    selectedDisplayCurrency = currency || 'USD';
+    saveStoredDisplayCurrency(selectedDisplayCurrency);
+    document.querySelectorAll('#global-currency-select, #mobile-currency-select').forEach(select => {
+        if (select.value !== selectedDisplayCurrency) select.value = selectedDisplayCurrency;
+    });
+    refreshMoneyOutputs();
+    updateCurrencyAffixes();
+    formatLoanPreview();
+    if (typeof calculateInvoice === 'function') calculateInvoice();
+    showToast(`Currency changed to ${selectedDisplayCurrency}`);
+}
+window.changeDisplayCurrency = changeDisplayCurrency;
+
+// --- EMI Calculator ---
 function formatLoanPreview() {
     const amount = parseFloat(document.getElementById('emi-amount')?.value);
     const preview = document.getElementById('emi-amount-preview');
@@ -221,9 +341,9 @@ function calcEMI() {
     const principalPercent = totalPayable > 0 ? (amount / totalPayable) * 100 : 0;
     const interestPercent = totalPayable > 0 ? (totalInterest / totalPayable) * 100 : 0;
 
-    document.getElementById('emi-monthly-result').innerText = formatReadableAmount(emi);
-    document.getElementById('emi-interest-result').innerText = formatReadableAmount(totalInterest);
-    document.getElementById('emi-total-result').innerText = formatReadableAmount(totalPayable);
+    setMoneyText('emi-monthly-result', emi);
+    setMoneyText('emi-interest-result', totalInterest);
+    setMoneyText('emi-total-result', totalPayable);
     formatLoanPreview();
 
     const principal = document.getElementById('emi-principal');
@@ -1073,10 +1193,10 @@ function calcSIP() {
     const invested = P * n;
     const returns = Math.max(0, M - invested);
 
-    document.getElementById('sip-result').innerText = `Maturity: ${formatReadableAmount(M)}`;
-    document.getElementById('sip-invested').innerText = formatReadableAmount(invested);
-    document.getElementById('sip-returns').innerText = formatReadableAmount(returns);
-    document.getElementById('sip-total').innerText = formatReadableAmount(M);
+    setMoneyText('sip-result', M, { prefix: 'Maturity: ' });
+    setMoneyText('sip-invested', invested);
+    setMoneyText('sip-returns', returns);
+    setMoneyText('sip-total', M);
     showToast('SIP Calculated!');
 }
 window.calcSIP = calcSIP;
@@ -1095,10 +1215,10 @@ function calcFD() {
 
     const interest = Math.max(0, A - P);
 
-    document.getElementById('fd-result').innerText = `Maturity: ${formatReadableAmount(A)}`;
-    document.getElementById('fd-invested').innerText = formatReadableAmount(P);
-    document.getElementById('fd-interest').innerText = formatReadableAmount(interest);
-    document.getElementById('fd-total').innerText = formatReadableAmount(A);
+    setMoneyText('fd-result', A, { prefix: 'Maturity: ' });
+    setMoneyText('fd-invested', P);
+    setMoneyText('fd-interest', interest);
+    setMoneyText('fd-total', A);
     showToast('FD/SB Calculated!');
 }
 window.calcFD = calcFD;
@@ -1115,10 +1235,10 @@ function calcRD() {
     const interest = P * (n * (n + 1) / 2) * (r / 12);
     const maturity = deposits + interest;
 
-    document.getElementById('rd-result').innerText = `Maturity: ${formatReadableAmount(maturity)}`;
-    document.getElementById('rd-deposits').innerText = formatReadableAmount(deposits);
-    document.getElementById('rd-interest').innerText = formatReadableAmount(interest);
-    document.getElementById('rd-total').innerText = formatReadableAmount(maturity);
+    setMoneyText('rd-result', maturity, { prefix: 'Maturity: ' });
+    setMoneyText('rd-deposits', deposits);
+    setMoneyText('rd-interest', interest);
+    setMoneyText('rd-total', maturity);
     showToast('RD Calculated!');
 }
 window.calcRD = calcRD;
@@ -1141,10 +1261,10 @@ function calcGST() {
     const gstAmount = action === 'add' ? amt * rate : amt - result;
     const finalAmount = action === 'add' ? result : amt;
 
-    document.getElementById('gst-result').innerText = `Final: ${formatReadableAmount(finalAmount, 2)}`;
-    document.getElementById('gst-base').innerText = formatReadableAmount(baseAmount, 2);
-    document.getElementById('gst-tax').innerText = formatReadableAmount(gstAmount, 2);
-    document.getElementById('gst-total').innerText = formatReadableAmount(finalAmount, 2);
+    setMoneyText('gst-result', finalAmount, { prefix: 'Final: ', digits: 2 });
+    setMoneyText('gst-base', baseAmount, { digits: 2 });
+    setMoneyText('gst-tax', gstAmount, { digits: 2 });
+    setMoneyText('gst-total', finalAmount, { digits: 2 });
     showToast('GST Calculated!');
 }
 window.calcGST = calcGST;
@@ -1165,10 +1285,10 @@ function calcSalary() {
 
     const inHand = monthlyCTC - pf - tax;
 
-    document.getElementById('sal-result').innerText = `${formatReadableAmount(inHand)} / month`;
-    document.getElementById('sal-monthly').innerText = formatReadableAmount(monthlyCTC);
-    document.getElementById('sal-pf').innerText = formatReadableAmount(pf);
-    document.getElementById('sal-tax').innerText = formatReadableAmount(tax);
+    setMoneyText('sal-result', inHand, { prefix: 'In-hand: ', suffix: ' / month' });
+    setMoneyText('sal-monthly', monthlyCTC);
+    setMoneyText('sal-pf', pf);
+    setMoneyText('sal-tax', tax);
     showToast('Salary Estimated!');
 }
 window.calcSalary = calcSalary;
@@ -1180,8 +1300,8 @@ function calcLeave() {
 
     const dailyWage = basic / 30;
     const result = dailyWage * days;
-    document.getElementById('leave-result').innerText = `Payable: ${formatReadableAmount(result)}`;
-    document.getElementById('leave-daily').innerText = formatReadableAmount(dailyWage);
+    setMoneyText('leave-result', result, { prefix: 'Payable: ' });
+    setMoneyText('leave-daily', dailyWage);
     document.getElementById('leave-days-out').innerText = `${days} days`;
     showToast('Leave Encashment Calculated!');
 }
@@ -1356,19 +1476,72 @@ const CURRENCY_OPTIONS = Object.freeze([
     { code: 'ZWL', name: 'Zimbabwean Dollar' }
 ]);
 
+function getCurrencyOptionLabel(code, name, includeSymbol = false) {
+    const symbol = includeSymbol ? ` ${getDisplayCurrencySymbol(code)}` : '';
+    if (includeSymbol === 'compact') return `${code}${symbol}`;
+    return `${code}${symbol} - ${name}`;
+}
+
 function populateCurrencySelects() {
-    document.querySelectorAll('#curr-from, #curr-to').forEach(select => {
-        const selectedCurrency = select.dataset.defaultCurrency || select.value || (select.id === 'curr-from' ? 'INR' : 'USD');
+    selectedDisplayCurrency = getStoredDisplayCurrency() || document.getElementById('global-currency-select')?.dataset.defaultCurrency || 'USD';
+    if (!CURRENCY_OPTIONS.some(({ code }) => code === selectedDisplayCurrency)) {
+        selectedDisplayCurrency = 'USD';
+    }
+
+    document.querySelectorAll('#curr-from, #curr-to, #global-currency-select, #mobile-currency-select').forEach(select => {
+        const isDisplayCurrencySelect = select.id === 'global-currency-select' || select.id === 'mobile-currency-select';
+        const selectedCurrency = isDisplayCurrencySelect
+            ? selectedDisplayCurrency
+            : select.dataset.defaultCurrency || select.value || (select.id === 'curr-from' ? 'INR' : 'USD');
         select.innerHTML = '';
 
         CURRENCY_OPTIONS.forEach(({ code, name }) => {
             const option = document.createElement('option');
             option.value = code;
-            option.textContent = `${code} - ${name}`;
+            option.textContent = getCurrencyOptionLabel(code, name, isDisplayCurrencySelect ? 'compact' : false);
+            option.title = `${code} ${getDisplayCurrencySymbol(code)} - ${name}`;
             option.selected = code === selectedCurrency;
             select.appendChild(option);
         });
     });
+
+    updateCurrencyAffixes();
+}
+
+function initializeMoneyDefaults() {
+    [
+        ['emi-monthly-result', 0],
+        ['emi-interest-result', 0],
+        ['emi-total-result', 0],
+        ['sip-result', 0, { prefix: 'Maturity: ' }],
+        ['sip-invested', 0],
+        ['sip-returns', 0],
+        ['sip-total', 0],
+        ['fd-result', 0, { prefix: 'Maturity: ' }],
+        ['fd-invested', 0],
+        ['fd-interest', 0],
+        ['fd-total', 0],
+        ['rd-result', 0, { prefix: 'Maturity: ' }],
+        ['rd-deposits', 0],
+        ['rd-interest', 0],
+        ['rd-total', 0],
+        ['gst-result', 0, { prefix: 'Final: ', digits: 2 }],
+        ['gst-base', 0, { digits: 2 }],
+        ['gst-tax', 0, { digits: 2 }],
+        ['gst-total', 0, { digits: 2 }],
+        ['sal-result', 0, { prefix: 'In-hand: ', suffix: ' / month' }],
+        ['sal-monthly', 0],
+        ['sal-pf', 0],
+        ['sal-tax', 0],
+        ['leave-result', 0, { prefix: 'Payable: ' }],
+        ['leave-daily', 0],
+        ['dt-result', 0, { prefix: 'Final: ', digits: 2 }],
+        ['dt-savings', 0, { digits: 2 }],
+        ['dt-tax-out', 0, { digits: 2 }],
+        ['dt-total', 0, { digits: 2 }],
+        ['bill-result', 0, { digits: 2 }],
+        ['ev-result', 0, { digits: 2 }]
+    ].forEach(([id, value, options]) => setMoneyText(id, value, options || {}));
 }
 
 function getCurrencyCache(base) {
@@ -1429,9 +1602,10 @@ async function fetchCurrencyRates(base) {
 
 function formatCurrencyValue(value, currency) {
     try {
-        return new Intl.NumberFormat('en-IN', {
+        return new Intl.NumberFormat(undefined, {
             style: 'currency',
             currency,
+            currencyDisplay: 'narrowSymbol',
             maximumFractionDigits: 2
         }).format(value);
     } catch {
@@ -1806,10 +1980,10 @@ function calcDiscountTax() {
     const savings = price - afterDiscount;
     const taxAdded = finalPrice - afterDiscount;
 
-    document.getElementById('dt-result').innerText = `Final: ${formatReadableAmount(finalPrice, 2)}`;
-    document.getElementById('dt-savings').innerText = formatReadableAmount(savings, 2);
-    document.getElementById('dt-tax-out').innerText = formatReadableAmount(taxAdded, 2);
-    document.getElementById('dt-total').innerText = formatReadableAmount(finalPrice, 2);
+    setMoneyText('dt-result', finalPrice, { prefix: 'Final: ', digits: 2 });
+    setMoneyText('dt-savings', savings, { digits: 2 });
+    setMoneyText('dt-tax-out', taxAdded, { digits: 2 });
+    setMoneyText('dt-total', finalPrice, { digits: 2 });
     showToast('Final Price Calculated!');
 }
 window.calcDiscountTax = calcDiscountTax;
@@ -1822,13 +1996,9 @@ function readCalcNumber(id) {
 
 function formatCalcNumber(value, digits = 2) {
     if (!Number.isFinite(value)) return '0';
-    return Number(value.toFixed(digits)).toLocaleString('en-IN', {
+    return Number(value.toFixed(digits)).toLocaleString(undefined, {
         maximumFractionDigits: digits
     });
-}
-
-function formatRupees(value) {
-    return 'Rs ' + formatCalcNumber(value, 2);
 }
 
 function requirePositiveInputs(fields) {
@@ -1871,7 +2041,8 @@ function calcElectricityBill() {
     if (!values) return;
 
     const bill = values['bill-units'] * values['bill-rate'];
-    setResultText('bill-result', formatRupees(bill), 'Electricity bill calculated');
+    setMoneyText('bill-result', bill, { digits: 2 });
+    showToast('Electricity bill calculated');
 
     // --- Electricity Pie Chart ---
     const chartContainer = document.getElementById('electricity-pie-container');
@@ -2060,7 +2231,8 @@ function calcEvChargingCost() {
     }
 
     const cost = values['ev-capacity'] * (chargePercent / 100) * values['ev-rate'];
-    setResultText('ev-result', formatRupees(cost), 'EV charging cost calculated');
+    setMoneyText('ev-result', cost, { digits: 2 });
+    showToast('EV charging cost calculated');
 }
 window.calcEvChargingCost = calcEvChargingCost;
 
@@ -2719,6 +2891,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initHeroChart();
     initHeroFloatingCards();
     populateCurrencySelects();
+    initializeMoneyDefaults();
     initToolDefaults();
     initToolActions();
     initInlineValidationClearing();
@@ -2976,10 +3149,10 @@ window.calcSIP = function() {
     const invested = P * n;
     const estReturns = Math.max(0, M - invested);
     
-    document.getElementById('sip-result').innerText = `Maturity: ${formatReadableAmount(M)}`;
-    document.getElementById('sip-invested').innerText = formatReadableAmount(invested);
-    document.getElementById('sip-returns').innerText = formatReadableAmount(estReturns);
-    document.getElementById('sip-total').innerText = formatReadableAmount(M);
+    setMoneyText('sip-result', M, { prefix: 'Maturity: ' });
+    setMoneyText('sip-invested', invested);
+    setMoneyText('sip-returns', estReturns);
+    setMoneyText('sip-total', M);
     
     showToast('SIP Wealth Growth Computed!');
 
@@ -3061,10 +3234,10 @@ window.calcFD = function() {
     const A = P * Math.pow((1 + totalRate / compoundFrequency), compoundFrequency * years);
     const interest = Math.max(0, A - P);
     
-    document.getElementById('fd-result').innerText = `Maturity: ${formatReadableAmount(A)}`;
-    document.getElementById('fd-invested').innerText = formatReadableAmount(P);
-    document.getElementById('fd-interest').innerText = formatReadableAmount(interest);
-    document.getElementById('fd-total').innerText = formatReadableAmount(A);
+    setMoneyText('fd-result', A, { prefix: 'Maturity: ' });
+    setMoneyText('fd-invested', P);
+    setMoneyText('fd-interest', interest);
+    setMoneyText('fd-total', A);
     
     showToast('FD Wealth Compound Computed!');
 
@@ -3143,10 +3316,10 @@ window.calcRD = function() {
     const interest = P * (months * (months + 1) / 2) * (r / 12);
     const maturity = deposits + interest;
     
-    document.getElementById('rd-result').innerText = `Maturity: ${formatReadableAmount(maturity)}`;
-    document.getElementById('rd-deposits').innerText = formatReadableAmount(deposits);
-    document.getElementById('rd-interest').innerText = formatReadableAmount(interest);
-    document.getElementById('rd-total').innerText = formatReadableAmount(maturity);
+    setMoneyText('rd-result', maturity, { prefix: 'Maturity: ' });
+    setMoneyText('rd-deposits', deposits);
+    setMoneyText('rd-interest', interest);
+    setMoneyText('rd-total', maturity);
     
     showToast('RD Maturity Interest Computed!');
 
@@ -4049,7 +4222,7 @@ function calculateInvoice() {
         const descEl = document.createElement('span');
         const totalEl = document.createElement('span');
         descEl.textContent = `${desc} (x${qty})`;
-        totalEl.textContent = `₹${total.toFixed(2)}`;
+        totalEl.textContent = formatReadableAmount(total, 2);
         itemEl.append(descEl, totalEl);
         previewItems.appendChild(itemEl);
     });
@@ -4069,10 +4242,10 @@ function calculateInvoice() {
     const invDate = document.getElementById('inv-date').value;
     document.getElementById('inv-preview-date').innerText = invDate || new Date().toISOString().split('T')[0];
     
-    document.getElementById('inv-preview-subtotal').innerText = '₹' + subtotal.toFixed(2);
-    document.getElementById('inv-preview-tax').innerText = '₹' + tax.toFixed(2);
-    document.getElementById('inv-preview-discount').innerText = '₹' + discount.toFixed(2);
-    document.getElementById('inv-preview-total').innerText = '₹' + totalDue.toFixed(2);
+    setMoneyText('inv-preview-subtotal', subtotal, { digits: 2 });
+    setMoneyText('inv-preview-tax', tax, { digits: 2 });
+    setMoneyText('inv-preview-discount', discount, { digits: 2 });
+    setMoneyText('inv-preview-total', totalDue, { digits: 2 });
 }
 window.calculateInvoice = calculateInvoice;
 
@@ -4097,10 +4270,10 @@ function exportInvoice(format) {
             csvContent += `${csvCell(desc)},${csvCell(qty)},${csvCell(price)},${csvCell(total)}\n`;
         });
         
-        csvContent += `\nSubtotal,,${document.getElementById('inv-preview-subtotal').innerText.replace('₹', '')}\n`;
-        csvContent += `Tax,,${document.getElementById('inv-preview-tax').innerText.replace('₹', '')}\n`;
-        csvContent += `Discount,,${document.getElementById('inv-preview-discount').innerText.replace('₹', '')}\n`;
-        csvContent += `Total,,${document.getElementById('inv-preview-total').innerText.replace('₹', '')}\n`;
+        csvContent += `\nSubtotal,,${csvCell(document.getElementById('inv-preview-subtotal').innerText)}\n`;
+        csvContent += `Tax,,${csvCell(document.getElementById('inv-preview-tax').innerText)}\n`;
+        csvContent += `Discount,,${csvCell(document.getElementById('inv-preview-discount').innerText)}\n`;
+        csvContent += `Total,,${csvCell(document.getElementById('inv-preview-total').innerText)}\n`;
         
         downloadCSV(csvContent, 'invoice-' + document.getElementById('inv-number').value + '.csv');
     }

@@ -1,6 +1,14 @@
 const calculatorPage = (() => {
     const currencyCache = new Map();
     const currencyApiBase = 'https://open.er-api.com/v6/latest';
+    const displayCurrencyStorageKey = 'calculator-display-currency';
+    const currencySymbolCache = new Map();
+    const fallbackCurrencyCodes = [
+        'USD', 'EUR', 'GBP', 'INR', 'AUD', 'CAD', 'JPY', 'CNY', 'AED', 'SAR', 'SGD', 'NZD',
+        'CHF', 'SEK', 'NOK', 'DKK', 'ZAR', 'BRL', 'MXN', 'KRW', 'IDR', 'MYR', 'THB', 'PHP'
+    ];
+    const moneyInputIds = new Set(['emi-amount', 'gst-amount', 'loan-amount', 'sip-monthly']);
+    let selectedDisplayCurrency = 'USD';
 
     const $ = (id) => document.getElementById(id);
     const readNumber = (id) => {
@@ -8,16 +16,179 @@ const calculatorPage = (() => {
         return Number.isFinite(value) ? value : 0;
     };
 
-    const formatNumber = (value, digits = 2) => Number(value || 0).toLocaleString('en-IN', {
+    const formatNumber = (value, digits = 2) => Number(value || 0).toLocaleString(undefined, {
         minimumFractionDigits: digits,
         maximumFractionDigits: digits
     });
 
-    const formatINR = (value, digits = 0) => `Rs ${formatNumber(value, digits)}`;
+    const getSupportedCurrencyCodes = () => {
+        if (typeof Intl.supportedValuesOf === 'function') {
+            try {
+                return Intl.supportedValuesOf('currency');
+            } catch {
+                return fallbackCurrencyCodes;
+            }
+        }
+        return fallbackCurrencyCodes;
+    };
+
+    const getStoredDisplayCurrency = () => {
+        try {
+            return localStorage.getItem(displayCurrencyStorageKey) || '';
+        } catch {
+            return '';
+        }
+    };
+
+    const saveDisplayCurrency = (currency) => {
+        try {
+            localStorage.setItem(displayCurrencyStorageKey, currency);
+        } catch {
+            // Keep the selected currency for this tab even if storage is unavailable.
+        }
+    };
+
+    const getDisplayCurrency = () => selectedDisplayCurrency || getStoredDisplayCurrency() || 'USD';
+
+    const getCurrencyName = (currency) => {
+        try {
+            return new Intl.DisplayNames(undefined, { type: 'currency' }).of(currency) || currency;
+        } catch {
+            return currency;
+        }
+    };
+
+    const getDisplayCurrencySymbol = (currency = getDisplayCurrency()) => {
+        if (currencySymbolCache.has(currency)) return currencySymbolCache.get(currency);
+
+        let symbol = currency;
+        try {
+            const parts = new Intl.NumberFormat(undefined, {
+                style: 'currency',
+                currency,
+                currencyDisplay: 'narrowSymbol',
+                maximumFractionDigits: 0
+            }).formatToParts(0);
+            symbol = parts.find((part) => part.type === 'currency')?.value || currency;
+        } catch {
+            symbol = currency;
+        }
+
+        currencySymbolCache.set(currency, symbol);
+        return symbol;
+    };
+
+    const formatMoney = (value, digits = 0) => {
+        const safeValue = Number.isFinite(Number(value)) ? Number(value) : 0;
+        const currency = getDisplayCurrency();
+        try {
+            return new Intl.NumberFormat(undefined, {
+                style: 'currency',
+                currency,
+                currencyDisplay: 'narrowSymbol',
+                minimumFractionDigits: digits,
+                maximumFractionDigits: digits
+            }).format(safeValue);
+        } catch {
+            return `${getDisplayCurrencySymbol(currency)} ${formatNumber(safeValue, digits)}`;
+        }
+    };
 
     const setText = (id, value) => {
         const element = $(id);
         if (element) element.textContent = value;
+    };
+
+    const setMoneyText = (id, value, digits = 2) => {
+        const element = $(id);
+        if (!element) return;
+
+        element.dataset.moneyValue = String(Number.isFinite(Number(value)) ? Number(value) : 0);
+        element.dataset.moneyDigits = String(digits);
+        element.textContent = formatMoney(value, digits);
+    };
+
+    const refreshMoneyOutputs = () => {
+        document.querySelectorAll('[data-money-value]').forEach((element) => {
+            setMoneyText(element.id, Number(element.dataset.moneyValue || 0), Number(element.dataset.moneyDigits || 2));
+        });
+    };
+
+    const updateCurrencyAffixes = () => {
+        const symbol = getDisplayCurrencySymbol();
+        document.querySelectorAll('.input-wrapper').forEach((wrapper) => {
+            const suffix = wrapper.querySelector('.input-suffix');
+            const input = wrapper.querySelector('.tool-input');
+            if (!suffix) return;
+
+            const text = suffix.textContent.trim();
+            if (moneyInputIds.has(input?.id) || text === 'Rs' || text === 'Rs.' || text.includes('\u20b9')) {
+                suffix.textContent = symbol;
+            }
+        });
+    };
+
+    const changeDisplayCurrency = (currency) => {
+        selectedDisplayCurrency = currency || 'USD';
+        saveDisplayCurrency(selectedDisplayCurrency);
+        document.querySelectorAll('#standalone-currency-select, #standalone-mobile-currency-select').forEach((select) => {
+            if (select.value !== selectedDisplayCurrency) select.value = selectedDisplayCurrency;
+        });
+        updateCurrencyAffixes();
+        refreshMoneyOutputs();
+    };
+
+    const populateDisplayCurrencySelector = () => {
+        const selects = document.querySelectorAll('#standalone-currency-select, #standalone-mobile-currency-select');
+        if (!selects.length) return;
+
+        const currencies = getSupportedCurrencyCodes();
+        const stored = getStoredDisplayCurrency();
+        selectedDisplayCurrency = currencies.includes(stored) ? stored : 'USD';
+
+        selects.forEach((select) => {
+            select.innerHTML = '';
+
+            currencies.forEach((currency) => {
+                const option = document.createElement('option');
+                option.value = currency;
+                option.textContent = `${currency} ${getDisplayCurrencySymbol(currency)}`;
+                option.title = `${currency} ${getDisplayCurrencySymbol(currency)} - ${getCurrencyName(currency)}`;
+                option.selected = currency === selectedDisplayCurrency;
+                select.appendChild(option);
+            });
+
+            select.addEventListener('change', () => {
+                changeDisplayCurrency(select.value);
+            });
+        });
+    };
+
+    const insertDisplayCurrencySelector = () => {
+        const nav = document.querySelector('.navbar nav');
+        if (nav && !$('standalone-currency-select')) {
+            const container = document.createElement('span');
+            container.className = 'currency-selector-container standalone-currency-container';
+            container.innerHTML = '<select class="lang-select currency-select" id="standalone-currency-select" aria-label="Select display currency"></select>';
+            nav.appendChild(container);
+        }
+
+        const mobilePanel = document.querySelector('.mobile-menu-panel');
+        if (mobilePanel && !$('standalone-mobile-currency-select')) {
+            const container = document.createElement('div');
+            container.className = 'mobile-currency-container';
+            container.innerHTML = '<select class="lang-select currency-select mobile-currency-select" id="standalone-mobile-currency-select" aria-label="Select display currency"></select>';
+            mobilePanel.appendChild(container);
+        }
+    };
+
+    const initializeMoneyDefaults = () => {
+        [
+            'emi-result', 'emi-interest', 'emi-total',
+            'gst-base', 'gst-tax', 'gst-total',
+            'loan-payment', 'loan-interest', 'loan-total',
+            'sip-invested', 'sip-returns', 'sip-total'
+        ].forEach((id) => setMoneyText(id, 0, 2));
     };
 
     const setHtml = (id, value) => {
@@ -49,9 +220,9 @@ const calculatorPage = (() => {
         const totalPayable = emi * months;
         const totalInterest = Math.max(0, totalPayable - principal);
 
-        setText('emi-result', formatINR(emi, 2));
-        setText('emi-interest', formatINR(totalInterest, 2));
-        setText('emi-total', formatINR(totalPayable, 2));
+        setMoneyText('emi-result', emi, 2);
+        setMoneyText('emi-interest', totalInterest, 2);
+        setMoneyText('emi-total', totalPayable, 2);
     }
 
     function calculateBmi() {
@@ -107,7 +278,7 @@ const calculatorPage = (() => {
 
         const totalDays = Math.floor((now - dob) / 86400000);
         setText('age-result', `${years} years, ${months} months, ${days} days`);
-        setText('age-days', `${totalDays.toLocaleString('en-IN')} total days`);
+        setText('age-days', `${totalDays.toLocaleString(undefined)} total days`);
     }
 
     function calculatePercentage() {
@@ -140,9 +311,9 @@ const calculatorPage = (() => {
         const gst = mode === 'add' ? amount * rate : amount - base;
         const finalAmount = mode === 'add' ? amount + gst : amount;
 
-        setText('gst-base', formatINR(base, 2));
-        setText('gst-tax', formatINR(gst, 2));
-        setText('gst-total', formatINR(finalAmount, 2));
+        setMoneyText('gst-base', base, 2);
+        setMoneyText('gst-tax', gst, 2);
+        setMoneyText('gst-total', finalAmount, 2);
     }
 
     function calculateLoan() {
@@ -164,9 +335,9 @@ const calculatorPage = (() => {
         const totalPayment = monthlyPayment * months;
         const totalInterest = Math.max(0, totalPayment - principal);
 
-        setText('loan-payment', formatINR(monthlyPayment, 2));
-        setText('loan-interest', formatINR(totalInterest, 2));
-        setText('loan-total', formatINR(totalPayment, 2));
+        setMoneyText('loan-payment', monthlyPayment, 2);
+        setMoneyText('loan-interest', totalInterest, 2);
+        setMoneyText('loan-total', totalPayment, 2);
     }
 
     function calculateSip() {
@@ -188,9 +359,9 @@ const calculatorPage = (() => {
         const invested = monthly * months;
         const returns = Math.max(0, maturity - invested);
 
-        setText('sip-invested', formatINR(invested, 2));
-        setText('sip-returns', formatINR(returns, 2));
-        setText('sip-total', formatINR(maturity, 2));
+        setMoneyText('sip-invested', invested, 2);
+        setMoneyText('sip-returns', returns, 2);
+        setMoneyText('sip-total', maturity, 2);
     }
 
     async function fetchCurrencyRates(base) {
@@ -231,9 +402,10 @@ const calculatorPage = (() => {
             const rate = data.rates[to];
             if (!rate) throw new Error('Selected currency is not available.');
             const converted = amount * rate;
-            const formatted = new Intl.NumberFormat('en-IN', {
+            const formatted = new Intl.NumberFormat(undefined, {
                 style: 'currency',
                 currency: to,
+                currencyDisplay: 'narrowSymbol',
                 maximumFractionDigits: 2
             }).format(converted);
             setText('currency-result', formatted);
@@ -331,6 +503,11 @@ const calculatorPage = (() => {
     };
 
     function init() {
+        insertDisplayCurrencySelector();
+        populateDisplayCurrencySelector();
+        initializeMoneyDefaults();
+        updateCurrencyAffixes();
+
         document.querySelectorAll('[data-calculator-form]').forEach((form) => {
             form.addEventListener('submit', (event) => {
                 event.preventDefault();

@@ -24,13 +24,13 @@
                 <h2>Calculate loan payment</h2>
                 <form class="calculator-page-form" data-calculator-form="loan">
                     <div class="input-group">
-                        <div class="input-wrapper"><input class="tool-input" id="loan-amount" type="number" min="1" placeholder="Principal amount"><span class="input-suffix">Rs</span></div>
+                        <div class="input-wrapper"><input class="tool-input" id="loan-amount" type="number" min="1" placeholder="Principal amount"><span class="input-suffix">$</span></div>
                         <div class="input-wrapper"><input class="tool-input" id="loan-rate" type="number" min="0" step="0.01" placeholder="Annual interest rate"><span class="input-suffix">%</span></div>
                         <div class="input-wrapper"><input class="tool-input" id="loan-years" type="number" min="0.1" step="0.1" placeholder="Tenure"><span class="input-suffix">years</span></div>
                     </div>
                     <p class="calculator-error" id="calculator-error" aria-live="polite"></p><button class="glowing-btn demo-btn ripple-btn" type="submit">Calculate Loan</button>
                 </form>
-                <div class="calculator-result-grid"><div><span>Monthly Payment</span><strong id="loan-payment">Rs 0</strong></div><div><span>Total Interest</span><strong id="loan-interest">Rs 0</strong></div><div><span>Total Repayment</span><strong id="loan-total">Rs 0</strong></div></div>
+                <div class="calculator-result-grid"><div><span>Monthly Payment</span><strong id="loan-payment">$0</strong></div><div><span>Total Interest</span><strong id="loan-interest">$0</strong></div><div><span>Total Repayment</span><strong id="loan-total">$0</strong></div></div>
             </aside>
             <section class="calculator-copy">
                 <article class="calculator-copy-card">
@@ -40,7 +40,7 @@
                     <p>Use the result as a planning estimate. Real loan schedules may include processing fees, insurance, taxes, prepayment penalties, delayed disbursement dates, floating interest changes, or different rounding rules. For a more complete comparison, look at the annual percentage rate, total amount payable, flexibility for part payments, and customer support from the lender. The best loan is not always the one with the lowest monthly payment.</p>
                 </article>
                 <article class="calculator-copy-card formula-box"><h2>Loan payment formula</h2><p>Monthly payment = P x r x (1 + r)^n / ((1 + r)^n - 1), where P is principal, r is monthly rate, and n is total months.</p></article>
-                <article class="calculator-copy-card example-box"><h2>Example calculation</h2><p>For a Rs 3,00,000 loan at 12% annual interest for 3 years, the estimated monthly payment is about Rs 9,964, with total repayment around Rs 3,58,713.</p></article>
+                <article class="calculator-copy-card example-box"><h2>Example calculation</h2><p>For a 300,000 loan at 12% annual interest for 3 years, the estimated monthly payment is about 9,964, with total repayment around 358,713.</p></article>
                 <article class="calculator-copy-card"><h2>FAQs</h2><div class="faq-list"><details><summary>How is this different from the EMI calculator?</summary><p>This page uses tenure in years and focuses on overall loan planning. The EMI page uses tenure in months.</p></details><details><summary>Can I use it for personal loans?</summary><p>Yes. It works for personal, vehicle, education, and other installment loans.</p></details><details><summary>Does it include processing fees?</summary><p>No. Add fees separately when comparing lender offers.</p></details><details><summary>What happens if interest rate is zero?</summary><p>The payment is simply principal divided by total months.</p></details></div></article>
                 <article class="calculator-copy-card"><h2>Related calculators</h2><div class="related-calculators"><a href="emi-calculator.html">EMI Calculator</a><a href="sip-calculator.html">SIP Calculator</a><a href="gst-calculator.html">GST Calculator</a><a href="index.html">Back to Homepage</a></div></article>
             </section>

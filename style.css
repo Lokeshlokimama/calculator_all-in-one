@@ -210,6 +210,18 @@ nav a {
 
 nav a:hover { color: #fff; }
 
+.lang-selector-container {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.35rem;
+    margin-left: 0.25rem !important;
+    white-space: nowrap;
+}
+
+.lang-selector-container .lang-select {
+    flex: 0 0 auto;
+}
+
 .mobile-menu {
     display: none;
     position: relative;
@@ -235,6 +247,8 @@ nav a:hover { color: #fff; }
     top: calc(100% + 0.7rem);
     right: 0;
     width: min(78vw, 280px);
+    max-height: calc(100vh - 5.5rem);
+    overflow-y: auto;
     display: grid;
     gap: 0.2rem;
     padding: 0.75rem;
@@ -242,6 +256,10 @@ nav a:hover { color: #fff; }
     border-radius: 14px;
     background: rgba(15, 23, 42, 0.98);
     box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+}
+
+.mobile-menu:not([open]) .mobile-menu-panel {
+    display: none;
 }
 
 .mobile-menu-panel a {
@@ -841,6 +859,37 @@ h1 {
 
 .tool-disclaimer {
     text-align: center;
+}
+
+.currency-selector-container {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 0.45rem;
+}
+
+.currency-select {
+    width: 86px;
+    min-height: 30px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 0.25rem 0.35rem;
+    font-family: inherit;
+    font-size: 0.82rem;
+    outline: none;
+    cursor: pointer;
+}
+
+.mobile-currency-container {
+    padding: 0.35rem 0 0.25rem;
+}
+
+.mobile-currency-select {
+    width: 100%;
+    min-height: 40px;
+    padding: 0.4rem;
+    font-size: 0.9rem;
 }
 
 /* Category Filter */
@@ -2006,12 +2055,38 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 /* Navbar adjustments for intermediate screen widths to prevent wrapping/overflow */
+@media (max-width: 1500px) and (min-width: 1201px) {
+    nav {
+        gap: 0.7rem;
+    }
+    nav a {
+        font-size: 0.9rem;
+    }
+    .header-search {
+        margin: 0 0.75rem;
+        max-width: 220px;
+    }
+    .logo {
+        font-size: 1.6rem;
+    }
+    .currency-select {
+        width: 80px;
+    }
+}
+
 @media (max-width: 1350px) and (min-width: 1201px) {
     nav {
         gap: 0.6rem;
     }
     nav a {
         font-size: 0.85rem;
+    }
+    .currency-select {
+        width: 76px;
+        font-size: 0.78rem;
+    }
+    .currency-selector-container {
+        margin-left: 0;
     }
     .header-search {
         margin: 0 0.8rem;
