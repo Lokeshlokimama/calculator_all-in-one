@@ -82,14 +82,26 @@
             <a href="contact.html">Contact</a>
             <a href="https://rzp.io/rzp/tpqo4et" target="_blank" rel="noopener noreferrer">Fund Me</a>
             <div class="lang-selector-container" style="display: inline-block; margin-left: 1rem;">
-                <select id="lang-select" onchange="changeLanguage(this.value)" class="lang-select" aria-label="Select Language" style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--glass-border); border-radius: 8px; padding: 0.25rem 0.5rem; font-family: inherit; font-size: 0.85rem; outline: none; cursor: pointer;">
-                    <option value="en">🌐 EN</option>
-                    <option value="es">🌐 ES</option>
-                    <option value="fr">🌐 FR</option>
-                    <option value="de">🌐 DE</option>
-                    <option value="hi">🌐 HI</option>
-                </select>
-                <select id="global-currency-select" class="lang-select currency-select" data-default-currency="USD" onchange="changeDisplayCurrency(this.value)" aria-label="Select display currency"></select>
+                <span class="language-picker" data-language-picker>
+                    <select id="lang-select" onchange="changeLanguage(this.value)" class="lang-select language-native-select" aria-label="Select Language" style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--glass-border); border-radius: 8px; padding: 0.25rem 0.5rem; font-family: inherit; font-size: 0.85rem; outline: none; cursor: pointer;">
+                        <option value="en">🌐 EN</option>
+                        <option value="es">🌐 ES</option>
+                        <option value="fr">🌐 FR</option>
+                        <option value="de">🌐 DE</option>
+                        <option value="hi">🌐 HI</option>
+                    </select>
+                    <button type="button" class="language-trigger" data-language-trigger aria-haspopup="listbox" aria-expanded="false">
+                        <span data-language-label>EN</span>
+                    </button>
+                    <div class="language-menu" data-language-menu role="listbox" aria-label="Select Language"></div>
+                </span>
+                <span class="currency-picker" data-display-currency-picker>
+                    <select id="global-currency-select" class="lang-select currency-select currency-native-select" data-default-currency="USD" onchange="changeDisplayCurrency(this.value)" aria-label="Select display currency"></select>
+                    <button type="button" class="currency-trigger" data-currency-trigger aria-haspopup="listbox" aria-expanded="false">
+                        <span data-currency-label>USD $</span>
+                    </button>
+                    <div class="currency-menu" data-currency-menu role="listbox" aria-label="Select display currency"></div>
+                </span>
             </div>
         </nav>
         <details class="mobile-menu">
@@ -107,16 +119,28 @@
                 <a href="disclaimer.html">Disclaimer</a>
                 <a href="https://rzp.io/rzp/tpqo4et" target="_blank" rel="noopener noreferrer">Fund Me</a>
                 <div class="mobile-lang-container" style="padding: 0.75rem 0 0.25rem; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 0.5rem;">
-                    <select id="mobile-lang-select" onchange="changeLanguage(this.value)" class="lang-select" aria-label="Select Language" style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--glass-border); border-radius: 8px; padding: 0.4rem; font-family: inherit; font-size: 0.9rem; width: 100%; outline: none; cursor: pointer;">
-                        <option value="en">🌐 English (EN)</option>
-                        <option value="es">🌐 Español (ES)</option>
-                        <option value="fr">🌐 Français (FR)</option>
-                        <option value="de">🌐 Deutsch (DE)</option>
-                        <option value="hi">🌐 हिन्दी (HI)</option>
-                    </select>
+                    <span class="language-picker mobile-language-picker" data-language-picker>
+                        <select id="mobile-lang-select" onchange="changeLanguage(this.value)" class="lang-select language-native-select mobile-language-select" aria-label="Select Language" style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--glass-border); border-radius: 8px; padding: 0.4rem; font-family: inherit; font-size: 0.9rem; width: 100%; outline: none; cursor: pointer;">
+                            <option value="en">🌐 English (EN)</option>
+                            <option value="es">🌐 Español (ES)</option>
+                            <option value="fr">🌐 Français (FR)</option>
+                            <option value="de">🌐 Deutsch (DE)</option>
+                            <option value="hi">🌐 हिन्दी (HI)</option>
+                        </select>
+                        <button type="button" class="language-trigger mobile-language-trigger" data-language-trigger aria-haspopup="listbox" aria-expanded="false">
+                            <span data-language-label>EN</span>
+                        </button>
+                        <div class="language-menu" data-language-menu role="listbox" aria-label="Select Language"></div>
+                    </span>
                 </div>
                 <div class="mobile-currency-container">
-                    <select id="mobile-currency-select" class="lang-select currency-select mobile-currency-select" data-default-currency="USD" onchange="changeDisplayCurrency(this.value)" aria-label="Select display currency"></select>
+                    <span class="currency-picker mobile-currency-picker" data-display-currency-picker>
+                        <select id="mobile-currency-select" class="lang-select currency-select currency-native-select mobile-currency-select" data-default-currency="USD" onchange="changeDisplayCurrency(this.value)" aria-label="Select display currency"></select>
+                        <button type="button" class="currency-trigger mobile-currency-trigger" data-currency-trigger aria-haspopup="listbox" aria-expanded="false">
+                            <span data-currency-label>USD $</span>
+                        </button>
+                        <div class="currency-menu" data-currency-menu role="listbox" aria-label="Select display currency"></div>
+                    </span>
                 </div>
             </div>
         </details>

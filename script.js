@@ -296,6 +296,7 @@ function changeDisplayCurrency(currency) {
     document.querySelectorAll('#global-currency-select, #mobile-currency-select').forEach(select => {
         if (select.value !== selectedDisplayCurrency) select.value = selectedDisplayCurrency;
     });
+    syncDisplayCurrencyPickers();
     refreshMoneyOutputs();
     updateCurrencyAffixes();
     formatLoanPreview();
@@ -1482,6 +1483,116 @@ function getCurrencyOptionLabel(code, name, includeSymbol = false) {
     return `${code}${symbol} - ${name}`;
 }
 
+function closeDisplayCurrencyPickers(exceptPicker = null) {
+    document.querySelectorAll('[data-display-currency-picker].is-open').forEach(picker => {
+        if (picker === exceptPicker) return;
+        picker.classList.remove('is-open');
+        picker.querySelector('[data-currency-trigger]')?.setAttribute('aria-expanded', 'false');
+    });
+}
+
+function syncDisplayCurrencyPickers() {
+    const activeCurrency = getDisplayCurrency();
+    document.querySelectorAll('[data-display-currency-picker]').forEach(picker => {
+        const select = picker.querySelector('select');
+        const trigger = picker.querySelector('[data-currency-trigger]');
+        const label = picker.querySelector('[data-currency-label]');
+
+        if (select && select.value !== activeCurrency) {
+            select.value = activeCurrency;
+        }
+
+        if (label) {
+            label.textContent = getCurrencyOptionLabel(activeCurrency, activeCurrency, 'compact');
+        }
+
+        const optionMeta = CURRENCY_OPTIONS.find(({ code }) => code === activeCurrency);
+        if (trigger) {
+            trigger.title = optionMeta
+                ? getCurrencyOptionLabel(optionMeta.code, optionMeta.name, true)
+                : getCurrencyOptionLabel(activeCurrency, activeCurrency, 'compact');
+        }
+
+        picker.querySelectorAll('[data-currency-option]').forEach(option => {
+            const isSelected = option.dataset.currencyOption === activeCurrency;
+            option.classList.toggle('is-selected', isSelected);
+            option.setAttribute('aria-selected', String(isSelected));
+        });
+    });
+}
+
+function initializeDisplayCurrencyPickers() {
+    document.querySelectorAll('#global-currency-select, #mobile-currency-select').forEach(select => {
+        const picker = select.closest('[data-display-currency-picker]');
+        const trigger = picker?.querySelector('[data-currency-trigger]');
+        const menu = picker?.querySelector('[data-currency-menu]');
+        if (!picker || !trigger || !menu) return;
+
+        picker.classList.add('is-enhanced');
+        menu.id = menu.id || `${select.id}-menu`;
+        trigger.setAttribute('aria-controls', menu.id);
+        menu.innerHTML = '';
+
+        CURRENCY_OPTIONS.forEach(({ code, name }) => {
+            const option = document.createElement('button');
+            const codeLabel = document.createElement('span');
+            const nameLabel = document.createElement('span');
+
+            option.type = 'button';
+            option.className = 'currency-option';
+            option.dataset.currencyOption = code;
+            option.setAttribute('role', 'option');
+            option.title = getCurrencyOptionLabel(code, name, true);
+
+            codeLabel.className = 'currency-option-code';
+            codeLabel.textContent = getCurrencyOptionLabel(code, name, 'compact');
+            nameLabel.className = 'currency-option-name';
+            nameLabel.textContent = name;
+
+            option.append(codeLabel, nameLabel);
+            option.addEventListener('click', () => {
+                changeDisplayCurrency(code);
+                closeDisplayCurrencyPickers();
+                trigger.focus();
+            });
+            menu.appendChild(option);
+        });
+
+        if (!picker.dataset.currencyPickerReady) {
+            trigger.addEventListener('click', () => {
+                const shouldOpen = !picker.classList.contains('is-open');
+                closeDisplayCurrencyPickers(picker);
+                picker.classList.toggle('is-open', shouldOpen);
+                trigger.setAttribute('aria-expanded', String(shouldOpen));
+            });
+
+            trigger.addEventListener('keydown', event => {
+                if (event.key === 'Escape') {
+                    closeDisplayCurrencyPickers();
+                    trigger.focus();
+                }
+            });
+
+            select.addEventListener('change', () => changeDisplayCurrency(select.value));
+            picker.dataset.currencyPickerReady = 'true';
+        }
+    });
+
+    syncDisplayCurrencyPickers();
+}
+
+document.addEventListener('click', event => {
+    if (!event.target.closest('[data-display-currency-picker]')) {
+        closeDisplayCurrencyPickers();
+    }
+});
+
+document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+        closeDisplayCurrencyPickers();
+    }
+});
+
 function populateCurrencySelects() {
     selectedDisplayCurrency = getStoredDisplayCurrency() || document.getElementById('global-currency-select')?.dataset.defaultCurrency || 'USD';
     if (!CURRENCY_OPTIONS.some(({ code }) => code === selectedDisplayCurrency)) {
@@ -1506,6 +1617,7 @@ function populateCurrencySelects() {
     });
 
     updateCurrencyAffixes();
+    initializeDisplayCurrencyPickers();
 }
 
 function initializeMoneyDefaults() {
@@ -4587,6 +4699,112 @@ const localizationDict = {
     }
 };
 
+const LANGUAGE_OPTIONS = Object.freeze([
+    { code: 'en', label: 'EN', name: 'English' },
+    { code: 'es', label: 'ES', name: 'Spanish' },
+    { code: 'fr', label: 'FR', name: 'French' },
+    { code: 'de', label: 'DE', name: 'German' },
+    { code: 'hi', label: 'HI', name: 'Hindi' }
+]);
+
+function getLanguageMeta(lang) {
+    return LANGUAGE_OPTIONS.find(option => option.code === lang) || LANGUAGE_OPTIONS[0];
+}
+
+function closeLanguagePickers(exceptPicker = null) {
+    document.querySelectorAll('[data-language-picker].is-open').forEach(picker => {
+        if (picker === exceptPicker) return;
+        picker.classList.remove('is-open');
+        picker.querySelector('[data-language-trigger]')?.setAttribute('aria-expanded', 'false');
+    });
+}
+
+function syncLanguagePickers(lang = document.getElementById('lang-select')?.value || 'en') {
+    const meta = getLanguageMeta(lang);
+
+    document.querySelectorAll('[data-language-picker]').forEach(picker => {
+        const select = picker.querySelector('select');
+        const trigger = picker.querySelector('[data-language-trigger]');
+        const label = picker.querySelector('[data-language-label]');
+
+        if (select && select.value !== meta.code) {
+            select.value = meta.code;
+        }
+        if (label) {
+            label.textContent = meta.label;
+        }
+        if (trigger) {
+            trigger.title = `${meta.name} (${meta.label})`;
+        }
+
+        picker.querySelectorAll('[data-language-option]').forEach(option => {
+            const isSelected = option.dataset.languageOption === meta.code;
+            option.classList.toggle('is-selected', isSelected);
+            option.setAttribute('aria-selected', String(isSelected));
+        });
+    });
+}
+
+function initializeLanguagePickers() {
+    document.querySelectorAll('#lang-select, #mobile-lang-select').forEach(select => {
+        const picker = select.closest('[data-language-picker]');
+        const trigger = picker?.querySelector('[data-language-trigger]');
+        const menu = picker?.querySelector('[data-language-menu]');
+        if (!picker || !trigger || !menu) return;
+
+        picker.classList.add('is-enhanced');
+        menu.id = menu.id || `${select.id}-menu`;
+        trigger.setAttribute('aria-controls', menu.id);
+        menu.innerHTML = '';
+
+        LANGUAGE_OPTIONS.forEach(({ code, label, name }) => {
+            const option = document.createElement('button');
+            const codeLabel = document.createElement('span');
+            const nameLabel = document.createElement('span');
+
+            option.type = 'button';
+            option.className = 'language-option';
+            option.dataset.languageOption = code;
+            option.setAttribute('role', 'option');
+            option.title = `${name} (${label})`;
+
+            codeLabel.className = 'language-option-code';
+            codeLabel.textContent = label;
+            nameLabel.className = 'language-option-name';
+            nameLabel.textContent = name;
+
+            option.append(codeLabel, nameLabel);
+            option.addEventListener('click', () => {
+                changeLanguage(code);
+                closeLanguagePickers();
+                trigger.focus();
+            });
+            menu.appendChild(option);
+        });
+
+        if (!picker.dataset.languagePickerReady) {
+            trigger.addEventListener('click', () => {
+                const shouldOpen = !picker.classList.contains('is-open');
+                closeLanguagePickers(picker);
+                picker.classList.toggle('is-open', shouldOpen);
+                trigger.setAttribute('aria-expanded', String(shouldOpen));
+            });
+
+            trigger.addEventListener('keydown', event => {
+                if (event.key === 'Escape') {
+                    closeLanguagePickers();
+                    trigger.focus();
+                }
+            });
+
+            select.addEventListener('change', () => changeLanguage(select.value));
+            picker.dataset.languagePickerReady = 'true';
+        }
+    });
+
+    syncLanguagePickers();
+}
+
 function changeLanguage(lang) {
     if (!localizationDict[lang]) return;
     
@@ -4595,6 +4813,7 @@ function changeLanguage(lang) {
     const mobSelect = document.getElementById('mobile-lang-select');
     if (navSelect) navSelect.value = lang;
     if (mobSelect) mobSelect.value = lang;
+    syncLanguagePickers(lang);
     
     const dict = localizationDict[lang];
     
@@ -4647,8 +4866,22 @@ function changeLanguage(lang) {
 }
 window.changeLanguage = changeLanguage;
 
+document.addEventListener('click', event => {
+    if (!event.target.closest('[data-language-picker]')) {
+        closeLanguagePickers();
+    }
+});
+
+document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+        closeLanguagePickers();
+    }
+});
+
 // Trigger preference load on start
 document.addEventListener('DOMContentLoaded', () => {
+    initializeLanguagePickers();
+
     try {
         const savedLang = localStorage.getItem('calculator-lang-preference');
         if (savedLang && localizationDict[savedLang]) {

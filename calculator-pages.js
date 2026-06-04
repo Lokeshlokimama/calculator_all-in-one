@@ -128,12 +128,104 @@ const calculatorPage = (() => {
         });
     };
 
+    const getCompactCurrencyLabel = (currency) => `${currency} ${getDisplayCurrencySymbol(currency)}`;
+
+    const closeDisplayCurrencyPickers = (exceptPicker = null) => {
+        document.querySelectorAll('[data-display-currency-picker].is-open').forEach((picker) => {
+            if (picker === exceptPicker) return;
+            picker.classList.remove('is-open');
+            picker.querySelector('[data-currency-trigger]')?.setAttribute('aria-expanded', 'false');
+        });
+    };
+
+    const syncDisplayCurrencyPickers = () => {
+        const activeCurrency = getDisplayCurrency();
+        document.querySelectorAll('[data-display-currency-picker]').forEach((picker) => {
+            const select = picker.querySelector('select');
+            const trigger = picker.querySelector('[data-currency-trigger]');
+            const label = picker.querySelector('[data-currency-label]');
+
+            if (select && select.value !== activeCurrency) {
+                select.value = activeCurrency;
+            }
+            if (label) {
+                label.textContent = getCompactCurrencyLabel(activeCurrency);
+            }
+            if (trigger) {
+                trigger.title = `${activeCurrency} ${getDisplayCurrencySymbol(activeCurrency)} - ${getCurrencyName(activeCurrency)}`;
+            }
+
+            picker.querySelectorAll('[data-currency-option]').forEach((option) => {
+                const isSelected = option.dataset.currencyOption === activeCurrency;
+                option.classList.toggle('is-selected', isSelected);
+                option.setAttribute('aria-selected', String(isSelected));
+            });
+        });
+    };
+
+    const buildDisplayCurrencyPicker = (select, currencies) => {
+        const picker = select.closest('[data-display-currency-picker]');
+        const trigger = picker?.querySelector('[data-currency-trigger]');
+        const menu = picker?.querySelector('[data-currency-menu]');
+        if (!picker || !trigger || !menu) return;
+
+        picker.classList.add('is-enhanced');
+        menu.id = menu.id || `${select.id}-menu`;
+        trigger.setAttribute('aria-controls', menu.id);
+        menu.innerHTML = '';
+
+        currencies.forEach((currency) => {
+            const option = document.createElement('button');
+            const codeLabel = document.createElement('span');
+            const nameLabel = document.createElement('span');
+
+            option.type = 'button';
+            option.className = 'currency-option';
+            option.dataset.currencyOption = currency;
+            option.setAttribute('role', 'option');
+            option.title = `${currency} ${getDisplayCurrencySymbol(currency)} - ${getCurrencyName(currency)}`;
+
+            codeLabel.className = 'currency-option-code';
+            codeLabel.textContent = getCompactCurrencyLabel(currency);
+            nameLabel.className = 'currency-option-name';
+            nameLabel.textContent = getCurrencyName(currency);
+
+            option.append(codeLabel, nameLabel);
+            option.addEventListener('click', () => {
+                changeDisplayCurrency(currency);
+                closeDisplayCurrencyPickers();
+                trigger.focus();
+            });
+            menu.appendChild(option);
+        });
+
+        if (!picker.dataset.currencyPickerReady) {
+            trigger.addEventListener('click', () => {
+                const shouldOpen = !picker.classList.contains('is-open');
+                closeDisplayCurrencyPickers(picker);
+                picker.classList.toggle('is-open', shouldOpen);
+                trigger.setAttribute('aria-expanded', String(shouldOpen));
+            });
+
+            trigger.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    closeDisplayCurrencyPickers();
+                    trigger.focus();
+                }
+            });
+
+            select.addEventListener('change', () => changeDisplayCurrency(select.value));
+            picker.dataset.currencyPickerReady = 'true';
+        }
+    };
+
     const changeDisplayCurrency = (currency) => {
         selectedDisplayCurrency = currency || 'USD';
         saveDisplayCurrency(selectedDisplayCurrency);
         document.querySelectorAll('#standalone-currency-select, #standalone-mobile-currency-select').forEach((select) => {
             if (select.value !== selectedDisplayCurrency) select.value = selectedDisplayCurrency;
         });
+        syncDisplayCurrencyPickers();
         updateCurrencyAffixes();
         refreshMoneyOutputs();
     };
@@ -161,15 +253,19 @@ const calculatorPage = (() => {
             select.addEventListener('change', () => {
                 changeDisplayCurrency(select.value);
             });
+            buildDisplayCurrencyPicker(select, currencies);
         });
+
+        syncDisplayCurrencyPickers();
     };
 
     const insertDisplayCurrencySelector = () => {
         const nav = document.querySelector('.navbar nav');
         if (nav && !$('standalone-currency-select')) {
             const container = document.createElement('span');
-            container.className = 'currency-selector-container standalone-currency-container';
-            container.innerHTML = '<select class="lang-select currency-select" id="standalone-currency-select" aria-label="Select display currency"></select>';
+            container.className = 'currency-selector-container standalone-currency-container currency-picker';
+            container.dataset.displayCurrencyPicker = '';
+            container.innerHTML = '<select class="lang-select currency-select currency-native-select" id="standalone-currency-select" aria-label="Select display currency"></select><button type="button" class="currency-trigger" data-currency-trigger aria-haspopup="listbox" aria-expanded="false"><span data-currency-label>USD $</span></button><div class="currency-menu" data-currency-menu role="listbox" aria-label="Select display currency"></div>';
             nav.appendChild(container);
         }
 
@@ -177,7 +273,7 @@ const calculatorPage = (() => {
         if (mobilePanel && !$('standalone-mobile-currency-select')) {
             const container = document.createElement('div');
             container.className = 'mobile-currency-container';
-            container.innerHTML = '<select class="lang-select currency-select mobile-currency-select" id="standalone-mobile-currency-select" aria-label="Select display currency"></select>';
+            container.innerHTML = '<span class="currency-picker mobile-currency-picker" data-display-currency-picker><select class="lang-select currency-select currency-native-select mobile-currency-select" id="standalone-mobile-currency-select" aria-label="Select display currency"></select><button type="button" class="currency-trigger mobile-currency-trigger" data-currency-trigger aria-haspopup="listbox" aria-expanded="false"><span data-currency-label>USD $</span></button><div class="currency-menu" data-currency-menu role="listbox" aria-label="Select display currency"></div></span>';
             mobilePanel.appendChild(container);
         }
     };
@@ -528,5 +624,23 @@ const calculatorPage = (() => {
 
     return { init };
 })();
+
+document.addEventListener('click', (event) => {
+    if (!event.target.closest('[data-display-currency-picker]')) {
+        document.querySelectorAll('[data-display-currency-picker].is-open').forEach((picker) => {
+            picker.classList.remove('is-open');
+            picker.querySelector('[data-currency-trigger]')?.setAttribute('aria-expanded', 'false');
+        });
+    }
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        document.querySelectorAll('[data-display-currency-picker].is-open').forEach((picker) => {
+            picker.classList.remove('is-open');
+            picker.querySelector('[data-currency-trigger]')?.setAttribute('aria-expanded', 'false');
+        });
+    }
+});
 
 document.addEventListener('DOMContentLoaded', calculatorPage.init);
