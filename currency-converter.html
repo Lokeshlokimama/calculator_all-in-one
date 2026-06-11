@@ -25,8 +25,11 @@
                 <form class="calculator-page-form" data-calculator-form="currency">
                     <div class="input-group">
                         <input class="tool-input" id="currency-amount" type="number" min="0.01" step="0.01" value="1" placeholder="Amount">
-                        <select class="tool-input" id="currency-from" aria-label="From currency"><option value="USD">USD</option><option value="INR" selected>INR</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="AUD">AUD</option><option value="CAD">CAD</option><option value="JPY">JPY</option></select>
-                        <select class="tool-input" id="currency-to" aria-label="To currency"><option value="USD" selected>USD</option><option value="INR">INR</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="AUD">AUD</option><option value="CAD">CAD</option><option value="JPY">JPY</option></select>
+                        <div class="currency-converter-row">
+                            <select class="tool-input" id="currency-from" aria-label="From currency" data-default-currency="INR"><option value="USD">USD</option><option value="INR" selected>INR</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="AUD">AUD</option><option value="CAD">CAD</option><option value="JPY">JPY</option></select>
+                            <button class="currency-swap-btn" id="currency-swap" type="button" aria-label="Swap currencies" title="Swap currencies">&#8644;</button>
+                            <select class="tool-input" id="currency-to" aria-label="To currency" data-default-currency="USD"><option value="USD" selected>USD</option><option value="INR">INR</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="AUD">AUD</option><option value="CAD">CAD</option><option value="JPY">JPY</option></select>
+                        </div>
                     </div>
                     <p class="calculator-error" id="calculator-error" aria-live="polite"></p><button class="glowing-btn demo-btn ripple-btn" id="currency-submit" type="submit">Convert</button>
                 </form>

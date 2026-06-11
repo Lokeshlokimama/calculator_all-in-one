@@ -1048,15 +1048,15 @@
                         <div class="input-group">
                             <input type="number" class="tool-input" id="curr-amount" value="1" placeholder="Amount">
                         </div>
-                        <div style="display:flex; gap:0.5rem; align-items:center; margin-bottom:1rem;">
-                            <select class="tool-input" id="curr-from" data-default-currency="INR" style="flex:1;">
+                        <div class="currency-converter-row">
+                            <select class="tool-input" id="curr-from" data-default-currency="INR" aria-label="From currency">
                                 <option value="USD">USD</option>
                                 <option value="INR" selected>INR</option>
                                 <option value="EUR">EUR</option>
                                 <option value="GBP">GBP</option>
                             </select>
-                            <span style="color:#fff;">to</span>
-                            <select class="tool-input" id="curr-to" data-default-currency="USD" style="flex:1;">
+                            <button type="button" class="currency-swap-btn" onclick="swapCurrencies()" aria-label="Swap currencies" title="Swap currencies">&#8644;</button>
+                            <select class="tool-input" id="curr-to" data-default-currency="USD" aria-label="To currency">
                                 <option value="USD" selected>USD</option>
                                 <option value="INR">INR</option>
                                 <option value="EUR">EUR</option>

@@ -1766,6 +1766,18 @@ async function calcCurrency() {
 }
 window.calcCurrency = calcCurrency;
 
+function swapCurrencies() {
+    const fromSelect = document.getElementById('curr-from');
+    const toSelect = document.getElementById('curr-to');
+    if (!fromSelect || !toSelect) return;
+
+    const currentFrom = fromSelect.value;
+    fromSelect.value = toSelect.value;
+    toSelect.value = currentFrom;
+    calcCurrency();
+}
+window.swapCurrencies = swapCurrencies;
+
 // --- Phase 2: Basic Daily Tools ---
 
 function calcAge() {

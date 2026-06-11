@@ -515,6 +515,42 @@ const calculatorPage = (() => {
         }
     }
 
+    function populateCurrencyConverterSelects() {
+        const converterSelects = [
+            { id: 'currency-from', fallback: 'INR' },
+            { id: 'currency-to', fallback: 'USD' }
+        ];
+        const currencies = getSupportedCurrencyCodes();
+
+        converterSelects.forEach(({ id, fallback }) => {
+            const select = $(id);
+            if (!select) return;
+
+            const selectedCurrency = select.value || select.dataset.defaultCurrency || fallback;
+            select.innerHTML = '';
+
+            currencies.forEach((currency) => {
+                const option = document.createElement('option');
+                option.value = currency;
+                option.textContent = `${currency} - ${getCurrencyName(currency)}`;
+                option.title = `${currency} ${getDisplayCurrencySymbol(currency)} - ${getCurrencyName(currency)}`;
+                option.selected = currency === selectedCurrency;
+                select.appendChild(option);
+            });
+        });
+    }
+
+    function swapCurrencyConverterCurrencies() {
+        const fromSelect = $('currency-from');
+        const toSelect = $('currency-to');
+        if (!fromSelect || !toSelect) return;
+
+        const currentFrom = fromSelect.value;
+        fromSelect.value = toSelect.value;
+        toSelect.value = currentFrom;
+        convertCurrency();
+    }
+
     function generatePassword() {
         clearError();
         const length = Math.max(8, Math.min(64, readNumber('password-length') || 16));
@@ -601,6 +637,7 @@ const calculatorPage = (() => {
     function init() {
         insertDisplayCurrencySelector();
         populateDisplayCurrencySelector();
+        populateCurrencyConverterSelects();
         initializeMoneyDefaults();
         updateCurrencyAffixes();
 
@@ -614,6 +651,8 @@ const calculatorPage = (() => {
         document.querySelectorAll('[data-site-search]').forEach((form) => {
             form.addEventListener('submit', handleSiteSearch);
         });
+
+        $('currency-swap')?.addEventListener('click', swapCurrencyConverterCurrencies);
 
         const lengthInput = $('password-length');
         if (lengthInput) {
