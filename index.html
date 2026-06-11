@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MRCMVF9545"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-MRCMVF9545');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator All-in-One | Free Online Utility Tools</title>
@@ -26,14 +17,59 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Calculator All-in-One | Free Online Utility Tools">
     <meta name="twitter:description" content="Free online calculators and productivity utilities for finance, electricity, health, and daily needs with instant results and no login required.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://pagead2.googlesyndication.com">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9409281508068005"
-        crossorigin="anonymous"></script>
+    <style>
+        :root{--bg-color:#0f172a;--text-color:#f8fafc;--primary:#0ea5e9;--secondary:#8b5cf6;--glass-bg:rgba(30,41,59,.7);--glass-border:rgba(14,165,233,.2)}
+        *{box-sizing:border-box}
+        html{overflow-x:hidden;background:#0f172a}
+        body{margin:0;background:#0f172a;color:#f8fafc;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.6;overflow-x:hidden}
+        .skip-link{position:fixed;top:.75rem;left:.75rem;z-index:1000;transform:translateY(-160%);background:#fff;color:#0f172a;padding:.7rem 1rem;border-radius:999px;font-weight:800;text-decoration:none}
+        .skip-link:focus{transform:translateY(0)}
+        .navbar{position:fixed;top:0;left:0;width:100%;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.9rem 5%;background:rgba(5,5,5,.82);border-bottom:1px solid rgba(14,165,233,.2)}
+        .logo{font-size:clamp(1.05rem,5vw,1.45rem);font-weight:800;line-height:1.1;max-width:68vw;color:#38bdf8;text-decoration:none;white-space:nowrap}
+        .header-search{order:3;flex:1 1 100%;max-width:100%;margin:.8rem 0 0}
+        .search-control{display:flex;width:100%}
+        .tool-input{width:100%;min-height:42px;border:1px solid rgba(14,165,233,.2);border-radius:12px;background:rgba(15,23,42,.76);color:#fff;padding:.75rem .9rem;font:inherit}
+        .secondary-btn,.glowing-btn{min-height:44px;border:0;border-radius:50px;font:inherit;font-weight:700}
+        .glowing-btn{background:linear-gradient(90deg,#0ea5e9,#8b5cf6);color:#fff;padding:.8rem 2rem}
+        nav{display:none}.mobile-menu{display:block;position:relative}.mobile-menu summary{list-style:none;cursor:pointer;border:1px solid rgba(14,165,233,.2);background:rgba(15,23,42,.88);color:#fff;border-radius:999px;padding:.55rem .9rem;font-weight:700}.mobile-menu:not([open]) .mobile-menu-panel{display:none}
+        .mobile-menu-panel{position:absolute;right:0;top:calc(100% + .7rem);width:min(78vw,280px);max-height:calc(100vh - 5.5rem);overflow-y:auto;display:grid;gap:.2rem;padding:.75rem;border:1px solid rgba(14,165,233,.2);border-radius:14px;background:rgba(15,23,42,.98)}
+        .mobile-menu-panel a{color:#e5e7eb;text-decoration:none;padding:.75rem;border-radius:10px;font-weight:700}
+        .hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:7.4rem 5% 2rem}
+        .hero-content{display:flex;flex-direction:column;align-items:center;max-width:600px;z-index:2}
+        .badge{display:inline-block;margin-bottom:1rem;padding:.35rem .85rem;border:1px solid rgba(99,102,241,.2);border-radius:999px;background:rgba(99,102,241,.1);color:#38bdf8;font-weight:700;font-size:.82rem}
+        h1{margin:0 0 1rem;font-size:clamp(2.55rem,13vw,4rem);line-height:1.05}.highlight{color:#38bdf8}.hero-content p{margin:0 0 1.35rem;color:#cbd5e1;font-size:1rem}.hero .reveal-text{opacity:1!important;transform:none!important;transition:none!important}
+        .hero-visual,.bg-grid,.particles,.gradient-blob{display:none!important}
+        @media (min-width:1201px){.header-search{order:initial;flex:1;max-width:360px;margin:0 1.5rem}.mobile-menu{display:none}nav{display:flex}.hero{flex-direction:row;text-align:left;justify-content:flex-start;padding-top:80px}.hero-content{align-items:flex-start}h1{font-size:4.5rem}.hero-visual{display:flex!important}}
+    </style>
+    <link rel="preload" href="style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="style.css"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet"></noscript>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function(){ window.dataLayer.push(arguments); };
+      (function(){
+        var runIdle = window.requestIdleCallback || function(callback){ return setTimeout(callback, 1200); };
+        function loadScript(src, attrs){
+          var script = document.createElement('script');
+          script.async = true;
+          script.src = src;
+          if (attrs) Object.keys(attrs).forEach(function(key){ script.setAttribute(key, attrs[key]); });
+          document.head.appendChild(script);
+        }
+        window.addEventListener('load', function(){
+          runIdle(function(){
+            loadScript('https://www.googletagmanager.com/gtag/js?id=G-MRCMVF9545');
+            window.gtag('js', new Date());
+            window.gtag('config', 'G-MRCMVF9545');
+          }, { timeout: 3000 });
+          setTimeout(function(){
+            loadScript('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9409281508068005', { crossorigin: 'anonymous' });
+          }, 3500);
+        }, { once: true });
+      })();
+    </script>
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -50,9 +86,6 @@
         }
     }
     </script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 </head>
 <body>
     <a class="skip-link" href="#tools">Skip to calculators</a>
@@ -2206,7 +2239,7 @@
                                     <input type="text" class="tool-input inv-item-desc" placeholder="Description" aria-label="Item description" style="flex: 2; min-width: 0;" value="Web Design Services" oninput="calculateInvoice()">
                                     <input type="number" class="tool-input inv-item-qty" placeholder="Qty" aria-label="Quantity" min="0" step="1" style="flex: 0.7; min-width: 0;" value="1" oninput="calculateInvoice()">
                                     <input type="number" class="tool-input inv-item-price" placeholder="Rate" aria-label="Rate" min="0" step="0.01" style="flex: 1.2; min-width: 0;" value="1200" oninput="calculateInvoice()">
-                                    <button class="secondary-btn" onclick="removeInvoiceRow(this)" style="padding: 0 0.5rem; min-height:40px; border-radius:8px; margin:0; flex: 0.4;">×</button>
+                                    <button class="secondary-btn" onclick="removeInvoiceRow(this)" aria-label="Remove item" style="padding: 0 0.5rem; min-height:40px; border-radius:8px; margin:0; flex: 0.4;">×</button>
                                 </div>
                             </div>
                             <button class="secondary-btn shine-btn" onclick="addInvoiceRow()" style="width: 100%; padding: 0.4rem; font-size: 0.85rem; border-radius: 8px; margin-top: 0.5rem; margin-bottom: 0;">+ Add Item</button>
@@ -2302,7 +2335,7 @@
                 <p style="color: #a3a3a3; font-size: 0.85rem; margin-bottom: 0.75rem;">Support helps maintain hosting/API costs.</p>
                 <div style="display: inline-block; background: var(--glass-bg); padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(99, 102, 241, 0.3); text-align: center;">
                     <div style="width: 160px; height: 160px; background: #fff; margin: 0 auto; display: flex; align-items: center; justify-content: center; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(255,255,255,0.1);">
-                        <img src="assets/upi-qr.jpeg" alt="UPI QR code for platform support" width="160" height="160" style="width: 100%; height: 100%; object-fit: cover;">
+                        <img src="assets/upi-qr.jpeg" alt="UPI QR code for platform support" width="160" height="160" loading="lazy" decoding="async" fetchpriority="low" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                     <p style="font-size: 1.1rem; color: #fff; margin-top: 0.8rem; font-family: 'Outfit', sans-serif; font-weight:600; letter-spacing: 1px;">klokeshcalculator@ybl</p>
                 </div>
@@ -2316,10 +2349,10 @@
             <a href="privacy.html">Privacy Policy</a>
             <a href="terms.html">Terms & Conditions</a>
             <a href="disclaimer.html">Disclaimer</a>
-            <a href="#" onclick="openFooterModal('upi')">UPI QR & Button</a>
+            <a href="#" onclick="openFooterModal('upi'); return false;">UPI QR & Button</a>
             <a href="https://rzp.io/rzp/tpqo4et" target="_blank" rel="noopener noreferrer">Fund Me</a>
-            <a href="#" onclick="openFooterModal('refund')">Refund Policy</a>
-            <a href="#" onclick="openFooterModal('shipping')">Shipping Policy</a>
+            <a href="#" onclick="openFooterModal('refund'); return false;">Refund Policy</a>
+            <a href="#" onclick="openFooterModal('shipping'); return false;">Shipping Policy</a>
         </div>
         
         <p class="copyright">&copy; 2026 Calculator All-in-One. All rights reserved.</p>
@@ -2331,7 +2364,7 @@
     <!-- Generic Modal -->
     <div id="footer-modal" class="modal-overlay" onclick="if(event.target===this) closeFooterModal()">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeFooterModal()">&times;</span>
+            <span class="close-modal" onclick="closeFooterModal()" role="button" tabindex="0" aria-label="Close modal" onkeydown="if(event.key==='Enter'||event.key===' ') closeFooterModal()">&times;</span>
             <h2 id="modal-title">Title</h2>
             <div id="modal-body" style="margin-top: 1rem; color: #a3a3a3;">
                 Content goes here.

@@ -23,7 +23,7 @@ html {
 }
 
 body {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     background-color: var(--bg-color);
     color: var(--text-color);
     overflow-x: hidden;
@@ -1381,6 +1381,35 @@ h1 {
 
 .result-card h3 { font-size: 1.4rem; margin-bottom: 0.5rem; position: relative; z-index: 1; letter-spacing: -0.5px; }
 .result-card p { color: #a3a3a3; font-size: 1rem; position: relative; z-index: 1; margin-bottom: 1.5rem; }
+
+@supports (content-visibility: auto) {
+    .stats-section,
+    .tools-section,
+    .site-footer {
+        content-visibility: auto;
+    }
+
+    .stats-section {
+        contain-intrinsic-size: 280px;
+    }
+
+    .tools-section {
+        contain-intrinsic-size: 3200px;
+    }
+
+    .site-footer {
+        contain-intrinsic-size: 620px;
+    }
+
+    .tools-grid .result-card {
+        content-visibility: auto;
+        contain-intrinsic-size: 560px;
+    }
+
+    .tools-grid #calc-invoice {
+        contain-intrinsic-size: 860px;
+    }
+}
 
 .result-card.active:hover h3,
 .result-card:focus-within h3 {
@@ -3000,6 +3029,48 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 @media (max-width: 768px) {
+    .bg-grid,
+    .particles,
+    .gradient-blob,
+    .marquee-track {
+        animation: none;
+    }
+
+    .bg-grid,
+    .particles,
+    .gradient-blob,
+    .math-particles,
+    .hero-visual {
+        display: none !important;
+    }
+
+    .hero {
+        min-height: 100svh;
+        justify-content: center;
+        padding-top: 7.4rem;
+        padding-bottom: 2rem;
+    }
+
+    .hero .reveal-text {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+        transition-delay: 0s !important;
+    }
+
+    .hero-content p {
+        min-height: auto;
+    }
+
+    .gradient-blob {
+        filter: blur(80px);
+        opacity: 0.36;
+    }
+
+    .navbar {
+        backdrop-filter: blur(10px);
+    }
+
     #calc-invoice.invoice-generator-card,
     #calc-invoice.result-card {
         grid-column: auto !important;

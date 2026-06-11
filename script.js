@@ -1,5 +1,6 @@
 // Ensure animations respect reduced motion settings
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isMobileViewport = window.matchMedia('(max-width: 768px)').matches;
 
 // Typing Effect for Hero Subtitle
 const typingTextElement = document.querySelector('.typing-text');
@@ -10,9 +11,11 @@ let isDeleting = false;
 let typingDelay = 100;
 
 function typeEffect() {
-    if (prefersReducedMotion) {
-        typingTextElement.textContent = "fluid animations.";
-        document.querySelector('.cursor').style.display = 'none';
+    if (!typingTextElement) return;
+
+    if (prefersReducedMotion || isMobileViewport) {
+        typingTextElement.textContent = isMobileViewport ? "instant answers." : "fluid animations.";
+        document.querySelector('.cursor')?.style.setProperty('display', 'none');
         return;
     }
 
@@ -41,7 +44,13 @@ function typeEffect() {
 }
 
 // Start typing effect on load
-setTimeout(typeEffect, 1000);
+if (typingTextElement) {
+    if (isMobileViewport) {
+        typeEffect();
+    } else {
+        setTimeout(typeEffect, 1000);
+    }
+}
 
 // Advanced Scroll Reveal Observer
 const revealElements = document.querySelectorAll('.scroll-reveal, .reveal-text');
@@ -78,7 +87,7 @@ const revealOptions = {
 };
 
 const revealObserver = new IntersectionObserver(revealCallback, revealOptions);
-if (!prefersReducedMotion) {
+if (!prefersReducedMotion && !isMobileViewport) {
     revealElements.forEach(el => revealObserver.observe(el));
 } else {
     revealElements.forEach(el => el.classList.add('active')); // Show all immediately
@@ -2157,7 +2166,7 @@ function calcPower() {
 }
 window.calcPower = calcPower;
 
-function calcElectricityBill() {
+async function calcElectricityBill() {
     const values = requirePositiveInputs([
         { id: 'bill-units', label: 'units/kWh' },
         { id: 'bill-rate', label: 'rate' }
@@ -2179,26 +2188,30 @@ function calcElectricityBill() {
         const taxEst = bill * 0.18; // Mock 18% tax
         const fixedCharge = 50; // Mock fixed charge
         
-        if (typeof Chart !== 'undefined') {
-            window.elecChartInstance = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Usage', 'Tax/Duty', 'Fixed'],
-                    datasets: [{
-                        data: [usageCost, taxEst, fixedCharge],
-                        backgroundColor: ['#facc15', '#ef4444', '#3b82f6'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    animation: { duration: 1500, animateScale: true },
-                    plugins: { legend: { position: 'right', labels: { color: '#fff', font: { size: 10 } } } }
-                }
-            });
-        } else {
-            console.warn("Chart.js is not defined. Electricity pie chart skipped.");
+        try {
+            await ensureChartLibrary();
+        } catch (err) {
+            console.error(err);
+            showToast('Chart tools could not be loaded.', 'error');
+            return;
         }
+
+        window.elecChartInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Usage', 'Tax/Duty', 'Fixed'],
+                datasets: [{
+                    data: [usageCost, taxEst, fixedCharge],
+                    backgroundColor: ['#facc15', '#ef4444', '#3b82f6'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                animation: { duration: 1500, animateScale: true },
+                plugins: { legend: { position: 'right', labels: { color: '#fff', font: { size: 10 } } } }
+            }
+        });
     }
 
 }
@@ -3009,8 +3022,40 @@ window.openFooterModal = openFooterModal;
 window.closeFooterModal = closeFooterModal;
 window.openRazorpay = openRazorpay;
 
+function initAccessibleControlNames() {
+    const makeLabel = (element) => {
+        const fromPlaceholder = element.getAttribute('placeholder');
+        if (fromPlaceholder) return fromPlaceholder;
+
+        const fromId = element.id || element.name || '';
+        return fromId
+            .replace(/^(calc|tool|input|select)-/i, '')
+            .replace(/[-_]+/g, ' ')
+            .replace(/\b\w/g, char => char.toUpperCase())
+            .trim();
+    };
+
+    document.querySelectorAll('input, select, textarea').forEach(element => {
+        const hasName = element.labels?.length
+            || element.hasAttribute('aria-label')
+            || element.hasAttribute('aria-labelledby')
+            || element.hasAttribute('title');
+
+        if (!hasName) {
+            const label = makeLabel(element);
+            if (label) element.setAttribute('aria-label', label);
+        }
+    });
+
+    document.querySelectorAll('canvas:not([aria-label]):not([aria-hidden])').forEach(canvas => {
+        canvas.setAttribute('role', 'img');
+        canvas.setAttribute('aria-label', makeLabel(canvas) || 'Calculator chart');
+    });
+}
+
 // Initialize when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
+    initAccessibleControlNames();
     initLiveCounters();
     initHeroChart();
     initHeroFloatingCards();
@@ -3079,49 +3124,122 @@ function initLiveCounters() {
     if (statsSection) observer.observe(statsSection);
 }
 
-// --- HERO CHART.JS ---
+// --- HERO CANVAS CHART ---
 function initHeroChart() {
-    const ctx = document.getElementById('hero-live-chart');
+    if (isMobileViewport) return;
+
+    const canvas = document.getElementById('hero-live-chart');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    
-    if (typeof Chart === 'undefined') {
-        console.warn("Chart.js is not defined. Hero chart skipped.");
-        return;
-    }
-    
-    // Create animated gradient line chart
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-            datasets: [{
-                label: 'Growth',
-                data: [10, 25, 40, 55, 90, 120, 150],
-                borderColor: '#0ea5e9',
-                backgroundColor: 'rgba(14, 165, 233, 0.1)',
-                borderWidth: 3,
-                tension: 0.4,
-                fill: true,
-                pointRadius: 0
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: {
-                duration: 3000,
-                easing: 'easeInOutQuart'
-            },
-            scales: {
-                x: { display: false },
-                y: { display: false, min: 0 }
-            },
-            plugins: {
-                legend: { display: false },
-                tooltip: { enabled: false }
-            }
+
+    const values = [10, 25, 40, 55, 90, 120, 150];
+    const maxValue = Math.max(...values);
+    let frameId = 0;
+
+    const draw = (progress = 1) => {
+        const rect = canvas.getBoundingClientRect();
+        const width = rect.width || 1;
+        const height = rect.height || 1;
+        const padding = Math.max(24, width * 0.07);
+        const usableWidth = width - padding * 2;
+        const usableHeight = height - padding * 2;
+
+        ctx.clearRect(0, 0, width, height);
+
+        const bg = ctx.createLinearGradient(0, 0, width, height);
+        bg.addColorStop(0, 'rgba(14, 165, 233, 0.18)');
+        bg.addColorStop(0.55, 'rgba(139, 92, 246, 0.12)');
+        bg.addColorStop(1, 'rgba(244, 63, 94, 0.08)');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+        ctx.lineWidth = 1;
+        for (let i = 1; i < 5; i += 1) {
+            const y = padding + (usableHeight / 5) * i;
+            ctx.beginPath();
+            ctx.moveTo(padding, y);
+            ctx.lineTo(width - padding, y);
+            ctx.stroke();
         }
-    });
+
+        const points = values.map((value, index) => ({
+            x: padding + (usableWidth / (values.length - 1)) * index,
+            y: padding + usableHeight - (value / maxValue) * usableHeight
+        }));
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(0, 0, width * progress, height);
+        ctx.clip();
+
+        const areaGradient = ctx.createLinearGradient(0, padding, 0, height - padding);
+        areaGradient.addColorStop(0, 'rgba(14, 165, 233, 0.34)');
+        areaGradient.addColorStop(1, 'rgba(14, 165, 233, 0)');
+        ctx.beginPath();
+        points.forEach((point, index) => {
+            if (index === 0) ctx.moveTo(point.x, point.y);
+            else ctx.lineTo(point.x, point.y);
+        });
+        ctx.lineTo(points[points.length - 1].x, height - padding);
+        ctx.lineTo(points[0].x, height - padding);
+        ctx.closePath();
+        ctx.fillStyle = areaGradient;
+        ctx.fill();
+
+        ctx.beginPath();
+        points.forEach((point, index) => {
+            if (index === 0) ctx.moveTo(point.x, point.y);
+            else ctx.lineTo(point.x, point.y);
+        });
+        ctx.strokeStyle = '#0ea5e9';
+        ctx.lineWidth = 3;
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.shadowColor = 'rgba(14, 165, 233, 0.55)';
+        ctx.shadowBlur = 14;
+        ctx.stroke();
+        ctx.restore();
+    };
+
+    const resize = () => {
+        const rect = canvas.getBoundingClientRect();
+        const ratio = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.max(1, Math.floor((rect.width || 1) * ratio));
+        canvas.height = Math.max(1, Math.floor((rect.height || 1) * ratio));
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        draw(prefersReducedMotion ? 1 : 0);
+    };
+
+    resize();
+
+    if (prefersReducedMotion) {
+        draw(1);
+    } else {
+        const startTime = performance.now();
+        const animate = (now) => {
+            const progress = Math.min(1, (now - startTime) / 1200);
+            draw(progress);
+            if (progress < 1) frameId = requestAnimationFrame(animate);
+        };
+        frameId = requestAnimationFrame(animate);
+    }
+
+    if ('ResizeObserver' in window) {
+        new ResizeObserver(() => {
+            cancelAnimationFrame(frameId);
+            resize();
+            draw(1);
+        }).observe(canvas);
+    } else {
+        window.addEventListener('resize', () => {
+            cancelAnimationFrame(frameId);
+            resize();
+            draw(1);
+        }, { passive: true });
+    }
 }
 
 
@@ -3170,18 +3288,23 @@ function explainFormula() {
 }
 window.explainFormula = explainFormula;
 
-function plotGraph() {
+async function plotGraph() {
     const m = parseFloat(document.getElementById('plot-m').value) || 0;
     const b = parseFloat(document.getElementById('plot-b').value) || 0;
-    const ctx = document.getElementById('plotter-chart').getContext('2d');
+    const canvas = document.getElementById('plotter-chart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
     
     if (window.plotChartInstance) window.plotChartInstance.destroy();
     
     let xs = [-10, -5, 0, 5, 10];
     let ys = xs.map(x => (m * x) + b);
     
-    if (typeof Chart === 'undefined') {
-        console.warn("Chart.js is not defined. Cannot plot equation plotter graph.");
+    try {
+        await ensureChartLibrary();
+    } catch (err) {
+        console.error(err);
+        showToast('Chart tools could not be loaded.', 'error');
         return;
     }
     
@@ -3205,7 +3328,6 @@ function plotGraph() {
     });
 }
 window.plotGraph = plotGraph;
-document.addEventListener('DOMContentLoaded', () => { setTimeout(plotGraph, 1000); });
 
 function convertImage() {
     const fileInput = document.getElementById('img-upload');
@@ -3250,12 +3372,33 @@ let sipChartInstance = null;
 let fdChartInstance = null;
 let rdChartInstance = null;
 let calorieChartInstance = null;
+let chartLibraryPromise = null;
+
+function ensureChartLibrary() {
+    if (typeof window.Chart === 'function') return Promise.resolve();
+    if (chartLibraryPromise) return chartLibraryPromise;
+
+    chartLibraryPromise = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        script.onload = () => resolve();
+        script.onerror = () => {
+            chartLibraryPromise = null;
+            reject(new Error('Failed to load Chart.js'));
+        };
+        document.head.appendChild(script);
+    });
+
+    return chartLibraryPromise;
+}
 
 // --- CHART.JS FINANCE & HEALTH GRAPH UPGRADES ---
 
 // Upgrade SIP Calculator calculation to render wealth growth chart
 const originalCalcSIP = window.calcSIP;
-window.calcSIP = function() {
+window.calcSIP = async function() {
     // Call original calculation first
     const P = parseFloat(document.getElementById('sip-monthly').value);
     const annualRate = parseFloat(document.getElementById('sip-rate').value);
@@ -3299,6 +3442,14 @@ window.calcSIP = function() {
     
     const ctx = document.getElementById('sip-chart');
     if (ctx) {
+        try {
+            await ensureChartLibrary();
+        } catch (err) {
+            console.error(err);
+            showToast('Chart tools could not be loaded.', 'error');
+            return;
+        }
+
         if (sipChartInstance) sipChartInstance.destroy();
         sipChartInstance = new Chart(ctx, {
             type: 'line',
@@ -3342,7 +3493,7 @@ window.calcSIP = function() {
 
 // Upgrade FD/SB Calculator calculation to render wealth growth chart
 const originalCalcFD = window.calcFD;
-window.calcFD = function() {
+window.calcFD = async function() {
     const P = parseFloat(document.getElementById('fd-principal').value);
     let r = parseFloat(document.getElementById('fd-rate').value);
     const citizenBump = parseFloat(document.getElementById('fd-citizen').value);
@@ -3383,6 +3534,14 @@ window.calcFD = function() {
     
     const ctx = document.getElementById('fd-chart');
     if (ctx) {
+        try {
+            await ensureChartLibrary();
+        } catch (err) {
+            console.error(err);
+            showToast('Chart tools could not be loaded.', 'error');
+            return;
+        }
+
         if (fdChartInstance) fdChartInstance.destroy();
         fdChartInstance = new Chart(ctx, {
             type: 'line',
@@ -3425,7 +3584,7 @@ window.calcFD = function() {
 
 // Upgrade RD Calculator calculation to render wealth growth chart
 const originalCalcRD = window.calcRD;
-window.calcRD = function() {
+window.calcRD = async function() {
     const P = parseFloat(document.getElementById('rd-monthly').value);
     const annualRate = parseFloat(document.getElementById('rd-rate').value);
     const months = parseFloat(document.getElementById('rd-months').value);
@@ -3477,6 +3636,14 @@ window.calcRD = function() {
     
     const ctx = document.getElementById('rd-chart');
     if (ctx) {
+        try {
+            await ensureChartLibrary();
+        } catch (err) {
+            console.error(err);
+            showToast('Chart tools could not be loaded.', 'error');
+            return;
+        }
+
         if (rdChartInstance) rdChartInstance.destroy();
         rdChartInstance = new Chart(ctx, {
             type: 'line',
@@ -3519,7 +3686,7 @@ window.calcRD = function() {
 
 // Upgrade Calories & Macronutrients calculation to render Doughnut Chart
 const originalUpdateMacroBars = window.updateMacroBars;
-window.updateMacroBars = function() {
+window.updateMacroBars = async function() {
     const total = totalMacros.carbs + totalMacros.protein + totalMacros.fat;
     if (total === 0) return;
     
@@ -3533,6 +3700,14 @@ window.updateMacroBars = function() {
     
     const ctx = document.getElementById('calorie-chart');
     if (ctx) {
+        try {
+            await ensureChartLibrary();
+        } catch (err) {
+            console.error(err);
+            showToast('Chart tools could not be loaded.', 'error');
+            return;
+        }
+
         if (calorieChartInstance) calorieChartInstance.destroy();
         calorieChartInstance = new Chart(ctx, {
             type: 'doughnut',
@@ -3563,8 +3738,43 @@ window.updateMacroBars = function() {
 
 // --- PREMIUM DATA EXPORT UTILITIES (PDF, PNG, CSV) ---
 
+const EXPORT_SCRIPT_URLS = {
+    html2canvas: 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
+    jspdf: 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
+};
+const exportScriptPromises = new Map();
+
+function loadExportScript(name, isReady) {
+    if (isReady()) return Promise.resolve();
+    if (exportScriptPromises.has(name)) return exportScriptPromises.get(name);
+
+    const promise = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = EXPORT_SCRIPT_URLS[name];
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        script.onload = () => resolve();
+        script.onerror = () => {
+            exportScriptPromises.delete(name);
+            reject(new Error(`Failed to load ${name}`));
+        };
+        document.head.appendChild(script);
+    });
+
+    exportScriptPromises.set(name, promise);
+    return promise;
+}
+
+function ensureHtml2Canvas() {
+    return loadExportScript('html2canvas', () => typeof window.html2canvas === 'function');
+}
+
+function ensureJsPDF() {
+    return loadExportScript('jspdf', () => Boolean(window.jspdf?.jsPDF));
+}
+
 // Generic PNG downloader
-function triggerPNGDownload(elementId, filename) {
+async function triggerPNGDownload(elementId, filename) {
     const element = document.getElementById(elementId);
     if (!element) {
         showToast('Element to export not found!', 'error');
@@ -3572,8 +3782,16 @@ function triggerPNGDownload(elementId, filename) {
     }
     
     showToast('Generating Image... Please wait.');
+
+    try {
+        await ensureHtml2Canvas();
+    } catch (err) {
+        console.error(err);
+        showToast('Unable to load image export tools.', 'error');
+        return;
+    }
     
-    html2canvas(element, {
+    window.html2canvas(element, {
         backgroundColor: '#0f172a',
         scale: 2, // high quality
         useCORS: true
@@ -3590,7 +3808,7 @@ function triggerPNGDownload(elementId, filename) {
 }
 
 // Generic PDF downloader
-function triggerPDFDownload(elementId, filename) {
+async function triggerPDFDownload(elementId, filename) {
     const element = document.getElementById(elementId);
     if (!element) {
         showToast('Element to export not found!', 'error');
@@ -3598,8 +3816,16 @@ function triggerPDFDownload(elementId, filename) {
     }
     
     showToast('Generating PDF... Please wait.');
+
+    try {
+        await Promise.all([ensureHtml2Canvas(), ensureJsPDF()]);
+    } catch (err) {
+        console.error(err);
+        showToast('Unable to load PDF export tools.', 'error');
+        return;
+    }
     
-    html2canvas(element, {
+    window.html2canvas(element, {
         backgroundColor: '#0f172a',
         scale: 2,
         useCORS: true
