@@ -17,7 +17,7 @@
 }
 
 html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
     overflow-x: hidden;
     scrollbar-color: rgba(14, 165, 233, 0.48) #0f172a;
 }
@@ -719,6 +719,25 @@ h1 {
     perspective: 1000px;
 }
 
+.hero-chart-container,
+#hero-live-chart {
+    border-radius: inherit;
+    inset: 0;
+    min-height: 100%;
+    min-width: 100%;
+    position: absolute;
+}
+
+#hero-live-chart {
+    background:
+        radial-gradient(circle at 28% 24%, rgba(14, 165, 233, 0.18), transparent 34%),
+        radial-gradient(circle at 76% 72%, rgba(139, 92, 246, 0.18), transparent 38%),
+        linear-gradient(135deg, rgba(15, 23, 42, 0.94), rgba(8, 47, 73, 0.82));
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+
 .floating-cards-wrapper {
     position: relative;
     width: 100%;
@@ -1384,7 +1403,6 @@ h1 {
 
 @supports (content-visibility: auto) {
     .stats-section,
-    .tools-section,
     .site-footer {
         content-visibility: auto;
     }
@@ -1393,17 +1411,13 @@ h1 {
         contain-intrinsic-size: 280px;
     }
 
-    .tools-section {
-        contain-intrinsic-size: 3200px;
-    }
-
     .site-footer {
         contain-intrinsic-size: 620px;
     }
 
     .tools-grid .result-card {
         content-visibility: auto;
-        contain-intrinsic-size: 560px;
+        contain-intrinsic-size: 690px;
     }
 
     .tools-grid #calc-invoice {
@@ -2313,7 +2327,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     .hero-visual { width: 100%; height: 280px; margin-top: 1rem; transform: none; }
     .floating-cards-wrapper { height: 240px; }
     .tool-card { padding: 0.7rem 0.9rem; }
-    .stats-section { flex-direction: column; gap: 3rem; }
+    .stats-section { flex-direction: column; gap: 2rem; padding: 3rem 5%; }
     .tools-section, .results-section { padding: 4rem 5%; }
     .tools-section h2, .results-section h2 { font-size: 2.2rem; }
     .tool-discovery { margin-bottom: 1.25rem; }
@@ -2389,7 +2403,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     .tool-actions {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-    .stats-section { padding: 3.5rem 5%; }
+    .stats-section { padding: 2.5rem 5%; }
     .stat-item h2, .stat-item .counter { font-size: 2.8rem; }
     .footer-links a { min-width: 44%; }
 }
@@ -2397,7 +2411,11 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 /* --- PREMIUM HERO ANIMATIONS --- */
 .premium-hero {
-    background: radial-gradient(circle at center, rgba(30,58,138,0.2) 0%, transparent 70%);
+    background:
+        radial-gradient(circle at 24% 18%, rgba(14, 165, 233, 0.22) 0%, transparent 36%),
+        radial-gradient(circle at 78% 72%, rgba(139, 92, 246, 0.18) 0%, transparent 42%),
+        linear-gradient(135deg, #0f172a 0%, #082f49 100%);
+    isolation: isolate;
     position: relative;
 }
 
@@ -3045,7 +3063,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     }
 
     .hero {
-        min-height: 100svh;
+        min-height: min(82svh, 720px);
         justify-content: center;
         padding-top: 7.4rem;
         padding-bottom: 2rem;
@@ -3074,6 +3092,16 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     #calc-invoice.invoice-generator-card,
     #calc-invoice.result-card {
         grid-column: auto !important;
+    }
+
+    @supports (content-visibility: auto) {
+        .tools-grid .result-card {
+            contain-intrinsic-size: 620px;
+        }
+
+        .tools-grid #calc-invoice {
+            contain-intrinsic-size: 1220px;
+        }
     }
 }
 

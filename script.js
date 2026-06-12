@@ -891,10 +891,15 @@ function getNavbarOffset() {
     return (document.querySelector('.navbar')?.offsetHeight || 0) + 16;
 }
 
+function getPreferredScrollBehavior() {
+    const compactViewport = window.matchMedia('(max-width: 768px)').matches;
+    return (prefersReducedMotion || compactViewport) ? 'auto' : 'smooth';
+}
+
 function getToolSearchText(card) {
     if (!card.dataset.searchText) {
-        const title = card.querySelector('h3')?.innerText || '';
-        const desc = card.querySelector('p')?.innerText || '';
+        const title = card.querySelector('h3')?.textContent || '';
+        const desc = card.querySelector('p')?.textContent || '';
         card.dataset.searchText = `${title} ${desc} ${card.dataset.category || ''}`.toLowerCase();
     }
 
@@ -914,7 +919,7 @@ function scrollToVisibleCalculator(category) {
 
         window.scrollTo({
             top: Math.max(0, top),
-            behavior: prefersReducedMotion ? 'auto' : 'smooth'
+            behavior: getPreferredScrollBehavior()
         });
     });
 }
@@ -2383,7 +2388,7 @@ function scrollToTools() {
     const top = tools.getBoundingClientRect().top + window.scrollY - getNavbarOffset();
     window.scrollTo({
         top: Math.max(0, top),
-        behavior: prefersReducedMotion ? 'auto' : 'smooth'
+        behavior: getPreferredScrollBehavior()
     });
 }
 window.scrollToTools = scrollToTools;
@@ -2431,7 +2436,7 @@ function scrollToCalc(id, category) {
 
             window.scrollTo({
                 top: Math.max(0, top),
-                behavior: prefersReducedMotion ? 'auto' : 'smooth'
+                behavior: getPreferredScrollBehavior()
             });
 
             // Add a temporary highlight effect
@@ -4937,12 +4942,163 @@ const localizationDict = {
     }
 };
 
+const extraLanguageContent = {
+    te: {
+        title: "క్యాల్కులేటర్ ఆల్-ఇన్-వన్",
+        hero_tag: "45+ ప్రీమియం క్యాల్కులేటర్లు",
+        hero_title: "అన్నింటినీ వెంటనే లెక్కించండి",
+        hero_title_html: 'అన్నింటినీ <span class="highlight">వెంటనే</span> లెక్కించండి',
+        hero_desc: "ఫైనాన్స్, ఆరోగ్యం, విద్యుత్, గణితం మరియు ఉత్పాదకత కోసం ఉచిత ఆన్‌లైన్ క్యాల్కులేటర్లు మరియు రోజువారీ సాధనాలు.",
+        nav_fund: "సహాయం చేయండి",
+        nav_about: "గురించి",
+        nav_contact: "సంప్రదించండి",
+        nav_privacy: "గోప్యత"
+    },
+    ta: {
+        title: "கால்குலேட்டர் ஆல்-இன்-ஒன்",
+        hero_tag: "45+ பிரீமியம் கால்குலேட்டர்கள்",
+        hero_title: "எல்லாவற்றையும் உடனடியாக கணக்கிடுங்கள்",
+        hero_title_html: 'எல்லாவற்றையும் <span class="highlight">உடனடியாக</span> கணக்கிடுங்கள்',
+        hero_desc: "நிதி, ஆரோக்கியம், மின்சாரம், கணிதம் மற்றும் உற்பத்தித்திறனுக்கான இலவச ஆன்லைன் கால்குலேட்டர்கள் மற்றும் தினசரி கருவிகள்.",
+        nav_fund: "ஆதரிக்கவும்",
+        nav_about: "பற்றி",
+        nav_contact: "தொடர்பு",
+        nav_privacy: "தனியுரிமை"
+    },
+    kn: {
+        title: "ಕ್ಯಾಲ್ಕುಲೇಟರ್ ಆಲ್-ಇನ್-ಒನ್",
+        hero_tag: "45+ ಪ್ರೀಮಿಯಂ ಕ್ಯಾಲ್ಕುಲೇಟರ್‌ಗಳು",
+        hero_title: "ಎಲ್ಲವನ್ನೂ ತಕ್ಷಣ ಲೆಕ್ಕಿಸಿ",
+        hero_title_html: 'ಎಲ್ಲವನ್ನೂ <span class="highlight">ತಕ್ಷಣ</span> ಲೆಕ್ಕಿಸಿ',
+        hero_desc: "ಹಣಕಾಸು, ಆರೋಗ್ಯ, ವಿದ್ಯುತ್, ಗಣಿತ ಮತ್ತು ಉತ್ಪಾದಕತೆಗಾಗಿ ಉಚಿತ ಆನ್‌ಲೈನ್ ಕ್ಯಾಲ್ಕುಲೇಟರ್‌ಗಳು ಮತ್ತು ದೈನಂದಿನ ಸಾಧನಗಳು.",
+        nav_fund: "ಬೆಂಬಲಿಸಿ",
+        nav_about: "ಬಗ್ಗೆ",
+        nav_contact: "ಸಂಪರ್ಕ",
+        nav_privacy: "ಗೌಪ್ಯತೆ"
+    },
+    ml: {
+        title: "കാൽക്കുലേറ്റർ ഓൾ-ഇൻ-വൺ",
+        hero_tag: "45+ പ്രീമിയം കാൽക്കുലേറ്ററുകൾ",
+        hero_title: "എല്ലാം ഉടൻ കണക്കാക്കൂ",
+        hero_title_html: 'എല്ലാം <span class="highlight">ഉടൻ</span> കണക്കാക്കൂ',
+        hero_desc: "ഫിനാൻസ്, ആരോഗ്യം, വൈദ്യുതി, ഗണിതം, ഉൽപ്പാദനക്ഷമത എന്നിവയ്ക്കുള്ള സൗജന്യ ഓൺലൈൻ കാൽക്കുലേറ്ററുകളും ദൈനംദിന ഉപകരണങ്ങളും.",
+        nav_fund: "പിന്തുണയ്ക്കുക",
+        nav_about: "കുറിച്ച്",
+        nav_contact: "ബന്ധപ്പെടുക",
+        nav_privacy: "സ്വകാര്യത"
+    },
+    mr: {
+        title: "कॅल्क्युलेटर ऑल-इन-वन",
+        hero_tag: "45+ प्रीमियम कॅल्क्युलेटर",
+        hero_title: "सगळे काही तत्काळ मोजा",
+        hero_title_html: 'सगळे काही <span class="highlight">तत्काळ</span> मोजा',
+        hero_desc: "फायनान्स, आरोग्य, वीज, गणित आणि उत्पादकतेसाठी मोफत ऑनलाइन कॅल्क्युलेटर आणि दैनंदिन साधने.",
+        nav_fund: "सहाय्य करा",
+        nav_about: "माहिती",
+        nav_contact: "संपर्क",
+        nav_privacy: "गोपनीयता"
+    },
+    bn: {
+        title: "ক্যালকুলেটর অল-ইন-ওয়ান",
+        hero_tag: "45+ প্রিমিয়াম ক্যালকুলেটর",
+        hero_title: "সবকিছু সঙ্গে সঙ্গে হিসাব করুন",
+        hero_title_html: 'সবকিছু <span class="highlight">সঙ্গে সঙ্গে</span> হিসাব করুন',
+        hero_desc: "ফাইন্যান্স, স্বাস্থ্য, বিদ্যুৎ, গণিত এবং উৎপাদনশীলতার জন্য বিনামূল্যের অনলাইন ক্যালকুলেটর ও দৈনন্দিন টুলস.",
+        nav_fund: "সহায়তা করুন",
+        nav_about: "সম্পর্কে",
+        nav_contact: "যোগাযোগ",
+        nav_privacy: "গোপনীয়তা"
+    },
+    gu: {
+        title: "કેલ્ક્યુલેટર ઓલ-ઇન-વન",
+        hero_tag: "45+ પ્રીમિયમ કેલ્ક્યુલેટર",
+        hero_title: "બધું તરત ગણો",
+        hero_title_html: 'બધું <span class="highlight">તરત</span> ગણો',
+        hero_desc: "ફાઇનાન્સ, આરોગ્ય, વીજળી, ગણિત અને પ્રોડક્ટિવિટી માટે મફત ઓનલાઇન કેલ્ક્યુલેટર અને દૈનિક સાધનો.",
+        nav_fund: "સહાય કરો",
+        nav_about: "વિશે",
+        nav_contact: "સંપર્ક",
+        nav_privacy: "ગોપનીયતા"
+    },
+    ar: {
+        title: "الحاسبة الشاملة",
+        hero_tag: "أكثر من 45 حاسبة مميزة",
+        hero_title: "احسب كل شيء فورًا",
+        hero_title_html: 'احسب كل شيء <span class="highlight">فورًا</span>',
+        hero_desc: "حاسبات مجانية عبر الإنترنت وأدوات يومية للمال والصحة والكهرباء والرياضيات والإنتاجية.",
+        nav_fund: "ادعمني",
+        nav_about: "حول",
+        nav_contact: "اتصال",
+        nav_privacy: "الخصوصية"
+    },
+    zh: {
+        title: "多功能计算器",
+        hero_tag: "45+ 个高级计算器",
+        hero_title: "立即计算一切",
+        hero_title_html: '立即<span class="highlight">计算一切</span>',
+        hero_desc: "免费的在线计算器和日常工具，适用于金融、健康、电力、数学和效率场景。",
+        nav_fund: "支持我",
+        nav_about: "关于",
+        nav_contact: "联系",
+        nav_privacy: "隐私"
+    },
+    ja: {
+        title: "オールインワン電卓",
+        hero_tag: "45以上のプレミアム計算機",
+        hero_title: "すべてをすぐに計算",
+        hero_title_html: 'すべてを<span class="highlight">すぐに</span>計算',
+        hero_desc: "金融、健康、電気、数学、生産性に使える無料オンライン計算機と毎日の便利ツール。",
+        nav_fund: "支援する",
+        nav_about: "概要",
+        nav_contact: "連絡先",
+        nav_privacy: "プライバシー"
+    },
+    pt: {
+        title: "Calculadora Tudo-em-Um",
+        hero_tag: "45+ calculadoras premium",
+        hero_title: "Calcule tudo instantaneamente",
+        hero_title_html: 'Calcule tudo <span class="highlight">instantaneamente</span>',
+        hero_desc: "Calculadoras online gratuitas e ferramentas diárias para finanças, saúde, eletricidade, matemática e produtividade.",
+        nav_fund: "Apoiar",
+        nav_about: "Sobre",
+        nav_contact: "Contato",
+        nav_privacy: "Privacidade"
+    },
+    ru: {
+        title: "Калькулятор Все-в-одном",
+        hero_tag: "45+ премиум-калькуляторов",
+        hero_title: "Мгновенно считайте всё",
+        hero_title_html: 'Мгновенно считайте <span class="highlight">всё</span>',
+        hero_desc: "Бесплатные онлайн-калькуляторы и ежедневные инструменты для финансов, здоровья, электричества, математики и продуктивности.",
+        nav_fund: "Поддержать",
+        nav_about: "О нас",
+        nav_contact: "Контакты",
+        nav_privacy: "Конфиденциальность"
+    }
+};
+
+Object.entries(extraLanguageContent).forEach(([code, dict]) => {
+    localizationDict[code] = { ...localizationDict.en, ...dict };
+});
+
 const LANGUAGE_OPTIONS = Object.freeze([
     { code: 'en', label: 'EN', name: 'English' },
     { code: 'es', label: 'ES', name: 'Spanish' },
     { code: 'fr', label: 'FR', name: 'French' },
     { code: 'de', label: 'DE', name: 'German' },
-    { code: 'hi', label: 'HI', name: 'Hindi' }
+    { code: 'hi', label: 'HI', name: 'Hindi' },
+    { code: 'te', label: 'TE', name: 'Telugu' },
+    { code: 'ta', label: 'TA', name: 'Tamil' },
+    { code: 'kn', label: 'KN', name: 'Kannada' },
+    { code: 'ml', label: 'ML', name: 'Malayalam' },
+    { code: 'mr', label: 'MR', name: 'Marathi' },
+    { code: 'bn', label: 'BN', name: 'Bengali' },
+    { code: 'gu', label: 'GU', name: 'Gujarati' },
+    { code: 'ar', label: 'AR', name: 'Arabic' },
+    { code: 'zh', label: 'ZH', name: 'Chinese' },
+    { code: 'ja', label: 'JA', name: 'Japanese' },
+    { code: 'pt', label: 'PT', name: 'Portuguese' },
+    { code: 'ru', label: 'RU', name: 'Russian' }
 ]);
 
 function getLanguageMeta(lang) {
@@ -4989,16 +5145,24 @@ function initializeLanguagePickers() {
         const trigger = picker?.querySelector('[data-language-trigger]');
         const menu = picker?.querySelector('[data-language-menu]');
         if (!picker || !trigger || !menu) return;
+        const currentLanguage = LANGUAGE_OPTIONS.some(option => option.code === select.value) ? select.value : 'en';
 
         picker.classList.add('is-enhanced');
         menu.id = menu.id || `${select.id}-menu`;
         trigger.setAttribute('aria-controls', menu.id);
+        select.innerHTML = '';
         menu.innerHTML = '';
 
         LANGUAGE_OPTIONS.forEach(({ code, label, name }) => {
+            const nativeOption = document.createElement('option');
             const option = document.createElement('button');
             const codeLabel = document.createElement('span');
             const nameLabel = document.createElement('span');
+
+            nativeOption.value = code;
+            nativeOption.textContent = select.id === 'mobile-lang-select' ? `${name} (${label})` : label;
+            nativeOption.selected = code === currentLanguage;
+            select.appendChild(nativeOption);
 
             option.type = 'button';
             option.className = 'language-option';
@@ -5044,16 +5208,18 @@ function initializeLanguagePickers() {
 }
 
 function changeLanguage(lang) {
-    if (!localizationDict[lang]) return;
+    const meta = getLanguageMeta(lang);
+    const activeLang = meta.code;
+    document.documentElement.lang = activeLang;
     
     // Set selects values
     const navSelect = document.getElementById('lang-select');
     const mobSelect = document.getElementById('mobile-lang-select');
-    if (navSelect) navSelect.value = lang;
-    if (mobSelect) mobSelect.value = lang;
-    syncLanguagePickers(lang);
+    if (navSelect) navSelect.value = activeLang;
+    if (mobSelect) mobSelect.value = activeLang;
+    syncLanguagePickers(activeLang);
     
-    const dict = localizationDict[lang];
+    const dict = { ...localizationDict.en, ...(localizationDict[activeLang] || {}) };
     
     // Update main titles
     const titleEl = document.querySelector('.logo');
@@ -5064,19 +5230,23 @@ function changeLanguage(lang) {
     
     const heroTitle = document.querySelector('.hero-content h1');
     if (heroTitle) {
-        // preserve the gradient highlight word if possible
-        if (lang === 'en') {
-            heroTitle.innerHTML = 'Calculate Everything, <span class="highlight">Instantly</span>';
-        } else if (lang === 'es') {
-            heroTitle.innerHTML = 'Calcula todo, <span class="highlight">al instante</span>';
-        } else if (lang === 'fr') {
-            heroTitle.innerHTML = 'Calculez tout, <span class="highlight">instantanément</span>';
-        } else if (lang === 'de') {
-            heroTitle.innerHTML = 'Alles sofort <span class="highlight">berechnen</span>';
-        } else if (lang === 'hi') {
-            heroTitle.innerHTML = 'सब कुछ तुरंत <span class="highlight">गणना करें</span>';
+        if (dict.hero_title_html) {
+            heroTitle.innerHTML = dict.hero_title_html;
         } else {
-            heroTitle.innerText = dict.hero_title;
+            // preserve the gradient highlight word if possible
+            if (activeLang === 'en') {
+                heroTitle.innerHTML = 'Calculate Everything, <span class="highlight">Instantly</span>';
+            } else if (activeLang === 'es') {
+                heroTitle.innerHTML = 'Calcula todo, <span class="highlight">al instante</span>';
+            } else if (activeLang === 'fr') {
+                heroTitle.innerHTML = 'Calculez tout, <span class="highlight">instantanément</span>';
+            } else if (activeLang === 'de') {
+                heroTitle.innerHTML = 'Alles sofort <span class="highlight">berechnen</span>';
+            } else if (activeLang === 'hi') {
+                heroTitle.innerHTML = 'सब कुछ तुरंत <span class="highlight">गणना करें</span>';
+            } else {
+                heroTitle.innerText = dict.hero_title;
+            }
         }
     }
     
@@ -5097,10 +5267,10 @@ function changeLanguage(lang) {
     
     // Save language preference in LocalStorage
     try {
-        localStorage.setItem('calculator-lang-preference', lang);
+        localStorage.setItem('calculator-lang-preference', activeLang);
     } catch(e) {}
     
-    showToast(`Language switched to ${lang.toUpperCase()}`);
+    showToast(`Language switched to ${meta.name}`);
 }
 window.changeLanguage = changeLanguage;
 
@@ -5122,7 +5292,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
         const savedLang = localStorage.getItem('calculator-lang-preference');
-        if (savedLang && localizationDict[savedLang]) {
+        if (savedLang && LANGUAGE_OPTIONS.some(option => option.code === savedLang)) {
             setTimeout(() => {
                 changeLanguage(savedLang);
             }, 100);
