@@ -508,6 +508,16 @@ nav a:hover { color: #fff; }
     font-weight: 700;
 }
 
+.info-pill a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 800;
+}
+
+.info-pill a:hover {
+    color: #fff;
+}
+
 .content-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2089,6 +2099,29 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     box-shadow: 0 0 15px var(--primary);
     transform: translateY(-3px);
 }
+.maintainer-credit {
+    max-width: 720px;
+    margin: 1.25rem auto 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(148, 163, 184, 0.12);
+    color: #94a3b8;
+    text-align: center;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    position: relative;
+    z-index: 1;
+}
+
+.maintainer-credit a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 800;
+}
+
+.maintainer-credit a:hover {
+    color: #fff;
+}
+
 .copyright { text-align: center; color: #666; font-size: 0.9rem; position: relative; z-index: 1; }
 
 /* Toasts */
