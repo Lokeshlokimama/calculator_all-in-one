@@ -617,8 +617,8 @@ const calculatorPage = (() => {
         const query = new FormData(event.currentTarget).get('search');
         const search = String(query || '').trim();
         window.location.href = search
-            ? `index.html?search=${encodeURIComponent(search)}#tools`
-            : 'index.html#tools';
+            ? `/?search=${encodeURIComponent(search)}#tools`
+            : '/#tools';
     }
 
     const handlers = {
