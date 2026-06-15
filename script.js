@@ -2398,13 +2398,15 @@ let scrollHelperTicking = false;
 function updateScrollHelpers() {
     const progress = document.getElementById('scroll-progress');
     const backButton = document.getElementById('back-to-tools');
-    const scrollable = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-    const percent = Math.min(100, Math.max(0, (window.scrollY / scrollable) * 100));
+    const scroller = document.scrollingElement || document.documentElement;
+    const currentScroll = scroller.scrollTop || window.scrollY || 0;
+    const scrollable = Math.max(1, scroller.scrollHeight - window.innerHeight);
+    const percent = Math.min(100, Math.max(0, (currentScroll / scrollable) * 100));
 
     progress?.style.setProperty('--scroll-progress', `${percent}%`);
 
     if (backButton) {
-        const shouldShow = window.scrollY > Math.max(420, window.innerHeight * 0.65);
+        const shouldShow = currentScroll > Math.max(420, window.innerHeight * 0.65);
         backButton.hidden = false;
         backButton.classList.toggle('is-visible', shouldShow);
         backButton.setAttribute('aria-hidden', String(!shouldShow));
