@@ -2,6 +2,23 @@
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isMobileViewport = window.matchMedia('(max-width: 768px)').matches;
 
+function initHeroWheelFallback() {
+    const hero = document.querySelector('.hero');
+    if (!hero) return;
+
+    hero.addEventListener('wheel', (event) => {
+        if (!event.deltaY || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
+
+        const before = window.scrollY;
+        window.requestAnimationFrame(() => {
+            if (window.scrollY !== before) return;
+            window.scrollBy({ top: event.deltaY, left: 0, behavior: 'auto' });
+        });
+    }, { passive: true });
+}
+
+initHeroWheelFallback();
+
 // Typing Effect for Hero Subtitle
 const typingTextElement = document.querySelector('.typing-text');
 const words = ["smooth scroll.", "interactive cards.", "glowing buttons.", "premium aesthetics."];
@@ -194,6 +211,10 @@ const MONEY_INPUT_IDS = new Set([
     'gst-amount',
     'sal-ctc',
     'leave-basic',
+    'roi-invested',
+    'roi-return',
+    'roi-costs',
+    'tip-bill',
     'dt-price',
     'bill-rate',
     'ev-rate'
@@ -369,6 +390,66 @@ function calcEMI() {
     showToast(`Monthly EMI: ${formatReadableAmount(emi)}`);
 }
 window.calcEMI = calcEMI;
+
+function calcROI() {
+    const invested = parseFloat(document.getElementById('roi-invested')?.value);
+    const finalValue = parseFloat(document.getElementById('roi-return')?.value);
+    const costs = parseFloat(document.getElementById('roi-costs')?.value) || 0;
+
+    if (!invested || invested <= 0) {
+        showFieldError('roi-invested', 'Enter an investment above 0');
+        return;
+    }
+    if (Number.isNaN(finalValue) || finalValue < 0) {
+        showFieldError('roi-return', 'Enter the final value');
+        return;
+    }
+    if (costs < 0) {
+        showFieldError('roi-costs', 'Costs cannot be negative');
+        return;
+    }
+
+    const netProfit = finalValue - invested - costs;
+    const roi = (netProfit / invested) * 100;
+    const multiple = finalValue / invested;
+
+    document.getElementById('roi-result').innerText = `ROI: ${roi.toFixed(2)}%`;
+    setMoneyText('roi-profit', netProfit, { digits: 2 });
+    document.getElementById('roi-roi').innerText = `${roi.toFixed(2)}%`;
+    document.getElementById('roi-multiple').innerText = `${multiple.toFixed(2)}x`;
+    showToast('ROI calculated successfully!');
+}
+window.calcROI = calcROI;
+
+function calcTip() {
+    const bill = parseFloat(document.getElementById('tip-bill')?.value);
+    const rate = parseFloat(document.getElementById('tip-rate')?.value);
+    const people = Math.floor(parseFloat(document.getElementById('tip-people')?.value));
+
+    if (!bill || bill <= 0) {
+        showFieldError('tip-bill', 'Enter a bill amount');
+        return;
+    }
+    if (Number.isNaN(rate) || rate < 0) {
+        showFieldError('tip-rate', 'Enter a tip percentage');
+        return;
+    }
+    if (!people || people < 1) {
+        showFieldError('tip-people', 'People must be at least 1');
+        return;
+    }
+
+    const tip = bill * (rate / 100);
+    const total = bill + tip;
+    const perPerson = total / people;
+
+    setMoneyText('tip-result', perPerson, { prefix: 'Per person: ', digits: 2 });
+    setMoneyText('tip-amount', tip, { digits: 2 });
+    setMoneyText('tip-total', total, { digits: 2 });
+    setMoneyText('tip-person', perPerson, { digits: 2 });
+    showToast('Tip split calculated!');
+}
+window.calcTip = calcTip;
 
 // --- BMI Calculator ---
 function getBmiCategory(bmi) {
@@ -1195,6 +1276,66 @@ function calcBodyFat() {
 }
 window.calcBodyFat = calcBodyFat;
 
+function parseLocalDateInput(value) {
+    if (!value) return null;
+    const parts = value.split('-').map(Number);
+    if (parts.length !== 3 || parts.some(Number.isNaN)) return null;
+    return new Date(parts[0], parts[1] - 1, parts[2]);
+}
+
+function addCalendarDays(date, days) {
+    const next = new Date(date);
+    next.setDate(next.getDate() + days);
+    return next;
+}
+
+function formatCalculatorDate(date) {
+    if (!(date instanceof Date) || Number.isNaN(date.getTime())) return '--';
+    return date.toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+}
+
+function diffCalendarDays(start, end) {
+    const startNoon = new Date(start.getFullYear(), start.getMonth(), start.getDate(), 12);
+    const endNoon = new Date(end.getFullYear(), end.getMonth(), end.getDate(), 12);
+    return Math.floor((endNoon - startNoon) / 86400000);
+}
+
+function calcDueDate() {
+    const lmp = parseLocalDateInput(document.getElementById('due-lmp')?.value);
+    const cycleLength = parseInt(document.getElementById('due-cycle')?.value, 10);
+
+    if (!lmp) {
+        showFieldError('due-lmp', 'Select the first day of the last period');
+        return;
+    }
+    if (!cycleLength || cycleLength < 20 || cycleLength > 45) {
+        showFieldError('due-cycle', 'Use a cycle length from 20 to 45 days');
+        return;
+    }
+
+    const cycleAdjustment = cycleLength - 28;
+    const dueDate = addCalendarDays(lmp, 280 + cycleAdjustment);
+    const conceptionDate = addCalendarDays(lmp, cycleLength - 14);
+    const today = new Date();
+    const gestationDays = Math.max(0, diffCalendarDays(lmp, today));
+    const weeks = Math.floor(gestationDays / 7);
+    const days = gestationDays % 7;
+    let trimester = '1st';
+    if (weeks >= 28) trimester = '3rd';
+    else if (weeks >= 13) trimester = '2nd';
+
+    document.getElementById('due-result').innerText = `Due date: ${formatCalculatorDate(dueDate)}`;
+    document.getElementById('due-conception').innerText = formatCalculatorDate(conceptionDate);
+    document.getElementById('due-age').innerText = `${weeks}w ${days}d`;
+    document.getElementById('due-trimester').innerText = trimester;
+    showToast('Due date estimated. Confirm with a clinician.');
+}
+window.calcDueDate = calcDueDate;
+
 // --- Phase 2: Finance Tools ---
 
 function calcSIP() {
@@ -1661,6 +1802,11 @@ function initializeMoneyDefaults() {
         ['sal-tax', 0],
         ['leave-result', 0, { prefix: 'Payable: ' }],
         ['leave-daily', 0],
+        ['roi-profit', 0, { digits: 2 }],
+        ['tip-result', 0, { prefix: 'Per person: ', digits: 2 }],
+        ['tip-amount', 0, { digits: 2 }],
+        ['tip-total', 0, { digits: 2 }],
+        ['tip-person', 0, { digits: 2 }],
         ['dt-result', 0, { prefix: 'Final: ', digits: 2 }],
         ['dt-savings', 0, { digits: 2 }],
         ['dt-tax-out', 0, { digits: 2 }],
@@ -1874,6 +2020,119 @@ function calcPct() {
 }
 window.calcPct = calcPct;
 
+function getFractionGcd(a, b) {
+    let x = Math.abs(a);
+    let y = Math.abs(b);
+    while (y) {
+        const t = y;
+        y = x % y;
+        x = t;
+    }
+    return x || 1;
+}
+
+function simplifyFraction(num, den) {
+    if (den < 0) {
+        num *= -1;
+        den *= -1;
+    }
+    const gcd = getFractionGcd(num, den);
+    return { num: num / gcd, den: den / gcd };
+}
+
+function calcFraction() {
+    const aNum = parseInt(document.getElementById('frac-a-num')?.value, 10);
+    const aDen = parseInt(document.getElementById('frac-a-den')?.value, 10);
+    const bNum = parseInt(document.getElementById('frac-b-num')?.value, 10);
+    const bDen = parseInt(document.getElementById('frac-b-den')?.value, 10);
+    const op = document.getElementById('frac-op')?.value || 'add';
+
+    if ([aNum, aDen, bNum, bDen].some(Number.isNaN)) {
+        showToast('Enter all fraction numbers.', 'error');
+        return;
+    }
+    if (aDen === 0 || bDen === 0) {
+        showToast('Denominators cannot be zero.', 'error');
+        return;
+    }
+    if (op === 'divide' && bNum === 0) {
+        showToast('Cannot divide by zero.', 'error');
+        return;
+    }
+
+    let num = 0;
+    let den = 1;
+    if (op === 'add') {
+        num = (aNum * bDen) + (bNum * aDen);
+        den = aDen * bDen;
+    } else if (op === 'subtract') {
+        num = (aNum * bDen) - (bNum * aDen);
+        den = aDen * bDen;
+    } else if (op === 'multiply') {
+        num = aNum * bNum;
+        den = aDen * bDen;
+    } else {
+        num = aNum * bDen;
+        den = aDen * bNum;
+    }
+
+    const simplified = simplifyFraction(num, den);
+    const decimal = simplified.num / simplified.den;
+    const resultText = simplified.den === 1
+        ? `${simplified.num}`
+        : `${simplified.num}/${simplified.den}`;
+
+    document.getElementById('frac-result').innerText = `Result: ${resultText}`;
+    document.getElementById('frac-decimal').innerText = `Decimal: ${decimal.toFixed(6).replace(/\.?0+$/, '')}`;
+    showToast('Fraction calculated!');
+}
+window.calcFraction = calcFraction;
+
+function formatMathNumber(value, digits = 4) {
+    if (!Number.isFinite(value)) return '--';
+    const rounded = Number(value.toFixed(digits));
+    return String(rounded);
+}
+
+function calcQuadratic() {
+    const a = parseFloat(document.getElementById('quad-a')?.value);
+    const b = parseFloat(document.getElementById('quad-b')?.value);
+    const c = parseFloat(document.getElementById('quad-c')?.value);
+
+    if (!a || Number.isNaN(a)) {
+        showFieldError('quad-a', 'Coefficient a cannot be zero');
+        return;
+    }
+    if (Number.isNaN(b) || Number.isNaN(c)) {
+        showToast('Enter coefficients b and c.', 'error');
+        return;
+    }
+
+    const discriminant = (b * b) - (4 * a * c);
+    const vertexX = -b / (2 * a);
+    const vertexY = (a * vertexX * vertexX) + (b * vertexX) + c;
+    let rootText = '';
+
+    if (discriminant > 0) {
+        const sqrtD = Math.sqrt(discriminant);
+        const x1 = (-b + sqrtD) / (2 * a);
+        const x2 = (-b - sqrtD) / (2 * a);
+        rootText = `Roots: ${formatMathNumber(x1)} and ${formatMathNumber(x2)}`;
+    } else if (discriminant === 0) {
+        rootText = `Root: ${formatMathNumber(-b / (2 * a))}`;
+    } else {
+        const real = -b / (2 * a);
+        const imag = Math.sqrt(Math.abs(discriminant)) / (2 * Math.abs(a));
+        rootText = `Roots: ${formatMathNumber(real)} +/- ${formatMathNumber(imag)}i`;
+    }
+
+    document.getElementById('quad-result').innerText = rootText;
+    document.getElementById('quad-discriminant').innerText = formatMathNumber(discriminant);
+    document.getElementById('quad-vertex').innerText = `(${formatMathNumber(vertexX)}, ${formatMathNumber(vertexY)})`;
+    showToast('Quadratic equation solved!');
+}
+window.calcQuadratic = calcQuadratic;
+
 // --- Phase 3: Education & Tech Tools ---
 
 // CGPA Calculator
@@ -2017,6 +2276,168 @@ function processBase64(action) {
     }
 }
 window.processBase64 = processBase64;
+
+const BASE_LABELS = {
+    2: 'Binary',
+    8: 'Octal',
+    10: 'Decimal',
+    16: 'Hexadecimal'
+};
+
+function parseBigIntBase(value, base) {
+    const clean = String(value || '').trim().toUpperCase();
+    if (!clean) throw new Error('empty');
+
+    const digits = '0123456789ABCDEF';
+    let sign = 1n;
+    let body = clean;
+    if (body.startsWith('-')) {
+        sign = -1n;
+        body = body.slice(1);
+    }
+    if (base === 16 && body.startsWith('0X')) body = body.slice(2);
+    if (!body) throw new Error('empty');
+
+    let result = 0n;
+    for (const char of body) {
+        const digit = digits.indexOf(char);
+        if (digit < 0 || digit >= base) throw new Error('invalid digit');
+        result = (result * BigInt(base)) + BigInt(digit);
+    }
+
+    return result * sign;
+}
+
+function convertBase() {
+    const rawValue = document.getElementById('base-value')?.value;
+    const fromBase = parseInt(document.getElementById('base-from')?.value, 10);
+    const toBase = parseInt(document.getElementById('base-to')?.value, 10);
+    const resultEl = document.getElementById('base-result');
+
+    try {
+        const decimalValue = parseBigIntBase(rawValue, fromBase);
+        const converted = decimalValue.toString(toBase).toUpperCase();
+
+        resultEl.innerText = `Result: ${converted} (${BASE_LABELS[toBase]})`;
+        document.getElementById('base-dec').innerText = decimalValue.toString(10);
+        document.getElementById('base-bin').innerText = decimalValue.toString(2);
+        document.getElementById('base-hex').innerText = decimalValue.toString(16).toUpperCase();
+        showToast('Number base converted!');
+    } catch {
+        showFieldError('base-value', `Enter a valid ${BASE_LABELS[fromBase] || 'source'} integer`);
+    }
+}
+window.convertBase = convertBase;
+
+function parseIPv4Address(value) {
+    const parts = String(value || '').trim().split('.');
+    if (parts.length !== 4) return null;
+
+    let intValue = 0;
+    for (const part of parts) {
+        if (!/^\d+$/.test(part)) return null;
+        const octet = Number(part);
+        if (octet < 0 || octet > 255) return null;
+        intValue = ((intValue << 8) + octet) >>> 0;
+    }
+    return intValue >>> 0;
+}
+
+function ipv4IntToString(value) {
+    return [
+        (value >>> 24) & 255,
+        (value >>> 16) & 255,
+        (value >>> 8) & 255,
+        value & 255
+    ].join('.');
+}
+
+function calcSubnet() {
+    const ip = parseIPv4Address(document.getElementById('subnet-ip')?.value);
+    const cidr = parseInt(document.getElementById('subnet-cidr')?.value, 10);
+    const resultEl = document.getElementById('subnet-result');
+
+    if (ip === null) {
+        showFieldError('subnet-ip', 'Enter a valid IPv4 address');
+        return;
+    }
+    if (Number.isNaN(cidr) || cidr < 0 || cidr > 32) {
+        showFieldError('subnet-cidr', 'CIDR must be from 0 to 32');
+        return;
+    }
+
+    const mask = cidr === 0 ? 0 : (0xffffffff << (32 - cidr)) >>> 0;
+    const network = (ip & mask) >>> 0;
+    const wildcard = (~mask) >>> 0;
+    const broadcast = (network | wildcard) >>> 0;
+    const totalAddresses = Math.pow(2, 32 - cidr);
+    const usableHosts = cidr >= 31 ? totalAddresses : Math.max(0, totalAddresses - 2);
+    const firstUsable = cidr >= 31 ? network : (network + 1) >>> 0;
+    const lastUsable = cidr >= 31 ? broadcast : (broadcast - 1) >>> 0;
+
+    resultEl.innerHTML = `
+        <div class="calc-result-lines">
+            <div class="calc-result-line"><span>Network</span><strong>${ipv4IntToString(network)}</strong></div>
+            <div class="calc-result-line"><span>Mask</span><strong>${ipv4IntToString(mask)}</strong></div>
+            <div class="calc-result-line"><span>Broadcast</span><strong>${ipv4IntToString(broadcast)}</strong></div>
+            <div class="calc-result-line"><span>Usable hosts</span><strong>${usableHosts.toLocaleString()}</strong></div>
+            <div class="calc-result-line"><span>Usable range</span><strong>${ipv4IntToString(firstUsable)} - ${ipv4IntToString(lastUsable)}</strong></div>
+        </div>
+    `;
+    showToast('Subnet calculated!');
+}
+window.calcSubnet = calcSubnet;
+
+function reduceAspectRatio(width, height) {
+    const scale = 10000;
+    const w = Math.round(width * scale);
+    const h = Math.round(height * scale);
+    const gcd = getFractionGcd(w, h);
+    return `${w / gcd}:${h / gcd}`;
+}
+
+function calcAspectRatio() {
+    const width = parseFloat(document.getElementById('aspect-width')?.value);
+    const height = parseFloat(document.getElementById('aspect-height')?.value);
+    const targetWidthInput = document.getElementById('aspect-target-width');
+    const targetHeightInput = document.getElementById('aspect-target-height');
+    const targetWidth = parseFloat(targetWidthInput?.value);
+    const targetHeight = parseFloat(targetHeightInput?.value);
+
+    if (!width || width <= 0) {
+        showFieldError('aspect-width', 'Enter original width');
+        return;
+    }
+    if (!height || height <= 0) {
+        showFieldError('aspect-height', 'Enter original height');
+        return;
+    }
+    if ((!targetWidth || targetWidth <= 0) && (!targetHeight || targetHeight <= 0)) {
+        showToast('Enter either a new width or new height.', 'error');
+        return;
+    }
+
+    let scaledWidth = targetWidth;
+    let scaledHeight = targetHeight;
+    let scalePercent = 0;
+    if (targetWidth > 0) {
+        scaledWidth = targetWidth;
+        scaledHeight = (targetWidth * height) / width;
+        scalePercent = (scaledWidth / width) * 100;
+        if (targetHeightInput) targetHeightInput.value = formatMathNumber(scaledHeight, 2);
+    } else {
+        scaledHeight = targetHeight;
+        scaledWidth = (targetHeight * width) / height;
+        scalePercent = (scaledHeight / height) * 100;
+        if (targetWidthInput) targetWidthInput.value = formatMathNumber(scaledWidth, 2);
+    }
+
+    document.getElementById('aspect-result').innerText = `Scaled size: ${formatMathNumber(scaledWidth, 2)} x ${formatMathNumber(scaledHeight, 2)}`;
+    document.getElementById('aspect-ratio').innerText = reduceAspectRatio(width, height);
+    document.getElementById('aspect-scale').innerText = `${formatMathNumber(scalePercent, 2)}%`;
+    showToast('Aspect ratio calculated!');
+}
+window.calcAspectRatio = calcAspectRatio;
 
 // Color Format Converter
 function hexToRgb(hex) {
@@ -3279,6 +3700,66 @@ function calcPythagorean() {
     setResultText('pythagorean-result', `Hypotenuse: ${formatCalcNumber(c, 2)}`, 'Calculated via a² + b² = c²');
 }
 window.calcPythagorean = calcPythagorean;
+
+function updateVolumeFields() {
+    const shape = document.getElementById('volume-shape')?.value || 'cube';
+    const primary = document.getElementById('volume-a');
+    const primaryLabel = document.getElementById('volume-a-label');
+    const heightWrap = document.getElementById('volume-b-wrap');
+    const formula = document.getElementById('volume-formula');
+
+    if (!primary || !primaryLabel || !heightWrap || !formula) return;
+
+    if (shape === 'cube') {
+        primary.placeholder = 'Side length';
+        primaryLabel.textContent = 'side';
+        heightWrap.hidden = true;
+        formula.textContent = 'Formula: side^3';
+    } else if (shape === 'sphere') {
+        primary.placeholder = 'Radius';
+        primaryLabel.textContent = 'radius';
+        heightWrap.hidden = true;
+        formula.textContent = 'Formula: 4/3 * pi * radius^3';
+    } else {
+        primary.placeholder = 'Radius';
+        primaryLabel.textContent = 'radius';
+        heightWrap.hidden = false;
+        formula.textContent = 'Formula: pi * radius^2 * height';
+    }
+}
+window.updateVolumeFields = updateVolumeFields;
+
+function calcVolume() {
+    const shape = document.getElementById('volume-shape')?.value || 'cube';
+    const a = parseFloat(document.getElementById('volume-a')?.value);
+    const b = parseFloat(document.getElementById('volume-b')?.value);
+
+    if (!a || a <= 0) {
+        showFieldError('volume-a', shape === 'cube' ? 'Enter side length' : 'Enter radius');
+        return;
+    }
+
+    let volume = 0;
+    let detail = '';
+    if (shape === 'cube') {
+        volume = Math.pow(a, 3);
+        detail = `side ${formatCalcNumber(a, 2)}`;
+    } else if (shape === 'sphere') {
+        volume = (4 / 3) * Math.PI * Math.pow(a, 3);
+        detail = `radius ${formatCalcNumber(a, 2)}`;
+    } else {
+        if (!b || b <= 0) {
+            showFieldError('volume-b', 'Enter cylinder height');
+            return;
+        }
+        volume = Math.PI * a * a * b;
+        detail = `radius ${formatCalcNumber(a, 2)}, height ${formatCalcNumber(b, 2)}`;
+    }
+
+    setResultText('volume-result', `Volume: ${formatCalcNumber(volume, 2)}`, detail);
+    showToast('Volume calculated!');
+}
+window.calcVolume = calcVolume;
 
 
 // --- TECH TOOLS ---
@@ -4659,6 +5140,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (document.getElementById('calc-ideal-weight')) updateIdealHeightUnit();
+    if (document.getElementById('calc-volume')) updateVolumeFields();
     if (document.getElementById('calc-mileage')) updateMileageFuelMode(false);
     if (document.getElementById('calc-invoice')) calculateInvoice();
 });

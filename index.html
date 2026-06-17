@@ -350,12 +350,16 @@
                     </div>
                     <div class="discovery-chips">
                         <button class="discovery-chip" data-tool-id="calc-emi" data-category="finance" onclick="jumpToTool('calc-emi', 'finance')">EMI</button>
+                        <button class="discovery-chip" data-tool-id="calc-roi" data-category="finance" onclick="jumpToTool('calc-roi', 'finance')">ROI</button>
+                        <button class="discovery-chip" data-tool-id="calc-tip" data-category="finance" onclick="jumpToTool('calc-tip', 'finance')">Tip</button>
                         <button class="discovery-chip" data-tool-id="calc-electricity-bill" data-category="electricity" onclick="jumpToTool('calc-electricity-bill', 'electricity')">Electricity Bill</button>
                         <button class="discovery-chip" data-tool-id="calc-bmi" data-category="health" onclick="jumpToTool('calc-bmi', 'health')">BMI</button>
+                        <button class="discovery-chip" data-tool-id="calc-due-date" data-category="health" onclick="jumpToTool('calc-due-date', 'health')">Due Date</button>
                         <button class="discovery-chip" data-tool-id="calc-curr" data-category="finance" onclick="jumpToTool('calc-curr', 'finance')">Currency</button>
                         <button class="discovery-chip" data-tool-id="calc-qr" data-category="web" onclick="jumpToTool('calc-qr', 'web')">QR Code</button>
                         <button class="discovery-chip" data-tool-id="calc-pass" data-category="web" onclick="jumpToTool('calc-pass', 'web')">Password</button>
                         <button class="discovery-chip" data-tool-id="calc-sip" data-category="finance" onclick="jumpToTool('calc-sip', 'finance')">SIP</button>
+                        <button class="discovery-chip" data-tool-id="calc-mileage" data-category="basic" onclick="jumpToTool('calc-mileage', 'basic')">Trip Cost</button>
                     </div>
                 </div>
                 <div class="discovery-row is-dynamic" id="saved-tools-section" hidden>
@@ -381,6 +385,7 @@
                 <button class="cat-btn" data-category-link="finance" onclick="filterCategory('finance', event)">Finance</button>
                 <button class="cat-btn" data-category-link="electricity" onclick="filterCategory('electricity', event)">Electricity</button>
                 <button class="cat-btn" data-category-link="health" onclick="filterCategory('health', event)">Health</button>
+                <button class="cat-btn" data-category-link="math" onclick="filterCategory('math', event)">Math</button>
                 <button class="cat-btn" data-category-link="geometry" onclick="filterCategory('geometry', event)">Geometry</button>
                 <button class="cat-btn" data-category-link="education" onclick="filterCategory('education', event)">Education</button>
                 <button class="cat-btn" data-category-link="web" onclick="filterCategory('web', event)">Tech & Web</button>
@@ -538,6 +543,100 @@
         </div>
     </details>
 </div>
+
+                <!-- ROI Calculator -->
+                <div id="calc-roi" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="finance">
+                    <div class="card-glow"></div>
+                    <h3>ROI Calculator</h3>
+                    <p>Return on investment and net profit</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="roi-invested" placeholder="Initial investment" min="0" step="0.01">
+                                <span class="input-suffix">$</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="roi-return" placeholder="Final value" min="0" step="0.01">
+                                <span class="input-suffix">$</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="roi-costs" placeholder="Extra costs" min="0" step="0.01" value="0">
+                                <span class="input-suffix">$</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="roi-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">ROI: 0.00%</div>
+                        <div class="emi-summary compact-summary">
+                            <div>
+                                <span>Net Profit</span>
+                                <strong id="roi-profit">$0.00</strong>
+                            </div>
+                            <div>
+                                <span>ROI</span>
+                                <strong id="roi-roi">0.00%</strong>
+                            </div>
+                            <div>
+                                <span>Value Multiple</span>
+                                <strong id="roi-multiple">0.00x</strong>
+                            </div>
+                        </div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcROI()" style="width:100%;">Calculate ROI</button>
+                    </div>
+                    <details class="formula-explainer">
+                        <summary>Formula & Explanation</summary>
+                        <div class="formula-content">
+                            <p><strong>Formula:</strong> <code>ROI = (Final Value - Investment - Costs) / Investment * 100</code></p>
+                            <p><strong>Explanation:</strong> Measures the percentage gain or loss compared with the original amount invested.</p>
+                            <p><strong>Example:</strong> 10,000 invested, 12,500 final value, 500 costs = 20.00% ROI and 2,000 net profit.</p>
+                        </div>
+                    </details>
+                </div>
+
+                <!-- Tip Calculator -->
+                <div id="calc-tip" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="finance">
+                    <div class="card-glow"></div>
+                    <h3>Tip Calculator</h3>
+                    <p>Split bill, tip amount, and per-person share</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="tip-bill" placeholder="Bill amount" min="0" step="0.01">
+                                <span class="input-suffix">$</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="tip-rate" placeholder="Tip percent" min="0" step="0.1" value="15">
+                                <span class="input-suffix">%</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="tip-people" placeholder="People" min="1" step="1" value="1">
+                                <span class="input-suffix">split</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="tip-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">Per person: $0.00</div>
+                        <div class="emi-summary compact-summary">
+                            <div>
+                                <span>Tip</span>
+                                <strong id="tip-amount">$0.00</strong>
+                            </div>
+                            <div>
+                                <span>Total Bill</span>
+                                <strong id="tip-total">$0.00</strong>
+                            </div>
+                            <div>
+                                <span>Each Pays</span>
+                                <strong id="tip-person">$0.00</strong>
+                            </div>
+                        </div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcTip()" style="width:100%;">Calculate Tip</button>
+                    </div>
+                    <details class="formula-explainer">
+                        <summary>Formula & Explanation</summary>
+                        <div class="formula-content">
+                            <p><strong>Formula:</strong> <code>Tip = Bill * Tip% | Each Pays = (Bill + Tip) / People</code></p>
+                            <p><strong>Explanation:</strong> Adds a selected gratuity percentage to the bill and splits the total evenly.</p>
+                            <p><strong>Example:</strong> 100 bill, 18% tip, 4 people = 18 tip, 118 total, 29.50 each.</p>
+                        </div>
+                    </details>
+                </div>
 
                 <!-- Calorie Calculator -->
                 <div id="calc-calorie" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="health">
@@ -895,6 +994,47 @@
         </div>
     </details>
 </div>
+
+                <!-- Pregnancy Due Date Calculator -->
+                <div id="calc-due-date" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="health">
+                    <div class="card-glow"></div>
+                    <h3>Pregnancy Due Date</h3>
+                    <p>Estimate due date from LMP and cycle length</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <label style="color:#a3a3a3; font-size:0.8rem;">Last Menstrual Period:</label>
+                            <input type="date" class="tool-input" id="due-lmp" style="margin-bottom:0.5rem;">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="due-cycle" placeholder="Cycle length" min="20" max="45" value="28">
+                                <span class="input-suffix">days</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="due-result" style="font-size:1.1rem; min-height:48px; margin-bottom:1rem;">Due date: --</div>
+                        <div class="emi-summary compact-summary">
+                            <div>
+                                <span>Est. Conception</span>
+                                <strong id="due-conception">--</strong>
+                            </div>
+                            <div>
+                                <span>Pregnancy Age</span>
+                                <strong id="due-age">--</strong>
+                            </div>
+                            <div>
+                                <span>Trimester</span>
+                                <strong id="due-trimester">--</strong>
+                            </div>
+                        </div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcDueDate()" style="width:100%;">Estimate Due Date</button>
+                    </div>
+                    <details class="formula-explainer">
+                        <summary>Formula & Explanation</summary>
+                        <div class="formula-content">
+                            <p><strong>Formula:</strong> <code>Due Date = LMP + 280 days + (Cycle Length - 28)</code></p>
+                            <p><strong>Explanation:</strong> Uses Naegele's rule with a cycle-length adjustment. It is an estimate, not medical advice.</p>
+                            <p><strong>Example:</strong> LMP 2026-01-01 with a 28-day cycle gives an estimated due date of 2026-10-08.</p>
+                        </div>
+                    </details>
+                </div>
                 <!-- SIP Calculator -->
                 <div id="calc-sip" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="finance">
                     <div class="card-glow"></div>
@@ -1359,6 +1499,87 @@
     </details>
 </div>
 
+                <!-- Fraction Calculator -->
+                <div id="calc-fraction" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="math">
+                    <div class="card-glow"></div>
+                    <h3>Fraction Calculator</h3>
+                    <p>Add, subtract, multiply, and divide fractions</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="fraction-row">
+                                <div class="fraction-pair">
+                                    <input type="number" class="tool-input" id="frac-a-num" placeholder="Num A" step="1">
+                                    <input type="number" class="tool-input" id="frac-a-den" placeholder="Den A" step="1">
+                                </div>
+                                <select class="tool-input fraction-op" id="frac-op" aria-label="Fraction operation">
+                                    <option value="add">+</option>
+                                    <option value="subtract">-</option>
+                                    <option value="multiply">*</option>
+                                    <option value="divide">/</option>
+                                </select>
+                                <div class="fraction-pair">
+                                    <input type="number" class="tool-input" id="frac-b-num" placeholder="Num B" step="1">
+                                    <input type="number" class="tool-input" id="frac-b-den" placeholder="Den B" step="1">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="frac-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">Result: 0</div>
+                        <div class="input-hint" id="frac-decimal">Decimal: 0</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcFraction()" style="width:100%; margin-top:0.75rem;">Calculate Fraction</button>
+                    </div>
+                    <details class="formula-explainer">
+                        <summary>Formula & Explanation</summary>
+                        <div class="formula-content">
+                            <p><strong>Formula:</strong> <code>a/b + c/d = (ad + bc) / bd</code>; multiplication and division follow numerator/denominator rules.</p>
+                            <p><strong>Explanation:</strong> Computes the operation, reduces the result to simplest terms, and also shows the decimal value.</p>
+                            <p><strong>Example:</strong> 1/2 + 1/4 = 3/4 = 0.75.</p>
+                        </div>
+                    </details>
+                </div>
+
+                <!-- Quadratic Equation Solver -->
+                <div id="calc-quadratic" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="math">
+                    <div class="card-glow"></div>
+                    <h3>Quadratic Equation Solver</h3>
+                    <p>Solve ax^2 + bx + c = 0</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="quad-a" placeholder="a" step="0.01">
+                                <span class="input-suffix">x^2</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="quad-b" placeholder="b" step="0.01">
+                                <span class="input-suffix">x</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="quad-c" placeholder="c" step="0.01">
+                                <span class="input-suffix">const</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="quad-result" style="font-size:1.05rem; min-height:56px; margin-bottom:1rem;">Roots: --</div>
+                        <div class="emi-summary compact-summary">
+                            <div>
+                                <span>Discriminant</span>
+                                <strong id="quad-discriminant">--</strong>
+                            </div>
+                            <div>
+                                <span>Vertex</span>
+                                <strong id="quad-vertex">--</strong>
+                            </div>
+                        </div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcQuadratic()" style="width:100%;">Solve Equation</button>
+                    </div>
+                    <details class="formula-explainer">
+                        <summary>Formula & Explanation</summary>
+                        <div class="formula-content">
+                            <p><strong>Formula:</strong> <code>x = (-b +/- sqrt(b^2 - 4ac)) / 2a</code></p>
+                            <p><strong>Explanation:</strong> Finds real or complex roots using the discriminant of a quadratic equation.</p>
+                            <p><strong>Example:</strong> 1x^2 - 5x + 6 = 0 gives roots 2 and 3.</p>
+                        </div>
+                    </details>
+                </div>
+
                 <!-- CGPA/SGPA Calculator -->
                 <div id="calc-cgpa" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="education">
                     <div class="card-glow"></div>
@@ -1495,6 +1716,123 @@
         </div>
     </details>
 </div>
+
+                <!-- Base Converter -->
+                <div id="calc-base-converter" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web">
+                    <div class="card-glow"></div>
+                    <h3>Base Converter</h3>
+                    <p>Convert decimal, binary, hexadecimal, and octal</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <input type="text" class="tool-input" id="base-value" placeholder="Enter number">
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem;">
+                                <select class="tool-input" id="base-from" aria-label="From base">
+                                    <option value="10">Decimal</option>
+                                    <option value="2">Binary</option>
+                                    <option value="16">Hexadecimal</option>
+                                    <option value="8">Octal</option>
+                                </select>
+                                <select class="tool-input" id="base-to" aria-label="To base">
+                                    <option value="2">Binary</option>
+                                    <option value="10">Decimal</option>
+                                    <option value="16">Hexadecimal</option>
+                                    <option value="8">Octal</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="base-result" style="font-size:1.05rem; min-height:48px; margin-bottom:1rem; word-break:break-all;">Result: --</div>
+                        <div class="emi-summary compact-summary">
+                            <div>
+                                <span>Dec</span>
+                                <strong id="base-dec">--</strong>
+                            </div>
+                            <div>
+                                <span>Bin</span>
+                                <strong id="base-bin">--</strong>
+                            </div>
+                            <div>
+                                <span>Hex</span>
+                                <strong id="base-hex">--</strong>
+                            </div>
+                        </div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="convertBase()" style="width:100%;">Convert Base</button>
+                    </div>
+                    <details class="formula-explainer">
+                        <summary>Formula & Explanation</summary>
+                        <div class="formula-content">
+                            <p><strong>Formula:</strong> <code>Decimal value = sum(digit * base^position)</code></p>
+                            <p><strong>Explanation:</strong> Parses the source number in its base and formats the integer into the selected destination base.</p>
+                            <p><strong>Example:</strong> Binary 1010 converts to decimal 10 and hexadecimal A.</p>
+                        </div>
+                    </details>
+                </div>
+
+                <!-- IP Subnet Calculator -->
+                <div id="calc-subnet" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web">
+                    <div class="card-glow"></div>
+                    <h3>IP Subnet Calculator</h3>
+                    <p>Network, mask, broadcast, and usable hosts</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <input type="text" class="tool-input" id="subnet-ip" placeholder="IP address, e.g. 192.168.1.10">
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="subnet-cidr" placeholder="CIDR" min="0" max="32" value="24">
+                                <span class="input-suffix">/</span>
+                            </div>
+                        </div>
+                        <div class="calc-display subnet-display" id="subnet-result" style="font-size:0.95rem; min-height:110px; margin-bottom:1rem; text-align:left;">
+                            Enter an IP and CIDR to calculate subnet details.
+                        </div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcSubnet()" style="width:100%;">Calculate Subnet</button>
+                    </div>
+                    <details class="formula-explainer">
+                        <summary>Formula & Explanation</summary>
+                        <div class="formula-content">
+                            <p><strong>Formula:</strong> <code>Network = IP AND Mask | Broadcast = Network OR Wildcard</code></p>
+                            <p><strong>Explanation:</strong> Converts IPv4 addresses to 32-bit integers, applies the CIDR mask, and derives network limits.</p>
+                            <p><strong>Example:</strong> 192.168.1.10/24 gives network 192.168.1.0 and broadcast 192.168.1.255.</p>
+                        </div>
+                    </details>
+                </div>
+
+                <!-- Aspect Ratio Calculator -->
+                <div id="calc-aspect-ratio" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web">
+                    <div class="card-glow"></div>
+                    <h3>Aspect Ratio Calculator</h3>
+                    <p>Scale width and height proportionally</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem;">
+                                <input type="number" class="tool-input" id="aspect-width" placeholder="Original width" min="0" step="0.01">
+                                <input type="number" class="tool-input" id="aspect-height" placeholder="Original height" min="0" step="0.01">
+                            </div>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; margin-top:0.5rem;">
+                                <input type="number" class="tool-input" id="aspect-target-width" placeholder="New width" min="0" step="0.01">
+                                <input type="number" class="tool-input" id="aspect-target-height" placeholder="New height" min="0" step="0.01">
+                            </div>
+                        </div>
+                        <div class="calc-display" id="aspect-result" style="font-size:1.05rem; min-height:48px; margin-bottom:1rem;">Scaled size: --</div>
+                        <div class="emi-summary compact-summary">
+                            <div>
+                                <span>Ratio</span>
+                                <strong id="aspect-ratio">--</strong>
+                            </div>
+                            <div>
+                                <span>Scale</span>
+                                <strong id="aspect-scale">--</strong>
+                            </div>
+                        </div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcAspectRatio()" style="width:100%;">Calculate Ratio</button>
+                    </div>
+                    <details class="formula-explainer">
+                        <summary>Formula & Explanation</summary>
+                        <div class="formula-content">
+                            <p><strong>Formula:</strong> <code>New Height = New Width * Original Height / Original Width</code></p>
+                            <p><strong>Explanation:</strong> Preserves the same width-to-height proportion while scaling one dimension from the other.</p>
+                            <p><strong>Example:</strong> 1920 x 1080 scaled to width 1280 gives height 720.</p>
+                        </div>
+                    </details>
+                </div>
 
                 <!-- Color Format Converter -->
                 <div id="calc-color" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web">
@@ -2026,6 +2364,40 @@
     </details>
 </div>
 
+                <div id="calc-volume" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="geometry">
+                    <div class="card-glow"></div>
+                    <h3>Volume Calculator</h3>
+                    <p>Cube, sphere, and cylinder volume</p>
+                    <div class="tool-ui">
+                        <div class="input-group">
+                            <select class="tool-input" id="volume-shape" onchange="updateVolumeFields()" aria-label="Select 3D shape">
+                                <option value="cube">Cube</option>
+                                <option value="sphere">Sphere</option>
+                                <option value="cylinder">Cylinder</option>
+                            </select>
+                            <div class="input-wrapper">
+                                <input type="number" class="tool-input" id="volume-a" placeholder="Side length" min="0" step="0.01">
+                                <span class="input-suffix" id="volume-a-label">side</span>
+                            </div>
+                            <div class="input-wrapper" id="volume-b-wrap" hidden>
+                                <input type="number" class="tool-input" id="volume-b" placeholder="Height" min="0" step="0.01">
+                                <span class="input-suffix">height</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="volume-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">Volume: 0</div>
+                        <div class="input-hint" id="volume-formula">Formula: side^3</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcVolume()" style="width:100%; margin-top:0.75rem;">Calculate Volume</button>
+                    </div>
+                    <details class="formula-explainer">
+                        <summary>Formula & Explanation</summary>
+                        <div class="formula-content">
+                            <p><strong>Formula:</strong> <code>Cube = s^3 | Sphere = 4/3*pi*r^3 | Cylinder = pi*r^2*h</code></p>
+                            <p><strong>Explanation:</strong> Select the 3D shape, enter the required dimensions, and get the enclosed volume.</p>
+                            <p><strong>Example:</strong> Cylinder with radius 3 and height 5 has volume 141.37 cubic units.</p>
+                        </div>
+                    </details>
+                </div>
+
                 <!-- Education & Tech Tools -->
                 <div id="calc-formula-explainer" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="education">
                     <div class="card-glow"></div>
@@ -2188,11 +2560,11 @@
                     </details>
                 </div>
 
-                <!-- Mileage Converter -->
+                <!-- Fuel Efficiency & Trip Cost -->
                 <div id="calc-mileage" class="result-card tool-demo-card scroll-reveal stagger-item mileage-converter-card" data-category="basic" style="max-width: 420px;">
                     <div class="card-glow"></div>
-                    <h3>Mileage Converter</h3>
-                    <p>Convert mileage and estimate petrol, diesel, CNG, LPG, or EV trip cost</p>
+                    <h3>Fuel Efficiency & Trip Cost</h3>
+                    <p>Estimate fuel required and total road trip cost</p>
                     <div class="tool-ui">
                         <div class="input-group mileage-main-inputs">
                             <div class="input-wrapper">

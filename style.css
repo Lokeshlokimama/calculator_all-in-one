@@ -732,6 +732,13 @@ h1 {
     perspective: 1000px;
 }
 
+.hero-visual,
+.hero-chart-container,
+#hero-live-chart,
+.math-particles {
+    pointer-events: none;
+}
+
 .hero-chart-container,
 #hero-live-chart {
     border-radius: inherit;
@@ -1808,6 +1815,62 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 .compact-summary div {
     padding: 0.55rem 0.7rem;
+}
+
+.compact-summary strong {
+    overflow-wrap: anywhere;
+}
+
+.fraction-row {
+    align-items: stretch;
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: minmax(0, 1fr) 64px minmax(0, 1fr);
+    width: 100%;
+}
+
+.fraction-pair {
+    display: grid;
+    gap: 0.35rem;
+    min-width: 0;
+}
+
+.fraction-op {
+    min-height: 100%;
+    text-align: center;
+}
+
+.calc-result-lines {
+    display: grid;
+    gap: 0.4rem;
+    width: 100%;
+}
+
+.calc-result-line {
+    align-items: center;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: space-between;
+}
+
+.calc-result-line span:first-child {
+    color: #a3a3a3;
+}
+
+.calc-result-line strong {
+    color: #fff;
+    overflow-wrap: anywhere;
+    text-align: right;
+}
+
+@media (max-width: 520px) {
+    .fraction-row {
+        grid-template-columns: 1fr;
+    }
+
+    .fraction-op {
+        min-height: 44px;
+    }
 }
 
 /* EMI Chart */
