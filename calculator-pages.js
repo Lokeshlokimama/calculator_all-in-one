@@ -1,4 +1,5 @@
 const calculatorPage = (() => {
+    const core = window.CalculatorCore;
     const currencyCache = new Map();
     const currencyApiBase = 'https://open.er-api.com/v6/latest';
     const displayCurrencyStorageKey = 'calculator-display-currency';
@@ -309,16 +310,10 @@ const calculatorPage = (() => {
             return;
         }
 
-        const monthlyRate = annualRate / 100 / 12;
-        const emi = monthlyRate === 0
-            ? principal / months
-            : principal * monthlyRate * Math.pow(1 + monthlyRate, months) / (Math.pow(1 + monthlyRate, months) - 1);
-        const totalPayable = emi * months;
-        const totalInterest = Math.max(0, totalPayable - principal);
-
-        setMoneyText('emi-result', emi, 2);
-        setMoneyText('emi-interest', totalInterest, 2);
-        setMoneyText('emi-total', totalPayable, 2);
+        const result = core.amortizedLoan(principal, annualRate, months);
+        setMoneyText('emi-result', result.payment, 2);
+        setMoneyText('emi-interest', result.totalInterest, 2);
+        setMoneyText('emi-total', result.totalPayment, 2);
     }
 
     function calculateBmi() {
@@ -331,17 +326,11 @@ const calculatorPage = (() => {
             return;
         }
 
-        const heightM = heightCm / 100;
-        const bmi = weightKg / (heightM * heightM);
-        let category = 'Obese';
-        if (bmi < 18.5) category = 'Underweight';
-        else if (bmi < 25) category = 'Normal';
-        else if (bmi < 30) category = 'Overweight';
-
-        setText('bmi-result', bmi.toFixed(1));
-        setText('bmi-category', category);
+        const result = core.bmi(weightKg, heightCm);
+        setText('bmi-result', result.value.toFixed(1));
+        setText('bmi-category', result.category);
         const progress = $('bmi-progress');
-        if (progress) progress.style.width = `${Math.max(6, Math.min(100, ((bmi - 12) / 28) * 100))}%`;
+        if (progress) progress.style.width = `${Math.max(6, Math.min(100, ((result.value - 12) / 28) * 100))}%`;
     }
 
     function calculateAge() {
@@ -352,42 +341,28 @@ const calculatorPage = (() => {
             return;
         }
 
-        const dob = new Date(`${dobValue}T00:00:00`);
         const now = new Date();
-        if (dob > now) {
-            showError('Date of birth cannot be in the future.');
-            return;
+        const asOf = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+        try {
+            const result = core.ageBetween(dobValue, asOf);
+            setText('age-result', `${result.years} years, ${result.months} months, ${result.days} days`);
+            setText('age-days', `${result.totalDays.toLocaleString(undefined)} total days`);
+        } catch (error) {
+            showError(error.message);
         }
-
-        let years = now.getFullYear() - dob.getFullYear();
-        let months = now.getMonth() - dob.getMonth();
-        let days = now.getDate() - dob.getDate();
-
-        if (days < 0) {
-            months -= 1;
-            days += new Date(now.getFullYear(), now.getMonth(), 0).getDate();
-        }
-        if (months < 0) {
-            years -= 1;
-            months += 12;
-        }
-
-        const totalDays = Math.floor((now - dob) / 86400000);
-        setText('age-result', `${years} years, ${months} months, ${days} days`);
-        setText('age-days', `${totalDays.toLocaleString(undefined)} total days`);
     }
 
     function calculatePercentage() {
         clearError();
-        const percentage = readNumber('percentage-value');
-        const base = readNumber('percentage-base');
+        const percentage = parseFloat($('percentage-value')?.value);
+        const base = parseFloat($('percentage-base')?.value);
 
-        if (!Number.isFinite(percentage) || base <= 0) {
+        if (!Number.isFinite(percentage) || !Number.isFinite(base)) {
             showError('Enter a valid percentage and base value.');
             return;
         }
 
-        const result = percentage / 100 * base;
+        const result = core.percentage(percentage, base);
         setText('percentage-result', formatNumber(result, 2));
         setText('percentage-equation', `${percentage}% of ${formatNumber(base, 2)} = ${formatNumber(result, 2)}`);
     }
@@ -395,7 +370,7 @@ const calculatorPage = (() => {
     function calculateGst() {
         clearError();
         const amount = readNumber('gst-amount');
-        const rate = readNumber('gst-rate') / 100;
+        const rate = readNumber('gst-rate');
         const mode = $('gst-mode')?.value || 'add';
 
         if (amount <= 0 || rate < 0) {
@@ -403,13 +378,10 @@ const calculatorPage = (() => {
             return;
         }
 
-        const base = mode === 'add' ? amount : amount / (1 + rate);
-        const gst = mode === 'add' ? amount * rate : amount - base;
-        const finalAmount = mode === 'add' ? amount + gst : amount;
-
-        setMoneyText('gst-base', base, 2);
-        setMoneyText('gst-tax', gst, 2);
-        setMoneyText('gst-total', finalAmount, 2);
+        const result = core.gst(amount, rate, mode);
+        setMoneyText('gst-base', result.base, 2);
+        setMoneyText('gst-tax', result.tax, 2);
+        setMoneyText('gst-total', result.total, 2);
     }
 
     function calculateLoan() {
@@ -423,17 +395,10 @@ const calculatorPage = (() => {
             return;
         }
 
-        const months = years * 12;
-        const monthlyRate = annualRate / 100 / 12;
-        const monthlyPayment = monthlyRate === 0
-            ? principal / months
-            : principal * monthlyRate * Math.pow(1 + monthlyRate, months) / (Math.pow(1 + monthlyRate, months) - 1);
-        const totalPayment = monthlyPayment * months;
-        const totalInterest = Math.max(0, totalPayment - principal);
-
-        setMoneyText('loan-payment', monthlyPayment, 2);
-        setMoneyText('loan-interest', totalInterest, 2);
-        setMoneyText('loan-total', totalPayment, 2);
+        const result = core.amortizedLoan(principal, annualRate, years * 12);
+        setMoneyText('loan-payment', result.payment, 2);
+        setMoneyText('loan-interest', result.totalInterest, 2);
+        setMoneyText('loan-total', result.totalPayment, 2);
     }
 
     function calculateSip() {
@@ -447,17 +412,10 @@ const calculatorPage = (() => {
             return;
         }
 
-        const months = years * 12;
-        const monthlyRate = annualRate / 100 / 12;
-        const maturity = monthlyRate === 0
-            ? monthly * months
-            : monthly * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate) * (1 + monthlyRate);
-        const invested = monthly * months;
-        const returns = Math.max(0, maturity - invested);
-
-        setMoneyText('sip-invested', invested, 2);
-        setMoneyText('sip-returns', returns, 2);
-        setMoneyText('sip-total', maturity, 2);
+        const result = core.sip(monthly, annualRate, years);
+        setMoneyText('sip-invested', result.invested, 2);
+        setMoneyText('sip-returns', result.returns, 2);
+        setMoneyText('sip-total', result.maturity, 2);
     }
 
     async function fetchCurrencyRates(base) {
@@ -497,7 +455,7 @@ const calculatorPage = (() => {
             const data = await fetchCurrencyRates(from);
             const rate = data.rates[to];
             if (!rate) throw new Error('Selected currency is not available.');
-            const converted = amount * rate;
+            const converted = core.convertCurrency(amount, rate);
             const formatted = new Intl.NumberFormat(undefined, {
                 style: 'currency',
                 currency: to,
@@ -558,24 +516,17 @@ const calculatorPage = (() => {
         const includeNumbers = $('password-numbers')?.checked;
         const includeSymbols = $('password-symbols')?.checked;
 
-        let chars = 'abcdefghijklmnopqrstuvwxyz';
-        if (includeUpper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        if (includeNumbers) chars += '0123456789';
-        if (includeSymbols) chars += '!@#$%^&*()-_=+[]{};:,.?/|';
-
-        const randomValues = new Uint32Array(length);
-        if (window.crypto?.getRandomValues) {
-            window.crypto.getRandomValues(randomValues);
-        } else {
-            for (let i = 0; i < length; i += 1) randomValues[i] = Math.floor(Math.random() * 4294967295);
+        try {
+            const password = core.generatePassword({
+                length,
+                uppercase: includeUpper,
+                numbers: includeNumbers,
+                symbols: includeSymbols
+            });
+            setText('password-result', password);
+        } catch (error) {
+            showError(error.message);
         }
-
-        let password = '';
-        for (let i = 0; i < length; i += 1) {
-            password += chars[randomValues[i] % chars.length];
-        }
-
-        setText('password-result', password);
     }
 
     function updatePasswordLength() {
@@ -593,7 +544,7 @@ const calculatorPage = (() => {
             return;
         }
 
-        const url = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(text)}`;
+        const url = core.buildQrUrl(text);
         if (placeholder) placeholder.textContent = 'Generating QR code...';
         if (image) {
             image.onload = () => {

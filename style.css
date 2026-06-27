@@ -880,6 +880,48 @@ h1 {
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
 }
 
+.calculator-search {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.calculator-search input {
+    min-width: 0;
+    min-height: 42px;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 10px;
+    background: rgba(15, 23, 42, 0.82);
+    color: #fff;
+    font: inherit;
+    padding: 0.65rem 0.8rem;
+}
+
+.calculator-search input:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.calculator-search button {
+    min-height: 42px;
+    border: 1px solid rgba(14, 165, 233, 0.4);
+    border-radius: 10px;
+    background: rgba(14, 165, 233, 0.14);
+    color: #e0f2fe;
+    font: inherit;
+    font-weight: 800;
+    padding: 0.65rem 0.85rem;
+    white-space: nowrap;
+}
+
+.calculator-search small {
+    grid-column: 1 / -1;
+    color: #94a3b8;
+    font-size: 0.72rem;
+    line-height: 1.2;
+}
+
 .stat-item { text-align: center; }
 .stat-item h2, .stat-item .counter {
     font-size: 3.5rem;
@@ -1342,12 +1384,6 @@ h1 {
     grid-template-columns: repeat(auto-fit, minmax(300px, 380px));
     justify-content: center;
     align-items: start;
-}
-
-.tools-grid.is-filtered .ad-inline {
-    grid-column: 1 / -1;
-    justify-self: center;
-    width: min(100%, 760px);
 }
 
 /* Result Cards / Tool Demo Cards */
@@ -2353,47 +2389,6 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     transform: translateY(0) translateX(0) scale(1); 
 }
 
-/* Google Ads Placement Containers */
-.ad-space {
-    width: 100%;
-    min-height: 90px;
-    background: rgba(15, 23, 42, 0.5);
-    border: 1px dashed rgba(14, 165, 233, 0.3);
-    border-radius: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 2rem auto;
-    position: relative;
-    overflow: hidden;
-}
-
-.ad-space::before {
-    content: 'Advertisement Space';
-    color: rgba(248, 250, 252, 0.3);
-    font-size: 0.85rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    position: absolute;
-    z-index: 0;
-}
-
-.ad-space > ins {
-    position: relative;
-    z-index: 1;
-}
-
-.ad-leaderboard { max-width: 1124px; height: 132px; }
-.tools-section > .ad-leaderboard:first-child {
-    height: 92px;
-    min-height: 92px;
-    margin-bottom: 1.5rem;
-}
-.ad-inline { grid-column: span 1; height: 280px; margin: 0; }
-@media (min-width: 900px) {
-    .ad-inline { grid-column: span 2; }
-}
-
 /* SEO Content Blocks */
 .seo-content-section {
     padding: 5rem 5% 6rem;
@@ -2646,8 +2641,6 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     .tools-grid, .results-grid { grid-template-columns: 1fr; gap: 1.25rem; }
     .result-card { max-width: none; padding: 1.35rem; border-radius: 18px; }
     .tool-ui { padding: 1rem; }
-    .ad-leaderboard { height: 88px; min-height: 88px; }
-    .ad-inline { height: 180px; }
     .footer-content { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
     .donation-section { text-align: left !important; width: 100%; }
     .footer-links { justify-content: flex-start !important; text-align: left !important; gap: 1rem !important; }
@@ -3620,6 +3613,54 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .calculator-copy-card p,
 .calculator-copy-card li {
     color: #a3a3a3;
+}
+
+.content-byline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 12px;
+    background: rgba(15, 23, 42, 0.78);
+    color: #cbd5e1;
+    font-size: 0.88rem;
+}
+
+.content-byline strong {
+    color: #fff;
+}
+
+.content-byline a,
+.content-evidence a,
+.standards-grid a {
+    color: #7dd3fc;
+}
+
+.content-evidence {
+    grid-column: 1 / -1;
+}
+
+.evidence-list,
+.source-list {
+    display: grid;
+    gap: 0.6rem;
+    padding-left: 1.2rem;
+}
+
+.evidence-list strong {
+    color: #e2e8f0;
+}
+
+.source-note {
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+.standards-grid .content-card p {
+    color: #b6c0cf;
 }
 
 .calculator-copy-card p + p,

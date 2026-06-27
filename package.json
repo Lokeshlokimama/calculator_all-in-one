@@ -1,0 +1,11 @@
+{
+  "name": "calculator-all-in-one",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Static calculator site with AdSense-readiness and calculation tests.",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "test:calculators": "node --test tests/calculator-core.test.mjs",
+    "test:content": "node --test tests/site-quality.test.mjs"
+  }
+}
