@@ -1022,6 +1022,8 @@ function scheduleSearchResultScroll(visibleCount) {
 
 function updateSearchStatus(visibleCount) {
     const status = document.getElementById('search-status');
+    const clearButton = document.querySelector('.search-clear');
+    if (clearButton) clearButton.style.display = currentSearchTerm ? 'inline-flex' : 'none';
     if (!status) return;
 
     if (currentSearchTerm) {
@@ -3415,8 +3417,10 @@ function openRazorpay() {
     if (razorpayWindow) razorpayWindow.opener = null;
 }
 
+let lastFooterModalTrigger = null;
+
 function openFooterModal(type) {
-    if (window.event) window.event.preventDefault(); // Prevent jump to top for anchor tags
+    lastFooterModalTrigger = document.activeElement;
 
     if (type === 'razorpay') {
         openRazorpay();
@@ -3432,17 +3436,21 @@ function openFooterModal(type) {
         bodyEl.innerHTML = modalContent[type].body;
 
         overlay.style.display = 'flex';
+        overlay.setAttribute('aria-hidden', 'false');
         // Force reflow
         void overlay.offsetWidth;
         overlay.classList.add('active');
+        overlay.querySelector('.close-modal')?.focus();
     }
 }
 
 function closeFooterModal() {
     const overlay = document.getElementById('footer-modal');
     overlay.classList.remove('active');
+    overlay.setAttribute('aria-hidden', 'true');
     setTimeout(() => {
         overlay.style.display = 'none';
+        if (lastFooterModalTrigger instanceof HTMLElement) lastFooterModalTrigger.focus();
     }, 300); // Matches CSS transition duration
 }
 
@@ -3498,7 +3506,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const initialCategory = params.get('category');
     const initialSearch = params.get('search');
-    if (['all', 'basic', 'finance', 'electricity', 'health', 'education', 'web'].includes(initialCategory)) {
+    if (['all', 'basic', 'finance', 'electricity', 'health', 'math', 'geometry', 'education', 'web'].includes(initialCategory)) {
         filterCategory(initialCategory);
     } else if (initialSearch) {
         const searchInput = document.getElementById('tool-search');
@@ -4431,14 +4439,16 @@ function downloadCSV(csvContent, filename) {
 }
 
 
-// --- FLOATING AI ASSISTANT WIDGET & FUZZY MATCH ENGINE ---
+// --- FLOATING CALCULATOR FINDER & FUZZY MATCH ENGINE ---
 
 // Open/Close widget
 function toggleAIAssistant() {
     const chatWindow = document.getElementById('ai-chat-window');
+    const trigger = document.getElementById('ai-widget-btn');
     if (!chatWindow) return;
     
     const isActive = chatWindow.classList.toggle('active');
+    trigger?.setAttribute('aria-expanded', String(isActive));
     
     if (isActive) {
         document.getElementById('ai-chat-input').focus();
@@ -4681,6 +4691,12 @@ function sendAIMessage() {
     }, 400);
 }
 window.sendAIMessage = sendAIMessage;
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && document.getElementById('footer-modal')?.classList.contains('active')) {
+        closeFooterModal();
+    }
+});
 
 
 // --- MISSING CALCULATORS IMPLEMENTATION ---

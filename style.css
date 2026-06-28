@@ -23,6 +23,18 @@ html {
     scrollbar-color: rgba(14, 165, 233, 0.48) #0f172a;
 }
 
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
 body {
     font-family: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     background-color: var(--bg-color);
@@ -2469,6 +2481,27 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     margin-bottom: 0.65rem;
 }
 
+.seo-info-card h3 a {
+    color: inherit;
+    text-decoration-color: rgba(125, 211, 252, 0.45);
+    text-underline-offset: 0.2em;
+}
+
+.seo-info-card h3 a:hover,
+.seo-info-card h3 a:focus-visible { color: #7dd3fc; }
+
+.seo-longform-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.seo-longform-grid .seo-info-card {
+    grid-column: auto;
+    min-height: 100%;
+}
+
 .seo-split-panel,
 .homepage-faq-panel {
     margin-top: 1rem;
@@ -2531,13 +2564,24 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .delay-3 { transition-delay: 0.45s; }
 
 /* Footer Links & Modals */
-.footer-links a {
+.footer-links a,
+.footer-link-button {
     color: #a3a3a3;
     text-decoration: none;
     font-size: 0.9rem;
     transition: color 0.3s;
 }
-.footer-links a:hover { color: var(--primary); }
+.footer-link-button {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+}
+.footer-links a:hover,
+.footer-link-button:hover,
+.footer-link-button:focus-visible { color: var(--primary); }
 
 .modal-overlay {
     position: fixed;
@@ -2580,6 +2624,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     cursor: pointer;
     line-height: 1;
     transition: color 0.3s;
+    border: 0;
+    background: transparent;
+    padding: 0;
 }
 .close-modal:hover { color: var(--accent); }
 
@@ -2616,6 +2663,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     .seo-content-section { padding: 4rem 5%; }
     .seo-info-card { grid-column: span 6; }
     .seo-split-panel { grid-template-columns: 1fr; }
+    .seo-longform-grid { grid-template-columns: 1fr; }
     .tool-discovery { margin-bottom: 1.25rem; }
     .search-control { grid-template-columns: 1fr; }
     .search-clear { width: 100%; }
@@ -2689,7 +2737,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     }
     .stats-section { padding: 2.5rem 5%; }
     .stat-item h2, .stat-item .counter { font-size: 2.8rem; }
-    .footer-links a { min-width: 44%; }
+    .footer-links a,
+    .footer-link-button { min-width: 44%; text-align: left; }
 }
 
 

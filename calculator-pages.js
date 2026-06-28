@@ -585,12 +585,30 @@ const calculatorPage = (() => {
         qr: generateQrCode
     };
 
+    function initializeAccessibleControls() {
+        document.querySelectorAll('input, select, textarea').forEach((control) => {
+            const hasAccessibleName = control.labels?.length
+                || control.hasAttribute('aria-label')
+                || control.hasAttribute('aria-labelledby')
+                || control.hasAttribute('title');
+            if (hasAccessibleName) return;
+
+            const name = control.getAttribute('placeholder')
+                || control.id
+                    .replace(/^(emi|bmi|age|percentage|gst|loan|sip|currency|password|qr)-/i, '')
+                    .replace(/[-_]+/g, ' ')
+                    .replace(/\b\w/g, (character) => character.toUpperCase());
+            if (name) control.setAttribute('aria-label', name);
+        });
+    }
+
     function init() {
         insertDisplayCurrencySelector();
         populateDisplayCurrencySelector();
         populateCurrencyConverterSelects();
         initializeMoneyDefaults();
         updateCurrencyAffixes();
+        initializeAccessibleControls();
 
         document.querySelectorAll('[data-calculator-form]').forEach((form) => {
             form.addEventListener('submit', (event) => {

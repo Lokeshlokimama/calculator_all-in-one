@@ -193,14 +193,16 @@
                 <input type="search" class="tool-input" id="tool-search" placeholder="Search calculators..." oninput="searchTools(this.value)">
                 <button class="secondary-btn search-clear" type="button" onclick="clearToolSearch()" style="padding: 0 0.8rem; min-height: 40px; font-size: 0.8rem; border-radius: 99px; display: none;">Clear</button>
             </div>
+            <p id="search-status" class="sr-only" aria-live="polite">Search all calculators instantly.</p>
         </div>
 
         <nav>
             <a href="#tools" data-category-link="all" onclick="filterCategory('all', event)">All Tools</a>
-            <a href="#tools" data-category-link="finance" onclick="filterCategory('finance', event)">Finance</a>
-            <a href="#tools" data-category-link="electricity" onclick="filterCategory('electricity', event)">Electricity</a>
-            <a href="#tools" data-category-link="health" onclick="filterCategory('health', event)">Health</a>
-            <a href="#tools" data-category-link="geometry" onclick="filterCategory('geometry', event)">Geometry</a>
+            <a href="finance-calculators.html">Finance</a>
+            <a href="health-calculators.html">Health</a>
+            <a href="electricity-calculators.html">Electricity</a>
+            <a href="math-calculators.html">Math</a>
+            <a href="geometry-calculators.html">Geometry</a>
             <a href="about.html">About</a>
             <a href="editorial-standards.html">Standards</a>
             <a href="contact.html">Contact</a>
@@ -244,10 +246,12 @@
             <summary>Menu</summary>
             <div class="mobile-menu-panel">
                 <a href="/#tools">All Tools</a>
-                <a href="/?category=finance#tools">Finance</a>
-                <a href="/?category=electricity#tools">Electricity</a>
-                <a href="/?category=health#tools">Health</a>
-                <a href="/?category=geometry#tools">Geometry</a>
+                <a href="finance-calculators.html">Finance</a>
+                <a href="health-calculators.html">Health</a>
+                <a href="electricity-calculators.html">Electricity</a>
+                <a href="math-calculators.html">Math</a>
+                <a href="geometry-calculators.html">Geometry</a>
+                <a href="utility-tools.html">Utility Tools</a>
                 <a href="about.html">About</a>
                 <a href="editorial-standards.html">Editorial Standards</a>
                 <a href="contact.html">Contact</a>
@@ -691,7 +695,7 @@
                         </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="generateWALink()">Create Link</button>
                         <div style="margin-top: 1rem; text-align: center;">
-                            <a id="wa-result" href="#" target="_blank" style="color: var(--primary); font-size: 0.9rem; display: none; word-break: break-all;"></a>
+                            <a id="wa-result" target="_blank" rel="noopener noreferrer" style="color: var(--primary); font-size: 0.9rem; display: none; word-break: break-all;"></a>
                         </div>
                     </div>
                 
@@ -2411,6 +2415,14 @@
                             <strong>E = mc²</strong><br><br><span style='color:#0ea5e9'>E</span> = Energy (Joules)<br><span style='color:#facc15'>m</span> = Mass (kg)<br><span style='color:#ef4444'>c</span> = Speed of light (3×10^8 m/s)<br><em>Shows mass and energy are interchangeable.</em>
                         </div>
                     </div>
+                    <details class="formula-explainer">
+                        <summary>Formula &amp; Explanation</summary>
+                        <div class="formula-content">
+                            <p><strong>Formula:</strong> select a listed equation to see each variable and its unit.</p>
+                            <p><strong>Explanation:</strong> This learning tool changes the explanation when you select mass-energy equivalence, compound interest, or universal gravitation.</p>
+                            <p><strong>Example:</strong> selecting compound interest shows how principal, rate, compounding frequency, and time contribute to the final amount.</p>
+                        </div>
+                    </details>
                 </div>
 
                 <div id="calc-equation-plotter" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="education">
@@ -2498,7 +2510,7 @@
                     <details class="formula-explainer">
                         <summary>Formula & Explanation</summary>
                         <div class="formula-content">
-                            <p><strong>Formula / Standard:</strong> RFC 4122 Standard</p>
+                            <p><strong>Formula:</strong> UUID structure and version bits follow the RFC 4122 identifier format.</p>
                             <p><strong>Explanation:</strong> UUID v4 uses 122 bits of random data, yielding 5.3×10<sup>36</sup> combinations. UUID v1 combines timestamp and MAC address.</p>
                             <p><strong>Example:</strong> <code>f81d4fae-7dec-11d0-a765-00a0c91e6bf6</code></p>
                         </div>
@@ -2670,7 +2682,7 @@
                     <details class="formula-explainer">
                         <summary>Formula & Explanation</summary>
                         <div class="formula-content">
-                            <p><strong>Functions:</strong> standard operators, trigonometry (radians), logs, and power curves.</p>
+                            <p><strong>Formula:</strong> standard operators, trigonometry in radians, logarithms, powers, roots, and factorials.</p>
                             <p><strong>Explanation:</strong> Computes complex algebraic expressions adhering strictly to order of operations (BODMAS/PEMDAS).</p>
                             <p><strong>Example:</strong> <code>sin(pi/2) = 1</code>, <code>2^3 = 8</code>, <code>5! = 120</code></p>
                         </div>
@@ -2782,6 +2794,7 @@
                         <div class="formula-content">
                             <p><strong>Formula:</strong> Subtotal = ∑(Qty × Price) | Tax = Subtotal × TaxRate | Discount = Subtotal × DiscountRate | Total = Subtotal + Tax - Discount</p>
                             <p><strong>Explanation:</strong> Multiplies each line item quantity by its rate, aggregates the sum, applies the tax percentage, subtracts the discount percentage, and provides the final due amount.</p>
+                            <p><strong>Example:</strong> One item at 1,200 with 18% tax and no discount produces a subtotal of 1,200, tax of 216, and total of 1,416.</p>
                         </div>
                     </details>
                 </div>
@@ -2804,17 +2817,22 @@
                     <p>Calculators All In One is a free online utility website for people who want quick, clear, and practical answers without opening spreadsheets or installing apps. The site brings finance calculators, health estimators, math helpers, electricity planning tools, geometry formulas, graphing utilities, QR tools, password tools, and text utilities into one place. Each tool is designed for fast input, instant output, and enough explanation to help you understand the result instead of simply copying a number.</p>
                 </div>
                 <div class="seo-feature-grid">
-                    <article class="seo-info-card"><span class="category-icon">$</span><h3>Finance Calculators</h3><p>Finance tools help you estimate loan EMIs, total interest, GST, SIP maturity, discounts, tax-inclusive prices, salary breakdowns, and currency conversion. Use them when comparing loan options, planning monthly budgets, estimating investment goals, or checking how much a purchase costs after tax. These calculators are useful when you want a transparent breakdown of principal, rate, time, total payable amount, and final value.</p></article>
-                    <article class="seo-info-card"><span class="category-icon">H</span><h3>Health Calculators</h3><p>Health calculators such as BMI, BMR, calorie, protein, water intake, ideal weight, and body fat estimators provide quick wellness reference points. They are not medical advice, but they can help you start a conversation about weight, nutrition, hydration, and daily activity. The goal is to make common health numbers easier to understand while reminding users that personal context matters.</p></article>
-                    <article class="seo-info-card"><span class="category-icon">%</span><h3>Math Calculators</h3><p>Math tools cover everyday arithmetic, percentages, age, date difference, time duration, unit conversion, CGPA, attendance, and scientific calculations. These are built for students, teachers, office workers, shop owners, and anyone who needs a reliable shortcut for routine calculations. You can use them to check homework, compare values, calculate changes, convert units, and avoid manual mistakes.</p></article>
-                    <article class="seo-info-card"><span class="category-icon">W</span><h3>Power &amp; Electricity Calculators</h3><p>Power and electricity calculators help estimate electricity bills, appliance energy use, kWh consumption, watts to units, inverter backup, UPS runtime, solar panel requirements, generator sizing, Ohm's law, and EV charging cost. These tools are useful before buying appliances, planning backup power, checking monthly power consumption, or comparing solar and battery options for homes and small offices.</p></article>
-                    <article class="seo-info-card"><span class="category-icon">G</span><h3>Geometry Calculators</h3><p>Geometry tools make shape formulas faster to use. Circle, triangle, and Pythagorean calculators help with area, circumference, side lengths, and basic measurement planning. They are useful for students, builders, designers, and DIY users who need a quick formula check while working with measurements.</p></article>
+                    <article class="seo-info-card"><span class="category-icon">$</span><h3><a href="finance-calculators.html">Finance Calculators</a></h3><p>Finance tools help you estimate loan EMIs, total interest, GST, SIP maturity, discounts, tax-inclusive prices, salary breakdowns, and currency conversion. Use them when comparing loan options, planning monthly budgets, estimating investment goals, or checking how much a purchase costs after tax. These calculators are useful when you want a transparent breakdown of principal, rate, time, total payable amount, and final value.</p></article>
+                    <article class="seo-info-card"><span class="category-icon">H</span><h3><a href="health-calculators.html">Health Calculators</a></h3><p>Health calculators such as BMI, BMR, calorie, protein, water intake, ideal weight, and body fat estimators provide quick wellness reference points. They are not medical advice, but they can help you start a conversation about weight, nutrition, hydration, and daily activity. The goal is to make common health numbers easier to understand while reminding users that personal context matters.</p></article>
+                    <article class="seo-info-card"><span class="category-icon">%</span><h3><a href="math-calculators.html">Math Calculators</a></h3><p>Math tools cover everyday arithmetic, percentages, age, date difference, time duration, unit conversion, CGPA, attendance, and scientific calculations. These are built for students, teachers, office workers, shop owners, and anyone who needs a reliable shortcut for routine calculations. You can use them to check homework, compare values, calculate changes, convert units, and avoid manual mistakes.</p></article>
+                    <article class="seo-info-card"><span class="category-icon">W</span><h3><a href="electricity-calculators.html">Power &amp; Electricity Calculators</a></h3><p>Power and electricity calculators help estimate electricity bills, appliance energy use, kWh consumption, watts to units, inverter backup, UPS runtime, solar panel requirements, generator sizing, Ohm's law, and EV charging cost. These tools are useful before buying appliances, planning backup power, checking monthly power consumption, or comparing solar and battery options for homes and small offices.</p></article>
+                    <article class="seo-info-card"><span class="category-icon">G</span><h3><a href="geometry-calculators.html">Geometry Calculators</a></h3><p>Geometry tools make shape formulas faster to use. Circle, triangle, and Pythagorean calculators help with area, circumference, side lengths, and basic measurement planning. They are useful for students, builders, designers, and DIY users who need a quick formula check while working with measurements.</p></article>
                     <article class="seo-info-card"><span class="category-icon">f(x)</span><h3>Graphing Tools</h3><p>The graphing and equation tools help you explore expressions visually and understand how formulas behave. They are useful for learning algebra, checking curves, explaining concepts, and turning abstract equations into visual patterns. A graph is often easier to understand than a line of numbers, especially for students and self-learners.</p></article>
-                    <article class="seo-info-card"><span class="category-icon">QR</span><h3>Daily Utility Tools</h3><p>Daily tools include QR code generation, password generation, word count, case conversion, Base64 tools, color tools, stopwatch, UUID generation, image conversion, timezone tools, invoice generation, and mileage cost estimation. These small utilities save time during work, study, travel, content creation, and web tasks.</p></article>
+                    <article class="seo-info-card"><span class="category-icon">QR</span><h3><a href="utility-tools.html">Daily Utility Tools</a></h3><p>Daily tools include QR code generation, password generation, word count, case conversion, Base64 tools, color tools, stopwatch, UUID generation, image conversion, timezone tools, invoice generation, and mileage cost estimation. These small utilities save time during work, study, travel, content creation, and web tasks.</p></article>
                 </div>
                 <div class="seo-split-panel">
                     <article><h3>Why use our calculators?</h3><p>Every calculator on this site is built around clarity. Inputs are labeled, results are shown immediately, and many tools include formula notes, examples, and category filters so you can understand the result. The website is mobile responsive, so you can calculate from a phone while shopping, studying, traveling, or discussing a plan with someone. The tools are also grouped by purpose, which makes it easier to find a finance calculator, a health calculator, a power calculator, or a daily utility without searching the web again.</p><p>Another benefit is transparency. A number is only useful when you know what it means. Dedicated calculator pages publish assumptions, repeatable test cases, source links, and practical limits. Read our <a href="editorial-standards.html">testing and editorial standards</a> to see how formulas, corrections, privacy boundaries, and advertising independence are handled.</p></article>
-                    <article><h3>Popular calculators</h3><div class="popular-link-grid"><a href="emi-calculator.html">EMI Calculator</a><a href="bmi-calculator.html">BMI Calculator</a><a href="percentage-calculator.html">Percentage Calculator</a><a href="age-calculator.html">Age Calculator</a><a href="sip-calculator.html">SIP Calculator</a><a href="gst-calculator.html">GST Calculator</a><a href="currency-converter.html">Currency Converter</a><a href="password-generator.html">Password Generator</a><a href="qr-code-generator.html">QR Code Generator</a><a href="/?category=electricity#tools">Electricity Calculators</a><a href="/#calc-equation-plotter">Equation Plotter</a><a href="/#calc-invoice">Invoice Generator</a></div></article>
+                    <article><h3>Popular calculators</h3><div class="popular-link-grid"><a href="emi-calculator.html">EMI Calculator</a><a href="bmi-calculator.html">BMI Calculator</a><a href="percentage-calculator.html">Percentage Calculator</a><a href="age-calculator.html">Age Calculator</a><a href="sip-calculator.html">SIP Calculator</a><a href="gst-calculator.html">GST Calculator</a><a href="currency-converter.html">Currency Converter</a><a href="password-generator.html">Password Generator</a><a href="qr-code-generator.html">QR Code Generator</a><a href="electricity-calculators.html">Electricity Calculators</a><a href="/#calc-equation-plotter">Equation Plotter</a><a href="/#calc-invoice">Invoice Generator</a></div></article>
+                </div>
+                <div class="seo-longform-grid">
+                    <article class="seo-info-card"><h3>How to choose the right calculator</h3><p>Start with the decision you need to make, not only the number you want. For a loan comparison, use an EMI or loan calculator and compare the monthly payment, total interest, fees, and term together. For an investment goal, use the SIP calculator as a projection and test more than one return assumption. For a purchase, use GST, discount, percentage, or currency tools and confirm whether the price is tax inclusive. Health tools answer different questions: BMI is a height-to-weight screening measure, while BMR estimates baseline energy use and body-fat tools use body measurements. Electricity tools also have distinct jobs: kWh estimates energy, an electricity-bill calculator applies a tariff, and backup calculators estimate runtime. Choosing the correct model prevents a precise-looking answer from being applied to the wrong problem.</p></article>
+                    <article class="seo-info-card"><h3>How to enter values and verify a result</h3><p>Check the unit beside every field before calculating. Months and years, watts and kilowatts, kilograms and pounds, or an inclusive and exclusive tax amount can produce very different answers. Use realistic values, then compare the result with a simple mental check. If a 12-month, zero-interest loan is 12,000, the payment should be 1,000 per month. If 10 percent of 500 is requested, the answer should be 50. Dedicated pages provide formulas, step-by-step examples, common mistakes, limits, and repeatable test cases for this reason. When a result affects a payment, medical decision, tax filing, electrical installation, or contract, verify it against the provider's current documents and ask a qualified professional. These tools support planning; they do not replace an official quote, diagnosis, regulation, or engineering assessment.</p></article>
+                    <article class="seo-info-card"><h3>How calculations are reviewed</h3><p>Calculator logic is tested with ordinary examples, boundary values, zero-rate cases where appropriate, invalid input, and known reference results. Important dedicated pages identify the formula, assumptions, source material, and the parts of a real-world decision that are excluded. A finance result may exclude lender fees and changing rates. A currency result may exclude a bank spread. A health estimate may not fit children, pregnancy, athletes, or people with conditions that change body composition. We keep these limitations beside the tool so the user can interpret the number before acting. If you find a reproducible problem, the Contact page explains how to report the page URL, entered values, expected output, and supporting source. The Editorial Standards page describes formula selection, corrections, testing, advertising independence, and review dates in more detail.</p></article>
                 </div>
                 <div class="homepage-faq-panel" id="faq">
                     <div class="seo-section-head compact"><p class="page-kicker">FAQ</p><h2>Questions people ask before using online calculators</h2></div>
@@ -2855,17 +2873,22 @@
         </div>
         
         <div class="footer-links" style="text-align: center; margin: 2rem 0; padding-top: 2rem; border-top: 1px solid var(--glass-border); display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem;">
-            <a href="/?category=geometry#tools">Geometry</a>
-                <a href="about.html">About Us</a>
+            <a href="finance-calculators.html">Finance</a>
+            <a href="health-calculators.html">Health</a>
+            <a href="electricity-calculators.html">Electricity</a>
+            <a href="math-calculators.html">Math</a>
+            <a href="geometry-calculators.html">Geometry</a>
+            <a href="utility-tools.html">Utility Tools</a>
+            <a href="about.html">About Us</a>
             <a href="editorial-standards.html">Editorial Standards</a>
             <a href="contact.html">Contact Us</a>
             <a href="privacy.html">Privacy Policy</a>
             <a href="terms.html">Terms & Conditions</a>
             <a href="disclaimer.html">Disclaimer</a>
-            <a href="#" onclick="openFooterModal('upi'); return false;">UPI QR & Button</a>
+            <button type="button" class="footer-link-button" onclick="openFooterModal('upi')">UPI support details</button>
             <a href="https://rzp.io/rzp/tpqo4et" target="_blank" rel="noopener noreferrer">Fund Me</a>
-            <a href="#" onclick="openFooterModal('refund'); return false;">Refund Policy</a>
-            <a href="#" onclick="openFooterModal('shipping'); return false;">Shipping Policy</a>
+            <button type="button" class="footer-link-button" onclick="openFooterModal('refund')">Contribution refund policy</button>
+            <button type="button" class="footer-link-button" onclick="openFooterModal('shipping')">Digital delivery notice</button>
         </div>
         
         <p class="maintainer-credit">This page is developed and maintained by <a href="mailto:support.aiagents@gmail.com">support.aiagents@gmail.com</a>.</p>
@@ -2876,27 +2899,27 @@
     <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
 
     <!-- Generic Modal -->
-    <div id="footer-modal" class="modal-overlay" onclick="if(event.target===this) closeFooterModal()">
+    <div id="footer-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-title" onclick="if(event.target===this) closeFooterModal()">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeFooterModal()" role="button" tabindex="0" aria-label="Close modal" onkeydown="if(event.key==='Enter'||event.key===' ') closeFooterModal()">&times;</span>
-            <h2 id="modal-title">Title</h2>
+            <button type="button" class="close-modal" onclick="closeFooterModal()" aria-label="Close dialog">&times;</button>
+            <h2 id="modal-title">Support and policy information</h2>
             <div id="modal-body" style="margin-top: 1rem; color: #a3a3a3;">
-                Content goes here.
+                Select a support or policy item in the footer to view its details.
             </div>
         </div>
     </div>
 
     <script src="script.js" defer></script>
 
-    <!-- Floating AI Assistant Widget -->
+    <!-- Floating calculator finder -->
     <div id="ai-assistant-widget" class="ai-widget-container" style="position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 999; font-family: inherit;">
-        <button id="ai-widget-btn" onclick="toggleAIAssistant()" aria-label="Toggle AI Assistant" style="width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 32px rgba(14, 165, 233, 0.4); transition: transform 0.3s ease, box-shadow 0.3s ease;">
-            <span class="ai-bot-icon">🤖</span>
+        <button id="ai-widget-btn" onclick="toggleAIAssistant()" aria-label="Open calculator finder" aria-expanded="false" aria-controls="ai-chat-window" style="width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 32px rgba(14, 165, 233, 0.4); transition: transform 0.3s ease, box-shadow 0.3s ease;">
+            <span class="ai-bot-icon" aria-hidden="true">⌕</span>
         </button>
         <div id="ai-chat-window" class="ai-chat-panel" style="position: absolute; bottom: 70px; right: 0; width: 320px; height: 400px; background: rgba(15, 23, 42, 0.95); border: 1px solid var(--glass-border); border-radius: 16px; backdrop-filter: blur(16px); display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); transition: opacity 0.3s ease, transform 0.3s ease; transform-origin: bottom right; opacity: 0; transform: scale(0.8); pointer-events: none;">
             <div class="ai-chat-header" style="padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); display: flex; justify-content: space-between; align-items: center; color: #fff;">
-                <span style="font-weight:600; display:flex; align-items:center; gap:0.4rem;">🤖 AI Assistant</span>
-                <button onclick="toggleAIAssistant()" class="close-chat" aria-label="Close Chat" style="background:none; border:none; color:#a3a3a3; font-size:1.4rem; cursor:pointer; padding:0; line-height:1;">&times;</button>
+                <span style="font-weight:600; display:flex; align-items:center; gap:0.4rem;">Calculator Finder</span>
+                <button onclick="toggleAIAssistant()" class="close-chat" aria-label="Close calculator finder" style="background:none; border:none; color:#a3a3a3; font-size:1.4rem; cursor:pointer; padding:0; line-height:1;">&times;</button>
             </div>
             <div id="ai-chat-log" class="ai-chat-messages" style="flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.88rem;">
                 <div class="ai-msg bot" style="background: rgba(255,255,255,0.05); color: #e2e8f0; padding: 0.6rem 0.8rem; border-radius: 12px 12px 12px 2px; align-self: flex-start; max-width: 85%; line-height: 1.4;">Which calculator do you need? Try typing "Need power consumption for AC" or "EMI".</div>
