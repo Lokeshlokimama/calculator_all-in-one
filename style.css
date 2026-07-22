@@ -3728,3 +3728,32 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
         grid-template-columns: 1fr;
     }
 }
+
+/* Inline informational disclaimers on calculator pages */
+.inline-disclaimer {
+    margin-top: 0.9rem;
+    padding: 0.75rem 1rem;
+    border-left: 3px solid rgba(14, 165, 233, 0.65);
+    background: rgba(14, 165, 233, 0.08);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: rgba(226, 232, 240, 0.92);
+}
+
+/* Breadcrumb navigation on calculator pages */
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.88rem;
+    margin-bottom: 1rem;
+    color: rgba(226, 232, 240, 0.6);
+}
+.breadcrumb a {
+    color: var(--primary);
+    text-decoration: none;
+}
+.breadcrumb a:hover,
+.breadcrumb a:focus-visible {
+    text-decoration: underline;
+}
