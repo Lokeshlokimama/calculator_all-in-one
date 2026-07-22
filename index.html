@@ -2688,19 +2688,27 @@
                             <div class="input-group invoice-client-fields" style="flex-direction: column; gap: 0.5rem;">
                                 <div class="invoice-field">
                                     <label for="inv-from">From</label>
-                                    <input type="text" class="tool-input" id="inv-from" placeholder="Your Name / Company" value="Acme Corp" autocomplete="organization" oninput="calculateInvoice()">
+                                    <input type="text" class="tool-input" id="inv-from" placeholder="Your name / business" autocomplete="organization" oninput="calculateInvoice()">
                                 </div>
                                 <div class="invoice-field">
                                     <label for="inv-to">Bill to</label>
-                                    <input type="text" class="tool-input" id="inv-to" placeholder="Client Name" value="John Doe" autocomplete="name" oninput="calculateInvoice()">
+                                    <input type="text" class="tool-input" id="inv-to" placeholder="Client name" autocomplete="name" oninput="calculateInvoice()">
                                 </div>
                                 <div class="invoice-field">
                                     <label for="inv-number">Invoice no.</label>
-                                    <input type="text" class="tool-input" id="inv-number" placeholder="Invoice Number" value="INV-001" oninput="calculateInvoice()">
+                                    <input type="text" class="tool-input" id="inv-number" placeholder="e.g. INV-001" value="INV-001" oninput="calculateInvoice()">
                                 </div>
                                 <div class="invoice-field">
-                                    <label for="inv-date">Date</label>
+                                    <label for="inv-date">Invoice date</label>
                                     <input type="date" class="tool-input" id="inv-date" onchange="calculateInvoice()">
+                                </div>
+                                <div class="invoice-field">
+                                    <label for="inv-due-date">Due date <span style="color:#64748b; font-weight:400;">(optional)</span></label>
+                                    <input type="date" class="tool-input" id="inv-due-date" onchange="calculateInvoice()">
+                                </div>
+                                <div class="invoice-field">
+                                    <label for="inv-notes">Notes <span style="color:#64748b; font-weight:400;">(optional)</span></label>
+                                    <textarea class="tool-input" id="inv-notes" rows="2" placeholder="Payment terms, bank/UPI details, thank-you note..." oninput="calculateInvoice()"></textarea>
                                 </div>
                             </div>
                         
@@ -2714,9 +2722,9 @@
                             </div>
                             <div id="invoice-items-container">
                                 <div class="invoice-item-row" style="display: flex; gap: 0.4rem; margin-bottom: 0.4rem; width:100%;">
-                                    <input type="text" class="tool-input inv-item-desc" placeholder="Description" aria-label="Item description" style="flex: 2; min-width: 0;" value="Web Design Services" oninput="calculateInvoice()">
-                                    <input type="number" class="tool-input inv-item-qty" placeholder="Qty" aria-label="Quantity" min="0" step="1" style="flex: 0.7; min-width: 0;" value="1" oninput="calculateInvoice()">
-                                    <input type="number" class="tool-input inv-item-price" placeholder="Rate" aria-label="Rate" min="0" step="0.01" style="flex: 1.2; min-width: 0;" value="1200" oninput="calculateInvoice()">
+                                    <input type="text" class="tool-input inv-item-desc" placeholder="Description" aria-label="Item description" style="flex: 2; min-width: 0;" oninput="calculateInvoice()">
+                                    <input type="number" class="tool-input inv-item-qty" placeholder="Qty" aria-label="Quantity" min="0" step="1" value="1" style="flex: 0.7; min-width: 0;" oninput="calculateInvoice()">
+                                    <input type="number" class="tool-input inv-item-price" placeholder="Rate" aria-label="Rate" min="0" step="0.01" style="flex: 1.2; min-width: 0;" oninput="calculateInvoice()">
                                     <button class="secondary-btn" onclick="removeInvoiceRow(this)" aria-label="Remove item" style="padding: 0 0.5rem; min-height:40px; border-radius:8px; margin:0; flex: 0.4;">×</button>
                                 </div>
                             </div>
@@ -2747,22 +2755,23 @@
                         </div>
                         <div id="invoice-report-wrapper" style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1rem; margin-top: 1.2rem; text-align: left; font-size: 0.85rem; color:#e2e8f0;">
                             <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem;">
-                                <strong id="inv-preview-from" style="color:var(--primary);">Acme Corp</strong>
+                                <strong id="inv-preview-from" style="color:var(--primary);">Your business</strong>
                                 <span id="inv-preview-num" style="color:#a3a3a3;">INV-001</span>
                             </div>
                             <div style="margin-bottom: 0.8rem; font-size: 0.8rem; color:#a3a3a3;">
-                                To: <span id="inv-preview-to" style="color:#fff;">John Doe</span><br>
-                                Date: <span id="inv-preview-date">2026-05-23</span>
+                                To: <span id="inv-preview-to" style="color:#fff;">Client</span><br>
+                                Date: <span id="inv-preview-date">&mdash;</span><span id="inv-preview-due-wrap" hidden><br>Due: <span id="inv-preview-due"></span></span>
                             </div>
                             <div id="inv-preview-items" style="border-top:1px solid rgba(255,255,255,0.1); border-bottom:1px solid rgba(255,255,255,0.1); padding: 0.5rem 0; margin-bottom: 0.8rem; display: flex; flex-direction: column; gap:0.25rem;">
                                 <!-- Preview items go here -->
                             </div>
                             <div style="display:flex; flex-direction:column; gap:0.25rem; text-align:right;">
-                                <div>Subtotal: <span id="inv-preview-subtotal" style="font-weight:600;">$1,200.00</span></div>
-                                <div style="color:var(--accent);">Tax: <span id="inv-preview-tax">$216.00</span></div>
+                                <div>Subtotal: <span id="inv-preview-subtotal" style="font-weight:600;">$0.00</span></div>
                                 <div style="color:var(--success);">Discount: <span id="inv-preview-discount">$0.00</span></div>
-                                <div style="font-size:1.05rem; margin-top:0.25rem; font-weight:700; color:#fff;">Total: <span id="inv-preview-total">$1,416.00</span></div>
+                                <div style="color:var(--accent);">Tax: <span id="inv-preview-tax">$0.00</span></div>
+                                <div style="font-size:1.05rem; margin-top:0.25rem; font-weight:700; color:#fff;">Total: <span id="inv-preview-total">$0.00</span></div>
                             </div>
+                            <div id="inv-preview-notes-wrap" hidden style="margin-top:0.8rem; padding-top:0.6rem; border-top:1px solid rgba(255,255,255,0.1); font-size:0.78rem; color:#a3a3a3; white-space:pre-wrap;"><span style="color:#e2e8f0; font-weight:600;">Notes:</span> <span id="inv-preview-notes"></span></div>
                         </div>
 
                         <div class="invoice-actions" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
@@ -2778,8 +2787,9 @@
                     <details class="formula-explainer">
                         <summary>Formula & Explanation</summary>
                         <div class="formula-content">
-                            <p><strong>Formula:</strong> Subtotal = ∑(Qty × Price) | Tax = Subtotal × TaxRate | Discount = Subtotal × DiscountRate | Total = Subtotal + Tax - Discount</p>
-                            <p><strong>Explanation:</strong> Multiplies each line item quantity by its rate, aggregates the sum, applies the tax percentage, subtracts the discount percentage, and provides the final due amount.</p>
+                            <p><strong>Formula:</strong> Subtotal = ∑(Qty × Rate) | Discount = Subtotal × Discount% | Taxable = Subtotal − Discount | Tax = Taxable × Tax% | Total = Taxable + Tax</p>
+                            <p><strong>Explanation:</strong> Line items are summed, the discount is subtracted first, and tax is then applied to the discounted amount — the order used on standard GST/VAT invoices.</p>
+                            <p><strong>Example:</strong> Items 1,000 with 10% discount and 18% tax → taxable 900, tax 162, total 1,062.</p>
                         </div>
                     </details>
                 </div>

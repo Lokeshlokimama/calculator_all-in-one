@@ -3757,3 +3757,10 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .breadcrumb a:focus-visible {
     text-decoration: underline;
 }
+
+/* Invoice notes textarea */
+#calc-invoice #inv-notes {
+    resize: vertical;
+    min-height: 56px;
+    width: 100%;
+}

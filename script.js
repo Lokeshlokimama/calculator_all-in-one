@@ -5023,9 +5023,9 @@ function addInvoiceRow() {
     row.style.cssText = 'display: flex; gap: 0.4rem; margin-bottom: 0.4rem; width:100%;';
     
     row.innerHTML = `
-        <input type="text" class="tool-input inv-item-desc" placeholder="Description" aria-label="Item description" style="flex: 2; min-width: 0;" value="Item Description" oninput="calculateInvoice()">
+        <input type="text" class="tool-input inv-item-desc" placeholder="Description" aria-label="Item description" style="flex: 2; min-width: 0;" oninput="calculateInvoice()">
         <input type="number" class="tool-input inv-item-qty" placeholder="Qty" aria-label="Quantity" min="0" step="1" style="flex: 0.7; min-width: 0;" value="1" oninput="calculateInvoice()">
-        <input type="number" class="tool-input inv-item-price" placeholder="Rate" aria-label="Rate" min="0" step="0.01" style="flex: 1.2; min-width: 0;" value="100" oninput="calculateInvoice()">
+        <input type="number" class="tool-input inv-item-price" placeholder="Rate" aria-label="Rate" min="0" step="0.01" style="flex: 1.2; min-width: 0;" oninput="calculateInvoice()">
         <button class="secondary-btn invoice-remove-item" onclick="removeInvoiceRow(this)" aria-label="Remove item" style="padding: 0 0.5rem; min-height:40px; border-radius:8px; margin:0; flex: 0.4;">&times;</button>
     `;
     container.appendChild(row);
@@ -5067,19 +5067,37 @@ function calculateInvoice() {
     
     const taxRate = parseFloat(document.getElementById('invoice-tax').value) || 0;
     const discountRate = parseFloat(document.getElementById('invoice-discount').value) || 0;
-    
-    const tax = subtotal * (taxRate / 100);
+
+    // Standard invoice order: discount reduces the subtotal first, tax applies to the discounted base.
     const discount = subtotal * (discountRate / 100);
-    const totalDue = subtotal + tax - discount;
-    
+    const taxableBase = subtotal - discount;
+    const tax = taxableBase * (taxRate / 100);
+    const totalDue = taxableBase + tax;
+
     // Update live previews
-    document.getElementById('inv-preview-from').innerText = document.getElementById('inv-from').value || 'Sender';
+    document.getElementById('inv-preview-from').innerText = document.getElementById('inv-from').value || 'Your business';
     document.getElementById('inv-preview-to').innerText = document.getElementById('inv-to').value || 'Client';
     document.getElementById('inv-preview-num').innerText = document.getElementById('inv-number').value || 'INV-001';
-    
+
     const invDate = document.getElementById('inv-date').value;
     document.getElementById('inv-preview-date').innerText = invDate || new Date().toISOString().split('T')[0];
-    
+
+    const dueDate = document.getElementById('inv-due-date')?.value || '';
+    const dueWrap = document.getElementById('inv-preview-due-wrap');
+    if (dueWrap) {
+        dueWrap.hidden = !dueDate;
+        const dueEl = document.getElementById('inv-preview-due');
+        if (dueEl) dueEl.innerText = dueDate;
+    }
+
+    const notes = document.getElementById('inv-notes')?.value.trim() || '';
+    const notesWrap = document.getElementById('inv-preview-notes-wrap');
+    if (notesWrap) {
+        notesWrap.hidden = !notes;
+        const notesEl = document.getElementById('inv-preview-notes');
+        if (notesEl) notesEl.innerText = notes;
+    }
+
     setMoneyText('inv-preview-subtotal', subtotal, { digits: 2 });
     setMoneyText('inv-preview-tax', tax, { digits: 2 });
     setMoneyText('inv-preview-discount', discount, { digits: 2 });
@@ -5098,8 +5116,15 @@ function exportInvoice(format) {
     } else if (format === 'csv') {
         const rows = document.querySelectorAll('.invoice-item-row');
         const csvCell = value => `"${String(value).replace(/"/g, '""')}"`;
-        let csvContent = "Description,Quantity,Price,Total\n";
-        
+        let csvContent = "";
+        csvContent += `From,,${csvCell(document.getElementById('inv-from').value || '')}\n`;
+        csvContent += `Bill To,,${csvCell(document.getElementById('inv-to').value || '')}\n`;
+        csvContent += `Invoice No,,${csvCell(document.getElementById('inv-number').value || '')}\n`;
+        csvContent += `Invoice Date,,${csvCell(document.getElementById('inv-date').value || '')}\n`;
+        const csvDue = document.getElementById('inv-due-date')?.value || '';
+        if (csvDue) csvContent += `Due Date,,${csvCell(csvDue)}\n`;
+        csvContent += "\nDescription,Quantity,Price,Total\n";
+
         rows.forEach(row => {
             const desc = row.querySelector('.inv-item-desc').value || 'Item';
             const qty = row.querySelector('.inv-item-qty').value || 0;
@@ -5109,9 +5134,11 @@ function exportInvoice(format) {
         });
         
         csvContent += `\nSubtotal,,${csvCell(document.getElementById('inv-preview-subtotal').innerText)}\n`;
-        csvContent += `Tax,,${csvCell(document.getElementById('inv-preview-tax').innerText)}\n`;
         csvContent += `Discount,,${csvCell(document.getElementById('inv-preview-discount').innerText)}\n`;
+        csvContent += `Tax,,${csvCell(document.getElementById('inv-preview-tax').innerText)}\n`;
         csvContent += `Total,,${csvCell(document.getElementById('inv-preview-total').innerText)}\n`;
+        const csvNotes = document.getElementById('inv-notes')?.value.trim() || '';
+        if (csvNotes) csvContent += `\nNotes,,${csvCell(csvNotes)}\n`;
         
         downloadCSV(csvContent, 'invoice-' + document.getElementById('inv-number').value + '.csv');
     }
