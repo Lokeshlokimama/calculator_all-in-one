@@ -3764,3 +3764,14 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     min-height: 56px;
     width: 100%;
 }
+
+/* Prevent the scientific calculator from sitting alone in a sparse last grid row:
+   span the full row and center it, just above the full-width invoice card. */
+@media (min-width: 901px) {
+    .tools-grid #calc-scientific.result-card {
+        grid-column: 1 / -1;
+        justify-self: center;
+        width: min(100%, 480px);
+        max-width: 480px;
+    }
+}
