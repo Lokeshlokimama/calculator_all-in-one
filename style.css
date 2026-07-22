@@ -3765,13 +3765,35 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     width: 100%;
 }
 
-/* Prevent the scientific calculator from sitting alone in a sparse last grid row:
-   span the full row and center it, just above the full-width invoice card. */
-@media (min-width: 901px) {
-    .tools-grid #calc-scientific.result-card {
-        grid-column: 1 / -1;
-        justify-self: center;
-        width: min(100%, 480px);
-        max-width: 480px;
+/* Keep the scientific calculator and the invoice generator in the SAME grid row:
+   the scientific card always lands alone in the last row, so the invoice fills the
+   remaining columns beside it instead of forcing a separate full-width row. */
+.tools-grid #calc-invoice.invoice-generator-card {
+    grid-column: 1 / -1;
+    max-width: none;
+}
+
+@media (min-width: 981px) {
+    .tools-grid #calc-invoice.invoice-generator-card {
+        grid-column: 2 / -1;
     }
+
+    .tools-grid #calc-scientific.result-card {
+        max-width: none;
+        align-self: stretch;
+    }
+}
+
+/* Let the invoice's editor/preview columns adapt to the card's own width,
+   so a narrower card stacks them instead of overflowing. */
+#calc-invoice .invoice-layout {
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+}
+
+/* In filtered/search views the scientific card may be hidden, so the invoice
+   returns to a full centered row of the same grid. */
+.tools-grid.is-filtered #calc-invoice.invoice-generator-card {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: min(100%, 1080px);
 }
