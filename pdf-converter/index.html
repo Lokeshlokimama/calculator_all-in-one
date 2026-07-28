@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>PDF Converter | PDF to Word and Images</title>
+    <meta name="description" content="Convert a PDF into an editable Word-compatible text document or render PDF pages as PNG, JPEG, or WebP images in your browser.">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Calculator All-in-One">
+    <meta name="theme-color" content="#121425">
+    <link rel="canonical" href="https://calculatorsallinone.com/pdf-converter/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Calculator All-in-One">
+    <meta property="og:title" content="PDF Converter | PDF to Word and Images">
+    <meta property="og:description" content="Private browser-based PDF conversion for editable text documents and page images.">
+    <meta property="og:url" content="https://calculatorsallinone.com/pdf-converter/">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="PDF Converter | Calculator All-in-One">
+    <meta name="twitter:description" content="Convert PDFs to Word-compatible text files or page images without uploading the PDF to our server.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/tokens.css">
+    <link rel="stylesheet" href="/ai-tools.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Does the PDF converter upload my file?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. The PDF conversion runs in your browser. The selected PDF is not sent to Calculator All-in-One servers."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Is PDF to Word layout-perfect?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. This browser tool extracts readable text and creates a Word-compatible .doc file. Complex layouts, forms, columns, handwritten content, and scanned pages may need manual cleanup or OCR."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Which image formats can I export?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "PDF pages can be rendered as PNG, JPEG, or WebP images. PNG is best for crisp text, while JPEG or WebP may create smaller files."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Can it convert scanned PDFs to Word text?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Only if the PDF already contains selectable text. Scanned image-only PDFs require OCR, which is not included in this version."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What file size is supported?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The browser tool accepts PDF files up to 25 MB. Very large or image-heavy PDFs may still take time depending on the device."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What should I check after conversion?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Open the downloaded output and verify page order, text flow, formatting, image quality, and any missing tables or symbols before sharing it."
+                }
+            }
+        ]
+    }
+    </script>
+    <script src="/pdf-converter/pdf-converter.js" defer></script>
+</head>
+<body class="ai-page pdf-page">
+    <a class="ai-skip-link" href="#pdf-converter">Skip to PDF converter</a>
+
+    <header class="ai-nav-shell" aria-label="Site header">
+        <a class="ai-wordmark" href="/">Calculator All-in-One</a>
+        <nav class="ai-nav-links" aria-label="Primary navigation">
+            <a href="/">Home</a>
+            <a href="/utility-tools.html">Utility Tools</a>
+            <a href="/pdf-converter/" aria-current="page">PDF Converter</a>
+            <a href="/ai-tools/">AI Tools</a>
+        </nav>
+        <a class="ai-nav-cta" href="#pdf-converter">Convert PDF</a>
+        <details class="ai-nav-mobile">
+            <summary aria-label="Open navigation">Menu</summary>
+            <nav class="ai-nav-menu" aria-label="Mobile navigation">
+                <a href="/">Home</a>
+                <a href="/utility-tools.html">Utility Tools</a>
+                <a href="/pdf-converter/" aria-current="page">PDF Converter</a>
+                <a href="/ai-tools/">AI Tools</a>
+                <a href="/deepfake-checker/">Deepfake Checker</a>
+            </nav>
+        </details>
+    </header>
+
+    <main class="ai-main">
+        <section class="ai-hero" aria-labelledby="pdf-converter-title">
+            <div class="ai-hero-copy">
+                <p class="ai-kicker">PDF utility</p>
+                <h1 id="pdf-converter-title">Convert PDFs into editable text and page images.</h1>
+                <p class="ai-lede">Turn a PDF into a Word-compatible text document, or render each page as a clean PNG, JPEG, or WebP image. The work happens in your browser so ordinary files do not need a server upload.</p>
+                <div class="ai-hero-actions">
+                    <a class="ai-button" href="#pdf-converter">Start converting</a>
+                    <a class="ai-button ai-button--secondary" href="#pdf-faq">Read FAQs</a>
+                </div>
+            </div>
+
+            <aside class="ai-hero-proof" aria-label="PDF converter capabilities">
+                <div class="ai-proof-header">
+                    <span>PDF workbench</span>
+                    <span class="ai-status-dot pdf-status-ready" aria-hidden="true"></span>
+                </div>
+                <div class="ai-proof-list">
+                    <div class="ai-proof-row"><span>Input</span><strong>PDF only</strong></div>
+                    <div class="ai-proof-row"><span>Maximum size</span><strong>25 MB</strong></div>
+                    <div class="ai-proof-row"><span>Word export</span><strong>Editable text</strong></div>
+                    <div class="ai-proof-row"><span>Image export</span><strong>PNG / JPG / WebP</strong></div>
+                </div>
+            </aside>
+        </section>
+
+        <section class="checker-stage pdf-converter-stage" id="pdf-converter" aria-labelledby="upload-pdf-title">
+            <div class="checker-stage-copy">
+                <h2 id="upload-pdf-title">Upload one PDF</h2>
+                <p>Select a PDF up to 25 MB. The converter loads PDF.js in the browser, reads the file locally, and then creates the output you choose.</p>
+                <p>Use PDF to Word when you need editable text. Use PDF to Image when you need page screenshots for slides, records, thumbnails, or quick sharing.</p>
+                <div class="ai-card-meta"><span>No server upload</span><span>PDF only</span><span>Review output</span></div>
+            </div>
+
+            <div class="checker-workbench pdf-workbench">
+                <form class="upload-card pdf-upload-card" id="pdf-form" novalidate>
+                    <label class="upload-dropzone" id="pdf-dropzone" for="pdf-file" data-state="default">
+                        <input class="upload-input" id="pdf-file" name="pdf" type="file" accept=".pdf,application/pdf" aria-describedby="pdf-file-help pdf-status">
+                        <span class="upload-mark" aria-hidden="true">PDF</span>
+                        <span class="upload-title">Choose or drop a PDF</span>
+                        <span class="upload-help" id="pdf-file-help">PDF file - up to 25 MB</span>
+                    </label>
+
+                    <div class="preview-panel pdf-preview-panel" id="pdf-preview-panel" hidden>
+                        <canvas id="pdf-preview-canvas" aria-label="First page preview"></canvas>
+                        <div class="file-meta">
+                            <div>
+                                <div class="file-name" id="pdf-file-name"></div>
+                                <div class="file-size" id="pdf-file-size"></div>
+                            </div>
+                            <span class="ai-card-status" id="pdf-page-count">PDF</span>
+                        </div>
+                    </div>
+
+                    <div class="pdf-option-grid" aria-label="PDF conversion options">
+                        <article class="pdf-mode-card">
+                            <span class="ai-card-status">PDF to Word</span>
+                            <h3>Editable Word text</h3>
+                            <p>Extracts selectable text and downloads a Word-compatible `.doc` file with page breaks.</p>
+                            <button class="ai-button" id="pdf-word-button" type="button" disabled>Convert to Word</button>
+                        </article>
+
+                        <article class="pdf-mode-card">
+                            <span class="ai-card-status">PDF to Image</span>
+                            <h3>Page image export</h3>
+                            <p>Renders pages as images. PNG is best for text clarity; JPEG and WebP can be smaller.</p>
+                            <div class="pdf-controls">
+                                <label>
+                                    Image format
+                                    <select class="pdf-select" id="pdf-image-format">
+                                        <option value="image/png">PNG</option>
+                                        <option value="image/jpeg">JPEG</option>
+                                        <option value="image/webp">WebP</option>
+                                    </select>
+                                </label>
+                                <label>
+                                    Resolution
+                                    <select class="pdf-select" id="pdf-image-scale">
+                                        <option value="1">Standard</option>
+                                        <option value="1.5" selected>Crisp</option>
+                                        <option value="2">High</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <button class="ai-button" id="pdf-image-button" type="button" disabled>Convert to Images</button>
+                        </article>
+                    </div>
+
+                    <div class="upload-actions">
+                        <button class="ai-button ai-button--secondary" id="pdf-clear-button" type="button" hidden>Clear PDF</button>
+                        <button class="ai-button ai-button--secondary" id="pdf-download-all-button" type="button" hidden>Download all images as ZIP</button>
+                    </div>
+
+                    <div class="pdf-progress-track" aria-hidden="true">
+                        <div class="pdf-progress-fill" id="pdf-progress-fill"></div>
+                    </div>
+                    <p class="form-status" id="pdf-status" role="status" aria-live="polite">Select a PDF to begin.</p>
+                </form>
+
+                <aside class="result-card pdf-output-card" id="pdf-output-card" aria-live="polite" aria-atomic="false" hidden>
+                    <div class="result-topline">
+                        <span class="result-label" id="pdf-output-label">Output</span>
+                        <span class="confidence-value" id="pdf-output-count"></span>
+                    </div>
+                    <h2 class="result-verdict" id="pdf-output-title">Ready</h2>
+                    <div id="pdf-output-body" class="pdf-output-body"></div>
+                    <p class="result-disclaimer">Always open and review converted files before sharing. Text extraction can miss layout, tables, scanned text, signatures, and embedded annotations.</p>
+                </aside>
+            </div>
+        </section>
+
+        <section class="ai-section" aria-labelledby="how-pdf-converter-works">
+            <div class="ai-section-heading">
+                <h2 id="how-pdf-converter-works">How the converter works</h2>
+                <p>The tool uses browser rendering and text extraction. That makes it quick and private, but it also means output quality depends on the PDF itself.</p>
+            </div>
+            <div class="ai-info-grid">
+                <article class="ai-info-card">
+                    <span class="ai-step-number">1.0</span>
+                    <h3>Validate the PDF</h3>
+                    <p>The browser checks that the selected file is a PDF under 25 MB and shows a first-page preview when the PDF can be read.</p>
+                </article>
+                <article class="ai-info-card">
+                    <span class="ai-step-number">2.0</span>
+                    <h3>Choose an output</h3>
+                    <p>Word export extracts selectable text. Image export renders visible pages to canvas and downloads image files.</p>
+                </article>
+                <article class="ai-info-card">
+                    <span class="ai-step-number">3.0</span>
+                    <h3>Review before use</h3>
+                    <p>Check page order, text flow, symbols, tables, and resolution. Use professional software for contracts, forms, or exact layout recovery.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="ai-section ai-section--tight" aria-labelledby="pdf-privacy-title">
+            <div class="privacy-panel">
+                <div class="privacy-inline">
+                    <h2 id="pdf-privacy-title">Privacy and safety note</h2>
+                    <span class="ai-card-status">Browser processing</span>
+                </div>
+                <p>The selected PDF is processed locally in your browser and is not uploaded to Calculator All-in-One. Still avoid sensitive contracts, medical records, bank statements, identity documents, passwords, or permission-restricted files in any general online utility. The PDF.js and ZIP libraries are loaded from a public CDN so the converter can run without installing software.</p>
+            </div>
+        </section>
+
+        <section class="ai-section" aria-labelledby="next-pdf-tools">
+            <div class="ai-section-heading">
+                <h2 id="next-pdf-tools">More PDF tools</h2>
+                <p>Use these focused pages when you need a specific PDF workflow beyond PDF to Word or PDF to Image.</p>
+            </div>
+            <div class="ai-tool-grid pdf-idea-grid">
+                <a class="ai-tool-card" href="/images-to-pdf/">
+                    <span class="ai-card-status">Available</span>
+                    <h3>Images to PDF</h3>
+                    <p>Upload JPG, PNG, or WebP images, reorder them, and download a single PDF.</p>
+                </a>
+                <a class="ai-tool-card" href="/merge-pdf/">
+                    <span class="ai-card-status">Available</span>
+                    <h3>Merge PDF</h3>
+                    <p>Combine multiple PDFs in the browser and arrange the file order before download.</p>
+                </a>
+                <a class="ai-tool-card" href="/split-pdf/">
+                    <span class="ai-card-status">Available</span>
+                    <h3>Split PDF</h3>
+                    <p>Extract selected pages or page ranges into a smaller PDF file.</p>
+                </a>
+                <a class="ai-tool-card" href="/compress-pdf/">
+                    <span class="ai-card-status">Available</span>
+                    <h3>Compress PDF</h3>
+                    <p>Reduce file size with clear warnings about image quality and readability tradeoffs.</p>
+                </a>
+                <a class="ai-tool-card" href="/pdf-password-helper/">
+                    <span class="ai-card-status">Available</span>
+                    <h3>PDF password helper</h3>
+                    <p>Generate strong passwords and a safer handoff checklist for PDF encryption workflows.</p>
+                </a>
+                <a class="ai-tool-card" href="/ocr-scanned-pdf/">
+                    <span class="ai-card-status">Available</span>
+                    <h3>OCR scanned PDF</h3>
+                    <p>Turn scanned PDF pages into reviewable plain text with browser-based OCR.</p>
+                </a>
+            </div>
+        </section>
+
+        <section class="ai-section" id="pdf-faq" aria-labelledby="pdf-faq-title">
+            <div class="ai-section-heading">
+                <h2 id="pdf-faq-title">PDF converter FAQs</h2>
+                <p>Short answers before you trust a converted file.</p>
+            </div>
+            <div class="ai-faq-list">
+                <details>
+                    <summary>Does the PDF converter upload my file?</summary>
+                    <p>No. The selected PDF is read by your browser and is not sent to Calculator All-in-One servers.</p>
+                </details>
+                <details>
+                    <summary>Is PDF to Word layout-perfect?</summary>
+                    <p>No. It extracts selectable text into a Word-compatible `.doc` file. Complex layouts, columns, forms, and scanned pages may need manual cleanup.</p>
+                </details>
+                <details>
+                    <summary>Which image formats can I export?</summary>
+                    <p>You can export PDF pages as PNG, JPEG, or WebP. PNG is best for text, JPEG is widely compatible, and WebP often creates smaller files.</p>
+                </details>
+                <details>
+                    <summary>Can scanned PDFs become editable Word text?</summary>
+                    <p>Not unless the PDF already contains hidden selectable text. Image-only scans require OCR, which is a separate tool.</p>
+                </details>
+                <details>
+                    <summary>Why does image conversion stop at 30 pages?</summary>
+                    <p>Rendering many high-resolution pages can freeze a phone or low-memory laptop. The cap keeps the browser responsive and predictable.</p>
+                </details>
+                <details>
+                    <summary>What should I check after conversion?</summary>
+                    <p>Open the output and verify page order, text flow, symbols, table alignment, image quality, and missing scanned content before using it.</p>
+                </details>
+            </div>
+        </section>
+    </main>
+
+    <footer class="ai-footer">
+        <p class="ai-footer-statement">A useful converter should be honest about what it can preserve.</p>
+        <div class="ai-footer-meta">
+            <nav class="ai-footer-links" aria-label="Footer navigation">
+                <a href="/">Home</a>
+                <a href="/utility-tools.html">Utility Tools</a>
+                <a href="/pdf-converter/">PDF Converter</a>
+                <a href="/images-to-pdf/">Images to PDF</a>
+                <a href="/merge-pdf/">Merge PDF</a>
+                <a href="/split-pdf/">Split PDF</a>
+                <a href="/ai-tools/">AI Tools</a>
+                <a href="/deepfake-checker/">Deepfake Checker</a>
+                <a href="/privacy.html">Privacy</a>
+                <a href="/disclaimer.html">Disclaimer</a>
+            </nav>
+            <span>&copy; 2026 Calculator All-in-One</span>
+        </div>
+    </footer>
+</body>
+</html>

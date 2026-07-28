@@ -2,7 +2,28 @@
 
 Static premium calculator landing page built in Antigravity.
 
-Open `index.html` directly in a browser. The page includes finance, health, education, web, and daily utility calculators with animated cards, AdSense integration, a donation footer, and responsive styling.
+The page includes finance, health, education, web, daily utility, and AI-assisted tools with responsive styling. Run the local server so clean routes and server endpoints work together:
+
+```powershell
+npm run dev
+```
+
+Then open `http://127.0.0.1:4173/`.
+
+## AI Deepfake Checker
+
+The clean routes are `/ai-tools/` and `/deepfake-checker/`. The checker validates JPG, JPEG, PNG, and WebP images up to 5 MB, previews the selection locally, and sends the image as an in-memory request to `/api/deepfake-checker`. Uploaded files are not written to disk.
+
+Server configuration uses `DEEPFAKE_API_KEY` and `DEEPFAKE_PROVIDER`; browser code never receives the API key. Two production adapters are registered:
+
+- `hive` sends the in-memory image to Hive's synchronous AI-generated/deepfake detection endpoint.
+- `reality-defender` requests a signed upload URL, uploads the in-memory bytes directly, and polls the ensemble result.
+
+For local use, add the matching private key to the ignored `.env.local` file and choose either provider name. The local server loads that file automatically. Until a valid key and provider are configured, the endpoint intentionally returns `PROVIDER_NOT_CONFIGURED` rather than a fabricated result.
+
+For production, this repository is configured for Cloudflare Pages Functions. The `functions/api/deepfake-checker.js` wrapper exposes `/api/deepfake-checker`, while `wrangler.jsonc` enables Node.js compatibility and declares `DEEPFAKE_API_KEY` as a required secret. Cloudflare's request allowance supports the full 5 MB application limit; platforms with a lower request-body cap are not suitable without changing the upload architecture.
+
+Use `npm run build` as the Pages build command and `dist` as the output directory. In Cloudflare Pages, add `DEEPFAKE_API_KEY` as an encrypted secret and set `DEEPFAKE_PROVIDER` to `hive` or `reality-defender` for both Production and Preview as needed. The Wrangler configuration defaults the provider to `hive`. Never place the key in frontend code or a plaintext Wrangler variable.
 
 ## AdSense readiness requirements
 
@@ -24,7 +45,7 @@ Google does not publish a guaranteed minimum word count or page count. The test 
 Run all checks with the bundled or system Node.js runtime:
 
 ```powershell
-npm test
+npm run build
 ```
 
 The suite validates calculator formulas and edge cases, metadata, JSON-LD, internal links, sitemap coverage, publisher disclosures, source-backed calculator sections, content depth, and repeated boilerplate.

@@ -2454,6 +2454,20 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
 }
 
+.seo-info-card.ai-tools-home-card {
+    grid-column: span 8;
+    min-height: 220px;
+    background:
+        linear-gradient(135deg, rgba(30, 41, 59, 0.88), rgba(15, 23, 42, 0.82)),
+        radial-gradient(circle at 90% 10%, rgba(139, 92, 246, 0.2), transparent 42%);
+}
+
+.ai-tools-home-card p a {
+    color: #7dd3fc;
+    font-weight: 700;
+    text-underline-offset: 0.2em;
+}
+
 .seo-info-card:hover {
     transform: translateY(-3px);
     border-color: rgba(14, 165, 233, 0.48);
@@ -2661,7 +2675,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     .tools-section, .results-section { padding: 4rem 5%; }
     .tools-section h2, .results-section h2 { font-size: 2.2rem; }
     .seo-content-section { padding: 4rem 5%; }
-    .seo-info-card { grid-column: span 6; }
+    .seo-info-card,
+    .seo-info-card.ai-tools-home-card { grid-column: span 6; }
     .seo-split-panel { grid-template-columns: 1fr; }
     .seo-longform-grid { grid-template-columns: 1fr; }
     .tool-discovery { margin-bottom: 1.25rem; }

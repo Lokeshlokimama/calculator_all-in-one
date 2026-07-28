@@ -1,0 +1,73 @@
+/* Hallmark · macrostructure: Workbench · genre: atmospheric · theme: Midnight · nav: N5 · footer: Ft5 */
+:root {
+    --color-paper: oklch(14% 0.025 275);
+    --color-paper-2: oklch(18% 0.03 275);
+    --color-paper-3: oklch(23% 0.035 275);
+    --color-panel: oklch(19% 0.032 275);
+    --color-panel-strong: oklch(24% 0.042 275);
+    --color-ink: oklch(96% 0.008 275);
+    --color-ink-soft: oklch(84% 0.018 275);
+    --color-muted: oklch(72% 0.02 275);
+    --color-rule: oklch(48% 0.045 275);
+    --color-rule-strong: oklch(60% 0.08 275);
+    --color-accent: oklch(75% 0.16 255);
+    --color-accent-strong: oklch(66% 0.2 270);
+    --color-accent-ink: oklch(16% 0.035 275);
+    --color-focus: oklch(82% 0.15 240);
+    --color-positive: oklch(75% 0.15 155);
+    --color-warning: oklch(80% 0.15 85);
+    --color-error: oklch(70% 0.18 28);
+    --color-bloom-a: oklch(63% 0.2 285);
+    --color-bloom-b: oklch(70% 0.16 235);
+    --color-overlay: oklch(8% 0.02 275 / 0.72);
+    --color-glass: oklch(20% 0.035 275 / 0.72);
+    --color-glass-strong: oklch(25% 0.045 275 / 0.84);
+
+    --font-display: "Bricolage Grotesque", "Outfit", ui-sans-serif, sans-serif;
+    --font-body: "Outfit", ui-sans-serif, sans-serif;
+
+    --space-3xs: 0.125rem;
+    --space-2xs: 0.25rem;
+    --space-xs: 0.5rem;
+    --space-sm: 0.75rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2.5rem;
+    --space-2xl: 4rem;
+    --space-3xl: 6rem;
+    --space-4xl: 9rem;
+
+    --text-xs: 0.8rem;
+    --text-sm: 0.9rem;
+    --text-base: 1rem;
+    --text-md: 1.25rem;
+    --text-lg: 1.5625rem;
+    --text-xl: 1.9531rem;
+    --text-2xl: 2.4414rem;
+    --text-3xl: 3.0518rem;
+    --text-display-s: clamp(2.35rem, 7vw, 4rem);
+    --text-display: clamp(2.75rem, 7vw, 5.25rem);
+
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    --dur-micro: 110ms;
+    --dur-short: 200ms;
+    --dur-long: 380ms;
+
+    --rule-hair: 1px;
+    --radius-sm: 0.75rem;
+    --radius-md: 1.125rem;
+    --radius-lg: 1.75rem;
+    --radius-pill: 999px;
+
+    --shadow-nav: 0 1rem 3rem oklch(7% 0.02 275 / 0.36);
+    --shadow-panel: 0 1.5rem 4rem oklch(7% 0.02 275 / 0.28);
+
+    --z-base: 1;
+    --z-raised: 10;
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-modal: 400;
+    --z-toast: 500;
+}

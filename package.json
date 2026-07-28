@@ -4,8 +4,10 @@
   "version": "1.0.0",
   "description": "Static calculator site with AdSense-readiness and calculation tests.",
   "scripts": {
-    "build": "npm run lint && npm test",
-    "lint": "node --check script.js && node --check calculator-pages.js && node --check calculator-core.js",
+    "dev": "node scripts/dev-server.mjs",
+    "build": "npm run lint && npm test && npm run build:static",
+    "build:static": "node scripts/build-static.mjs",
+    "lint": "node --check script.js && node --check calculator-pages.js && node --check calculator-core.js && node --check deepfake-checker/deepfake-checker.js && node --check pdf-converter/pdf-converter.js && node --check pdf-tools-suite.js && node --check api/deepfake-checker.js && node --check api/providers/index.js && node --check api/providers/hive.js && node --check api/providers/reality-defender.js && node --check functions/api/deepfake-checker.js && node --check scripts/dev-server.mjs && node --check scripts/build-static.mjs",
     "test": "node --test tests/*.test.mjs",
     "test:calculators": "node --test tests/calculator-core.test.mjs",
     "test:content": "node --test tests/site-quality.test.mjs"
