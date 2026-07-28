@@ -25,6 +25,8 @@
     window.addEventListener('beforeunload', revokeOutputs);
 
     function init() {
+        initPdfToolsMenu();
+
         dom.form = document.getElementById('pdf-form');
         dom.input = document.getElementById('pdf-file');
         dom.dropzone = document.getElementById('pdf-dropzone');
@@ -74,6 +76,24 @@
             if (!file) return;
             dom.input.files = event.dataTransfer.files;
             handleFile(file);
+        });
+    }
+
+    function initPdfToolsMenu() {
+        const menu = document.querySelector('.pdf-nav-tools');
+        if (!menu) return;
+
+        document.addEventListener('pointerdown', (event) => {
+            if (menu.open && !menu.contains(event.target)) {
+                menu.open = false;
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && menu.open) {
+                menu.open = false;
+                menu.querySelector('summary')?.focus();
+            }
         });
     }
 

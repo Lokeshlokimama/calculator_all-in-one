@@ -148,24 +148,28 @@ body.ai-page::after {
 
 .pdf-nav-tools-menu {
     position: absolute;
-    inset-block-start: calc(100% + var(--space-md));
-    inset-inline-start: 50%;
+    z-index: var(--z-dropdown);
+    inset-block-start: calc(100% + var(--space-sm));
+    inset-inline-end: 0;
     display: grid;
-    width: min(19rem, 80vw);
-    gap: var(--space-3xs);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: min(28rem, calc(100vw - (2 * var(--space-md))));
+    gap: var(--space-2xs);
     padding: var(--space-sm);
-    border: var(--rule-hair) solid var(--color-rule);
+    border: var(--rule-hair) solid var(--color-rule-strong);
     border-radius: var(--radius-md);
-    background: var(--color-glass-strong);
+    background: var(--color-paper-2);
     box-shadow: var(--shadow-nav);
-    backdrop-filter: blur(1rem);
-    transform: translateX(-50%);
 }
 
 .pdf-nav-tools-menu a {
-    min-height: 2.5rem;
-    padding: var(--space-sm);
+    display: flex;
+    min-width: 0;
+    min-height: 2.75rem;
+    align-items: center;
+    padding: var(--space-xs) var(--space-sm);
     border-radius: var(--radius-sm);
+    white-space: normal;
 }
 
 .pdf-nav-tools-menu a:hover,
@@ -1040,6 +1044,7 @@ body.ai-page::after {
 
 .pdf-controls label {
     display: grid;
+    min-width: 0;
     gap: var(--space-2xs);
     color: var(--color-muted);
     font-size: var(--text-sm);
@@ -1047,6 +1052,8 @@ body.ai-page::after {
 }
 
 .pdf-select {
+    min-width: 0;
+    max-width: 100%;
     min-height: 2.75rem;
     width: 100%;
     padding: 0 var(--space-sm);
@@ -1054,6 +1061,12 @@ body.ai-page::after {
     border-radius: var(--radius-sm);
     background: var(--color-paper-2);
     color: var(--color-ink);
+}
+
+.pdf-mode-card > .ai-button {
+    width: 100%;
+    margin-top: auto;
+    padding-inline: var(--space-sm);
 }
 
 .pdf-text-input,
@@ -1201,7 +1214,6 @@ body.ai-page::after {
 }
 
 @media (min-width: 40rem) {
-    .pdf-option-grid,
     .pdf-image-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -1214,6 +1226,10 @@ body.ai-page::after {
 }
 
 @media (max-width: 30rem) {
+    .pdf-nav-tools-menu {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
     .pdf-controls {
         grid-template-columns: minmax(0, 1fr);
     }
