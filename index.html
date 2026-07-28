@@ -196,6 +196,7 @@
         </div>
 
         <nav>
+            <a href="/pdf-converter/">PDF Converter</a>
             <a href="#tools" data-category-link="all" onclick="filterCategory('all', event)">All Tools</a>
             <a href="#tools" data-category-link="finance" onclick="filterCategory('finance', event)">Finance</a>
             <a href="#tools" data-category-link="electricity" onclick="filterCategory('electricity', event)">Electricity</a>
@@ -242,6 +243,7 @@
         <details class="mobile-menu">
             <summary>Menu</summary>
             <div class="mobile-menu-panel">
+                <a href="/pdf-converter/">PDF Converter</a>
                 <a href="/#tools">All Tools</a>
                 <a href="/?category=finance#tools">Finance</a>
                 <a href="/?category=electricity#tools">Electricity</a>
@@ -2794,11 +2796,33 @@
                     </details>
                 </div>
 
+                <a id="pdf-converter-page" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web" href="/pdf-converter/" style="text-decoration:none;color:inherit;">
+                    <div class="card-glow"></div><h3>PDF Converter</h3><p>Convert PDF to Word-compatible text or page images</p>
+                </a>
+                <a id="images-to-pdf-page" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web" href="/images-to-pdf/" style="text-decoration:none;color:inherit;">
+                    <div class="card-glow"></div><h3>Images to PDF</h3><p>Combine JPG, PNG, and WebP images into one PDF</p>
+                </a>
+                <a id="merge-pdf-page" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web" href="/merge-pdf/" style="text-decoration:none;color:inherit;">
+                    <div class="card-glow"></div><h3>Merge PDF</h3><p>Combine multiple PDF files in your browser</p>
+                </a>
+                <a id="split-pdf-page" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web" href="/split-pdf/" style="text-decoration:none;color:inherit;">
+                    <div class="card-glow"></div><h3>Split PDF</h3><p>Extract selected pages or page ranges</p>
+                </a>
+                <a id="compress-pdf-page" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web" href="/compress-pdf/" style="text-decoration:none;color:inherit;">
+                    <div class="card-glow"></div><h3>Compress PDF</h3><p>Create a smaller image-based PDF copy</p>
+                </a>
+                <a id="pdf-password-helper-page" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web" href="/pdf-password-helper/" style="text-decoration:none;color:inherit;">
+                    <div class="card-glow"></div><h3>PDF Password Helper</h3><p>Create a strong password for PDF protection workflows</p>
+                </a>
+                <a id="ocr-scanned-pdf-page" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web" href="/ocr-scanned-pdf/" style="text-decoration:none;color:inherit;">
+                    <div class="card-glow"></div><h3>OCR Scanned PDF</h3><p>Extract text from scanned PDF pages</p>
+                </a>
+
             </div>
 
             <div class="empty-tools-state" id="empty-tools-state" hidden>
                 <h3>No matching tools found</h3>
-                <p>Try searching for EMI, BMI, currency, QR, password, or electricity.</p>
+                <p>Try searching for EMI, BMI, currency, PDF, QR, password, or electricity.</p>
                 <button class="secondary-btn shine-btn" onclick="clearToolSearch()">Show all tools</button>
             </div>
             
@@ -2822,7 +2846,7 @@
                 </div>
                 <div class="seo-split-panel">
                     <article><h3>Why use our calculators?</h3><p>Every calculator on this site is built around clarity. Inputs are labeled, results are shown immediately, and many tools include formula notes, examples, and category filters so you can understand the result. The website is mobile responsive, so you can calculate from a phone while shopping, studying, traveling, or discussing a plan with someone. The tools are also grouped by purpose, which makes it easier to find a finance calculator, a health calculator, a power calculator, or a daily utility without searching the web again.</p><p>Another benefit is transparency. A number is only useful when you know what it means. That is why the site explains formulas, assumptions, and practical limits wherever possible. Finance results are estimates, health outputs are educational, and electricity tools depend on the values you enter. This honest approach helps you use the calculators confidently while still checking official sources for final decisions.</p></article>
-                    <article><h3>Popular calculators</h3><div class="popular-link-grid"><a href="emi-calculator.html">EMI Calculator</a><a href="bmi-calculator.html">BMI Calculator</a><a href="percentage-calculator.html">Percentage Calculator</a><a href="age-calculator.html">Age Calculator</a><a href="sip-calculator.html">SIP Calculator</a><a href="gst-calculator.html">GST Calculator</a><a href="currency-converter.html">Currency Converter</a><a href="loan-calculator.html">Loan Calculator</a><a href="password-generator.html">Password Generator</a><a href="qr-code-generator.html">QR Code Generator</a><a href="/?category=electricity#tools">Electricity Calculators</a><a href="/#calc-equation-plotter">Equation Plotter</a><a href="/#calc-invoice">Invoice Generator</a></div></article>
+                    <article><h3>Popular calculators</h3><div class="popular-link-grid"><a href="emi-calculator.html">EMI Calculator</a><a href="bmi-calculator.html">BMI Calculator</a><a href="percentage-calculator.html">Percentage Calculator</a><a href="age-calculator.html">Age Calculator</a><a href="sip-calculator.html">SIP Calculator</a><a href="gst-calculator.html">GST Calculator</a><a href="currency-converter.html">Currency Converter</a><a href="loan-calculator.html">Loan Calculator</a><a href="/pdf-converter/">PDF Converter</a><a href="/merge-pdf/">Merge PDF</a><a href="/images-to-pdf/">Images to PDF</a><a href="password-generator.html">Password Generator</a><a href="qr-code-generator.html">QR Code Generator</a><a href="/?category=electricity#tools">Electricity Calculators</a><a href="/#calc-equation-plotter">Equation Plotter</a><a href="/#calc-invoice">Invoice Generator</a></div></article>
                 </div>
                 <div class="homepage-faq-panel" id="faq">
                     <div class="seo-section-head compact"><p class="page-kicker">FAQ</p><h2>Questions people ask before using online calculators</h2></div>
@@ -2862,7 +2886,7 @@
             </div>
         </div>
         
-        <div class="footer-links" style="text-align: center; margin: 2rem 0; padding-top: 2rem; border-top: 1px solid var(--glass-border); display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem;">
+        <div class="footer-links" style="text-align: center; margin: 2rem 0; padding-top: 2rem; border-top: 1px solid var(--glass-border); display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem;"><a href="/pdf-converter/">PDF Converter</a><a href="/merge-pdf/">Merge PDF</a><a href="/images-to-pdf/">Images to PDF</a>
             <a href="/?category=geometry#tools">Geometry</a>
                 <a href="about.html">About Us</a>
             <a href="contact.html">Contact Us</a>
@@ -2893,7 +2917,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=20260722b" defer></script>
+    <script src="script.js?v=20260728pdf" defer></script>
 
     <!-- Floating AI Assistant Widget -->
     <div id="ai-assistant-widget" class="ai-widget-container" style="position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 999; font-family: inherit;">

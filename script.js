@@ -4507,6 +4507,13 @@ const AI_TOOL_RULES = [
     { target: 'calc-base64', label: 'Base64 Encode/Decode', category: 'web', keys: ['base64', 'encode', 'decode', 'base 64'], tip: 'Use it to encode plain text or decode Base64.' },
     { target: 'calc-color', label: 'Color Converter', category: 'web', keys: ['color', 'hex', 'rgb', 'color converter', 'palette'], tip: 'Use it to convert between HEX and RGB color values.' },
     { target: 'calc-image-converter', label: 'Image Format Converter', category: 'web', keys: ['image', 'image converter', 'jpg', 'png', 'webp', 'format converter'], tip: 'Use it to convert image formats in the browser.' },
+    { target: 'pdf-converter-page', href: '/pdf-converter/', label: 'PDF Converter', category: 'web', keys: ['pdf', 'pdf converter', 'pdf convertor', 'pdf to word', 'pdf to image', 'pdf pages', 'word document'], tip: 'Convert PDFs to Word-compatible text files or page images.' },
+    { target: 'images-to-pdf-page', href: '/images-to-pdf/', label: 'Images to PDF', category: 'web', keys: ['images to pdf', 'jpg to pdf', 'jpeg to pdf', 'png to pdf', 'webp to pdf', 'photo to pdf'], tip: 'Turn JPG, PNG, or WebP images into one PDF.' },
+    { target: 'merge-pdf-page', href: '/merge-pdf/', label: 'Merge PDF', category: 'web', keys: ['merge pdf', 'combine pdf', 'join pdf', 'multiple pdf into one'], tip: 'Combine multiple PDFs into one file.' },
+    { target: 'split-pdf-page', href: '/split-pdf/', label: 'Split PDF', category: 'web', keys: ['split pdf', 'extract pdf pages', 'pdf page range', 'separate pdf'], tip: 'Extract selected pages from one PDF.' },
+    { target: 'compress-pdf-page', href: '/compress-pdf/', label: 'Compress PDF', category: 'web', keys: ['compress pdf', 'reduce pdf size', 'smaller pdf', 'pdf size'], tip: 'Create a smaller image-based PDF copy.' },
+    { target: 'pdf-password-helper-page', href: '/pdf-password-helper/', label: 'PDF Password Helper', category: 'web', keys: ['pdf password', 'protect pdf', 'pdf lock', 'pdf encryption password'], tip: 'Generate a strong password and safety note for PDF workflows.' },
+    { target: 'ocr-scanned-pdf-page', href: '/ocr-scanned-pdf/', label: 'OCR Scanned PDF', category: 'web', keys: ['ocr pdf', 'scanned pdf text', 'extract text from scanned pdf', 'pdf ocr'], tip: 'Extract plain text from scanned PDF pages.' },
     { target: 'calc-uuid', label: 'UUID Generator', category: 'web', keys: ['uuid', 'guid', 'unique id', 'identifier', 'id generator'], tip: 'Use it to generate UUID identifiers.' },
     { target: 'calc-timezone', label: 'Time Zone Converter', category: 'web', keys: ['timezone', 'time zone', 'gmt', 'utc', 'est', 'ist', 'pst', 'compare time'], tip: 'Use it to compare a time across time zones.' },
     { target: 'calc-age', label: 'Age Calculator', category: 'basic', keys: ['age', 'birthday', 'date of birth', 'how old'], tip: 'Use it to calculate exact age from a birth date.' },
@@ -4622,6 +4629,13 @@ function findAIToolMatch(query) {
 
 function routeAIToTool(rule) {
     const category = getAIRuleCategory(rule);
+
+    if (rule.href) {
+        appendAIMessage(`Best match: <strong>${escapeAIHTML(rule.label)}</strong>.<br>${escapeAIHTML(rule.tip || 'I found the matching tool for you.')}<br><a class="ai-tool-action" href="${escapeAIHTML(rule.href)}">Open ${escapeAIHTML(rule.label)}</a>`, 'bot');
+        window.location.href = rule.href;
+        return;
+    }
+
     const targetEl = document.getElementById(rule.target);
 
     if (!targetEl) {
