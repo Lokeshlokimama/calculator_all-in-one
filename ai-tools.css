@@ -118,6 +118,62 @@ body.ai-page::after {
     gap: var(--space-lg);
 }
 
+.pdf-nav-tools {
+    position: relative;
+}
+
+.pdf-nav-tools summary {
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    white-space: nowrap;
+}
+
+.pdf-nav-tools summary::-webkit-details-marker {
+    display: none;
+}
+
+.pdf-nav-tools summary::after {
+    content: " +";
+    color: var(--color-focus);
+}
+
+.pdf-nav-tools[open] summary,
+.pdf-nav-tools summary:hover,
+.pdf-nav-tools summary:focus-visible {
+    color: var(--color-ink);
+}
+
+.pdf-nav-tools-menu {
+    position: absolute;
+    inset-block-start: calc(100% + var(--space-md));
+    inset-inline-start: 50%;
+    display: grid;
+    width: min(19rem, 80vw);
+    gap: var(--space-3xs);
+    padding: var(--space-sm);
+    border: var(--rule-hair) solid var(--color-rule);
+    border-radius: var(--radius-md);
+    background: var(--color-glass-strong);
+    box-shadow: var(--shadow-nav);
+    backdrop-filter: blur(1rem);
+    transform: translateX(-50%);
+}
+
+.pdf-nav-tools-menu a {
+    min-height: 2.5rem;
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+}
+
+.pdf-nav-tools-menu a:hover,
+.pdf-nav-tools-menu a:focus-visible {
+    color: var(--color-ink);
+    background: rgba(255, 255, 255, 0.06);
+}
+
 .ai-nav-links a,
 .ai-nav-menu a,
 .ai-footer-links a {

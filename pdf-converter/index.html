@@ -23,7 +23,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="stylesheet" href="/tokens.css">
-    <link rel="stylesheet" href="/ai-tools.css">
+    <link rel="stylesheet" href="/ai-tools.css?v=20260728pdfnav">
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -80,6 +80,22 @@
         ]
     }
     </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "PDF tools",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "PDF to Word and Images", "url": "https://calculatorsallinone.com/pdf-converter/"},
+            {"@type": "ListItem", "position": 2, "name": "Images to PDF", "url": "https://calculatorsallinone.com/images-to-pdf/"},
+            {"@type": "ListItem", "position": 3, "name": "Merge PDF", "url": "https://calculatorsallinone.com/merge-pdf/"},
+            {"@type": "ListItem", "position": 4, "name": "Split PDF", "url": "https://calculatorsallinone.com/split-pdf/"},
+            {"@type": "ListItem", "position": 5, "name": "Compress PDF", "url": "https://calculatorsallinone.com/compress-pdf/"},
+            {"@type": "ListItem", "position": 6, "name": "PDF Password Helper", "url": "https://calculatorsallinone.com/pdf-password-helper/"},
+            {"@type": "ListItem", "position": 7, "name": "OCR Scanned PDF", "url": "https://calculatorsallinone.com/ocr-scanned-pdf/"}
+        ]
+    }
+    </script>
     <script src="/pdf-converter/pdf-converter.js" defer></script>
 </head>
 <body class="ai-page pdf-page">
@@ -91,7 +107,18 @@
             <a href="/">Home</a>
             <a href="/utility-tools.html">Utility Tools</a>
             <a href="/pdf-converter/" aria-current="page">PDF Converter</a>
-            <a href="/ai-tools/">AI Tools</a>
+            <details class="pdf-nav-tools">
+                <summary>All PDF tools</summary>
+                <nav class="pdf-nav-tools-menu" aria-label="All PDF tools">
+                    <a href="/pdf-converter/" aria-current="page">PDF to Word &amp; Images</a>
+                    <a href="/images-to-pdf/">Images to PDF</a>
+                    <a href="/merge-pdf/">Merge PDF</a>
+                    <a href="/split-pdf/">Split PDF</a>
+                    <a href="/compress-pdf/">Compress PDF</a>
+                    <a href="/pdf-password-helper/">PDF Password Helper</a>
+                    <a href="/ocr-scanned-pdf/">OCR Scanned PDF</a>
+                </nav>
+            </details>
         </nav>
         <a class="ai-nav-cta" href="#pdf-converter">Convert PDF</a>
         <details class="ai-nav-mobile">
@@ -100,8 +127,12 @@
                 <a href="/">Home</a>
                 <a href="/utility-tools.html">Utility Tools</a>
                 <a href="/pdf-converter/" aria-current="page">PDF Converter</a>
-                <a href="/ai-tools/">AI Tools</a>
-                <a href="/deepfake-checker/">Deepfake Checker</a>
+                <a href="/images-to-pdf/">Images to PDF</a>
+                <a href="/merge-pdf/">Merge PDF</a>
+                <a href="/split-pdf/">Split PDF</a>
+                <a href="/compress-pdf/">Compress PDF</a>
+                <a href="/pdf-password-helper/">PDF Password Helper</a>
+                <a href="/ocr-scanned-pdf/">OCR Scanned PDF</a>
             </nav>
         </details>
     </header>
@@ -258,32 +289,26 @@
             </div>
             <div class="ai-tool-grid pdf-idea-grid">
                 <a class="ai-tool-card" href="/images-to-pdf/">
-                    <span class="ai-card-status">Available</span>
                     <h3>Images to PDF</h3>
                     <p>Upload JPG, PNG, or WebP images, reorder them, and download a single PDF.</p>
                 </a>
                 <a class="ai-tool-card" href="/merge-pdf/">
-                    <span class="ai-card-status">Available</span>
                     <h3>Merge PDF</h3>
                     <p>Combine multiple PDFs in the browser and arrange the file order before download.</p>
                 </a>
                 <a class="ai-tool-card" href="/split-pdf/">
-                    <span class="ai-card-status">Available</span>
                     <h3>Split PDF</h3>
                     <p>Extract selected pages or page ranges into a smaller PDF file.</p>
                 </a>
                 <a class="ai-tool-card" href="/compress-pdf/">
-                    <span class="ai-card-status">Available</span>
                     <h3>Compress PDF</h3>
                     <p>Reduce file size with clear warnings about image quality and readability tradeoffs.</p>
                 </a>
                 <a class="ai-tool-card" href="/pdf-password-helper/">
-                    <span class="ai-card-status">Available</span>
                     <h3>PDF password helper</h3>
                     <p>Generate strong passwords and a safer handoff checklist for PDF encryption workflows.</p>
                 </a>
                 <a class="ai-tool-card" href="/ocr-scanned-pdf/">
-                    <span class="ai-card-status">Available</span>
                     <h3>OCR scanned PDF</h3>
                     <p>Turn scanned PDF pages into reviewable plain text with browser-based OCR.</p>
                 </a>
