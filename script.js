@@ -901,6 +901,13 @@ function generateWALink() {
 }
 window.generateWALink = generateWALink;
 
+function trackSiteEvent(name, params = {}) {
+    if (typeof window.gtag === 'function') {
+        window.gtag('event', name, params);
+    }
+}
+window.trackSiteEvent = trackSiteEvent;
+
 // --- Real QR Generator ---
 function generateRealQR() {
     const textInput = document.getElementById('qr-text');
@@ -937,6 +944,7 @@ function generateRealQR() {
         qrContainer.style.background = '#fff';
         qrContainer.style.border = 'none';
         qrContainer.classList.add('generated');
+        trackSiteEvent('generate_qr', { event_category: 'tool_interaction', tool_name: 'homepage_qr' });
         showToast('QR Code Generated!');
     } catch (error) {
         qrPrompt.innerText = 'Error';
@@ -963,6 +971,7 @@ function downloadQR() {
     document.body.appendChild(link);
     link.click();
     link.remove();
+    trackSiteEvent('download_qr', { event_category: 'tool_interaction', tool_name: 'homepage_qr' });
     showToast('QR download started');
 }
 window.downloadQR = downloadQR;
@@ -1080,6 +1089,7 @@ function applyToolFilters(options = {}) {
 function filterCategory(category, sourceEvent) {
     if (sourceEvent) sourceEvent.preventDefault();
     currentCategory = category;
+    if (sourceEvent) trackSiteEvent('filter_tools', { event_category: 'tool_discovery', tool_category: category });
     if (sourceEvent) {
         currentSearchTerm = '';
         const searchInput = document.getElementById('tool-search');
@@ -1093,6 +1103,9 @@ function searchTools(value) {
     currentSearchTerm = value || '';
     currentCategory = 'all';
     const visibleCount = applyToolFilters();
+    if (currentSearchTerm.trim().length >= 2) {
+        trackSiteEvent('search_tools', { event_category: 'tool_discovery', search_term: currentSearchTerm.trim().slice(0, 80), visible_count: visibleCount });
+    }
     scheduleSearchResultScroll(visibleCount);
 }
 window.searchTools = searchTools;
@@ -1111,6 +1124,7 @@ function jumpToTool(id, category = 'all') {
     if (searchInput) searchInput.value = '';
     currentCategory = category;
     applyToolFilters();
+    trackSiteEvent('select_tool', { event_category: 'tool_discovery', tool_id: id, tool_category: category });
     scrollToCalc(id, category);
 }
 window.jumpToTool = jumpToTool;
@@ -3088,6 +3102,7 @@ async function copyToolResult(card) {
     }
 
     const copied = await copyText(text);
+    trackSiteEvent('copy_tool_result', { event_category: 'tool_interaction', tool_name: card?.id || 'unknown', success: copied });
     showToast(copied ? 'Result copied' : 'Copy failed');
 }
 
@@ -3102,6 +3117,7 @@ async function shareToolResult(card) {
     if (navigator.share) {
         try {
             await navigator.share({ title, text });
+            trackSiteEvent('share_tool_result', { event_category: 'tool_interaction', tool_name: card?.id || 'unknown', method: 'native_share' });
             showToast('Share sheet opened');
             return;
         } catch {
@@ -4482,11 +4498,15 @@ const AI_TOOL_RULES = [
     { target: 'calc-protein', label: 'Protein Intake', category: 'health', keys: ['protein', 'protein intake', 'daily protein', 'muscle protein'], tip: 'Use it to estimate protein needs from body weight and activity goal.' },
     { target: 'calc-body-fat', label: 'Body Fat Calculator', category: 'health', keys: ['body fat', 'fat percentage', 'waist neck hip', 'body fat percent'], tip: 'Use it to estimate body fat percentage from body measurements.' },
     { target: 'calc-calorie', label: 'Calorie & Macro', category: 'health', keys: ['calorie', 'calories', 'macro', 'macros', 'nutrition', 'food log', 'carbs', 'protein', 'fat', 'diet'], tip: 'Use it to total calories and macros for foods.' },
-    { target: 'calc-emi', label: 'EMI Calculator', category: 'finance', keys: ['emi', 'loan', 'home loan', 'car loan', 'monthly payment', 'mortgage', 'interest rate', 'tenure'], tip: 'Enter loan amount, annual interest, and tenure to estimate monthly EMI.' },
+    { target: 'calc-emi', label: 'EMI Calculator', category: 'finance', keys: ['emi', 'loan', 'car loan', 'monthly payment', 'mortgage', 'interest rate', 'tenure'], tip: 'Enter loan amount, annual interest, and tenure to estimate monthly EMI.' },
+    { target: 'home-loan-emi-india-page', href: '/home-loan-emi-calculator-india/', label: 'Home Loan EMI Calculator India', category: 'finance', keys: ['home loan emi', 'home loan calculator india', 'housing loan emi', 'mortgage india'], tip: 'Estimate home loan EMI, total interest, and total repayment.' },
+    { target: 'emi-prepayment-page', href: '/emi-calculator-with-prepayment/', label: 'EMI Prepayment Calculator', category: 'finance', keys: ['emi prepayment', 'loan prepayment', 'part payment loan', 'interest saved prepayment'], tip: 'Estimate balance, months saved, and future payment saved after a prepayment.' },
     { target: 'calc-sip', label: 'SIP Calculator', category: 'finance', keys: ['sip', 'mutual fund', 'investment', 'invest', 'wealth growth', 'compounding', 'monthly investment'], tip: 'Use it to project monthly investment growth over time.' },
+    { target: 'sip-step-up-page', href: '/sip-step-up-calculator/', label: 'SIP Step-Up Calculator', category: 'finance', keys: ['sip step up', 'step up sip', 'increase sip yearly', 'sip annual increase'], tip: 'Project SIP growth when monthly investment increases every year.' },
     { target: 'calc-fd', label: 'FD / SB Calculator', category: 'finance', keys: ['fd', 'fixed deposit', 'sb', 'savings account', 'deposit interest', 'senior citizen'], tip: 'Use it to estimate maturity value for fixed deposits or savings interest.' },
     { target: 'calc-rd', label: 'RD Calculator', category: 'finance', keys: ['rd', 'recurring deposit', 'monthly deposit'], tip: 'Use it to estimate recurring deposit maturity.' },
     { target: 'calc-gst', label: 'GST Calculator', category: 'finance', keys: ['gst', 'sales tax', 'tax', 'cgst', 'sgst', 'add gst', 'remove gst'], tip: 'Use it to add or remove GST from an amount.' },
+    { target: 'gst-india-page', href: '/gst-calculator-india/', label: 'GST Calculator India', category: 'finance', keys: ['gst calculator india', 'indian gst', 'cgst sgst calculator', 'remove gst india'], tip: 'Add or remove Indian GST and see CGST/SGST split.' },
     { target: 'calc-salary', label: 'Salary Calculator', category: 'finance', keys: ['salary', 'take home', 'in hand', 'hra', 'pf', 'ctc'], tip: 'Use it to estimate monthly in-hand salary from salary components.' },
     { target: 'calc-leave', label: 'Leave Encashment', category: 'finance', keys: ['leave encashment', 'unused leave', 'paid leave', 'leave salary'], tip: 'Use it to estimate pay for unused leave days.' },
     { target: 'calc-curr', label: 'Currency Converter', category: 'finance', keys: ['currency', 'exchange rate', 'usd', 'inr', 'eur', 'convert money', 'forex'], tip: 'Use it to convert currencies with the latest available rate loaded by the site.' },
@@ -4494,6 +4514,19 @@ const AI_TOOL_RULES = [
     { target: 'calc-invoice', label: 'Invoice Generator', category: 'finance', keys: ['invoice', 'billing', 'bill generator', 'receipt', 'pdf invoice', 'customer invoice'], tip: 'Use it to create a simple invoice with items, tax, discount, and preview.' },
     { target: 'calc-power', label: 'Power Calculator', category: 'electricity', keys: ['power', 'watts', 'wattage', 'voltage', 'current', 'ampere', 'amps'], tip: 'Use it for P = V x I electrical power estimates.' },
     { target: 'calc-electricity-bill', label: 'Electricity Bill', category: 'electricity', keys: ['electricity', 'electric bill', 'power consumption', 'ac usage', 'bill rates', 'monthly units', 'kwh cost'], tip: 'Use it to estimate electricity cost from appliance wattage, hours, days, and tariff.' },
+    { target: 'electricity-bill-india-page', href: '/electricity-bill-calculator-india/', label: 'Electricity Bill Calculator India', category: 'electricity', keys: ['electricity bill calculator india', 'current bill calculator', 'units to rupees', 'electricity units cost india'], tip: 'Estimate electricity bill from units, tariff, fixed charge, and tax.' },
+    { target: 'tneb-electricity-page', href: '/tneb-electricity-bill-calculator/', label: 'TNEB Electricity Bill Calculator', category: 'electricity', keys: ['tneb bill', 'tneb calculator', 'tamil nadu electricity bill', 'tangedco bill calculator'], tip: 'Estimate a Tamil Nadu electricity bill using your latest units and tariff inputs.' },
+    { target: 'bescom-electricity-page', href: '/bescom-electricity-bill-calculator/', label: 'BESCOM Electricity Bill Calculator', category: 'electricity', keys: ['bescom bill', 'bescom calculator', 'bengaluru electricity bill', 'bangalore electricity bill'], tip: 'Estimate a Bengaluru BESCOM-style bill from units, rate, fixed charge, and duty.' },
+    { target: 'msedcl-electricity-page', href: '/msedcl-electricity-bill-calculator/', label: 'MSEDCL Electricity Bill Calculator', category: 'electricity', keys: ['msedcl bill', 'maharashtra electricity bill', 'mahavitaran bill calculator'], tip: 'Estimate a Maharashtra electricity bill without hardcoded stale slab rates.' },
+    { target: 'delhi-electricity-page', href: '/delhi-electricity-bill-calculator/', label: 'Delhi Electricity Bill Calculator', category: 'electricity', keys: ['delhi electricity bill', 'delhi bill calculator', 'bses bill calculator', 'tpddl bill calculator'], tip: 'Estimate a Delhi electricity bill using current values from your bill.' },
+    { target: 'telangana-electricity-page', href: '/telangana-electricity-bill-calculator/', label: 'Telangana Electricity Bill Calculator', category: 'electricity', keys: ['telangana electricity bill', 'telangana current bill', 'telangana bill calculator'], tip: 'Estimate a Telangana electricity bill using your own tariff inputs.' },
+    { target: 'andhra-electricity-page', href: '/andhra-pradesh-electricity-bill-calculator/', label: 'Andhra Pradesh Electricity Bill Calculator', category: 'electricity', keys: ['andhra electricity bill', 'andhra pradesh electricity bill', 'ap electricity bill calculator'], tip: 'Estimate an Andhra Pradesh electricity bill from units and current tariff values.' },
+    { target: 'kerala-electricity-page', href: '/kerala-electricity-bill-calculator/', label: 'Kerala Electricity Bill Calculator', category: 'electricity', keys: ['kerala electricity bill', 'kseb bill calculator', 'kerala bill calculator'], tip: 'Estimate a Kerala electricity bill using your latest bill inputs.' },
+    { target: 'gujarat-electricity-page', href: '/gujarat-electricity-bill-calculator/', label: 'Gujarat Electricity Bill Calculator', category: 'electricity', keys: ['gujarat electricity bill', 'gujarat bill calculator'], tip: 'Estimate a Gujarat electricity bill from units, rate, fixed charge, and duty.' },
+    { target: 'uttar-pradesh-electricity-page', href: '/uttar-pradesh-electricity-bill-calculator/', label: 'Uttar Pradesh Electricity Bill Calculator', category: 'electricity', keys: ['uttar pradesh electricity bill', 'up electricity bill calculator', 'uppcl bill calculator'], tip: 'Estimate an Uttar Pradesh electricity bill using the latest values from your bill.' },
+    { target: 'rajasthan-electricity-page', href: '/rajasthan-electricity-bill-calculator/', label: 'Rajasthan Electricity Bill Calculator', category: 'electricity', keys: ['rajasthan electricity bill', 'rajasthan bill calculator'], tip: 'Estimate a Rajasthan electricity bill without relying on outdated tariff tables.' },
+    { target: 'west-bengal-electricity-page', href: '/west-bengal-electricity-bill-calculator/', label: 'West Bengal Electricity Bill Calculator', category: 'electricity', keys: ['west bengal electricity bill', 'wbsedcl bill calculator', 'west bengal bill calculator'], tip: 'Estimate a West Bengal electricity bill using your current bill values.' },
+    { target: 'punjab-electricity-page', href: '/punjab-electricity-bill-calculator/', label: 'Punjab Electricity Bill Calculator', category: 'electricity', keys: ['punjab electricity bill', 'punjab bill calculator', 'pspcl bill calculator'], tip: 'Estimate a Punjab electricity bill from units, rate, fixed charge, and duty.' },
     { target: 'calc-kwh', label: 'kWh Calculator', category: 'electricity', keys: ['kwh', 'kilowatt hour', 'energy use', 'unit consumption'], tip: 'Use it to convert watts and usage time into kWh.' },
     { target: 'calc-watt-unit', label: 'Watt to Unit', category: 'electricity', keys: ['watt to unit', 'watts to units', 'unit from watts', 'electric unit'], tip: 'Use it to estimate electricity units from wattage and usage.' },
     { target: 'calc-solar', label: 'Solar Panel Size', category: 'electricity', keys: ['solar', 'solar panel', 'panel size', 'solar array', 'sun hours'], tip: 'Use it to estimate required solar array size from daily usage.' },
@@ -4503,15 +4536,25 @@ const AI_TOOL_RULES = [
     { target: 'calc-generator', label: 'Generator Size', category: 'electricity', keys: ['generator', 'generator size', 'kva', 'load generator'], tip: 'Use it to estimate generator kVA size from load.' },
     { target: 'calc-ev', label: 'EV Charging Cost', category: 'electricity', keys: ['ev', 'electric vehicle', 'charging cost', 'ev charging', 'battery charging'], tip: 'Use it to estimate EV charging cost from battery size and tariff.' },
     { target: 'calc-wa', label: 'WhatsApp Link', category: 'web', keys: ['whatsapp', 'wa link', 'chat link', 'direct chat', 'message link'], tip: 'Use it to generate a direct WhatsApp chat link.' },
-    { target: 'calc-qr', label: 'QR Code', category: 'web', keys: ['qr', 'qr code', 'barcode', 'scan code', 'quick response', 'wifi qr', 'upi qr', 'vcard qr', 'contact qr', 'whatsapp qr', 'sms qr', 'email qr', 'map qr', 'event qr'], tip: 'Use it to generate QR codes for links, Wi-Fi, UPI, contacts, maps, events, and more.' },
+    { target: 'calc-qr', label: 'QR Code', category: 'web', keys: ['qr', 'qr code', 'barcode', 'scan code', 'quick response', 'sms qr', 'email qr', 'map qr', 'event qr'], tip: 'Use it to generate QR codes for links, Wi-Fi, UPI, contacts, maps, events, and more.' },
+    { target: 'upi-qr-page', href: '/upi-qr-code-generator/', label: 'UPI QR Code Generator', category: 'web', keys: ['upi qr', 'upi qr code', 'payment qr', 'upi payment qr'], tip: 'Create a UPI payment QR code.' },
+    { target: 'wifi-qr-page', href: '/wifi-qr-code-generator/', label: 'Wi-Fi QR Code Generator', category: 'web', keys: ['wifi qr', 'wi-fi qr', 'wifi password qr', 'guest wifi qr'], tip: 'Create a Wi-Fi login QR code.' },
+    { target: 'whatsapp-qr-page', href: '/whatsapp-qr-code-generator/', label: 'WhatsApp QR Generator', category: 'web', keys: ['whatsapp qr', 'whatsapp qr code', 'wa qr', 'direct chat qr'], tip: 'Create a WhatsApp direct-chat QR code.' },
+    { target: 'vcard-qr-page', href: '/vcard-qr-code-generator/', label: 'vCard QR Generator', category: 'web', keys: ['vcard qr', 'contact qr', 'business card qr', 'contact card qr'], tip: 'Create a contact-card QR code.' },
+    { target: 'bulk-qr-page', href: '/bulk-qr-code-generator/', label: 'Bulk QR Generator', category: 'web', keys: ['bulk qr', 'multiple qr', 'batch qr', 'many qr codes'], tip: 'Create multiple static QR previews from a list.' },
     { target: 'calc-pass', label: 'Password Generator', category: 'web', keys: ['password', 'pwd', 'secure password', 'generate password', 'passphrase'], tip: 'Use it to create a stronger random password.' },
     { target: 'calc-unit', label: 'Unit Converter', category: 'web', keys: ['unit', 'unit converter', 'meters', 'grams', 'inches', 'miles', 'length conversion', 'weight conversion'], tip: 'Use it for common length and weight conversions.' },
     { target: 'calc-word', label: 'Word & Char Count', category: 'web', keys: ['word count', 'character count', 'text count', 'count words'], tip: 'Use it to count words and characters in text.' },
     { target: 'calc-case', label: 'Case Converter', category: 'web', keys: ['case converter', 'uppercase', 'lowercase', 'title case', 'sentence case'], tip: 'Use it to convert text casing.' },
     { target: 'calc-base64', label: 'Base64 Encode/Decode', category: 'web', keys: ['base64', 'encode', 'decode', 'base 64'], tip: 'Use it to encode plain text or decode Base64.' },
     { target: 'calc-color', label: 'Color Converter', category: 'web', keys: ['color', 'hex', 'rgb', 'color converter', 'palette'], tip: 'Use it to convert between HEX and RGB color values.' },
-    { target: 'calc-image-converter', label: 'Image Format Converter', category: 'web', keys: ['image', 'image converter', 'jpg', 'png', 'webp', 'format converter'], tip: 'Use it to convert image formats in the browser.' },    { target: 'pdf-converter-page', href: '/pdf-converter/', label: 'PDF Converter', category: 'web', keys: ['pdf', 'pdf converter', 'pdf convertor', 'pdf to word', 'pdf to image', 'pdf pages', 'word document'], tip: 'Convert PDFs to Word-compatible text files or page images.' },
-    { target: 'images-to-pdf-page', href: '/images-to-pdf/', label: 'Images to PDF', category: 'web', keys: ['images to pdf', 'jpg to pdf', 'jpeg to pdf', 'png to pdf', 'webp to pdf', 'photo to pdf'], tip: 'Turn JPG, PNG, or WebP images into one PDF.' },
+    { target: 'calc-image-converter', label: 'Image Format Converter', category: 'web', keys: ['image', 'image converter', 'jpg', 'png', 'webp', 'format converter'], tip: 'Use it to convert image formats in the browser.' },
+    { target: 'pdf-to-word-page', href: '/pdf-to-word/', label: 'PDF to Word Converter', category: 'web', keys: ['pdf to word', 'pdf into word', 'pdf word converter', 'convert pdf to word', 'word document from pdf'], tip: 'Open the focused PDF to Word guide and working converter.' },
+    { target: 'pdf-to-jpg-page', href: '/pdf-to-jpg/', label: 'PDF to JPG Converter', category: 'web', keys: ['pdf to jpg', 'pdf to jpeg', 'pdf to image', 'pdf pages to jpg', 'convert pdf pages to image'], tip: 'Open the PDF to JPG guide for page-image conversion.' },
+    { target: 'jpg-to-pdf-page', href: '/jpg-to-pdf/', label: 'JPG to PDF Converter', category: 'web', keys: ['jpg to pdf', 'jpeg to pdf', 'photo to pdf', 'image to pdf online'], tip: 'Open the JPG to PDF guide and image-to-PDF workflow.' },
+    { target: 'compress-pdf-100kb-page', href: '/compress-pdf-to-100kb/', label: 'Compress PDF to 100KB', category: 'web', keys: ['compress pdf to 100kb', 'pdf 100kb', 'reduce pdf to 100kb', 'make pdf under 100kb'], tip: 'Open the focused PDF compression guide for small upload limits.' },
+    { target: 'pdf-converter-page', href: '/pdf-converter/', label: 'PDF Converter', category: 'web', keys: ['pdf', 'pdf converter', 'pdf convertor', 'pdf pages', 'word document'], tip: 'Convert PDFs to Word-compatible text files or page images.' },
+    { target: 'images-to-pdf-page', href: '/images-to-pdf/', label: 'Images to PDF', category: 'web', keys: ['images to pdf', 'png to pdf', 'webp to pdf', 'multiple images to pdf'], tip: 'Turn JPG, PNG, or WebP images into one PDF.' },
     { target: 'merge-pdf-page', href: '/merge-pdf/', label: 'Merge PDF', category: 'web', keys: ['merge pdf', 'combine pdf', 'join pdf', 'multiple pdf into one'], tip: 'Combine multiple PDFs into one file.' },
     { target: 'split-pdf-page', href: '/split-pdf/', label: 'Split PDF', category: 'web', keys: ['split pdf', 'extract pdf pages', 'pdf page range', 'separate pdf'], tip: 'Extract selected pages from one PDF.' },
     { target: 'compress-pdf-page', href: '/compress-pdf/', label: 'Compress PDF', category: 'web', keys: ['compress pdf', 'reduce pdf size', 'smaller pdf', 'pdf size'], tip: 'Create a smaller image-based PDF copy.' },
