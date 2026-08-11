@@ -582,34 +582,348 @@ const calculatorPage = (() => {
         setText('password-length-label', String(readNumber('password-length') || 16));
     }
 
+    const qrRequestTypes = {
+        url: {
+            label: 'Website URL',
+            fields: [{ id: 'url', label: 'Website URL', type: 'text', inputmode: 'url', placeholder: 'https://example.com/menu', required: true }],
+            build: (values) => normalizeQrUrl(values.url)
+        },
+        text: {
+            label: 'Plain text',
+            fields: [{ id: 'text', label: 'Text to encode', kind: 'textarea', placeholder: 'Type any public text, label, note, or instruction', required: true }],
+            build: (values) => values.text
+        },
+        email: {
+            label: 'Email',
+            fields: [
+                { id: 'email', label: 'Email address', type: 'email', placeholder: 'name@example.com', required: true },
+                { id: 'subject', label: 'Subject', placeholder: 'Quick question' },
+                { id: 'body', label: 'Body', kind: 'textarea', placeholder: 'Message body' }
+            ],
+            build: (values) => `mailto:${values.email}?${new URLSearchParams({ subject: values.subject, body: values.body }).toString()}`
+        },
+        phone: {
+            label: 'Phone call',
+            fields: [{ id: 'phone', label: 'Phone number', type: 'tel', placeholder: '+919876543210', required: true }],
+            build: (values) => `tel:${normalizeQrPhone(values.phone)}`
+        },
+        sms: {
+            label: 'SMS',
+            fields: [
+                { id: 'phone', label: 'Phone number', type: 'tel', placeholder: '+919876543210', required: true },
+                { id: 'message', label: 'Message', kind: 'textarea', placeholder: 'Hi, I saw your poster.' }
+            ],
+            build: (values) => `SMSTO:${normalizeQrPhone(values.phone)}:${values.message || ''}`
+        },
+        whatsapp: {
+            label: 'WhatsApp',
+            fields: [
+                { id: 'phone', label: 'WhatsApp number with country code', type: 'tel', placeholder: '919876543210', required: true },
+                { id: 'message', label: 'Prefilled message', kind: 'textarea', placeholder: 'Hello, I want to know more.' }
+            ],
+            build: (values) => {
+                const phone = normalizeQrPhone(values.phone).replace(/^\+/, '');
+                const params = values.message ? `?text=${encodeURIComponent(values.message)}` : '';
+                return `https://wa.me/${phone}${params}`;
+            }
+        },
+        wifi: {
+            label: 'Wi-Fi login',
+            fields: [
+                { id: 'ssid', label: 'Network name / SSID', placeholder: 'Cafe WiFi', required: true },
+                { id: 'password', label: 'Password', placeholder: 'WiFi password' },
+                { id: 'encryption', label: 'Security type', kind: 'select', options: [['WPA', 'WPA/WPA2'], ['WEP', 'WEP'], ['nopass', 'No password']] },
+                { id: 'hidden', label: 'Hidden network', kind: 'checkbox' }
+            ],
+            build: (values) => `WIFI:T:${values.encryption || 'WPA'};S:${escapeWifi(values.ssid)};P:${escapeWifi(values.password)};H:${values.hidden ? 'true' : 'false'};;`
+        },
+        vcard: {
+            label: 'Contact card',
+            fields: [
+                { id: 'name', label: 'Full name', placeholder: 'Asha Kumar', required: true },
+                { id: 'phone', label: 'Phone', type: 'tel', placeholder: '+919876543210' },
+                { id: 'email', label: 'Email', type: 'email', placeholder: 'asha@example.com' },
+                { id: 'organization', label: 'Organization', placeholder: 'Asha Studio' },
+                { id: 'title', label: 'Job title', placeholder: 'Designer' },
+                { id: 'url', label: 'Website', type: 'text', inputmode: 'url', placeholder: 'https://example.com' },
+                { id: 'address', label: 'Address', kind: 'textarea', placeholder: 'Street, city, state, country' }
+            ],
+            build: (values) => [
+                'BEGIN:VCARD',
+                'VERSION:3.0',
+                `FN:${escapeVCard(values.name)}`,
+                values.organization ? `ORG:${escapeVCard(values.organization)}` : '',
+                values.title ? `TITLE:${escapeVCard(values.title)}` : '',
+                values.phone ? `TEL:${escapeVCard(values.phone)}` : '',
+                values.email ? `EMAIL:${escapeVCard(values.email)}` : '',
+                values.url ? `URL:${escapeVCard(normalizeQrUrl(values.url))}` : '',
+                values.address ? `ADR:;;${escapeVCard(values.address)};;;;` : '',
+                'END:VCARD'
+            ].filter(Boolean).join('\n')
+        },
+        upi: {
+            label: 'UPI payment',
+            fields: [
+                { id: 'pa', label: 'UPI ID', placeholder: 'name@upi', required: true },
+                { id: 'pn', label: 'Payee name', placeholder: 'Business or person name' },
+                { id: 'am', label: 'Amount (optional)', type: 'number', min: '0', step: '0.01', placeholder: '500' },
+                { id: 'tn', label: 'Payment note', placeholder: 'Invoice 1024' }
+            ],
+            build: (values) => {
+                const params = new URLSearchParams();
+                params.set('pa', values.pa);
+                if (values.pn) params.set('pn', values.pn);
+                if (values.am) params.set('am', values.am);
+                params.set('cu', 'INR');
+                if (values.tn) params.set('tn', values.tn);
+                return `upi://pay?${params.toString()}`;
+            }
+        },
+        geo: {
+            label: 'Map location',
+            fields: [
+                { id: 'lat', label: 'Latitude', type: 'number', min: '-90', max: '90', step: 'any', placeholder: '17.3850', required: true },
+                { id: 'lng', label: 'Longitude', type: 'number', min: '-180', max: '180', step: 'any', placeholder: '78.4867', required: true },
+                { id: 'label', label: 'Place label', placeholder: 'Meet here' }
+            ],
+            build: (values) => {
+                const base = `geo:${values.lat},${values.lng}`;
+                return values.label ? `${base}?q=${values.lat},${values.lng}(${encodeURIComponent(values.label)})` : base;
+            }
+        },
+        event: {
+            label: 'Calendar event',
+            fields: [
+                { id: 'summary', label: 'Event title', placeholder: 'Team meeting', required: true },
+                { id: 'start', label: 'Start date/time', type: 'datetime-local', required: true },
+                { id: 'end', label: 'End date/time', type: 'datetime-local' },
+                { id: 'location', label: 'Location', placeholder: 'Conference room or online link' },
+                { id: 'description', label: 'Description', kind: 'textarea', placeholder: 'Agenda or notes' }
+            ],
+            build: (values) => [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'BEGIN:VEVENT',
+                `SUMMARY:${escapeVCard(values.summary)}`,
+                `DTSTART:${formatQrDateTime(values.start)}`,
+                values.end ? `DTEND:${formatQrDateTime(values.end)}` : '',
+                values.location ? `LOCATION:${escapeVCard(values.location)}` : '',
+                values.description ? `DESCRIPTION:${escapeVCard(values.description)}` : '',
+                'END:VEVENT',
+                'END:VCALENDAR'
+            ].filter(Boolean).join('\n')
+        }
+    };
+
+    let currentQrPayload = '';
+    let currentQrSvg = '';
+
+    function normalizeQrUrl(value) {
+        const trimmed = String(value || '').trim();
+        if (!trimmed) return '';
+        if (/^[a-z][a-z0-9+.-]*:/i.test(trimmed)) return trimmed;
+        return trimmed.includes('.') ? `https://${trimmed}` : trimmed;
+    }
+
+    function normalizeQrPhone(value) {
+        return String(value || '').replace(/[^\d+]/g, '');
+    }
+
+    function escapeWifi(value = '') {
+        return String(value).replace(/([\\;,":])/g, '\\$1');
+    }
+
+    function escapeVCard(value = '') {
+        return String(value).replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/;/g, '\\;').replace(/,/g, '\\,');
+    }
+
+    function formatQrDateTime(value = '') {
+        return String(value).replace(/[-:]/g, '').replace(/\.\d+$/, '').replace(/\s/g, 'T').replace(/T?$/, '').padEnd(15, '0');
+    }
+
+    function truncateQrPayload(value) {
+        return value.length > 140 ? `${value.slice(0, 140)}...` : value;
+    }
+
+    function renderQrFields() {
+        const typeSelect = $('qr-type');
+        const fieldsContainer = $('qr-fields');
+        if (!typeSelect || !fieldsContainer) return;
+
+        const config = qrRequestTypes[typeSelect.value] || qrRequestTypes.url;
+        fieldsContainer.innerHTML = config.fields.map((field) => {
+            const id = `qr-${field.id}`;
+            const required = field.required ? ' required' : '';
+            if (field.kind === 'textarea') {
+                return `<label class="input-group"><span>${field.label}</span><textarea class="tool-input" id="${id}" rows="3" placeholder="${field.placeholder || ''}"${required}></textarea></label>`;
+            }
+            if (field.kind === 'select') {
+                const options = field.options.map(([value, label]) => `<option value="${value}">${label}</option>`).join('');
+                return `<label class="input-group"><span>${field.label}</span><select class="tool-input" id="${id}">${options}</select></label>`;
+            }
+            if (field.kind === 'checkbox') {
+                return `<label class="qr-checkbox"><input id="${id}" type="checkbox"> <span>${field.label}</span></label>`;
+            }
+            const inputmode = field.inputmode ? ` inputmode="${field.inputmode}"` : '';
+            const min = field.min !== undefined ? ` min="${field.min}"` : '';
+            const max = field.max !== undefined ? ` max="${field.max}"` : '';
+            const step = field.step !== undefined ? ` step="${field.step}"` : '';
+            return `<label class="input-group"><span>${field.label}</span><input class="tool-input" id="${id}" type="${field.type || 'text'}"${inputmode}${min}${max}${step} placeholder="${field.placeholder || ''}"${required}></label>`;
+        }).join('');
+
+        const firstInput = fieldsContainer.querySelector('input:not([type="checkbox"]), textarea, select');
+        firstInput?.focus();
+    }
+
+    function getQrFieldValues(config) {
+        const values = {};
+        config.fields.forEach((field) => {
+            const element = $(`qr-${field.id}`);
+            values[field.id] = field.kind === 'checkbox' ? Boolean(element?.checked) : String(element?.value || '').trim();
+            if (field.required && !values[field.id]) {
+                throw new Error(`Enter ${field.label.toLowerCase()}.`);
+            }
+            if (values[field.id] && element?.checkValidity && !element.checkValidity()) {
+                throw new Error(`Enter a valid ${field.label.toLowerCase()}.`);
+            }
+        });
+        return values;
+    }
+
+    function buildQrPayload() {
+        const typeSelect = $('qr-type');
+        if (!typeSelect) {
+            const text = $('qr-text')?.value.trim();
+            if (!text) throw new Error('Enter a URL or text to encode.');
+            return { payload: text, label: 'Text / URL' };
+        }
+
+        const config = qrRequestTypes[typeSelect.value] || qrRequestTypes.url;
+        const payload = String(config.build(getQrFieldValues(config)) || '').trim();
+        if (!payload) throw new Error('Enter details to create this QR code.');
+        return { payload, label: config.label };
+    }
+
+    function getQrRenderOptions() {
+        return {
+            size: Number($('qr-size')?.value || 320),
+            color: $('qr-foreground')?.value || '#000000',
+            background: $('qr-background')?.value || '#ffffff'
+        };
+    }
+
+    function setQrButtonsEnabled(enabled) {
+        ['qr-download-png', 'qr-download-svg', 'qr-copy-payload'].forEach((id) => {
+            const button = $(id);
+            if (button) button.disabled = !enabled;
+        });
+    }
+
     function generateQrCode() {
         clearError();
-        const text = $('qr-text')?.value.trim();
         const image = $('qr-image');
         const placeholder = $('qr-placeholder');
+        const preview = image?.closest('.qr-page-preview');
 
-        if (!text) {
-            showError('Enter a URL or text to encode.');
+        if (!globalThis.CalculatorQRCode) {
+            showError('QR generator could not load. Refresh the page and try again.');
             return;
         }
 
-        const url = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(text)}`;
-        if (placeholder) placeholder.textContent = 'Generating QR code...';
-        if (image) {
-            image.onload = () => {
-                image.hidden = false;
-                if (placeholder) placeholder.hidden = true;
-            };
-            image.onerror = () => {
+        try {
+            const { payload, label } = buildQrPayload();
+            const options = getQrRenderOptions();
+            const rendered = globalThis.CalculatorQRCode.renderToImage(payload, image, options);
+            const svgResult = globalThis.CalculatorQRCode.toSvg(payload, options);
+            currentQrPayload = payload;
+            currentQrSvg = svgResult.svg;
+
+            if (placeholder) placeholder.hidden = true;
+            preview?.classList.add('generated');
+            setText('qr-data', truncateQrPayload(payload));
+            setText('qr-type-used', label);
+            setText('qr-technical', `QR version ${rendered.meta.version} · ${rendered.meta.size}×${rendered.meta.size} modules · ${rendered.meta.bytes} bytes · ECC M`);
+            setText('qr-copy-status', '');
+            setQrButtonsEnabled(true);
+        } catch (error) {
+            if (image) {
                 image.hidden = true;
-                if (placeholder) {
-                    placeholder.hidden = false;
-                    placeholder.textContent = 'QR service unavailable. Please try again.';
-                }
-            };
-            image.src = url;
+                image.removeAttribute('src');
+            }
+            if (placeholder) {
+                placeholder.hidden = false;
+                placeholder.textContent = 'QR preview';
+            }
+            preview?.classList.remove('generated');
+            currentQrPayload = '';
+            currentQrSvg = '';
+            setText('qr-copy-status', '');
+            setQrButtonsEnabled(false);
+            showError(error.message);
         }
-        setText('qr-data', text.length > 80 ? `${text.slice(0, 80)}...` : text);
+    }
+
+    function downloadBlob(content, filename, type) {
+        const blob = new Blob([content], { type });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function downloadQrPng() {
+        const image = $('qr-image');
+        if (!image?.src) {
+            showError('Generate a QR code first.');
+            return;
+        }
+        const link = document.createElement('a');
+        link.href = image.src;
+        link.download = 'calculator-all-in-one-qr.png';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    }
+
+    function downloadQrSvg() {
+        if (!currentQrSvg) {
+            showError('Generate a QR code first.');
+            return;
+        }
+        downloadBlob(currentQrSvg, 'calculator-all-in-one-qr.svg', 'image/svg+xml;charset=utf-8');
+    }
+
+    async function copyQrPayload() {
+        if (!currentQrPayload) {
+            showError('Generate a QR code first.');
+            return;
+        }
+        try {
+            await navigator.clipboard.writeText(currentQrPayload);
+            clearError();
+            setText('qr-copy-status', 'Copied payload to clipboard.');
+        } catch {
+            setText('qr-copy-status', 'Copy failed. Select the encoded data and copy it manually.');
+        }
+    }
+
+    function initQrBuilder() {
+        const typeSelect = $('qr-type');
+        if (typeSelect) {
+            typeSelect.addEventListener('change', () => {
+                renderQrFields();
+                setText('qr-copy-status', '');
+            });
+            renderQrFields();
+        }
+        $('qr-download-png')?.addEventListener('click', downloadQrPng);
+        $('qr-download-svg')?.addEventListener('click', downloadQrSvg);
+        $('qr-copy-payload')?.addEventListener('click', copyQrPayload);
+        setQrButtonsEnabled(false);
     }
 
     function handleSiteSearch(event) {
@@ -659,6 +973,8 @@ const calculatorPage = (() => {
             lengthInput.addEventListener('input', updatePasswordLength);
             updatePasswordLength();
         }
+
+        initQrBuilder();
     }
 
     return { init };

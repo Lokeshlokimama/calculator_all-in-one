@@ -913,7 +913,10 @@ function generateRealQR() {
         return;
     }
 
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(textInput.value)}`;
+    if (!window.CalculatorQRCode) {
+        showToast('QR generator is still loading. Please try again.');
+        return;
+    }
 
     // UI Loading state
     qrPrompt.innerText = 'Generating...';
@@ -923,24 +926,25 @@ function generateRealQR() {
     qrContainer.style.border = '2px dashed #444';
     qrContainer.classList.remove('generated');
 
-    qrImage.onload = () => {
+    try {
+        window.CalculatorQRCode.renderToImage(textInput.value.trim(), qrImage, {
+            size: 180,
+            color: '#000000',
+            background: '#ffffff'
+        });
         qrPrompt.style.display = 'none';
         qrImage.style.display = 'block';
         qrContainer.style.background = '#fff';
         qrContainer.style.border = 'none';
         qrContainer.classList.add('generated');
         showToast('QR Code Generated!');
-    };
-
-    qrImage.onerror = () => {
+    } catch (error) {
         qrPrompt.innerText = 'Error';
         qrImage.style.display = 'none';
         qrPrompt.style.display = 'block';
         qrContainer.classList.remove('generated');
-        showToast('Failed to generate QR. Check connection.');
-    };
-
-    qrImage.src = qrUrl;
+        showToast(error.message || 'Failed to generate QR');
+    }
 }
 window.generateRealQR = generateRealQR;
 
@@ -3282,7 +3286,7 @@ const heroToolsDatabase = [
     { id: 'calc-word', category: 'web', icon: '📝', title: 'Word Count', desc: 'Text Analysis' },
     { id: 'calc-bmi', category: 'health', icon: '🥗', title: 'BMI', desc: 'Health Stats' },
     { id: 'calc-body-fat', category: 'health', icon: '📏', title: 'Body Fat', desc: 'Body Estimate' },
-    { id: 'calc-qr', category: 'web', icon: '▦', title: 'QR Code', desc: 'Quick Share' },
+    { id: 'calc-qr', category: 'web', icon: '▦', title: 'QR Code', desc: 'Links, Wi-Fi, UPI' },
     { id: 'calc-fd', category: 'finance', icon: '🏦', title: 'FD / SB', desc: 'Interest Calc' },
     { id: 'calc-age', category: 'basic', icon: '📅', title: 'Age Calc', desc: 'Exact Age' },
     { id: 'calc-att', category: 'education', icon: '📝', title: 'Attendance', desc: 'Class Planner' },
@@ -4499,7 +4503,7 @@ const AI_TOOL_RULES = [
     { target: 'calc-generator', label: 'Generator Size', category: 'electricity', keys: ['generator', 'generator size', 'kva', 'load generator'], tip: 'Use it to estimate generator kVA size from load.' },
     { target: 'calc-ev', label: 'EV Charging Cost', category: 'electricity', keys: ['ev', 'electric vehicle', 'charging cost', 'ev charging', 'battery charging'], tip: 'Use it to estimate EV charging cost from battery size and tariff.' },
     { target: 'calc-wa', label: 'WhatsApp Link', category: 'web', keys: ['whatsapp', 'wa link', 'chat link', 'direct chat', 'message link'], tip: 'Use it to generate a direct WhatsApp chat link.' },
-    { target: 'calc-qr', label: 'QR Code', category: 'web', keys: ['qr', 'qr code', 'barcode', 'scan code', 'quick response'], tip: 'Use it to generate a QR code for links or text.' },
+    { target: 'calc-qr', label: 'QR Code', category: 'web', keys: ['qr', 'qr code', 'barcode', 'scan code', 'quick response', 'wifi qr', 'upi qr', 'vcard qr', 'contact qr', 'whatsapp qr', 'sms qr', 'email qr', 'map qr', 'event qr'], tip: 'Use it to generate QR codes for links, Wi-Fi, UPI, contacts, maps, events, and more.' },
     { target: 'calc-pass', label: 'Password Generator', category: 'web', keys: ['password', 'pwd', 'secure password', 'generate password', 'passphrase'], tip: 'Use it to create a stronger random password.' },
     { target: 'calc-unit', label: 'Unit Converter', category: 'web', keys: ['unit', 'unit converter', 'meters', 'grams', 'inches', 'miles', 'length conversion', 'weight conversion'], tip: 'Use it for common length and weight conversions.' },
     { target: 'calc-word', label: 'Word & Char Count', category: 'web', keys: ['word count', 'character count', 'text count', 'count words'], tip: 'Use it to count words and characters in text.' },

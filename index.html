@@ -709,7 +709,7 @@
                 <div id="calc-qr" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web">
                     <div class="card-glow"></div>
                     <h3>QR Code</h3>
-                    <p>Create QR codes for links or text</p>
+                    <p>Create quick QR codes here, or open the full generator for Wi-Fi, UPI, contacts, maps, and events.</p>
                     <div class="tool-ui">
                         <div class="input-group">
                             <input type="text" class="tool-input" id="qr-text" placeholder="Paste URL or text">
@@ -720,6 +720,7 @@
                         </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="generateRealQR()">Generate QR</button>
                         <button class="secondary-btn shine-btn" style="width:100%; margin-top:0.65rem; padding:0.55rem;" onclick="downloadQR()">Download QR</button>
+                        <a class="tool-page-link" href="qr-code-generator.html">Open full QR generator</a>
                     </div>
                 
     <details class="formula-explainer">
@@ -2921,7 +2922,8 @@
         </div>
     </div>
 
-    <script src="script.js?v=20260728pdf" defer></script>
+    <script src="qr-code-engine.js?v=20260812qr" defer></script>
+    <script src="script.js?v=20260812qr" defer></script>
 
     <!-- Floating AI Assistant Widget -->
     <div id="ai-assistant-widget" class="ai-widget-container" style="position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 999; font-family: inherit;">
