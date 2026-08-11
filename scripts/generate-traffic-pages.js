@@ -544,10 +544,52 @@ const regionalElectricityPages = [
   ]
 }));
 
+const regionalGuidance = {
+  'tneb-electricity-bill-calculator': ['Tamil Nadu / TNEB review checks', 'Tamil Nadu domestic bills may be affected by billing cycle length, consumer category, subsidy treatment, fixed charges, and the distribution company named on the bill. Use this page to compare usage scenarios, then confirm the exact payable amount in the official bill or customer portal before payment.'],
+  'bescom-electricity-bill-calculator': ['Bengaluru / BESCOM review checks', 'For a Bengaluru-style estimate, check whether the bill separates energy charges, fixed or demand charges, fuel adjustment, arrears, taxes, and any credits. Enter the rate you want to test instead of assuming one permanent city-wide slab.'],
+  'msedcl-electricity-bill-calculator': ['Maharashtra / MSEDCL review checks', 'Maharashtra bills can vary by connection type, sanctioned load, category, arrears, subsidy, duty, and other line items. Use the latest bill line items as inputs and keep official payment or dispute questions with the distribution company.'],
+  'delhi-electricity-bill-calculator': ['Delhi electricity review checks', 'Delhi estimates should account for the provider shown on the bill, consumer category, unit slab, fixed charge, subsidy or rebate eligibility, arrears, and taxes. A quick average-rate estimate is useful for budgeting but does not decide subsidy eligibility.'],
+  'telangana-electricity-bill-calculator': ['Telangana electricity review checks', 'For Telangana bills, verify the distribution company, consumer category, billing period, connected load, fixed charges, arrears, and any state-specific duties on the latest bill. Use official tariff notices for exact slab disputes.'],
+  'andhra-pradesh-electricity-bill-calculator': ['Andhra Pradesh electricity review checks', 'Andhra Pradesh estimates should be checked against the DISCOM named on the bill, consumer category, connected load, subsidy line, duty, and fixed charges. Enter an average unit rate only for quick planning.'],
+  'kerala-electricity-bill-calculator': ['Kerala / KSEB review checks', 'For Kerala or KSEB-style planning, check the bill for energy charge, fixed charge, duty, surcharge, billing period, consumer category, and any subsidy or arrear line. Keep the official bill as the payable record.'],
+  'gujarat-electricity-bill-calculator': ['Gujarat electricity review checks', 'Gujarat users should verify the distribution company named on the bill, tariff category, fuel adjustment or other surcharge lines, fixed charges, duty, and subsidy or credit entries before comparing the estimate.'],
+  'uttar-pradesh-electricity-bill-calculator': ['Uttar Pradesh electricity review checks', 'For Uttar Pradesh estimates, check the connection category, rural or urban tariff context, sanctioned load, fixed charge, duty, arrears, and the distribution company listed on the bill. Use this page for scenario planning, not official billing.'],
+  'rajasthan-electricity-bill-calculator': ['Rajasthan electricity review checks', 'Rajasthan bills can include distribution-circle context, subsidy or rebate treatment, fuel surcharge, fixed charges, taxes, arrears, and category-specific rates. Enter the latest bill values to avoid stale tariff assumptions.'],
+  'west-bengal-electricity-bill-calculator': ['West Bengal electricity review checks', 'For West Bengal estimates, confirm whether your bill is from the state distribution company or a city supplier, then check category, billing period, fixed or meter charges, duty, arrears, and any rebate line.'],
+  'punjab-electricity-bill-calculator': ['Punjab electricity review checks', 'Punjab estimates should be checked against the latest bill for category, connected load, subsidy treatment, duty, fixed charges, arrears, and the official payable amount. This tool is for budgeting and usage comparison.']
+};
+
+regionalElectricityPages.forEach((page) => {
+  const extra = regionalGuidance[page.slug];
+  if (extra) page.sections.splice(1, 0, extra);
+});
+
 pages.push(...regionalElectricityPages);
 
 function json(value) {
   return JSON.stringify(value, null, 2).replace(/</g, '\\u003c');
+}
+
+function reviewStrip(page) {
+  const method = page.group === 'electricity'
+    ? 'Tariff method checked: user-entered current bill values'
+    : page.group === 'finance'
+      ? 'Formula method checked: standard planning arithmetic'
+      : page.group === 'pdf'
+        ? 'Workflow checked: browser-only file handling'
+        : 'QR payload checked: local browser rendering';
+  return `<div class="review-strip"><strong>Published by Calculator All-in-One</strong><span>Last reviewed: 12 August 2026</span><span>${method}</span><a href="/editorial-standards.html">Testing and editorial standards</a></div>`;
+}
+
+function evidenceArticle(page) {
+  const text = page.group === 'electricity'
+    ? 'This page deliberately avoids fixed tariff tables because electricity rates, slabs, subsidies, taxes, and distribution-company rules change. The source of truth is the latest bill, official tariff order, or customer portal; the calculator performs only the arithmetic on the values you enter.'
+    : page.group === 'finance'
+      ? 'The calculation uses transparent arithmetic from the inputs shown on the page. It does not include lender-specific fees, tax classification, market volatility, eligibility rules, or provider quotations unless you enter those values yourself.'
+      : page.group === 'pdf'
+        ? 'The PDF workflow is described as a browser utility, not a server conversion service. Selected files are processed locally where the tool supports it, and users should open the downloaded output to confirm page order, text, image quality, and missing advanced features.'
+        : 'The QR payload is assembled from the fields shown on the page and rendered locally in the browser. Static QR codes do not provide scan analytics, editable redirects, payment confirmation, or account-based history.';
+  return `<article class="content-evidence source-note"><h2>Review method and source trail</h2><p>${text} See the <a href="/editorial-standards.html">editorial standards</a> and <a href="/disclaimer.html">site disclaimer</a> for how estimates, file tools, and safety notes are reviewed.</p></article>`;
 }
 
 function nav(current) {
@@ -601,6 +643,9 @@ function pageHtml(page) {
     url,
     description: page.description,
     isPartOf: { '@type': 'WebSite', name: 'Calculator All-in-One', url: site },
+    publisher: { '@type': 'Organization', name: 'Calculator All-in-One', email: 'support.aiagents@gmail.com', url: site },
+    dateModified: today,
+    isAccessibleForFree: true,
     ...(page.kind !== 'pdf' ? { applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } } : {})
   };
   const breadcrumb = {
@@ -646,12 +691,14 @@ ${scripts}
     <main class="traffic-main">
         <section class="traffic-hero">
             <div><p class="page-kicker">${page.kicker}</p><h1>${page.h1}</h1><p>${page.lede}</p><div class="page-actions"><a class="glowing-btn" href="#tool">${page.kind === 'pdf' ? 'Open workflow' : 'Use the tool'}</a><a class="secondary-btn" href="#faq">Read FAQs</a></div></div>
-            <aside class="traffic-hero-card"><span>Search intent</span><strong>${page.proof[0]}</strong><p>${page.proof.join(' · ')}</p></aside>
+            <aside class="traffic-hero-card"><span>Search intent</span><strong>${page.proof[0]}</strong><p>${page.proof.join(' &middot; ')}</p></aside>
         </section>
+        ${reviewStrip(page)}
         <section class="traffic-shell" id="tool">
             ${tool(page)}
             <div class="traffic-panel">
                 ${page.sections.map(([heading, body]) => `<article><h2>${heading}</h2><p>${body}</p></article>`).join('')}
+                ${evidenceArticle(page)}
                 <article><h2>Related tools</h2><div class="traffic-related">${related[page.group].map(([href, label]) => `<a href="${href}">${label}</a>`).join('')}</div></article>
                 <article id="faq"><h2>FAQs</h2><div class="faq-list">${page.faqs.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div></article>
             </div>
