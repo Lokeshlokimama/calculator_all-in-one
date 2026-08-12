@@ -130,8 +130,8 @@
                 <h2>Calculate BMI</h2>
                 <form class="calculator-page-form" data-calculator-form="bmi">
                     <div class="input-group">
-                        <div class="input-wrapper"><input class="tool-input" id="bmi-height" type="number" min="1" placeholder="Height" aria-label="Height"><span class="input-suffix">cm</span></div>
-                        <div class="input-wrapper"><input class="tool-input" id="bmi-weight" type="number" min="1" placeholder="Weight" aria-label="Weight"><span class="input-suffix">kg</span></div>
+                        <label class="field-label" for="bmi-height">Height</label><div class="input-wrapper"><input class="tool-input" id="bmi-height" type="number" min="1" placeholder="Example: 170" aria-label="Height in centimeters"><span class="input-suffix">cm</span></div>
+                        <label class="field-label" for="bmi-weight">Weight</label><div class="input-wrapper"><input class="tool-input" id="bmi-weight" type="number" min="1" placeholder="Example: 70" aria-label="Weight in kilograms"><span class="input-suffix">kg</span></div>
                     </div>
                     <p class="calculator-error" id="calculator-error" aria-live="polite"></p>
                     <button class="glowing-btn demo-btn ripple-btn" type="submit">Calculate BMI</button>

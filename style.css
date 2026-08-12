@@ -191,6 +191,9 @@ textarea:focus-visible {
 }
 
 .logo {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
     font-size: 1.8rem;
     font-weight: 800;
     background: linear-gradient(to right, var(--primary), var(--secondary));
@@ -206,6 +209,11 @@ nav {
 }
 
 nav a {
+    display: inline-flex;
+    min-height: 44px;
+    min-width: 44px;
+    align-items: center;
+    justify-content: center;
     color: #a3a3a3;
     text-decoration: none;
     font-weight: 600;
@@ -247,7 +255,7 @@ nav a:hover { color: #fff; }
     justify-content: space-between;
     gap: 0.45rem;
     width: 78px;
-    min-height: 30px;
+    min-height: 44px;
     display: none;
     background: rgba(15, 23, 42, 0.94);
     color: #fff;
@@ -378,6 +386,9 @@ nav a:hover { color: #fff; }
 }
 
 .mobile-menu summary {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
     list-style: none;
     cursor: pointer;
     border: 1px solid var(--glass-border);
@@ -413,6 +424,9 @@ nav a:hover { color: #fff; }
 }
 
 .mobile-menu-panel a {
+    display: flex;
+    min-height: 44px;
+    align-items: center;
     color: #e5e7eb;
     text-decoration: none;
     padding: 0.75rem;
@@ -553,6 +567,9 @@ nav a:hover { color: #fff; }
 }
 
 .content-card a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
     color: var(--primary);
     text-decoration: none;
 }
@@ -583,6 +600,7 @@ nav a:hover { color: #fff; }
 
 /* Buttons */
 .glowing-btn, .secondary-btn {
+    min-height: 44px !important;
     padding: 0.8rem 2rem;
     border: none;
     border-radius: 50px;
@@ -888,6 +906,65 @@ h1 {
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
 }
 
+.calculator-search {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.calculator-search input[type="search"] {
+    width: 100%;
+    min-width: 0;
+    min-height: 42px;
+    padding: 0 1rem;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.86);
+    color: #f8fafc;
+    font: inherit;
+    font-size: 0.92rem;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.calculator-search input[type="search"]::placeholder {
+    color: rgba(203, 213, 225, 0.72);
+}
+
+.calculator-search input[type="search"]:focus-visible {
+    border-color: rgba(56, 189, 248, 0.86);
+    outline-color: rgba(14, 165, 233, 0.9);
+}
+
+.calculator-search button {
+    min-height: 42px;
+    padding: 0 1rem;
+    border: 1px solid rgba(56, 189, 248, 0.34);
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.92), rgba(139, 92, 246, 0.88));
+    color: #fff;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.calculator-search button:hover,
+.calculator-search button:focus-visible {
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.16);
+}
+
+.calculator-search small {
+    grid-column: 1 / -1;
+    color: rgba(203, 213, 225, 0.78);
+    font-size: 0.74rem;
+    line-height: 1.25;
+}
+
 .stat-item { text-align: center; }
 .stat-item h2, .stat-item .counter {
     font-size: 3.5rem;
@@ -1104,7 +1181,7 @@ h1 {
     justify-content: space-between;
     gap: 0.45rem;
     width: 86px;
-    min-height: 30px;
+    min-height: 44px;
     display: none;
     background: rgba(15, 23, 42, 0.94);
     color: #fff;
@@ -1254,6 +1331,7 @@ h1 {
 }
 .cat-btn {
     position: relative;
+    min-height: 44px;
     background: rgba(15, 23, 42, 0.6);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -1350,6 +1428,76 @@ h1 {
     grid-template-columns: repeat(auto-fit, minmax(300px, 380px));
     justify-content: center;
     align-items: start;
+}
+
+.quick-start-strip {
+    width: min(1160px, 90vw);
+    margin: -4.5rem auto 1.5rem;
+    padding: 1.1rem;
+    border: 1px solid rgba(56, 189, 248, 0.18);
+    border-radius: 24px;
+    background:
+        radial-gradient(circle at 0% 0%, rgba(14, 165, 233, 0.18), transparent 34%),
+        linear-gradient(135deg, rgba(15, 23, 42, 0.86), rgba(2, 6, 23, 0.64));
+    box-shadow: 0 26px 70px rgba(0, 0, 0, 0.28);
+}
+
+.quick-start-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.9rem;
+}
+
+.quick-start-head .page-kicker {
+    margin-bottom: 0.25rem;
+}
+
+.quick-start-head h2 {
+    max-width: 620px;
+    color: #fff;
+    font-size: clamp(1.35rem, 3vw, 2.15rem);
+    line-height: 1.08;
+}
+
+.quick-start-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+.quick-start-grid a {
+    display: grid;
+    min-width: 0;
+    min-height: 92px;
+    align-content: center;
+    gap: 0.35rem;
+    padding: 0.9rem;
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    border-radius: 16px;
+    background: rgba(15, 23, 42, 0.72);
+    color: #dbeafe;
+    text-decoration: none;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.quick-start-grid a:hover,
+.quick-start-grid a:focus-visible {
+    transform: translateY(-2px);
+    border-color: rgba(56, 189, 248, 0.62);
+    background: rgba(14, 165, 233, 0.12);
+}
+
+.quick-start-grid strong {
+    color: #fff;
+    line-height: 1.1;
+}
+
+.quick-start-grid span {
+    color: #9fb3cc;
+    font-size: 0.82rem;
+    line-height: 1.3;
 }
 
 .pdf-tools-heading {
@@ -1737,13 +1885,23 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     filter: drop-shadow(0 0 5px var(--primary));
 }
 
+.tool-input[type="range"],
+input[type="range"] {
+    min-height: 44px;
+}
+
+input[type="color"] {
+    min-width: 44px !important;
+    min-height: 44px !important;
+}
+
 .tool-input option {
     background: var(--bg-color);
     color: var(--text-color);
 }
 
 .currency-converter-row {
-    align-items: center;
+    align-items: end;
     display: grid;
     gap: 0.5rem;
     grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr);
@@ -2094,6 +2252,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .rate-source a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
     color: var(--primary);
     text-decoration: none;
 }
@@ -2111,6 +2272,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .tool-action-btn {
+    min-height: 44px;
     border: 1px solid var(--glass-border);
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.045);
@@ -2142,6 +2304,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     gap: 8px;
 }
 .calc-btn {
+    min-height: 44px !important;
+    min-width: 44px;
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     border-radius: 6px;
@@ -2318,6 +2482,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .maintainer-credit a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
     color: var(--primary);
     text-decoration: none;
     font-weight: 800;
@@ -2623,6 +2790,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 /* Footer Links & Modals */
 .footer-links a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
     color: #a3a3a3;
     text-decoration: none;
     font-size: 0.9rem;
@@ -2666,6 +2836,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .close-modal {
     position: absolute;
     top: 15px; right: 20px;
+    display: inline-flex;
+    width: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    align-items: center;
+    justify-content: center;
     font-size: 2rem;
     color: #a3a3a3;
     cursor: pointer;
@@ -2673,6 +2849,29 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     transition: color 0.3s;
 }
 .close-modal:hover { color: var(--accent); }
+
+.site-footer a[href^="mailto:"],
+#ai-chat-input,
+#ai-chat-window button,
+.close-chat {
+    min-height: 56px !important;
+}
+
+.site-footer a[href^="mailto:"] {
+    display: inline-flex;
+    align-items: center;
+}
+
+#ai-chat-window button,
+.close-chat {
+    min-width: 56px !important;
+}
+
+button[aria-label*="Close"],
+[role="button"][aria-label*="Close"] {
+    min-width: 44px !important;
+    min-height: 44px !important;
+}
 
 /* Responsive */
 @media (max-width: 1200px) {
@@ -2898,6 +3097,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     display: inline-flex;
     gap: 0.42rem;
     font-weight: 600;
+    min-height: 44px;
     user-select: none;
     outline: none;
     padding: 0.34rem 0.68rem;
@@ -3185,7 +3385,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 #calc-invoice .invoice-items-head {
     display: grid;
-    grid-template-columns: minmax(150px, 1.8fr) minmax(58px, 0.55fr) minmax(90px, 0.85fr) 38px;
+    grid-template-columns: minmax(150px, 1.8fr) minmax(58px, 0.55fr) minmax(90px, 0.85fr) 44px;
     gap: 0.4rem;
     margin-bottom: 0.25rem;
     color: #94a3b8;
@@ -3195,15 +3395,15 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 #calc-invoice .invoice-item-row {
     display: grid !important;
-    grid-template-columns: minmax(150px, 1.8fr) minmax(58px, 0.55fr) minmax(90px, 0.85fr) 38px;
+    grid-template-columns: minmax(150px, 1.8fr) minmax(58px, 0.55fr) minmax(90px, 0.85fr) 44px;
     align-items: center;
     gap: 0.4rem !important;
 }
 
 #calc-invoice .invoice-item-row .secondary-btn {
-    width: 38px;
-    min-width: 38px;
-    min-height: 38px !important;
+    width: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
     padding: 0 !important;
 }
 
@@ -3259,16 +3459,16 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     }
 
     #calc-invoice .invoice-items-head {
-        grid-template-columns: minmax(0, 1fr) 56px 78px 36px;
+        grid-template-columns: minmax(0, 1fr) 56px 78px 44px;
     }
 
     #calc-invoice .invoice-item-row {
-        grid-template-columns: minmax(0, 1fr) 56px 78px 36px;
+        grid-template-columns: minmax(0, 1fr) 56px 78px 44px;
     }
 
     #calc-invoice .invoice-item-row .secondary-btn {
-        width: 36px;
-        min-width: 36px;
+        width: 44px !important;
+        min-width: 44px !important;
     }
 
     #calc-invoice .invoice-preview-column {
@@ -3278,12 +3478,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 @media (max-width: 520px) {
     #calc-invoice .invoice-items-head {
-        grid-template-columns: minmax(0, 1fr) minmax(54px, 0.4fr) minmax(74px, 0.6fr) 36px;
+        grid-template-columns: minmax(0, 1fr) minmax(54px, 0.4fr) minmax(74px, 0.6fr) 44px;
         font-size: 0.68rem;
     }
 
     #calc-invoice .invoice-item-row {
-        grid-template-columns: minmax(0, 1fr) minmax(54px, 0.4fr) minmax(74px, 0.6fr) 36px;
+        grid-template-columns: minmax(0, 1fr) minmax(54px, 0.4fr) minmax(74px, 0.6fr) 44px;
     }
 
     #calc-invoice .invoice-item-row input {
@@ -3416,6 +3616,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     }
 
     #calc-scientific .calc-btn {
+        min-height: 44px !important;
         font-size: 0.75rem !important;
         padding: 0.2rem !important;
     }
@@ -3643,6 +3844,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .review-strip a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
     border-color: rgba(14, 165, 233, 0.34);
     color: #7dd3fc;
     font-weight: 800;
@@ -3656,6 +3860,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .source-note a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
     color: #7dd3fc;
     font-weight: 800;
 }
@@ -3693,6 +3900,127 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     color: #cbd5e1;
     font-size: 0.88rem;
     font-weight: 800;
+}
+
+.calculator-page-form .field-label {
+    display: block;
+    margin-bottom: -0.35rem;
+    color: #e0f2fe;
+    font-size: 0.84rem;
+    letter-spacing: 0.01em;
+}
+
+.currency-field {
+    display: grid;
+    min-width: 0;
+    gap: 0.4rem;
+}
+
+.decision-guide {
+    border-color: rgba(56, 189, 248, 0.32);
+    background:
+        radial-gradient(circle at 100% 0%, rgba(14, 165, 233, 0.12), transparent 36%),
+        rgba(15, 23, 42, 0.72);
+}
+
+.decision-guide-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+.decision-guide-grid div {
+    display: grid;
+    gap: 0.35rem;
+    min-width: 0;
+    padding: 0.9rem;
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    border-radius: 14px;
+    background: rgba(2, 6, 23, 0.28);
+}
+
+.decision-guide-grid strong {
+    color: #fff;
+    line-height: 1.2;
+}
+
+.decision-guide-grid span {
+    color: #b8c6da;
+    font-size: 0.9rem;
+    line-height: 1.45;
+}
+
+@media (max-width: 1200px) {
+    .quick-start-strip {
+        margin-top: 1rem;
+        width: min(1120px, 90vw);
+    }
+
+    .quick-start-head {
+        display: grid;
+        align-items: start;
+    }
+
+    .quick-start-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .decision-guide-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 520px) {
+    .calculator-search {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0.4rem;
+    }
+
+    .calculator-search input[type="search"],
+    .calculator-search button {
+        min-height: 40px;
+    }
+
+    .calculator-search button {
+        padding-inline: 0.85rem;
+    }
+
+    .calculator-search small {
+        display: none;
+    }
+
+    .quick-start-strip {
+        width: calc(100% - 2rem);
+        margin-top: 0.75rem;
+        padding: 0.9rem;
+    }
+
+    .quick-start-head {
+        gap: 0.45rem;
+    }
+
+    .quick-start-grid,
+    .decision-guide-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .quick-start-grid a {
+        min-height: 76px;
+    }
+
+    .calculator-page-form .field-label {
+        margin-bottom: -0.25rem;
+    }
+
+    .currency-converter-row {
+        grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1fr);
+    }
+
+    .currency-swap-btn {
+        width: 42px;
+        min-height: 42px;
+        height: 42px;
+    }
 }
 
 .calculator-page-form input[type="checkbox"] {
@@ -3785,6 +4113,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .faq-list summary {
+    display: flex;
+    min-height: 44px;
+    align-items: center;
     cursor: pointer;
     color: #fff;
     font-weight: 800;
@@ -3805,7 +4136,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 38px;
+    min-height: 44px;
     border: 1px solid rgba(14, 165, 233, 0.26);
     border-radius: 999px;
     background: rgba(14, 165, 233, 0.08);
@@ -4167,6 +4498,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .qr-color-input {
+    min-width: 44px;
     min-height: 48px;
     padding: 0.25rem;
     cursor: pointer;
@@ -4297,6 +4629,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     color: rgba(226, 232, 240, 0.6);
 }
 .breadcrumb a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
     color: var(--primary);
     text-decoration: none;
 }

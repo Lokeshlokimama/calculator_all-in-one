@@ -110,9 +110,9 @@
                 <h2>Calculate SIP value</h2>
                 <form class="calculator-page-form" data-calculator-form="sip">
                     <div class="input-group">
-                        <div class="input-wrapper"><input class="tool-input" id="sip-monthly" type="number" min="1" placeholder="Monthly investment" aria-label="Monthly investment"><span class="input-suffix">$</span></div>
-                        <div class="input-wrapper"><input class="tool-input" id="sip-rate" type="number" min="0" step="0.01" placeholder="Expected annual return" aria-label="Expected annual return"><span class="input-suffix">%</span></div>
-                        <div class="input-wrapper"><input class="tool-input" id="sip-years" type="number" min="1" placeholder="Time period" aria-label="Time period"><span class="input-suffix">years</span></div>
+                        <label class="field-label" for="sip-monthly">Monthly investment</label><div class="input-wrapper"><input class="tool-input" id="sip-monthly" type="number" min="1" placeholder="Example: 5000" aria-label="Monthly investment"><span class="input-suffix">$</span></div>
+                        <label class="field-label" for="sip-rate">Expected annual return</label><div class="input-wrapper"><input class="tool-input" id="sip-rate" type="number" min="0" step="0.01" placeholder="Example: 12" aria-label="Expected annual return"><span class="input-suffix">%</span></div>
+                        <label class="field-label" for="sip-years">Time period</label><div class="input-wrapper"><input class="tool-input" id="sip-years" type="number" min="1" placeholder="Example: 10" aria-label="Time period in years"><span class="input-suffix">years</span></div>
                     </div>
                     <p class="calculator-error" id="calculator-error" aria-live="polite"></p><button class="glowing-btn demo-btn ripple-btn" type="submit">Calculate SIP</button>
                 </form>
