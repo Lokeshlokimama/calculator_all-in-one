@@ -42,8 +42,8 @@
         .hero-visual,.bg-grid,.particles,.gradient-blob{display:none!important}
         @media (min-width:1201px){.header-search{order:initial;flex:1;max-width:360px;margin:0 1.5rem}.mobile-menu{display:none}nav{display:flex}.hero{flex-direction:row;text-align:left;justify-content:flex-start;padding-top:80px}.hero-content{align-items:flex-start}h1{font-size:4.5rem}.hero-visual{display:flex!important}}
     </style>
-    <link rel="preload" href="style.css?v=20260728pdfcards" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="style.css?v=20260728pdfcards"></noscript>
+    <link rel="preload" href="style.css?v=20260908" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="style.css?v=20260908"></noscript>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet"></noscript>
     <script>
@@ -184,10 +184,10 @@
     <div class="particles"></div>
     <div class="gradient-blob blob-1"></div>
     <div class="gradient-blob blob-2"></div>
-    
+
     <header class="navbar">
         <a href="/" class="logo" style="text-decoration: none;">Calculator All-in-One</a>
-        
+
         <div class="header-search">
             <div class="search-control">
                 <input type="search" class="tool-input" id="tool-search" placeholder="Search calculators..." oninput="searchTools(this.value)">
@@ -336,16 +336,16 @@
             </div>
         </section>
 
-        <div class="review-strip"><strong>Published by Calculator All-in-One</strong><span>Last reviewed: 12 August 2026</span><span>Homepage directory checked for tool coverage and AdSense readiness</span><a href="editorial-standards.html">Testing and editorial standards</a></div>
+        <div class="review-strip"><strong>Published by Calculator All-in-One</strong><span>Choose a tool, enter your values, and compare the result with its formula.</span><a href="editorial-standards.html">Methods and limitations</a></div>
 
         <section id="stats" class="stats-section scroll-reveal slide-up">
 
             <div class="stat-item">
-                <h2 class="counter" data-target="100">0</h2><span>%</span>
+                <h2 class="counter" data-target="100">100</h2><span>%</span>
                 <p>Free</p>
             </div>
             <div class="stat-item">
-                <h2 class="counter" data-target="60">0</h2><span>+</span>
+                <h2 class="counter" data-target="60">60</h2><span>+</span>
                 <p>Calculators &amp; Tools</p>
             </div>
             <div class="stat-item">
@@ -356,7 +356,7 @@
 
         <section id="tools" class="tools-section">
             <h2 class="scroll-reveal slide-up">Interactive Tools</h2>
-            <p class="section-subtitle scroll-reveal slide-up delay-1">Experience premium animations and instant feedback.</p>
+            <p class="section-subtitle scroll-reveal slide-up delay-1">Choose a calculator and check its inputs, result, and formula.</p>
 
             <div class="tool-discovery scroll-reveal slide-up delay-2">
 
@@ -394,7 +394,7 @@
                 </div>
                 <p class="tool-disclaimer">Finance, health, electricity, and nutrition results are estimates. Please verify important decisions before acting.</p>
             </div>
-            
+
             <div class="category-filter scroll-reveal slide-up delay-2">
                 <button class="cat-btn active" data-category-link="all" onclick="filterCategory('all', event)">All</button>
                 <button class="cat-btn" data-category-link="basic" onclick="filterCategory('basic', event)">Basic</button>
@@ -420,26 +420,26 @@
                             <button class="calc-btn op" onclick="appendCalc('/')">/</button>
                             <button class="calc-btn op" onclick="appendCalc('*')">×</button>
                             <button class="calc-btn op" onclick="appendCalc('-')">-</button>
-                            
+
                             <button class="calc-btn" onclick="appendCalc('7')">7</button>
                             <button class="calc-btn" onclick="appendCalc('8')">8</button>
                             <button class="calc-btn" onclick="appendCalc('9')">9</button>
                             <button class="calc-btn op" style="grid-row: span 2;" onclick="appendCalc('+')">+</button>
-                            
+
                             <button class="calc-btn" onclick="appendCalc('4')">4</button>
                             <button class="calc-btn" onclick="appendCalc('5')">5</button>
                             <button class="calc-btn" onclick="appendCalc('6')">6</button>
-                            
+
                             <button class="calc-btn" onclick="appendCalc('1')">1</button>
                             <button class="calc-btn" onclick="appendCalc('2')">2</button>
                             <button class="calc-btn" onclick="appendCalc('3')">3</button>
                             <button class="calc-btn op equals" style="grid-row: span 2;" onclick="calculateResult()">=</button>
-                            
+
                             <button class="calc-btn" style="grid-column: span 2;" onclick="appendCalc('0')">0</button>
                             <button class="calc-btn" onclick="appendCalc('.')">.</button>
                         </div>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -483,7 +483,7 @@
                         </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcBMI()">Calculate BMI</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -544,7 +544,7 @@
                         </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcEMI()">Calculate EMI</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -664,7 +664,7 @@
                             </div>
                         </div>
                         <button class="secondary-btn shine-btn" style="width:100%; margin-bottom:1rem; padding:0.5rem;" onclick="addFood()">Calculate Nutrition</button>
-                        
+
                         <div class="food-list" id="food-list">
                             <!-- Foods will appear here -->
                         </div>
@@ -678,7 +678,7 @@
                             <span class="dot dot-f"></span> Fat
                         </div>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -739,7 +739,7 @@
                         <button class="secondary-btn shine-btn" style="width:100%; margin-top:0.65rem; padding:0.55rem;" onclick="downloadQR()">Download QR</button>
                         <a class="tool-page-link" href="qr-code-generator.html">Open full QR generator</a>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -749,18 +749,18 @@
         </div>
     </details>
 </div>
-                
+
                 <!-- Password Generator -->
                 <div id="calc-pass" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web">
                     <div class="card-glow"></div>
                     <h3>Password Generator</h3>
-                    <p>Create secure passwords</p>
+                    <p>Create random passwords in your browser</p>
                     <div class="tool-ui">
                         <div class="calc-display" id="pwd-result" style="font-size: 1rem; letter-spacing: 2px;">Click Generate</div>
                         <div class="input-group">
                             <label style="color:#a3a3a3; font-size:0.8rem; display:flex; justify-content:space-between; width:100%;">Length: <span id="pwd-len-display">12</span></label>
                             <input type="range" id="pwd-length" min="8" max="32" value="12" oninput="document.getElementById('pwd-len-display').innerText=this.value" style="width:100%; margin-bottom:1rem;">
-                            
+
                             <label style="color:#a3a3a3; font-size:0.8rem; display:flex; align-items:center; gap:0.5rem;">
                                 <input type="checkbox" id="pwd-upper" checked> Uppercase
                             </label>
@@ -773,12 +773,12 @@
                         </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="generatePassword()" style="margin-top:1rem; width:100%;">Generate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
-            <p><strong>Formula:</strong> <code>Pseudo-Random Selection: S = Random(Pool^Length)</code></p>
-            <p><strong>Explanation:</strong> Selects characters uniformly from pools of lowercase, uppercase, numbers, and symbols.</p>
+            <p><strong>Method:</strong> Browser cryptography selects characters from the enabled groups and shuffles the result.</p>
+            <p><strong>Explanation:</strong> Includes at least one lowercase character and one character from each selected group. Generation requires secure browser randomness. Use a different password for each account and save it in a password manager.</p>
             <p><strong>Example:</strong> Length 12 with symbols -> k9$aB8#mZ!2Q</p>
         </div>
     </details>
@@ -816,7 +816,7 @@
                             </select>
                         </div>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -854,7 +854,7 @@
                         <div class="calc-display" id="bmr-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 kcal/day</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcBMR()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -885,12 +885,12 @@
                         <div class="calc-display" id="water-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 Liters</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcWater()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
             <p><strong>Formula:</strong> <code>Water (Liters) = Weight (kg) × 0.033 × Activity Multiplier</code></p>
-            <p><strong>Explanation:</strong> Computes optimal daily water requirements based on body mass and exercise rate (Light: 1.0, Moderate: 1.2, High: 1.5).</p>
+            <p><strong>Explanation:</strong> Applies a rough weight-based rule with activity multipliers (Light: 1.0, Moderate: 1.2, High: 1.5). It does not determine your individual fluid needs or account for fluids in food, climate, illness, or a prescribed fluid restriction.</p>
             <p><strong>Example:</strong> 70kg with moderate activity = 70 × 0.033 × 1.2 = 2.77 Liters/day</p>
         </div>
     </details>
@@ -900,7 +900,7 @@
                 <div id="calc-ideal-weight" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="health">
                     <div class="card-glow"></div>
                     <h3>Ideal Weight</h3>
-                    <p>Healthy weight range</p>
+                    <p>Devine formula reference weight</p>
                     <div class="tool-ui">
                         <div class="input-group">
                             <select class="tool-input" id="iw-gender">
@@ -919,18 +919,18 @@
                         <div class="calc-display" id="iw-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 kg</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcIdealWeight()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
             <p><strong>Formula:</strong> <code>Male: 50.0 + 2.3×((Height_cm / 2.54) - 60) | Female: 45.5 + 2.3×((Height_cm / 2.54) - 60)</code></p>
             <p><strong>Inches:</strong> Select Inches to use the entered height directly as Height_in.</p>
-            <p><strong>Explanation:</strong> Devine Formula. Calculates standard ideal body weight from centimeters or inches based on height over 5 feet (60 in / 152.4 cm).</p>
+            <p><strong>Explanation:</strong> The Devine formula returns a single reference weight using height and the selected sex. It is not a healthy-weight range, a target weight, or a body-composition assessment; it was not designed for children or heights below 5 feet (152.4 cm).</p>
             <p><strong>Example:</strong> Male of height 175cm (~69 in) = 50.0 + 2.3 × 9 = 70.7 kg</p>
         </div>
     </details>
 </div>
-                
+
                 <!-- Protein Intake Calculator -->
                 <div id="calc-protein" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="health">
                     <div class="card-glow"></div>
@@ -952,12 +952,12 @@
                         <div class="calc-display" id="protein-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 g/day</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcProtein()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
             <p><strong>Formula:</strong> <code>Protein (g) = Weight (kg) × Daily Ratio (g/kg)</code></p>
-            <p><strong>Explanation:</strong> Determines daily protein needs (Sedentary: 0.8, Active: 1.2, Build Muscle: 1.6, Heavy Lifting: 2.0).</p>
+            <p><strong>Explanation:</strong> Multiplies weight by a preset ratio (Sedentary: 0.8, Active: 1.2, Build Muscle: 1.6, Heavy Lifting: 2.0 g/kg). This is an illustrative estimate, not an assessment of your individual diet or medical needs.</p>
             <p><strong>Example:</strong> 70kg active individual = 70 × 1.2 = 84 grams of protein/day</p>
         </div>
     </details>
@@ -996,7 +996,7 @@
                         <div class="calc-display" id="bf-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 %</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcBodyFat()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -1087,7 +1087,7 @@
                         </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcSIP()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -1142,7 +1142,7 @@
                         </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcFD()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -1193,7 +1193,7 @@
                         </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcRD()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -1243,7 +1243,7 @@
                         </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcGST()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -1258,18 +1258,31 @@
                 <div id="calc-salary" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="finance">
                     <div class="card-glow"></div>
                     <h3>Salary Calculator</h3>
-                    <p>Estimate in-hand salary</p>
+                    <p>Estimate salary after the deductions you enter</p>
                     <div class="tool-ui">
                         <div class="input-group">
                             <div class="input-wrapper">
-                                <input type="number" class="tool-input" id="sal-ctc" placeholder="Annual CTC">
+                                <label class="field-label" for="sal-ctc">Annual CTC</label>
+                                <input type="number" class="tool-input" id="sal-ctc" min="0" step="any" placeholder="e.g. 1200000" required>
                                 <span class="input-suffix">$</span>
                             </div>
                             <div class="input-wrapper">
-                                <input type="number" class="tool-input" id="sal-basic-pct" placeholder="Basic Salary">
+                                <label class="field-label" for="sal-basic-pct">Basic salary (% of CTC)</label>
+                                <input type="number" class="tool-input" id="sal-basic-pct" min="0" max="100" step="any" placeholder="e.g. 50" required>
                                 <span class="input-suffix">%</span>
                             </div>
                         </div>
+                        <div class="input-group">
+                            <div>
+                                <label class="field-label" for="sal-monthly-tax">Monthly tax from payslip</label>
+                                <input type="number" class="tool-input" id="sal-monthly-tax" min="0" step="any" value="0" required>
+                            </div>
+                            <div>
+                                <label class="field-label" for="sal-other-deductions">Other monthly deductions</label>
+                                <input type="number" class="tool-input" id="sal-other-deductions" min="0" step="any" value="0" required>
+                            </div>
+                        </div>
+                        <p class="tool-feedback">Uses an assumed employee PF deduction of 12% of basic salary. Enter tax and other deductions from your payslip; this tool does not calculate statutory income tax.</p>
                         <div class="calc-display" id="sal-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">In-hand: $0 / month</div>
                         <div class="emi-summary compact-summary">
                             <div>
@@ -1281,19 +1294,19 @@
                                 <strong id="sal-pf">$0</strong>
                             </div>
                             <div>
-                                <span>Est. Tax</span>
+                                <span>Entered Tax</span>
                                 <strong id="sal-tax">$0</strong>
                             </div>
                         </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcSalary()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
-            <p><strong>Formula:</strong> <code>In-Hand Salary = Gross Salary - PF Deduction - Income Tax</code></p>
-            <p><strong>Explanation:</strong> Estimates monthly take-home salary. PF is 12% of basic salary. Income Tax is based on basic slab estimates.</p>
-            <p><strong>Example:</strong> Annual CTC of 1,200,000 (Basic 50%) -> monthly in-hand approx 83,000.</p>
+            <p><strong>Formula:</strong> <code>Monthly estimate = Annual CTC / 12 - assumed employee PF - entered monthly tax - other entered deductions</code></p>
+            <p><strong>Explanation:</strong> Assumed PF is 12% of the basic-salary share you enter. CTC can include employer contributions, gratuity, variable pay and benefits that are not monthly cash salary. This simplified model does not separate those components or select a tax regime; use your payslip or employer breakdown for actual take-home pay.</p>
+            <p><strong>Example:</strong> Annual CTC 1,200,000, basic share 50%, monthly tax 10,000 and other deductions 1,000: 100,000 - 6,000 - 10,000 - 1,000 = 83,000 per month in this model.</p>
         </div>
     </details>
 </div>
@@ -1327,7 +1340,7 @@
                         </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcLeave()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -1368,7 +1381,7 @@
                         </div>
                         <button class="glowing-btn demo-btn ripple-btn" id="curr-btn" onclick="calcCurrency()" style="width:100%;">Convert</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -1392,7 +1405,7 @@
                         <div class="calc-display" id="age-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 Yrs, 0 Mos, 0 Days</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcAge()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -1418,7 +1431,7 @@
                         <div class="calc-display" id="date-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 Days</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcDateDiff()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -1464,7 +1477,7 @@
                         <div class="calc-display" id="time-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">00h 00m</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcTime()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -1616,7 +1629,7 @@
                         <div class="calc-display" id="cgpa-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0.00 GPA</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcCGPA()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -1644,7 +1657,7 @@
                         <div class="calc-display" id="att-result" style="font-size:1rem; min-height:40px; margin-bottom:1rem;">Result will appear here</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcAttendance()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -1667,12 +1680,12 @@
                             <span>Chars: <strong id="count-chars" style="color:var(--primary);">0</strong></span>
                         </div>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
-            <p><strong>Formula:</strong> <code>Words = count(whitespaces), Chars = count(all letters)</code></p>
-            <p><strong>Explanation:</strong> Analyzes text length by scanning whitespace delimiters for words and absolute string lengths for characters.</p>
+            <p><strong>Method:</strong> Words are non-empty text segments separated by whitespace. The character counter uses JavaScript string length, including spaces and punctuation.</p>
+            <p><strong>Explanation:</strong> Multiple spaces do not add words. Emoji can count as more than one character because JavaScript counts UTF-16 code units; languages that do not separate words with spaces need a different word-counting method.</p>
             <p><strong>Example:</strong> 'Hello world' = 2 words, 11 characters</p>
         </div>
     </details>
@@ -1694,7 +1707,7 @@
                         <textarea class="tool-input" id="case-output" placeholder="Converted result..." rows="3" style="width:100%; resize:none; margin-bottom:0.75rem;" readonly></textarea>
                         <button class="secondary-btn shine-btn" style="width:100%; padding:0.5rem;" onclick="copyCaseResult()">Copy Result</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -1709,7 +1722,7 @@
                 <div id="calc-base64" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web">
                     <div class="card-glow"></div>
                     <h3>Base64 Encode/Decode</h3>
-                    <p>Secure string conversion</p>
+                    <p>Encode or decode text; Base64 is not encryption</p>
                     <div class="tool-ui">
                         <textarea class="tool-input" id="b64-input" placeholder="Enter text or Base64..." rows="2" style="width:100%; resize:none; margin-bottom:0.5rem;"></textarea>
                         <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
@@ -1718,7 +1731,7 @@
                         </div>
                         <textarea class="tool-input" id="b64-output" placeholder="Result..." rows="2" style="width:100%; resize:none; margin-bottom:1rem;" readonly></textarea>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -1863,7 +1876,7 @@
                             </div>
                         </div>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -1888,7 +1901,7 @@
                             <button class="secondary-btn shine-btn" id="sw-reset" style="flex:1; padding:0.5rem;" onclick="resetStopwatch()">Reset</button>
                         </div>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -1936,7 +1949,7 @@
                         </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcDiscountTax()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -1966,7 +1979,7 @@
                         <div class="calc-display" id="power-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 W</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcPower()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -2001,7 +2014,7 @@
                         </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcElectricityBill()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -2031,7 +2044,7 @@
                         <div class="calc-display" id="kwh-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 kWh</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcKwh()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -2065,7 +2078,7 @@
                         <div class="calc-display" id="wattunit-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 units</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcWattToUnit()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -2099,7 +2112,7 @@
                         <div class="calc-display" id="solar-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 kW</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcSolarPanel()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -2137,7 +2150,7 @@
                         <div class="calc-display" id="inv-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 hours</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcInverterBackup()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -2175,7 +2188,7 @@
                         <div class="calc-display" id="ups-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 minutes</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcUpsBackup()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -2213,7 +2226,7 @@
                         <div class="calc-display electricity-result" id="ohm-result" style="font-size:1rem; min-height:64px; margin-bottom:1rem;">Enter any two values</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcOhmsLaw()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -2247,7 +2260,7 @@
                         <div class="calc-display" id="gen-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 kVA</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcGeneratorSize()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -2281,7 +2294,7 @@
                         <div class="calc-display" id="ev-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">$0.00</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcEvChargingCost()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -2307,7 +2320,7 @@
                         <div class="calc-display" id="circle-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">Area: 0</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcCircle()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -2336,7 +2349,7 @@
                         <div class="calc-display" id="triangle-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">Area: 0</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcTriangle()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -2365,7 +2378,7 @@
                         <div class="calc-display" id="pythagorean-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">Hypotenuse: 0</div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="calcPythagorean()" style="width:100%;">Calculate</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -2451,7 +2464,7 @@
                         </div>
                         <button class="glowing-btn demo-btn ripple-btn" onclick="plotGraph()" style="width:100%;">Re-plot Graph</button>
                     </div>
-                
+
     <details class="formula-explainer">
         <summary>Formula & Explanation</summary>
         <div class="formula-content">
@@ -2496,12 +2509,11 @@
                 <div id="calc-uuid" class="result-card tool-demo-card scroll-reveal stagger-item" data-category="web">
                     <div class="card-glow"></div>
                     <h3>UUID Generator</h3>
-                    <p>Generate v1 or v4 unique identifiers</p>
+                    <p>Generate random UUID v4 identifiers</p>
                     <div class="tool-ui">
                         <div class="input-group">
                             <select class="tool-input" id="uuid-version" style="width: 100%; padding: 0.75rem; border-radius: 8px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--glass-border);">
                                 <option value="4">UUID v4 (Random)</option>
-                                <option value="1">UUID v1 (Time-based)</option>
                             </select>
                             <div class="input-wrapper" style="width: 100%; margin-top: 0.5rem;">
                                 <input type="number" class="tool-input" id="uuid-count" value="1" min="1" max="100" placeholder="Count (1-100)">
@@ -2516,9 +2528,9 @@
                     <details class="formula-explainer">
                         <summary>Formula & Explanation</summary>
                         <div class="formula-content">
-                            <p><strong>Formula / Standard:</strong> RFC 4122 Standard</p>
-                            <p><strong>Explanation:</strong> UUID v4 uses 122 bits of random data, yielding 5.3×10<sup>36</sup> combinations. UUID v1 combines timestamp and MAC address.</p>
-                            <p><strong>Example:</strong> <code>f81d4fae-7dec-11d0-a765-00a0c91e6bf6</code></p>
+                            <p><strong>Method:</strong> Version 4 UUID with its version and variant bits set.</p>
+                            <p><strong>Explanation:</strong> A UUID v4 contains 122 random bits. This generator uses browser cryptography and does not provide time-based UUIDs. Random identifiers have a very small collision probability; they do not guarantee global uniqueness or replace access controls.</p>
+                            <p><strong>Example:</strong> <code>6f290498-119c-4eac-9a14-62b3664d8f70</code></p>
                         </div>
                     </details>
                 </div>
@@ -2532,7 +2544,7 @@
                         <div class="input-group">
                             <label style="color:#a3a3a3; font-size:0.8rem; width:100%;">Source Time:</label>
                             <input type="datetime-local" class="tool-input" id="tz-input-time" style="width: 100%; margin-bottom: 0.5rem;">
-                            
+
                             <label style="color:#a3a3a3; font-size:0.8rem; width:100%;">From Zone:</label>
                             <select class="tool-input" id="tz-from" style="width: 100%; margin-bottom: 0.5rem; padding: 0.75rem; border-radius: 8px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--glass-border);">
                                 <option value="UTC">UTC (GMT)</option>
@@ -2544,7 +2556,7 @@
                                 <option value="Australia/Sydney">AEST (Sydney, UTC+10)</option>
                                 <option value="Asia/Tokyo">JST (Tokyo, UTC+9)</option>
                             </select>
-                            
+
                             <label style="color:#a3a3a3; font-size:0.8rem; width:100%;">To Zone:</label>
                             <select class="tool-input" id="tz-to" style="width: 100%; padding: 0.75rem; border-radius: 8px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--glass-border);">
                                 <option value="UTC">UTC (GMT)</option>
@@ -2651,36 +2663,36 @@
                             <button class="calc-btn op" style="font-size: 0.8rem; min-height:36px; padding:0.25rem;" onclick="appendSci('tan(')">tan</button>
                             <button class="calc-btn op" style="font-size: 0.8rem; min-height:36px; padding:0.25rem;" onclick="appendSci('log(')">log</button>
                             <button class="calc-btn op" style="font-size: 0.8rem; min-height:36px; padding:0.25rem;" onclick="appendSci('ln(')">ln</button>
-                            
+
                             <button class="calc-btn op" style="min-height:36px; padding:0.25rem;" onclick="appendSci('Math.PI')">π</button>
                             <button class="calc-btn op" style="min-height:36px; padding:0.25rem;" onclick="appendSci('Math.E')">e</button>
                             <button class="calc-btn op" style="min-height:36px; padding:0.25rem;" onclick="appendSci('^')">^</button>
                             <button class="calc-btn op" style="min-height:36px; padding:0.25rem;" onclick="appendSci('sqrt(')">√</button>
                             <button class="calc-btn op" style="min-height:36px; padding:0.25rem;" onclick="factorialSci()">n!</button>
-                            
+
                             <button class="calc-btn op" style="min-height:36px; padding:0.25rem;" onclick="appendSci('(')">(</button>
                             <button class="calc-btn op" style="min-height:36px; padding:0.25rem;" onclick="appendSci(')')">)</button>
                             <button class="calc-btn clear" style="min-height:36px; padding:0.25rem;" onclick="clearSci()">C</button>
                             <button class="calc-btn op" style="min-height:36px; padding:0.25rem;" onclick="backspaceSci()">⌫</button>
                             <button class="calc-btn op" style="min-height:36px; padding:0.25rem;" onclick="appendSci('/')">/</button>
-                            
+
                             <button class="calc-btn" style="min-height:36px; padding:0.25rem;" onclick="appendSci('7')">7</button>
                             <button class="calc-btn" style="min-height:36px; padding:0.25rem;" onclick="appendSci('8')">8</button>
                             <button class="calc-btn" style="min-height:36px; padding:0.25rem;" onclick="appendSci('9')">9</button>
                             <button class="calc-btn op" style="min-height:36px; padding:0.25rem;" onclick="appendSci('*')">×</button>
                             <button class="calc-btn op" style="min-height:36px; padding:0.25rem;" onclick="appendSci('-')">-</button>
-                            
+
                             <button class="calc-btn" style="min-height:36px; padding:0.25rem;" onclick="appendSci('4')">4</button>
                             <button class="calc-btn" style="min-height:36px; padding:0.25rem;" onclick="appendSci('5')">5</button>
                             <button class="calc-btn" style="min-height:36px; padding:0.25rem;" onclick="appendSci('6')">6</button>
                             <button class="calc-btn op" style="min-height:36px; padding:0.25rem;" onclick="appendSci('+')">+</button>
                             <button class="calc-btn op equals" style="grid-row: span 2; min-height:76px; padding:0.25rem; margin:0;" onclick="calculateSci()">=</button>
-                            
+
                             <button class="calc-btn" style="min-height:36px; padding:0.25rem;" onclick="appendSci('1')">1</button>
                             <button class="calc-btn" style="min-height:36px; padding:0.25rem;" onclick="appendSci('2')">2</button>
                             <button class="calc-btn" style="min-height:36px; padding:0.25rem;" onclick="appendSci('3')">3</button>
                             <button class="calc-btn" style="grid-column: span 2; min-height:36px; padding:0.25rem;" onclick="appendSci('0')">0</button>
-                            
+
                             <button class="calc-btn" style="min-height:36px; padding:0.25rem;" onclick="appendSci('.')">.</button>
                             <button class="calc-btn op" style="min-height:36px; padding:0.25rem;" onclick="appendSci('%')">%</button>
                         </div>
@@ -2731,7 +2743,7 @@
                                     <textarea class="tool-input" id="inv-notes" rows="2" placeholder="Payment terms, bank/UPI details, thank-you note..." oninput="calculateInvoice()"></textarea>
                                 </div>
                             </div>
-                        
+
                         <div class="invoice-items-editor" style="margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
                             <h4 style="color:#fff; font-size: 0.9rem; margin-bottom: 0.5rem;">Items</h4>
                             <div class="invoice-items-head" aria-hidden="true">
@@ -2750,7 +2762,7 @@
                             </div>
                             <button class="secondary-btn shine-btn" onclick="addInvoiceRow()" style="width: 100%; padding: 0.4rem; font-size: 0.85rem; border-radius: 8px; margin-top: 0.5rem; margin-bottom: 0;">+ Add Item</button>
                         </div>
-                        
+
                         <div class="invoice-section-heading invoice-adjustment-heading">
                             <h4>Adjustments</h4>
                         </div>
@@ -2847,30 +2859,30 @@
                 <p>Try searching for EMI, BMI, currency, PDF, QR, password, or electricity.</p>
                 <button class="secondary-btn shine-btn" onclick="clearToolSearch()">Show all tools</button>
             </div>
-            
+
         </section>
 
         <section class="traffic-home-paths scroll-reveal slide-up" aria-labelledby="traffic-paths-title">
             <div class="traffic-path-head">
                 <div>
-                    <p class="page-kicker">Search paths</p>
-                    <h2 id="traffic-paths-title">Tools people search for by exact task</h2>
+                    <p class="page-kicker">Task shortcuts</p>
+                    <h2 id="traffic-paths-title">Choose a tool for your next task</h2>
                 </div>
-                <p>These focused pages answer long-tail searches directly and connect visitors to the working calculator or converter instead of dropping them into a generic tool wall.</p>
+                <p>Create a guest Wi-Fi code, compare a loan prepayment, or prepare a document. Each shortcut opens the tool with its instructions and limitations.</p>
             </div>
             <div class="traffic-path-grid">
                 <a class="traffic-path-card" href="/upi-qr-code-generator/"><span>QR</span><h3>UPI QR Code Generator</h3><p>Create payment QR codes for UPI ID, amount, and note.</p></a>
                 <a class="traffic-path-card" href="/wifi-qr-code-generator/"><span>QR</span><h3>Wi-Fi QR Code Generator</h3><p>Share guest network access without typing passwords.</p></a>
-                <a class="traffic-path-card" href="/pdf-to-word/"><span>PDF</span><h3>PDF to Word</h3><p>Extract editable text and understand layout limits.</p></a>
-                <a class="traffic-path-card" href="/jpg-to-pdf/"><span>PDF</span><h3>JPG to PDF</h3><p>Combine photos or scans into one PDF file.</p></a>
+                <a class="traffic-path-card" href="/pdf-converter/#pdf-word-button"><span>PDF</span><h3>PDF to Word</h3><p>Extract editable text and understand layout limits.</p></a>
+                <a class="traffic-path-card" href="/images-to-pdf/"><span>PDF</span><h3>JPG to PDF</h3><p>Combine photos or scans into one PDF file.</p></a>
                 <a class="traffic-path-card" href="/home-loan-emi-calculator-india/"><span>Finance</span><h3>Home Loan EMI India</h3><p>Estimate EMI, total interest, and repayment.</p></a>
                 <a class="traffic-path-card" href="/emi-calculator-with-prepayment/"><span>Finance</span><h3>EMI Prepayment</h3><p>Check rough months and future payments saved.</p></a>
                 <a class="traffic-path-card" href="/sip-step-up-calculator/"><span>Investing</span><h3>SIP Step-Up</h3><p>Model yearly SIP increases and future value.</p></a>
                 <a class="traffic-path-card" href="/electricity-bill-calculator-india/"><span>Electricity</span><h3>Electricity Bill India</h3><p>Estimate units-to-cost with your current tariff.</p></a>
-                <a class="traffic-path-card" href="/tneb-electricity-bill-calculator/"><span>Tamil Nadu</span><h3>TNEB Bill Calculator</h3><p>Use your latest Tamil Nadu units and tariff rate.</p></a>
-                <a class="traffic-path-card" href="/bescom-electricity-bill-calculator/"><span>Bengaluru</span><h3>BESCOM Bill Calculator</h3><p>Estimate Bengaluru units-to-cost with current inputs.</p></a>
-                <a class="traffic-path-card" href="/msedcl-electricity-bill-calculator/"><span>Maharashtra</span><h3>MSEDCL Bill Calculator</h3><p>Plan a Maharashtra bill without stale slab tables.</p></a>
-                <a class="traffic-path-card" href="/delhi-electricity-bill-calculator/"><span>Delhi</span><h3>Delhi Bill Calculator</h3><p>Estimate cost from your Delhi bill values.</p></a>
+
+
+
+
             </div>
         </section>
 
@@ -2931,7 +2943,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="footer-links" style="text-align: center; margin: 2rem 0; padding-top: 2rem; border-top: 1px solid var(--glass-border); display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem;"><a href="/pdf-converter/">PDF Converter</a><a href="/merge-pdf/">Merge PDF</a><a href="/images-to-pdf/">Images to PDF</a>
             <a href="/?category=geometry#tools">Geometry</a>
                 <a href="about.html">About Us</a>
@@ -2944,7 +2956,7 @@
             <a href="#" onclick="openFooterModal('refund'); return false;">Refund Policy</a>
             <a href="#" onclick="openFooterModal('shipping'); return false;">Shipping Policy</a>
         </div>
-        
+
         <p class="maintainer-credit">This page is developed and maintained by <a href="mailto:support.aiagents@gmail.com">support.aiagents@gmail.com</a>.</p>
         <p class="copyright">&copy; 2026 Calculator All-in-One. All rights reserved.</p>
     </footer>
@@ -2964,7 +2976,7 @@
     </div>
 
     <script src="qr-code-engine.js?v=20260812qr" defer></script>
-    <script src="script.js?v=20260812qr" defer></script>
+    <script src="script.js?v=20260908" defer></script>
 
     <!-- Floating AI Assistant Widget -->
     <div id="ai-assistant-widget" class="ai-widget-container" style="position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 999; font-family: inherit;">

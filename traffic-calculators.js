@@ -1,7 +1,7 @@
 (function () {
     const $ = (selector, root = document) => root.querySelector(selector);
     const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
-    const money = (value, currency = '₹') => `${currency}${Number(value || 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+    const money = (value, currency = '₹') => `${currency}${Number(value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     const number = (value, digits = 2) => Number(value || 0).toLocaleString(undefined, { maximumFractionDigits: digits });
 
     function track(name, params = {}) {
@@ -17,16 +17,53 @@
         result.hidden = false;
     }
 
+    function showCalculatorError(form, message) {
+        const card = form.closest('.traffic-tool-card') || form;
+        let error = $('[data-traffic-error]', card);
+        if (!error) {
+            error = document.createElement('p');
+            error.dataset.trafficError = '';
+            error.className = 'calculator-error';
+            error.setAttribute('role', 'alert');
+            form.appendChild(error);
+        }
+        error.textContent = message;
+        if (message) {
+            const result = $('[data-traffic-result]', card);
+            if (result) result.hidden = true;
+        }
+    }
+
+    function validCalculatorInputs(type, data) {
+        const schemas = {
+            'home-emi': { principal: [0.01, 1e15], rate: [0, 100], years: [1 / 12, 100] },
+            'emi-prepayment': { principal: [0.01, 1e15], rate: [0, 100], years: [1 / 12, 100], paidMonths: [0, 1200], prepay: [0, 1e15] },
+            'sip-step-up': { monthly: [0.01, 1e15], rate: [0, 100], step: [0, 100], years: [1 / 12, 100] },
+            'gst-india': { amount: [0, 1e15], gstRate: [0, 100] },
+            'electricity-bill': { units: [0, 1e12], unitRate: [0, 1e9], fixed: [0, 1e12], tax: [0, 100] }
+        };
+        const schema = schemas[type];
+        if (!schema) return false;
+        return Object.entries(schema).every(([name, [min, max]]) => {
+            const raw = data[name];
+            const value = Number(raw);
+            return raw !== undefined && String(raw).trim() !== '' && Number.isFinite(value) && value >= min && value <= max;
+        });
+    }
+
     function payment(principal, annualRate, months) {
         const r = annualRate / 12 / 100;
         if (!r) return principal / months;
-        return principal * r * Math.pow(1 + r, months) / (Math.pow(1 + r, months) - 1);
+        return principal * r / -Math.expm1(-months * Math.log1p(r));
     }
 
     function remainingBalance(principal, annualRate, monthsPaid, emi) {
         const r = annualRate / 12 / 100;
         if (!r) return Math.max(0, principal - emi * monthsPaid);
-        return principal * Math.pow(1 + r, monthsPaid) - emi * ((Math.pow(1 + r, monthsPaid) - 1) / r);
+        // Iterate paid installments to avoid cancellation of very large powers.
+        let balance = principal;
+        for (let month = 0; month < monthsPaid; month += 1) balance = Math.max(0, balance * (1 + r) - emi);
+        return balance;
     }
 
     function monthsToClose(balance, annualRate, emi) {
@@ -37,16 +74,40 @@
         return Math.ceil(-Math.log(1 - (r * balance / emi)) / Math.log(1 + r));
     }
 
+    function repaymentSchedule(balance, annualRate, emi) {
+        let total = 0;
+        let months = 0;
+        const r = annualRate / 12 / 100;
+        const tolerance = Math.max(1e-8, balance * Number.EPSILON * 100);
+        while (balance > tolerance && months < 1201) {
+            const due = balance * (1 + r);
+            const installment = Math.min(emi, due);
+            total += installment;
+            balance = Math.max(0, due - installment);
+            months += 1;
+        }
+        return balance <= tolerance ? { months, total } : { months: Infinity, total: Infinity };
+    }
+
     function initFinanceCalculators() {
         $$('[data-traffic-calc]').forEach((form) => {
             form.addEventListener('submit', (event) => {
                 event.preventDefault();
                 const data = Object.fromEntries(new FormData(form).entries());
                 const type = form.dataset.trafficCalc;
+                showCalculatorError(form, '');
+                if (!validCalculatorInputs(type, data)) {
+                    showCalculatorError(form, 'Enter valid values in every field. Amounts and rates must be non-negative; loan or investment amounts and tenure must be positive. Rates cannot exceed 100%.');
+                    return;
+                }
                 const principal = Number(data.principal || 0);
                 const rate = Number(data.rate || 0);
                 const years = Number(data.years || 0);
-                const months = Math.max(1, Math.round(years * 12));
+                const months = Math.round(years * 12);
+                if (['home-emi', 'emi-prepayment', 'sip-step-up'].includes(type) && Math.abs(years * 12 - months) > 1e-8) {
+                    showCalculatorError(form, 'Enter a tenure corresponding to a whole number of monthly payments.');
+                    return;
+                }
 
                 if (type === 'home-emi') {
                     const emi = payment(principal, rate, months);
@@ -62,19 +123,27 @@
                 if (type === 'emi-prepayment') {
                     const paidMonths = Number(data.paidMonths || 0);
                     const prepay = Number(data.prepay || 0);
+                    if (!Number.isInteger(paidMonths) || paidMonths > months) {
+                        showCalculatorError(form, 'Months already paid must be a whole number between zero and the original loan tenure.');
+                        return;
+                    }
                     const emi = payment(principal, rate, months);
                     const balance = Math.max(0, remainingBalance(principal, rate, paidMonths, emi));
-                    const afterPrepay = Math.max(0, balance - prepay);
+                    const appliedPrepay = Math.min(balance, prepay);
+                    const afterPrepay = balance - appliedPrepay;
                     const remainingOriginal = Math.max(0, months - paidMonths);
-                    const revisedMonths = monthsToClose(afterPrepay, rate, emi);
-                    const originalFuture = emi * remainingOriginal;
-                    const revisedFuture = Number.isFinite(revisedMonths) ? emi * revisedMonths : Infinity;
+                    const original = repaymentSchedule(balance, rate, emi);
+                    const revised = repaymentSchedule(afterPrepay, rate, emi);
+                    const revisedMonths = revised.months;
+                    const originalFuture = original.total;
+                    const revisedFuture = revised.total;
                     setResult(form, [
                         { label: 'Current EMI', value: money(emi) },
                         { label: 'Estimated balance', value: money(balance) },
+                        { label: 'Prepayment applied', value: money(appliedPrepay) },
                         { label: 'Balance after prepayment', value: money(afterPrepay) },
                         { label: 'Months saved', value: Number.isFinite(revisedMonths) ? `${Math.max(0, remainingOriginal - revisedMonths)} months` : 'EMI too low' },
-                        { label: 'Future payment saved', value: Number.isFinite(revisedFuture) ? money(Math.max(0, originalFuture - revisedFuture - prepay)) : 'Increase EMI' }
+                        { label: 'Estimated interest saved', value: Number.isFinite(revisedFuture) ? money(Math.max(0, originalFuture - revisedFuture - appliedPrepay)) : 'Increase EMI' }
                     ]);
                 }
 

@@ -1,0 +1,14 @@
+{
+  "name": "calculator-all-in-one",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "generate": "node scripts/generate-traffic-pages.js",
+    "build": "npm run generate && node scripts/build-site.cjs",
+    "lint": "node scripts/check-site.cjs",
+    "test": "node --test tests/*.test.cjs",
+    "verify": "npm run build && npm run lint && npm test",
+    "serve": "node scripts/serve-site.cjs"
+  },
+  "engines": { "node": ">=20" }
+}

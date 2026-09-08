@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const today = '2026-08-12';
+const today = '2026-09-08';
 const site = 'https://calculatorsallinone.com';
 
 const related = {
@@ -15,10 +15,6 @@ const related = {
   ],
   pdf: [
     ['/pdf-converter/', 'PDF Converter'],
-    ['/pdf-to-word/', 'PDF to Word'],
-    ['/pdf-to-jpg/', 'PDF to JPG'],
-    ['/jpg-to-pdf/', 'JPG to PDF'],
-    ['/compress-pdf-to-100kb/', 'Compress PDF to 100KB'],
     ['/merge-pdf/', 'Merge PDF'],
     ['/split-pdf/', 'Split PDF'],
     ['/ocr-scanned-pdf/', 'OCR Scanned PDF']
@@ -36,18 +32,6 @@ const related = {
   electricity: [
     ['/electricity-calculators.html', 'Electricity Calculators'],
     ['/electricity-bill-calculator-india/', 'Electricity Bill India'],
-    ['/tneb-electricity-bill-calculator/', 'TNEB / Tamil Nadu Bill'],
-    ['/bescom-electricity-bill-calculator/', 'BESCOM / Bengaluru Bill'],
-    ['/msedcl-electricity-bill-calculator/', 'MSEDCL / Maharashtra Bill'],
-    ['/delhi-electricity-bill-calculator/', 'Delhi Electricity Bill'],
-    ['/telangana-electricity-bill-calculator/', 'Telangana Electricity Bill'],
-    ['/andhra-pradesh-electricity-bill-calculator/', 'Andhra Pradesh Bill'],
-    ['/kerala-electricity-bill-calculator/', 'Kerala Electricity Bill'],
-    ['/gujarat-electricity-bill-calculator/', 'Gujarat Electricity Bill'],
-    ['/uttar-pradesh-electricity-bill-calculator/', 'Uttar Pradesh Bill'],
-    ['/rajasthan-electricity-bill-calculator/', 'Rajasthan Electricity Bill'],
-    ['/west-bengal-electricity-bill-calculator/', 'West Bengal Bill'],
-    ['/punjab-electricity-bill-calculator/', 'Punjab Electricity Bill'],
     ['/#calc-electricity-bill', 'Homepage Electricity Bill'],
     ['/#calc-kwh', 'kWh Calculator'],
     ['/#calc-watt-unit', 'Watt to Unit'],
@@ -218,114 +202,6 @@ const pages = [
     ]
   },
   {
-    slug: 'pdf-to-word',
-    group: 'pdf',
-    kind: 'pdf',
-    title: 'PDF to Word Converter Online | Editable Text Export',
-    description: 'Convert selectable PDF text into a Word-compatible document using the browser PDF converter. Learn limits for scanned PDFs and layouts.',
-    kicker: 'PDF to Word',
-    h1: 'PDF to Word converter',
-    lede: 'Use the PDF converter to extract selectable text from a PDF into a Word-compatible document, then check formatting before sharing.',
-    proof: ['Browser-based workflow', 'Editable text export', 'Layout check required'],
-    ctaHref: '/pdf-converter/#pdf-converter',
-    ctaText: 'Open PDF to Word tool',
-    sections: [
-      ['What PDF to Word means here', 'This workflow extracts readable selectable text from a PDF and creates a Word-compatible document. It is useful for notes, drafts, simple reports, receipts, and documents where the text layer already exists.'],
-      ['When it will not be perfect', 'Complex tables, multi-column layouts, forms, scanned pages, handwritten notes, and decorative PDFs may need manual cleanup. A browser converter can help you recover text, but it is not a guaranteed layout clone.'],
-      ['Privacy and file handling', 'The linked PDF converter runs in the browser for ordinary files. Avoid sensitive contracts, medical records, identity documents, or password-protected files in any general online utility.'],
-      ['After-conversion checklist', 'Open the output, verify page order, check headings, review tables, confirm special symbols, and compare the result against the original before sending it to anyone.']
-    ],
-    faqs: [
-      ['Can scanned PDFs become Word files?', 'Image-only scanned pages need OCR. Use the OCR scanned PDF page first if the text is not selectable.'],
-      ['Will the layout match exactly?', 'No. Treat the result as editable text that may need cleanup.'],
-      ['Does it work on mobile?', 'Small files may work, but larger PDFs are easier on a laptop or desktop browser.'],
-      ['What should I check after export?', 'Check text order, tables, spacing, symbols, and missing content.'],
-      ['Is a server upload required?', 'The linked converter is designed for browser processing of ordinary files.'],
-      ['Which tool should I use for page images?', 'Use PDF to JPG or the PDF converter image export mode.']
-    ]
-  },
-  {
-    slug: 'pdf-to-jpg',
-    group: 'pdf',
-    kind: 'pdf',
-    title: 'PDF to JPG Converter | Turn PDF Pages into Images',
-    description: 'Render PDF pages as JPG images for sharing, previews, uploads, and thumbnails. Understand quality, file-size, and privacy limits.',
-    kicker: 'PDF to JPG',
-    h1: 'PDF to JPG converter',
-    lede: 'Render PDF pages as image files when you need previews, thumbnails, upload-friendly pages, or visual sharing instead of editable text.',
-    proof: ['Page image export', 'Good for previews', 'Quality tradeoffs'],
-    ctaHref: '/pdf-converter/#pdf-converter',
-    ctaText: 'Open PDF image converter',
-    sections: [
-      ['What PDF to JPG is useful for', 'JPG export is helpful when a form, design, receipt, slide, or certificate must be shared as an image. It preserves the visual page more reliably than a text extraction workflow.'],
-      ['JPG versus PNG', 'JPG usually creates smaller files for photo-heavy pages. PNG is better for crisp text, screenshots, charts, and documents with sharp lines. Choose the format based on the page content.'],
-      ['Quality checks', 'Zoom into the exported image before submitting it anywhere. Check that text remains readable, stamps or signatures are visible, and important edges were not cropped.'],
-      ['Privacy note', 'Use browser-based conversion for ordinary files only. Avoid confidential IDs, private contracts, bank statements, medical records, or files you do not have permission to process.']
-    ],
-    faqs: [
-      ['Can every PDF page become a JPG?', 'Most pages can be rendered visually, but very large or protected PDFs may fail in the browser.'],
-      ['Is JPG best for text?', 'PNG is often better for sharp text. JPG is better for photos and smaller file size.'],
-      ['Can I convert only selected pages?', 'Use split PDF first if you only need a page range.'],
-      ['Will links stay clickable?', 'No. Image export flattens the page visually.'],
-      ['Can I upload the result to forms?', 'Usually, if the form accepts JPG and the file size is within its limit.'],
-      ['Does it edit the original PDF?', 'No. It creates image output from the pages.']
-    ]
-  },
-  {
-    slug: 'jpg-to-pdf',
-    group: 'pdf',
-    kind: 'pdf',
-    title: 'JPG to PDF Converter | Combine Photos into PDF',
-    description: 'Turn JPG, JPEG, PNG, or WebP images into one PDF for forms, assignments, receipts, and document sharing.',
-    kicker: 'JPG to PDF',
-    h1: 'JPG to PDF converter',
-    lede: 'Combine photos or scanned images into one PDF file for uploads, assignments, receipts, and simple document bundles.',
-    proof: ['Image sequence to PDF', 'Works with common images', 'Check page order'],
-    ctaHref: '/images-to-pdf/#images-to-pdf',
-    ctaText: 'Open Images to PDF tool',
-    sections: [
-      ['What JPG to PDF does', 'The workflow places one or more images into a PDF. It is useful when a website or office asks for one PDF instead of several separate photo uploads.'],
-      ['Before you convert', 'Rename or arrange images in the order you want. Crop unnecessary background, keep pages upright, and make sure text is readable before creating the final PDF.'],
-      ['Common use cases', 'Students can combine assignment photos, customers can package receipts, and small offices can combine photographed forms or document pages into a single upload.'],
-      ['Quality and privacy', 'Photo quality controls the final PDF readability. Use sufficient lighting, avoid shadows, and do not process sensitive identity or bank documents in a general online tool unless you accept the risk.']
-    ],
-    faqs: [
-      ['Can I use PNG or WebP too?', 'Yes. The images-to-PDF tool supports common browser image formats.'],
-      ['Can I reorder images?', 'Arrange the files before conversion or use the tool page options if available.'],
-      ['Will the PDF be searchable?', 'No. Image PDFs are visual unless OCR is applied.'],
-      ['Why is my PDF large?', 'High-resolution photos create large PDFs. Compress or resize images if needed.'],
-      ['Can I use it for forms?', 'Yes, if the receiving site accepts a PDF made from photos.'],
-      ['What should I check?', 'Open the downloaded PDF and confirm page order, orientation, and readability.']
-    ]
-  },
-  {
-    slug: 'compress-pdf-to-100kb',
-    group: 'pdf',
-    kind: 'pdf',
-    title: 'Compress PDF to 100KB | Reduce PDF Size Carefully',
-    description: 'Learn how to reduce PDF size toward 100KB with browser compression, image quality tradeoffs, and safer document checks.',
-    kicker: 'PDF compression',
-    h1: 'Compress PDF to 100KB',
-    lede: 'Try to reduce PDF size for upload limits while understanding that exact 100KB output depends on images, pages, fonts, and document complexity.',
-    proof: ['Upload-size help', 'Quality tradeoffs', 'Check readability'],
-    ctaHref: '/compress-pdf/#compress-pdf',
-    ctaText: 'Open PDF compressor',
-    sections: [
-      ['Why exact 100KB is hard', 'PDF size depends on page count, embedded images, fonts, scans, and compression history. A one-page text PDF can be tiny; a scanned document may not reach 100KB without becoming unreadable.'],
-      ['Best compression strategy', 'Remove unnecessary pages, compress images, avoid screenshots when text PDF is possible, and test a lower quality setting only after saving a backup of the original.'],
-      ['When not to over-compress', 'Do not sacrifice readability for a file-size target. If an upload portal requires clear names, marks, barcodes, or signatures, the document must remain legible after compression.'],
-      ['Privacy and safety', 'Use PDF compression only for files you are allowed to process. Avoid identity documents, medical files, contracts, or confidential records in a general online utility.']
-    ],
-    faqs: [
-      ['Can every PDF become 100KB?', 'No. Some files cannot reach 100KB without unacceptable quality loss.'],
-      ['What reduces PDF size most?', 'Large images and scanned pages usually contribute most to file size.'],
-      ['Should I keep the original?', 'Yes. Always keep the original file before compression.'],
-      ['Can I compress for exam or job portals?', 'Yes, but confirm readability and file-size rules after export.'],
-      ['Does compression remove security?', 'Use dedicated password workflows for protected files; compression is not a security tool.'],
-      ['What if the output is blurry?', 'Use a higher quality setting or reduce page count instead.']
-    ]
-  },
-  {
     slug: 'home-loan-emi-calculator-india',
     group: 'finance',
     kind: 'finance',
@@ -468,22 +344,25 @@ const pages = [
     title: 'Electricity Bill Calculator India | Units to Cost Estimate',
     description: 'Estimate electricity bill cost in India from monthly units, unit rate, fixed charge, and tax or duty percentage. Use your latest tariff.',
     kicker: 'Electricity calculator',
-    h1: 'Electricity bill India',
-    lede: 'Estimate monthly electricity cost from units consumed, tariff per unit, fixed charges, and taxes using values from your latest bill or state tariff notice.',
-    proof: ['Units to cost', 'User-entered tariff', 'No outdated slab claims'],
+    h1: 'Estimate electricity cost from your bill',
+    lede: 'Turn your consumed units and an entered rate into a cost breakdown. This is a flat-rate budgeting tool: it does not calculate official state tariffs or subsidy eligibility.',
+    proof: ['Units to cost', 'Your bill inputs', 'Clear calculation steps'],
     form: `
       <form class="traffic-form" data-traffic-calc="electricity-bill">
         <label>Monthly units / kWh<input name="units" type="number" min="0" step="0.01" value="250" required></label>
-        <label>Rate per unit<input name="unitRate" type="number" min="0" step="0.01" value="7.5" required></label>
-        <label>Fixed charge<input name="fixed" type="number" min="0" step="0.01" value="100"></label>
-        <label>Tax / duty (%)<input name="tax" type="number" min="0" step="0.01" value="0"></label>
+        <label>Flat or average rate (INR per kWh)<input name="unitRate" type="number" min="0" step="0.01" value="7.5" required></label>
+        <label>Fixed charge (INR)<input name="fixed" type="number" min="0" step="0.01" value="100"></label>
+        <label>Illustrative tax on subtotal (%)<input name="tax" type="number" min="0" step="0.01" value="0"></label>
         <button class="glowing-btn demo-btn ripple-btn" type="submit">Estimate bill</button>
       </form>`,
     sections: [
       ['Why this calculator asks for your tariff', 'Electricity rates in India vary by state, board, consumer category, slab, connected load, subsidy, fixed charge, and billing period. Hardcoding a rate can become wrong quickly, so this page lets you enter the rate from your latest bill or official tariff notice.'],
-      ['How the estimate works', 'The calculator multiplies consumed units by the unit rate, adds fixed charges, and optionally applies a tax or duty percentage. This gives a quick planning estimate, not an official bill calculation.'],
-      ['Where to find inputs', 'Use the units or kWh shown on your electricity bill. For unit rate, check the tariff line, average energy charge, or official tariff sheet. Add fixed charges and taxes separately if your bill shows them.'],
-      ['State-board caution', 'TNEB, BESCOM, MSEDCL, Telangana, Andhra Pradesh, and other boards can use different slabs and rules. For payment disputes or exact billing, use the official board bill, tariff order, or customer portal.']
+      ['How the estimate works', 'Energy charge = units × rate. Subtotal = energy charge + fixed charge. Tax = subtotal × entered percentage / 100. Estimated total = subtotal + tax. The tax field applies to the whole subtotal; if your actual duty uses another basis, leave it at zero and reconcile that line separately.'],
+      ['Worked example: reproduce every line', 'Using illustrative inputs of 250 kWh, INR 7.50 per kWh, INR 100 fixed charge and 5% tax: energy charge is 250 × 7.50 = INR 1,875; subtotal is INR 1,975; tax is INR 98.75; total is INR 2,073.75. These are example numbers, not a tariff recommendation.'],
+      ['Compare an appliance before buying', 'A 1,000 W appliance running for 2 hours a day over 30 days uses 1 × 2 × 30 = 60 kWh. At an illustrative INR 7.50 per kWh, its energy cost is INR 450. Use zero fixed charge and tax when comparing energy alone so you do not charge the same household fixed fee twice. Actual cycling appliances do not necessarily draw rated power continuously.'],
+      ['Read a slab bill without double counting', 'Suppose an illustrative tariff charges the first 100 units at INR 4 and the next 150 at INR 6. Energy cost is (100 × 4) + (150 × 6) = INR 1,300. Enter the average energy rate, 1,300 / 250 = INR 5.20, for that bill. Do not use total payable / units as the energy rate and then add fixed charges again. The average changes when consumption crosses a slab, so it cannot reliably predict a different month.'],
+      ['Where to find inputs', 'Take kWh and the billing period from your meter bill. Compare like-for-like periods; do not compare a two-month bill with one month of usage. Separate energy charge from fixed charges, arrears, credits, fuel adjustments and taxes. This tool does not automatically include those extra lines.'],
+      ['Why the official payable amount can differ', 'Your provider may apply slabs, minimum charges, time-of-use rates, sanctioned-load charges or conditional subsidies. This page does not store state-specific tariff tables. For exact amounts or a dispute, use the tariff order and customer portal of the distribution company printed on your bill.']
     ],
     faqs: [
       ['Can this calculate exact state electricity slabs?', 'No. It avoids hardcoded state slabs because tariffs change and vary by category. Enter your current rate manually.'],
@@ -496,89 +375,15 @@ const pages = [
   }
 ];
 
-const regionalElectricityPages = [
-  ['tneb-electricity-bill-calculator', 'TNEB Electricity Bill Calculator | Tamil Nadu Units Cost', 'Estimate a Tamil Nadu or TNEB-style electricity bill from units, latest unit rate, fixed charge, and duty. No hardcoded slab rates.', 'Tamil Nadu electricity', 'TNEB bill calculator', 'Estimate a Tamil Nadu electricity bill using the units on your bill and the latest tariff rate you enter yourself.', 'Tamil Nadu / TNEB searches'],
-  ['bescom-electricity-bill-calculator', 'BESCOM Electricity Bill Calculator | Bengaluru Units Cost', 'Estimate a Bengaluru BESCOM electricity bill from monthly units, current rate per unit, fixed charge, and tax or duty.', 'Bengaluru electricity', 'BESCOM bill calculator', 'Estimate a BESCOM-style electricity bill for Bengaluru by entering your current units, unit rate, fixed charge, and duty.', 'BESCOM / Bengaluru searches'],
-  ['msedcl-electricity-bill-calculator', 'MSEDCL Electricity Bill Calculator | Maharashtra Units Cost', 'Estimate a Maharashtra MSEDCL electricity bill using units, latest rate per unit, fixed charges, and tax or duty percentage.', 'Maharashtra electricity', 'MSEDCL bill calculator', 'Estimate a Maharashtra electricity bill with your latest MSEDCL-style tariff inputs instead of outdated fixed slab assumptions.', 'MSEDCL / Maharashtra searches'],
-  ['delhi-electricity-bill-calculator', 'Delhi Electricity Bill Calculator | Units to Bill Estimate', 'Estimate a Delhi electricity bill from monthly units, current unit rate, fixed charge, and duty or tax percentage.', 'Delhi electricity', 'Delhi electricity bill calculator', 'Estimate a Delhi electricity bill using the units and tariff values from your latest bill or provider notice.', 'Delhi electricity searches'],
-  ['telangana-electricity-bill-calculator', 'Telangana Electricity Bill Calculator | Units Cost Estimate', 'Estimate a Telangana electricity bill from units consumed, current tariff per unit, fixed charge, and duty or tax.', 'Telangana electricity', 'Telangana electricity bill calculator', 'Estimate a Telangana electricity bill with user-entered tariff values, fixed charges, and tax or duty percentage.', 'Telangana electricity searches'],
-  ['andhra-pradesh-electricity-bill-calculator', 'Andhra Pradesh Electricity Bill Calculator | Units Cost', 'Estimate an Andhra Pradesh electricity bill using monthly units, latest rate per unit, fixed charge, and duty or tax.', 'Andhra Pradesh electricity', 'Andhra Pradesh electricity bill calculator', 'Estimate an Andhra Pradesh electricity bill from your current unit consumption and tariff values.', 'Andhra Pradesh searches'],
-  ['kerala-electricity-bill-calculator', 'Kerala Electricity Bill Calculator | KSEB Units Cost Estimate', 'Estimate a Kerala or KSEB-style electricity bill from units, latest unit rate, fixed charge, and duty or tax percentage.', 'Kerala electricity', 'Kerala electricity bill calculator', 'Estimate a Kerala electricity bill using your latest KSEB-style tariff inputs and monthly unit consumption.', 'Kerala / KSEB searches'],
-  ['gujarat-electricity-bill-calculator', 'Gujarat Electricity Bill Calculator | Units Cost Estimate', 'Estimate a Gujarat electricity bill from monthly units, current per-unit tariff, fixed charge, and tax or duty percentage.', 'Gujarat electricity', 'Gujarat electricity bill calculator', 'Estimate a Gujarat electricity bill by entering the latest unit rate and fixed charges shown on your bill.', 'Gujarat electricity searches'],
-  ['uttar-pradesh-electricity-bill-calculator', 'Uttar Pradesh Electricity Bill Calculator | Units Cost', 'Estimate an Uttar Pradesh electricity bill using units consumed, current unit rate, fixed charge, and duty or tax.', 'Uttar Pradesh electricity', 'Uttar Pradesh electricity bill calculator', 'Estimate an Uttar Pradesh electricity bill with your own latest tariff rate, fixed charge, and duty inputs.', 'Uttar Pradesh searches'],
-  ['rajasthan-electricity-bill-calculator', 'Rajasthan Electricity Bill Calculator | Units Cost Estimate', 'Estimate a Rajasthan electricity bill from monthly units, current tariff rate, fixed charge, and tax or duty percentage.', 'Rajasthan electricity', 'Rajasthan electricity bill calculator', 'Estimate a Rajasthan electricity bill using current bill values instead of hardcoded tariff tables.', 'Rajasthan electricity searches'],
-  ['west-bengal-electricity-bill-calculator', 'West Bengal Electricity Bill Calculator | Units Cost', 'Estimate a West Bengal electricity bill from consumed units, current rate per unit, fixed charge, and duty or tax.', 'West Bengal electricity', 'West Bengal electricity bill calculator', 'Estimate a West Bengal electricity bill by entering units, unit rate, fixed charges, and taxes from your latest bill.', 'West Bengal searches'],
-  ['punjab-electricity-bill-calculator', 'Punjab Electricity Bill Calculator | Units Cost Estimate', 'Estimate a Punjab electricity bill using monthly units, current rate per unit, fixed charge, and duty or tax percentage.', 'Punjab electricity', 'Punjab electricity bill calculator', 'Estimate a Punjab electricity bill using the tariff values from your latest bill or official provider notice.', 'Punjab electricity searches']
-].map(([slug, title, description, kicker, h1, lede, proof]) => ({
-  slug,
-  group: 'electricity',
-  kind: 'finance',
-  calc: 'electricity-bill',
-  title,
-  description,
-  kicker,
-  h1,
-  lede,
-  proof: [proof, 'User-entered tariff', 'No hardcoded slabs'],
-  form: `
-      <form class="traffic-form" data-traffic-calc="electricity-bill">
-        <label>Monthly units / kWh<input name="units" type="number" min="0" step="0.01" value="250" required></label>
-        <label>Latest rate per unit<input name="unitRate" type="number" min="0" step="0.01" value="7.5" required></label>
-        <label>Fixed / demand charge<input name="fixed" type="number" min="0" step="0.01" value="100"></label>
-        <label>Tax / duty (%)<input name="tax" type="number" min="0" step="0.01" value="0"></label>
-        <button class="glowing-btn demo-btn ripple-btn" type="submit">Estimate bill</button>
-      </form>`,
-  sections: [
-    ['Why this regional page does not hardcode rates', 'Electricity tariffs can change by state, distribution company, consumer category, slab, subsidy, billing cycle, and connected load. This calculator avoids stale tariff tables and asks you to enter the latest rate from your own bill or official tariff notice.'],
-    ['How to use this estimate', 'Enter the units or kWh consumed, the current unit rate, any fixed or demand charge, and an optional duty or tax percentage. The result is a planning estimate that helps you compare usage scenarios before checking the official bill.'],
-    ['Where to find the inputs', 'Look for units consumed, energy charge, fixed charge, duty, tax, subsidy, and average unit rate on your latest electricity bill. If your bill uses slabs, you can enter an average rate for a quick estimate or calculate each slab separately.'],
-    ['Official bill caution', 'For bill payment, complaints, subsidy eligibility, arrears, meter issues, category changes, or slab disputes, use the official distribution-company bill, customer portal, tariff order, or support channel. This page performs arithmetic only.']
-  ],
-  faqs: [
-    ['Does this use official current tariff slabs?', 'No. It avoids hardcoded rates because tariffs and eligibility rules can change. Enter the latest rate from your bill or official tariff notice.'],
-    ['What is one electricity unit?', 'One unit is usually one kilowatt-hour, or 1 kWh.'],
-    ['Can I use this for a slab-based bill?', 'Yes for a rough estimate. Use an average per-unit rate, or calculate separate slab portions manually.'],
-    ['Why is fixed charge separate?', 'Many electricity bills include fixed, demand, meter, or customer charges in addition to per-unit energy charges.'],
-    ['Can this replace my official bill?', 'No. It is only a planning estimate and not a payment demand or official statement.'],
-    ['Can I estimate AC or appliance cost?', 'Yes. Estimate the appliance kWh first, then enter those units with your current tariff rate.']
-  ]
-}));
-
-const regionalGuidance = {
-  'tneb-electricity-bill-calculator': ['Tamil Nadu / TNEB review checks', 'Tamil Nadu domestic bills may be affected by billing cycle length, consumer category, subsidy treatment, fixed charges, and the distribution company named on the bill. Use this page to compare usage scenarios, then confirm the exact payable amount in the official bill or customer portal before payment.'],
-  'bescom-electricity-bill-calculator': ['Bengaluru / BESCOM review checks', 'For a Bengaluru-style estimate, check whether the bill separates energy charges, fixed or demand charges, fuel adjustment, arrears, taxes, and any credits. Enter the rate you want to test instead of assuming one permanent city-wide slab.'],
-  'msedcl-electricity-bill-calculator': ['Maharashtra / MSEDCL review checks', 'Maharashtra bills can vary by connection type, sanctioned load, category, arrears, subsidy, duty, and other line items. Use the latest bill line items as inputs and keep official payment or dispute questions with the distribution company.'],
-  'delhi-electricity-bill-calculator': ['Delhi electricity review checks', 'Delhi estimates should account for the provider shown on the bill, consumer category, unit slab, fixed charge, subsidy or rebate eligibility, arrears, and taxes. A quick average-rate estimate is useful for budgeting but does not decide subsidy eligibility.'],
-  'telangana-electricity-bill-calculator': ['Telangana electricity review checks', 'For Telangana bills, verify the distribution company, consumer category, billing period, connected load, fixed charges, arrears, and any state-specific duties on the latest bill. Use official tariff notices for exact slab disputes.'],
-  'andhra-pradesh-electricity-bill-calculator': ['Andhra Pradesh electricity review checks', 'Andhra Pradesh estimates should be checked against the DISCOM named on the bill, consumer category, connected load, subsidy line, duty, and fixed charges. Enter an average unit rate only for quick planning.'],
-  'kerala-electricity-bill-calculator': ['Kerala / KSEB review checks', 'For Kerala or KSEB-style planning, check the bill for energy charge, fixed charge, duty, surcharge, billing period, consumer category, and any subsidy or arrear line. Keep the official bill as the payable record.'],
-  'gujarat-electricity-bill-calculator': ['Gujarat electricity review checks', 'Gujarat users should verify the distribution company named on the bill, tariff category, fuel adjustment or other surcharge lines, fixed charges, duty, and subsidy or credit entries before comparing the estimate.'],
-  'uttar-pradesh-electricity-bill-calculator': ['Uttar Pradesh electricity review checks', 'For Uttar Pradesh estimates, check the connection category, rural or urban tariff context, sanctioned load, fixed charge, duty, arrears, and the distribution company listed on the bill. Use this page for scenario planning, not official billing.'],
-  'rajasthan-electricity-bill-calculator': ['Rajasthan electricity review checks', 'Rajasthan bills can include distribution-circle context, subsidy or rebate treatment, fuel surcharge, fixed charges, taxes, arrears, and category-specific rates. Enter the latest bill values to avoid stale tariff assumptions.'],
-  'west-bengal-electricity-bill-calculator': ['West Bengal electricity review checks', 'For West Bengal estimates, confirm whether your bill is from the state distribution company or a city supplier, then check category, billing period, fixed or meter charges, duty, arrears, and any rebate line.'],
-  'punjab-electricity-bill-calculator': ['Punjab electricity review checks', 'Punjab estimates should be checked against the latest bill for category, connected load, subsidy treatment, duty, fixed charges, arrears, and the official payable amount. This tool is for budgeting and usage comparison.']
-};
-
-regionalElectricityPages.forEach((page) => {
-  const extra = regionalGuidance[page.slug];
-  if (extra) page.sections.splice(1, 0, extra);
-});
-
-pages.push(...regionalElectricityPages);
 
 function json(value) {
   return JSON.stringify(value, null, 2).replace(/</g, '\\u003c');
 }
 
 function reviewStrip(page) {
-  const method = page.group === 'electricity'
-    ? 'Tariff method checked: user-entered current bill values'
-    : page.group === 'finance'
-      ? 'Formula method checked: standard planning arithmetic'
-      : page.group === 'pdf'
-        ? 'Workflow checked: browser-only file handling'
-        : 'QR payload checked: local browser rendering';
-  return `<div class="review-strip"><strong>Published by Calculator All-in-One</strong><span>Last reviewed: 12 August 2026</span><span>${method}</span><a href="/editorial-standards.html">Testing and editorial standards</a></div>`;
+  const method = page.group === 'electricity' ? 'Enter rates from your bill'
+    : page.group === 'finance' ? 'Assumptions explained below' : 'Static QR codes generated in your browser';
+  return `<div class="review-strip"><strong>Calculator All-in-One</strong><span>${method}</span><a href="/editorial-standards.html">Methods and limitations</a></div>`;
 }
 
 function evidenceArticle(page) {
@@ -589,7 +394,7 @@ function evidenceArticle(page) {
       : page.group === 'pdf'
         ? 'The PDF workflow is described as a browser utility, not a server conversion service. Selected files are processed locally where the tool supports it, and users should open the downloaded output to confirm page order, text, image quality, and missing advanced features.'
         : 'The QR payload is assembled from the fields shown on the page and rendered locally in the browser. Static QR codes do not provide scan analytics, editable redirects, payment confirmation, or account-based history.';
-  return `<article class="content-evidence source-note"><h2>Review method and source trail</h2><p>${text} See the <a href="/editorial-standards.html">editorial standards</a> and <a href="/disclaimer.html">site disclaimer</a> for how estimates, file tools, and safety notes are reviewed.</p></article>`;
+  return `<article class="content-evidence source-note"><h2>Method and limitations</h2><p>${text} See the <a href="/editorial-standards.html">editorial standards</a> and <a href="/disclaimer.html">site disclaimer</a> for the limits of these tools and how to report a problem.</p></article>`;
 }
 
 function nav(current) {
@@ -617,9 +422,9 @@ function tool(page) {
     return `<aside class="traffic-tool-card" aria-label="${page.h1} tool"><h2>Create a small batch</h2><form class="traffic-form" data-traffic-bulk-qr><label>One URL or text item per line<textarea name="items" required placeholder="https://example.com/menu&#10;https://example.com/contact&#10;Table 7 feedback form"></textarea></label><button class="glowing-btn demo-btn ripple-btn" type="submit">Generate batch</button></form><div class="bulk-qr-grid" data-bulk-qr-grid></div></aside>`;
   }
   if (page.kind === 'finance') {
-    return `<aside class="traffic-tool-card" aria-label="${page.h1} calculator"><h2>Calculate now</h2>${page.form}<div class="traffic-result-grid" data-traffic-result hidden></div><p class="traffic-encoded">Planning estimate only. Verify final loan, tax, or investment decisions with current official or provider information.</p></aside>`;
+    return `<aside class="traffic-tool-card" aria-label="${page.h1} calculator"><h2>Calculate now</h2>${page.form}<div class="traffic-result-grid" data-traffic-result hidden></div><p class="traffic-encoded">${page.group === 'electricity' ? 'Example inputs are not official tariffs. Replace them with your bill values; this is a flat-rate estimate.' : 'Planning estimate only. Check fees, payment timing and current provider information.'}</p></aside>`;
   }
-  return `<aside class="traffic-tool-card" aria-label="${page.h1} action"><h2>Use the working tool</h2><p class="traffic-encoded">This long-tail guide explains the workflow and points you to the active browser tool that completes the task.</p><div class="page-actions"><a class="glowing-btn" href="${page.ctaHref}">${page.ctaText}</a><a class="secondary-btn" href="/pdf-converter/">See all PDF tools</a></div><div class="traffic-result-grid"><div><span>Best for</span><strong>${page.proof[0]}</strong></div><div><span>Watch for</span><strong>${page.proof[2]}</strong></div></div></aside>`;
+  throw new Error(`Unsupported page kind: ${page.kind}`);
 }
 
 function pageHtml(page) {
@@ -658,9 +463,9 @@ function pageHtml(page) {
     ]
   };
   const scripts = page.group === 'qr'
-    ? `<script src="/qr-code-engine.js?v=20260812qr" defer></script><script src="/traffic-calculators.js?v=20260812seo" defer></script>`
+    ? `<script src="/qr-code-engine.js?v=20260812qr" defer></script><script src="/traffic-calculators.js?v=20260908" defer></script>`
     : page.kind === 'finance'
-      ? `<script src="/traffic-calculators.js?v=20260812seo" defer></script>`
+      ? `<script src="/traffic-calculators.js?v=20260908" defer></script>`
       : '';
   return `<!DOCTYPE html>
 <html lang="en">
@@ -675,7 +480,7 @@ function pageHtml(page) {
     <link rel="canonical" href="${url}">
     <meta property="og:type" content="website"><meta property="og:site_name" content="Calculator All-in-One"><meta property="og:title" content="${page.title}"><meta property="og:description" content="${page.description}"><meta property="og:url" content="${url}">
     <meta name="twitter:card" content="summary"><meta name="twitter:title" content="${page.title}"><meta name="twitter:description" content="${page.description}">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="stylesheet" href="/style.css?v=20260812seo">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="stylesheet" href="/style.css?v=20260908">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-MRCMVF9545"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-MRCMVF9545');</script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9409281508068005" crossorigin="anonymous"></script>
@@ -691,7 +496,7 @@ ${scripts}
     <main class="traffic-main">
         <section class="traffic-hero">
             <div><p class="page-kicker">${page.kicker}</p><h1>${page.h1}</h1><p>${page.lede}</p><div class="page-actions"><a class="glowing-btn" href="#tool">${page.kind === 'pdf' ? 'Open workflow' : 'Use the tool'}</a><a class="secondary-btn" href="#faq">Read FAQs</a></div></div>
-            <aside class="traffic-hero-card"><span>Search intent</span><strong>${page.proof[0]}</strong><p>${page.proof.join(' &middot; ')}</p></aside>
+            <aside class="traffic-hero-card"><span>What you can do</span><strong>${page.proof[0]}</strong><p>${page.proof.join(' &middot; ')}</p></aside>
         </section>
         ${reviewStrip(page)}
         <section class="traffic-shell" id="tool">
@@ -716,14 +521,4 @@ for (const page of pages) {
   fs.writeFileSync(path.join(dir, 'index.html'), pageHtml(page), 'utf8');
 }
 
-const sitemapPath = path.join(process.cwd(), 'sitemap.xml');
-let sitemap = fs.readFileSync(sitemapPath, 'utf8');
-for (const page of pages) {
-  const loc = `${site}/${page.slug}/`;
-  if (!sitemap.includes(`<loc>${loc}</loc>`)) {
-    sitemap = sitemap.replace('</urlset>', `    <url>\n        <loc>${loc}</loc>\n        <lastmod>${today}</lastmod>\n        <changefreq>monthly</changefreq>\n        <priority>${page.group === 'pdf' ? '0.82' : '0.84'}</priority>\n    </url>\n</urlset>`);
-  }
-}
-fs.writeFileSync(sitemapPath, sitemap, 'utf8');
-
-console.log(`Generated ${pages.length} traffic pages and updated sitemap.xml`);
+console.log(`Generated ${pages.length} working tool pages. Run npm run build to refresh the sitemap and consolidated routes.`);

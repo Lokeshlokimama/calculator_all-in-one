@@ -1132,7 +1132,7 @@ window.jumpToTool = jumpToTool;
 // --- Phase 1: Web Tools ---
 
 function generatePassword() {
-    const len = document.getElementById('pwd-length').value;
+    const len = Number(document.getElementById('pwd-length').value);
     const upper = document.getElementById('pwd-upper').checked;
     const nums = document.getElementById('pwd-numbers').checked;
     const syms = document.getElementById('pwd-symbols').checked;
@@ -1142,19 +1142,29 @@ function generatePassword() {
     const numChars = '0123456789';
     const symChars = '!@#$%^&*()_+~`|}{[]:;?><,./-=';
 
-    let validChars = chars;
-    if (upper) validChars += upperChars;
-    if (nums) validChars += numChars;
-    if (syms) validChars += symChars;
-
-    if (validChars.length === 0) validChars = chars; // fallback
-
-    let password = '';
-    for (let i = 0; i < len; i++) {
-        password += validChars.charAt(Math.floor(Math.random() * validChars.length));
+    if (!Number.isInteger(len) || len < 8 || len > 64 || !window.crypto?.getRandomValues) {
+        document.getElementById('pwd-result').innerText = '';
+        showToast('Choose a length from 8 to 64 and use a browser with secure random number support.', 'error');
+        return;
     }
-
-    document.getElementById('pwd-result').innerText = password;
+    const groups = [chars];
+    if (upper) groups.push(upperChars);
+    if (nums) groups.push(numChars);
+    if (syms) groups.push(symChars);
+    const validChars = groups.join('');
+    const randomIndex = (size) => {
+        const buffer = new Uint32Array(1);
+        const limit = Math.floor(4294967296 / size) * size;
+        do { window.crypto.getRandomValues(buffer); } while (buffer[0] >= limit);
+        return buffer[0] % size;
+    };
+    const password = groups.map((group) => group[randomIndex(group.length)]);
+    while (password.length < len) password.push(validChars[randomIndex(validChars.length)]);
+    for (let i = password.length - 1; i > 0; i -= 1) {
+        const j = randomIndex(i + 1);
+        [password[i], password[j]] = [password[j], password[i]];
+    }
+    document.getElementById('pwd-result').innerText = password.join('');
     showToast('Password Generated!');
 }
 window.generatePassword = generatePassword;
@@ -1397,17 +1407,23 @@ function calcFD() {
 }
 window.calcFD = calcFD;
 
+function recurringDepositMaturity(monthlyDeposit, annualRate, months) {
+    const monthlyRate = Math.expm1(Math.log1p(annualRate / 100 / 4) / 3);
+    if (monthlyRate === 0) return monthlyDeposit * months;
+    return monthlyDeposit * (1 + monthlyRate) * Math.expm1(months * Math.log1p(monthlyRate)) / monthlyRate;
+}
+
 function calcRD() {
     const P = parseFloat(document.getElementById('rd-monthly').value);
     const annualRate = parseFloat(document.getElementById('rd-rate').value);
     const r = annualRate / 100;
     const n = parseFloat(document.getElementById('rd-months').value);
 
-    if (!P || P <= 0 || Number.isNaN(annualRate) || annualRate < 0 || !n || n <= 0) { showToast('Please enter all values'); return; }
+    if (![P, annualRate, n].every(Number.isFinite) || P <= 0 || annualRate < 0 || annualRate > 100 || !Number.isInteger(n) || n <= 0 || n > 1200) { showToast('Enter a positive deposit, annual rate from 0 to 100, and 1 to 1200 whole months.'); return; }
 
     const deposits = P * n;
-    const interest = P * (n * (n + 1) / 2) * (r / 12);
-    const maturity = deposits + interest;
+    const maturity = recurringDepositMaturity(P, annualRate, n);
+    const interest = maturity - deposits;
 
     setMoneyText('rd-result', maturity, { prefix: 'Maturity: ' });
     setMoneyText('rd-deposits', deposits);
@@ -1446,18 +1462,21 @@ window.calcGST = calcGST;
 function calcSalary() {
     const ctc = parseFloat(document.getElementById('sal-ctc').value);
     const basicPct = parseFloat(document.getElementById('sal-basic-pct').value) / 100;
-    if (!ctc || !basicPct) { showToast('Please enter all values'); return; }
+    const tax = parseFloat(document.getElementById('sal-monthly-tax')?.value);
+    const otherDeductions = parseFloat(document.getElementById('sal-other-deductions')?.value);
+    if (![ctc, basicPct, tax, otherDeductions].every(Number.isFinite) || ctc <= 0 || basicPct < 0 || basicPct > 1 || tax < 0 || otherDeductions < 0) {
+        showToast('Enter annual CTC, a basic salary percentage from 0 to 100, and non-negative monthly deductions.', 'error');
+        return;
+    }
 
     const monthlyCTC = ctc / 12;
     const basic = monthlyCTC * basicPct;
     const pf = basic * 0.12;
-    const taxable = monthlyCTC - pf;
-
-    let tax = 0;
-    if (ctc > 500000 && ctc <= 1000000) tax = (taxable * 0.1);
-    if (ctc > 1000000) tax = (taxable * 0.2);
-
-    const inHand = monthlyCTC - pf - tax;
+    const inHand = monthlyCTC - pf - tax - otherDeductions;
+    if (inHand < 0) {
+        showToast('Monthly deductions exceed the monthly CTC. Check your entered amounts.', 'error');
+        return;
+    }
 
     setMoneyText('sal-result', inHand, { prefix: 'In-hand: ', suffix: ' / month' });
     setMoneyText('sal-monthly', monthlyCTC);
@@ -4097,15 +4116,15 @@ window.calcRD = async function() {
     const annualRate = parseFloat(document.getElementById('rd-rate').value);
     const months = parseFloat(document.getElementById('rd-months').value);
     
-    if (!P || P <= 0 || Number.isNaN(annualRate) || annualRate < 0 || !months || months <= 0) {
-        showToast('Please enter all values', 'error');
+    if (![P, annualRate, months].every(Number.isFinite) || P <= 0 || annualRate < 0 || annualRate > 100 || !Number.isInteger(months) || months <= 0 || months > 1200) {
+        showToast('Enter a positive deposit, annual rate from 0 to 100, and 1 to 1200 whole months.', 'error');
         return;
     }
     
     const r = annualRate / 100;
     const deposits = P * months;
-    const interest = P * (months * (months + 1) / 2) * (r / 12);
-    const maturity = deposits + interest;
+    const maturity = recurringDepositMaturity(P, annualRate, months);
+    const interest = maturity - deposits;
     
     setMoneyText('rd-result', maturity, { prefix: 'Maturity: ' });
     setMoneyText('rd-deposits', deposits);
@@ -4130,9 +4149,8 @@ window.calcRD = async function() {
     for (let m = stepSize; m <= months; m += stepSize) {
         labels.push(`${m} Mo`);
         const deps = P * m;
-        const intr = P * (m * (m + 1) / 2) * (r / 12);
         depositsData.push(deps);
-        totalData.push(Math.round(deps + intr));
+        totalData.push(Math.round(recurringDepositMaturity(P, annualRate, m)));
     }
     
     // Add final point if not present
@@ -4748,31 +4766,26 @@ window.sendAIMessage = sendAIMessage;
 // 1. UUID Generator
 function generateUUIDs() {
     const version = document.getElementById('uuid-version').value;
-    const count = parseInt(document.getElementById('uuid-count').value) || 1;
+    const count = Number(document.getElementById('uuid-count').value);
     const out = document.getElementById('uuid-output');
     
-    if (count < 1 || count > 100) {
+    if (!Number.isInteger(count) || count < 1 || count > 100) {
         showToast('Count must be between 1 and 100.', 'error');
         return;
     }
     
-    let uuids = [];
+    if (version !== '4' || !window.crypto?.getRandomValues) {
+        out.value = '';
+        showToast('UUID v4 requires a browser with secure random number support.', 'error');
+        return;
+    }
+    const uuids = [];
     for (let i = 0; i < count; i++) {
-        if (version === '4') {
-            // Standard RFC4122 v4 UUID
-            uuids.push('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            }));
-        } else {
-            // RFC4122 v1 UUID (mock time-based using timestamp)
-            const d = new Date().getTime();
-            const uuid = 'xxxxxxxx-xxxx-1xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                const r = (d + Math.random()*16)%16 | 0;
-                return (c=='x' ? r : (r&0x3|0x8)).toString(16);
-            });
-            uuids.push(uuid);
-        }
+        const bytes = window.crypto.getRandomValues(new Uint8Array(16));
+        bytes[6] = (bytes[6] & 0x0f) | 0x40;
+        bytes[8] = (bytes[8] & 0x3f) | 0x80;
+        const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+        uuids.push(`${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`);
     }
     
     out.value = uuids.join('\n');

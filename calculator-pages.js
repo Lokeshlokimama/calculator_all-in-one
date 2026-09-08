@@ -12,8 +12,8 @@ const calculatorPage = (() => {
 
     const $ = (id) => document.getElementById(id);
     const readNumber = (id) => {
-        const value = parseFloat($(id)?.value);
-        return Number.isFinite(value) ? value : 0;
+        const raw = $(id)?.value?.trim();
+        return raw ? Number(raw) : NaN;
     };
 
     const formatNumber = (value, digits = 2) => Number(value || 0).toLocaleString(undefined, {
@@ -304,7 +304,7 @@ const calculatorPage = (() => {
         const annualRate = readNumber('emi-rate');
         const months = readNumber('emi-tenure');
 
-        if (principal <= 0 || annualRate < 0 || months <= 0) {
+        if (![principal, annualRate, months].every(Number.isFinite) || principal <= 0 || annualRate < 0 || !Number.isInteger(months) || months <= 0 || months > 1200) {
             showError('Enter a valid loan amount, annual interest rate, and tenure in months.');
             return;
         }
@@ -312,7 +312,7 @@ const calculatorPage = (() => {
         const monthlyRate = annualRate / 100 / 12;
         const emi = monthlyRate === 0
             ? principal / months
-            : principal * monthlyRate * Math.pow(1 + monthlyRate, months) / (Math.pow(1 + monthlyRate, months) - 1);
+            : principal * monthlyRate / -Math.expm1(-months * Math.log1p(monthlyRate));
         const totalPayable = emi * months;
         const totalInterest = Math.max(0, totalPayable - principal);
 
@@ -326,7 +326,7 @@ const calculatorPage = (() => {
         const heightCm = readNumber('bmi-height');
         const weightKg = readNumber('bmi-weight');
 
-        if (heightCm <= 0 || weightKg <= 0) {
+        if (![heightCm, weightKg].every(Number.isFinite) || heightCm <= 0 || weightKg <= 0) {
             showError('Enter valid height in centimeters and weight in kilograms.');
             return;
         }
@@ -382,7 +382,7 @@ const calculatorPage = (() => {
         const percentage = readNumber('percentage-value');
         const base = readNumber('percentage-base');
 
-        if (!Number.isFinite(percentage) || base <= 0) {
+        if (![percentage, base].every(Number.isFinite)) {
             showError('Enter a valid percentage and base value.');
             return;
         }
@@ -398,7 +398,7 @@ const calculatorPage = (() => {
         const rate = readNumber('gst-rate') / 100;
         const mode = $('gst-mode')?.value || 'add';
 
-        if (amount <= 0 || rate < 0) {
+        if (![amount, rate].every(Number.isFinite) || amount < 0 || rate < 0 || rate > 1) {
             showError('Enter a valid amount and GST rate.');
             return;
         }
@@ -418,16 +418,16 @@ const calculatorPage = (() => {
         const annualRate = readNumber('loan-rate');
         const years = readNumber('loan-years');
 
-        if (principal <= 0 || annualRate < 0 || years <= 0) {
+        if (![principal, annualRate, years].every(Number.isFinite) || principal <= 0 || annualRate < 0 || years <= 0 || years > 100 || Math.abs(years * 12 - Math.round(years * 12)) > 1e-8) {
             showError('Enter a valid principal amount, interest rate, and tenure in years.');
             return;
         }
 
-        const months = years * 12;
+        const months = Math.round(years * 12);
         const monthlyRate = annualRate / 100 / 12;
         const monthlyPayment = monthlyRate === 0
             ? principal / months
-            : principal * monthlyRate * Math.pow(1 + monthlyRate, months) / (Math.pow(1 + monthlyRate, months) - 1);
+            : principal * monthlyRate / -Math.expm1(-months * Math.log1p(monthlyRate));
         const totalPayment = monthlyPayment * months;
         const totalInterest = Math.max(0, totalPayment - principal);
 
@@ -442,7 +442,7 @@ const calculatorPage = (() => {
         const annualRate = readNumber('sip-rate');
         const years = readNumber('sip-years');
 
-        if (monthly <= 0 || annualRate < 0 || years <= 0) {
+        if (![monthly, annualRate, years].every(Number.isFinite) || monthly <= 0 || annualRate < 0 || annualRate > 100 || years <= 0 || years > 100) {
             showError('Enter a valid monthly investment, expected return, and time period.');
             return;
         }
@@ -485,7 +485,7 @@ const calculatorPage = (() => {
         const to = $('currency-to')?.value || 'INR';
         const button = $('currency-submit');
 
-        if (amount <= 0) {
+        if (!Number.isFinite(amount) || amount <= 0) {
             showError('Enter a valid amount to convert.');
             return;
         }
@@ -496,7 +496,7 @@ const calculatorPage = (() => {
         try {
             const data = await fetchCurrencyRates(from);
             const rate = data.rates[to];
-            if (!rate) throw new Error('Selected currency is not available.');
+            if (!Number.isFinite(rate) || rate <= 0) throw new Error('Selected currency is not available.');
             const converted = amount * rate;
             const formatted = new Intl.NumberFormat(undefined, {
                 style: 'currency',
@@ -553,29 +553,34 @@ const calculatorPage = (() => {
 
     function generatePassword() {
         clearError();
-        const length = Math.max(8, Math.min(64, readNumber('password-length') || 16));
+        const length = readNumber('password-length');
         const includeUpper = $('password-uppercase')?.checked;
         const includeNumbers = $('password-numbers')?.checked;
         const includeSymbols = $('password-symbols')?.checked;
 
-        let chars = 'abcdefghijklmnopqrstuvwxyz';
-        if (includeUpper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        if (includeNumbers) chars += '0123456789';
-        if (includeSymbols) chars += '!@#$%^&*()-_=+[]{};:,.?/|';
-
-        const randomValues = new Uint32Array(length);
-        if (window.crypto?.getRandomValues) {
-            window.crypto.getRandomValues(randomValues);
-        } else {
-            for (let i = 0; i < length; i += 1) randomValues[i] = Math.floor(Math.random() * 4294967295);
+        if (!Number.isInteger(length) || length < 8 || length > 64 || !window.crypto?.getRandomValues) {
+            setText('password-result', '');
+            showError('Choose a length from 8 to 64 and use a browser with secure random number support.');
+            return;
         }
-
-        let password = '';
-        for (let i = 0; i < length; i += 1) {
-            password += chars[randomValues[i] % chars.length];
+        const groups = ['abcdefghijklmnopqrstuvwxyz'];
+        if (includeUpper) groups.push('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+        if (includeNumbers) groups.push('0123456789');
+        if (includeSymbols) groups.push('!@#$%^&*()-_=+[]{};:,.?/|');
+        const chars = groups.join('');
+        const randomIndex = (size) => {
+            const buffer = new Uint32Array(1);
+            const limit = Math.floor(4294967296 / size) * size;
+            do { window.crypto.getRandomValues(buffer); } while (buffer[0] >= limit);
+            return buffer[0] % size;
+        };
+        const password = groups.map((group) => group[randomIndex(group.length)]);
+        while (password.length < length) password.push(chars[randomIndex(chars.length)]);
+        for (let i = password.length - 1; i > 0; i -= 1) {
+            const j = randomIndex(i + 1);
+            [password[i], password[j]] = [password[j], password[i]];
         }
-
-        setText('password-result', password);
+        setText('password-result', password.join(''));
     }
 
     function updatePasswordLength() {

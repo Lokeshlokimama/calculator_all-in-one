@@ -43,7 +43,7 @@
     }
 
     function baseDom() {
-        return {
+        const dom = {
             input: document.querySelector('[data-tool-input]'),
             action: document.querySelector('[data-tool-action]'),
             clear: document.querySelector('[data-tool-clear]'),
@@ -52,6 +52,17 @@
             list: document.querySelector('[data-tool-list]'),
             output: document.querySelector('[data-tool-output]')
         };
+        const dropzone = dom.input?.closest('.upload-dropzone');
+        for (const eventName of ['dragover', 'drop']) {
+            dropzone?.addEventListener(eventName, (event) => {
+                event.preventDefault();
+                if (eventName !== 'drop' || dom.input.disabled || !event.dataTransfer?.files?.length) return;
+                dom.input.files = event.dataTransfer.files;
+                dom.input.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+        }
+        dom.input?.closest('form')?.addEventListener('submit', (event) => event.preventDefault());
+        return dom;
     }
 
     function initImagesToPdf() {
@@ -60,8 +71,14 @@
         if (!dom.input || !dom.action) return;
 
         dom.input.addEventListener('change', () => {
-            revokeObjectUrls();
-            state.files = validateImageFiles(dom.input.files);
+            resetOutput(dom);
+            try {
+                state.files = validateImageFiles(dom.input.files);
+            } catch (error) {
+                clearTool(dom);
+                setStatus(dom, error.message, 'error');
+                return;
+            }
             renderImageFileList(dom.list, state.files);
             dom.action.disabled = state.files.length === 0;
             dom.clear.hidden = state.files.length === 0;
@@ -116,7 +133,14 @@
         if (!dom.input || !dom.action) return;
 
         dom.input.addEventListener('change', () => {
-            state.files = validatePdfFiles(dom.input.files, { min: 2, max: MAX_MERGE_FILES });
+            resetOutput(dom);
+            try {
+                state.files = validatePdfFiles(dom.input.files, { min: 2, max: MAX_MERGE_FILES });
+            } catch (error) {
+                clearTool(dom);
+                setStatus(dom, error.message, 'error');
+                return;
+            }
             renderFileList(dom.list, state.files);
             dom.action.disabled = state.files.length < 2;
             dom.clear.hidden = state.files.length === 0;
@@ -166,7 +190,14 @@
         if (!dom.input || !dom.action || !ranges) return;
 
         dom.input.addEventListener('change', async () => {
-            state.file = validateSinglePdf(dom.input.files?.[0] || null);
+            resetOutput(dom);
+            try {
+                state.file = validatePdfFiles(dom.input.files, { max: 1 })[0] || null;
+            } catch (error) {
+                clearTool(dom);
+                setStatus(dom, error.message, 'error');
+                return;
+            }
             state.pageCount = 0;
             renderFileList(dom.list, state.file ? [state.file] : []);
             dom.action.disabled = true;
@@ -178,6 +209,7 @@
             }
 
             setStatus(dom, 'Reading page count...', 'success');
+            setBusy(dom, true);
             try {
                 await loadPdfLib();
                 const source = await window.PDFLib.PDFDocument.load(await state.file.arrayBuffer());
@@ -187,10 +219,13 @@
                 setStatus(dom, `PDF loaded with ${state.pageCount} page${state.pageCount === 1 ? '' : 's'}.`, 'success');
             } catch (error) {
                 showError(dom, 'Could not read PDF', error);
+            } finally {
+                setBusy(dom, false);
+                dom.action.disabled = !state.pageCount || !ranges.value.trim();
             }
         });
         ranges.addEventListener('input', () => {
-            dom.action.disabled = !state.file || !ranges.value.trim();
+            dom.action.disabled = dom.input.disabled || !state.pageCount || !ranges.value.trim();
         });
         dom.clear?.addEventListener('click', () => clearTool(dom));
         dom.action.addEventListener('click', async () => {
@@ -237,7 +272,14 @@
         if (!dom.input || !dom.action) return;
 
         dom.input.addEventListener('change', () => {
-            state.file = validateSinglePdf(dom.input.files?.[0] || null);
+            resetOutput(dom);
+            try {
+                state.file = validatePdfFiles(dom.input.files, { max: 1 })[0] || null;
+            } catch (error) {
+                clearTool(dom);
+                setStatus(dom, error.message, 'error');
+                return;
+            }
             renderFileList(dom.list, state.file ? [state.file] : []);
             dom.action.disabled = !state.file;
             dom.clear.hidden = !state.file;
@@ -252,14 +294,17 @@
 
             setBusy(dom, true);
             setProgress(dom, 0);
-            setOutput(dom, 'Compressing PDF...', 'Rendering pages as JPEG images and rebuilding a smaller PDF.');
+            setOutput(dom, 'Compressing PDF...', 'Rendering pages as JPEG images and comparing the new file size.');
 
             let pdf = null;
             try {
                 await Promise.all([loadPdfJs(), loadJsPdf()]);
                 const buffer = await state.file.arrayBuffer();
                 pdf = await window.pdfjsLib.getDocument({ data: new Uint8Array(buffer), isEvalSupported: false }).promise;
-                const totalPages = Math.min(pdf.numPages, MAX_COMPRESS_PAGES);
+                if (pdf.numPages > MAX_COMPRESS_PAGES) {
+                    throw new Error(`This PDF has ${pdf.numPages} pages. The limit is ${MAX_COMPRESS_PAGES}; no pages were exported. Split the document into smaller PDFs first.`);
+                }
+                const totalPages = pdf.numPages;
                 const scale = Number(scaleSelect?.value || 1);
                 const quality = Number(qualitySelect?.value || 0.65);
                 const { jsPDF } = window.jspdf;
@@ -267,6 +312,7 @@
 
                 for (let pageNumber = 1; pageNumber <= totalPages; pageNumber += 1) {
                     const page = await pdf.getPage(pageNumber);
+                    const pageSize = page.getViewport({ scale: 1 });
                     const viewport = page.getViewport({ scale });
                     const canvas = document.createElement('canvas');
                     const context = canvas.getContext('2d', { alpha: false });
@@ -279,11 +325,11 @@
                     const orientation = canvas.width > canvas.height ? 'landscape' : 'portrait';
 
                     if (!outputPdf) {
-                        outputPdf = new jsPDF({ unit: 'pt', format: [canvas.width, canvas.height], orientation });
+                        outputPdf = new jsPDF({ unit: 'pt', format: [pageSize.width, pageSize.height], orientation });
                     } else {
-                        outputPdf.addPage([canvas.width, canvas.height], orientation);
+                        outputPdf.addPage([pageSize.width, pageSize.height], orientation);
                     }
-                    outputPdf.addImage(image, 'JPEG', 0, 0, canvas.width, canvas.height, undefined, 'FAST');
+                    outputPdf.addImage(image, 'JPEG', 0, 0, pageSize.width, pageSize.height, undefined, 'FAST');
                     setProgress(dom, pageNumber / totalPages);
                     setStatus(dom, `Compressed page ${pageNumber} of ${totalPages}...`, 'success');
                 }
@@ -292,9 +338,12 @@
                 const blob = outputPdf.output('blob');
                 const original = formatBytes(state.file.size);
                 const compressed = formatBytes(blob.size);
-                const pageNote = pdf.numPages > MAX_COMPRESS_PAGES ? ` Rendered the first ${MAX_COMPRESS_PAGES} pages to protect browser performance.` : '';
-                showDownload(dom, 'Compressed PDF ready', `Original: ${original}. New file: ${compressed}.${pageNote} This output is image-based, so selectable text and links may be removed.`, blob, `${safeBaseName(state.file.name)}-compressed.pdf`);
-                setStatus(dom, 'Compressed PDF is ready to download.', 'success');
+                const reduced = blob.size < state.file.size;
+                const comparison = reduced
+                    ? `Reduced by ${((1 - blob.size / state.file.size) * 100).toFixed(1)}%.`
+                    : 'The new file is not smaller. Keep the original, or try lower quality settings if the text remains readable.';
+                showDownload(dom, reduced ? 'Compressed PDF ready' : 'File size was not reduced', `Original: ${original}. New file: ${compressed}. ${comparison} All ${totalPages} pages are included. This output is image-based; selectable text, links, forms and signatures are not preserved.`, blob, `${safeBaseName(state.file.name)}-compressed.pdf`);
+                setStatus(dom, reduced ? 'Compressed PDF is ready to download.' : 'No size saving. Compare the result with your original before using it.', reduced ? 'success' : undefined);
             } catch (error) {
                 showError(dom, 'Compression failed', error);
             } finally {
@@ -384,7 +433,16 @@
         if (!dom.input || !dom.action || !outputText) return;
 
         dom.input.addEventListener('change', () => {
-            state.file = validateSinglePdf(dom.input.files?.[0] || null);
+            resetOutput(dom);
+            outputText.value = '';
+            downloadButton.disabled = true;
+            try {
+                state.file = validatePdfFiles(dom.input.files, { max: 1 })[0] || null;
+            } catch (error) {
+                clearTool(dom);
+                setStatus(dom, error.message, 'error');
+                return;
+            }
             renderFileList(dom.list, state.file ? [state.file] : []);
             dom.action.disabled = !state.file;
             dom.clear.hidden = !state.file;
@@ -406,6 +464,7 @@
             setBusy(dom, true);
             setProgress(dom, 0);
             outputText.value = '';
+            downloadButton.disabled = true;
             setOutput(dom, 'Running OCR...', 'This can take a while because OCR runs in the browser.');
 
             let pdf = null;
@@ -469,25 +528,29 @@
     }
 
     function validateImageFiles(fileList) {
-        const files = Array.from(fileList || []).slice(0, MAX_IMAGE_COUNT);
-        const valid = [];
+        const files = Array.from(fileList || []);
+        if (files.length > MAX_IMAGE_COUNT) throw new Error(`Choose up to ${MAX_IMAGE_COUNT} images at a time. No files were selected.`);
         for (const file of files) {
             const extensionOk = /\.(jpe?g|png|webp)$/i.test(file.name || '');
-            const typeOk = ['image/jpeg', 'image/png', 'image/webp'].includes(file.type);
-            if (extensionOk && typeOk && file.size <= MAX_IMAGE_SIZE) valid.push(file);
+            const typeOk = !file.type || ['image/jpeg', 'image/png', 'image/webp'].includes(file.type);
+            if (!extensionOk || !typeOk) throw new Error(`${file.name}: choose JPG, PNG, or WebP images. No files were selected.`);
+            if (!file.size || file.size > MAX_IMAGE_SIZE) throw new Error(`${file.name}: images must contain data and be no larger than 12 MB. No files were selected.`);
         }
-        return valid;
+        return files;
     }
 
     function validatePdfFiles(fileList, options = {}) {
         const max = options.max || 10;
-        return Array.from(fileList || [])
-            .slice(0, max)
-            .filter((file) => /\.pdf$/i.test(file.name || '') && (!file.type || file.type === 'application/pdf' || file.type === 'application/x-pdf') && file.size <= MAX_PDF_SIZE);
-    }
-
-    function validateSinglePdf(file) {
-        return validatePdfFiles(file ? [file] : [], { max: 1 })[0] || null;
+        const files = Array.from(fileList || []);
+        if (files.length > max) throw new Error(`Choose no more than ${max} PDF${max === 1 ? '' : 's'}. No files were selected.`);
+        if (files.length && files.length < (options.min || 1)) throw new Error(`Choose at least ${options.min} PDFs to merge.`);
+        for (const file of files) {
+            if (!/\.pdf$/i.test(file.name || '') || (file.type && !['application/pdf', 'application/x-pdf'].includes(file.type))) {
+                throw new Error(`${file.name}: only PDF files are supported. No files were selected.`);
+            }
+            if (!file.size || file.size > MAX_PDF_SIZE) throw new Error(`${file.name}: PDFs must contain data and be no larger than 30 MB. No files were selected.`);
+        }
+        return files;
     }
 
     function renderFileList(container, files) {
@@ -636,6 +699,15 @@
         return scriptPromises.get(src);
     }
 
+    function resetOutput(dom) {
+        revokeObjectUrls();
+        if (dom.output) {
+            dom.output.innerHTML = '';
+            dom.output.hidden = true;
+        }
+        setProgress(dom, 0);
+    }
+
     function clearTool(dom) {
         state.files = [];
         state.file = null;
@@ -657,6 +729,7 @@
     }
 
     function setBusy(dom, isBusy) {
+        if (dom.input) dom.input.disabled = isBusy;
         if (dom.action) dom.action.disabled = isBusy;
         if (dom.clear) dom.clear.disabled = isBusy;
     }

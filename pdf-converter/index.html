@@ -42,7 +42,7 @@
                 "name": "Is PDF to Word layout-perfect?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "No. This browser tool extracts readable text and creates a Word-compatible .doc file. Complex layouts, forms, columns, handwritten content, and scanned pages may need manual cleanup or OCR."
+                    "text": "No. This tool exports selectable text as an HTML-based .doc file, not a native .docx file. Layouts, images and tables are not preserved, and a word processor may require import or show a format warning. Scanned pages require OCR."
                 }
             },
             {
@@ -58,7 +58,7 @@
                 "name": "Can it convert scanned PDFs to Word text?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Only if the PDF already contains selectable text. Scanned image-only PDFs require OCR, which is not included in this version."
+                    "text": "Only if the PDF already contains selectable text. Image-only scans need the separate OCR Scanned PDF tool, which extracts English plain text from up to the first five pages."
                 }
             },
             {
@@ -96,7 +96,7 @@
         ]
     }
     </script>
-    <script src="/pdf-converter/pdf-converter.js?v=20260728menu2" defer></script>
+    <script src="/pdf-converter/pdf-converter.js?v=20260908" defer></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-MRCMVF9545"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-MRCMVF9545');</script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9409281508068005" crossorigin="anonymous"></script>
     <script type="application/ld+json">{
@@ -210,7 +210,7 @@
                 </div>
             </aside>
         </section>
-        <div class="ai-review-strip"><strong>Published by Calculator All-in-One</strong><span>Last reviewed: 12 August 2026</span><span>PDF workflow checked: PDF to Word and image export</span><a href="/editorial-standards.html">Testing and editorial standards</a></div>
+        <div class="ai-review-strip"><strong>Files processed in your browser</strong><a href="/privacy.html">Privacy information</a><a href="/contact.html">Report a conversion problem</a></div>
 
         <section class="checker-stage pdf-converter-stage" id="pdf-converter" aria-labelledby="upload-pdf-title">
             <div class="checker-stage-copy">
@@ -244,7 +244,7 @@
                         <article class="pdf-mode-card">
                             <span class="ai-card-status">PDF to Word</span>
                             <h3>Editable Word text</h3>
-                            <p>Extracts selectable text and downloads a Word-compatible `.doc` file with page breaks.</p>
+                            <p>Exports selectable text as an HTML-based <code>.doc</code> file with page breaks. This is not a native <code>.docx</code> file; images, tables, and original formatting are not preserved.</p>
                             <button class="ai-button" id="pdf-word-button" type="button" disabled>Convert to Word</button>
                         </article>
 
@@ -339,11 +339,11 @@
             <div class="ai-tool-grid pdf-idea-grid">
                 <a class="ai-tool-card" href="/images-to-pdf/">
                     <h3>Images to PDF</h3>
-                    <p>Upload JPG, PNG, or WebP images, reorder them, and download a single PDF.</p>
+                    <p>Combine JPG, PNG, or WebP images in the displayed file order and download a single PDF.</p>
                 </a>
                 <a class="ai-tool-card" href="/merge-pdf/">
                     <h3>Merge PDF</h3>
-                    <p>Combine multiple PDFs in the browser and arrange the file order before download.</p>
+                    <p>Combine multiple PDFs in the order shown in the selected file list.</p>
                 </a>
                 <a class="ai-tool-card" href="/split-pdf/">
                     <h3>Split PDF</h3>
@@ -376,7 +376,7 @@
                 </details>
                 <details>
                     <summary>Is PDF to Word layout-perfect?</summary>
-                    <p>No. It extracts selectable text into a Word-compatible `.doc` file. Complex layouts, columns, forms, and scanned pages may need manual cleanup.</p>
+                    <p>No. It exports selectable text as an HTML-based <code>.doc</code> file, not a native <code>.docx</code> file. Layouts, images and tables are not preserved. Your word processor may show a file-format warning or require import; after opening and checking the text, use Save As to create a native document.</p>
                 </details>
                 <details>
                     <summary>Which image formats can I export?</summary>
@@ -384,11 +384,11 @@
                 </details>
                 <details>
                     <summary>Can scanned PDFs become editable Word text?</summary>
-                    <p>Not unless the PDF already contains hidden selectable text. Image-only scans require OCR, which is a separate tool.</p>
+                    <p>Only if the PDF already contains selectable text. Use <a href="/ocr-scanned-pdf/">OCR Scanned PDF</a> for image-only scans. That tool extracts English plain text from up to the first five pages; you can review and paste the result into Word.</p>
                 </details>
                 <details>
-                    <summary>Why does image conversion stop at 30 pages?</summary>
-                    <p>Rendering many high-resolution pages can freeze a phone or low-memory laptop. The cap keeps the browser responsive and predictable.</p>
+                    <summary>What happens if my PDF has more than 30 pages?</summary>
+                    <p>Image export stops with an error before exporting any pages. Rendering too many high-resolution pages can exhaust browser memory. Use <a href="/split-pdf/">Split PDF</a> to make documents of 30 pages or fewer, then convert each one.</p>
                 </details>
                 <details>
                     <summary>What should I check after conversion?</summary>

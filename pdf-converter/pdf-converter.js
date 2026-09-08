@@ -72,6 +72,11 @@
         }
 
         dom.dropzone.addEventListener('drop', (event) => {
+            if (dom.input.disabled) return;
+            if (event.dataTransfer?.files?.length !== 1) {
+                setStatus('Choose one PDF at a time.', 'error');
+                return;
+            }
             const file = event.dataTransfer?.files?.[0] || null;
             if (!file) return;
             dom.input.files = event.dataTransfer.files;
@@ -105,6 +110,8 @@
 
         if (validationError) {
             selectedFile = null;
+            dom.previewPanel.hidden = true;
+            clearPreviewCanvas();
             setReady(false);
             setStatus(validationError, 'error');
             dom.dropzone.dataset.state = 'error';
@@ -121,16 +128,20 @@
         dom.previewPanel.hidden = false;
         setStatus('PDF selected. Reading first-page preview...', 'success');
 
+        setBusy(true);
+        let pdf = null;
         try {
-            const pdf = await openPdf(file);
+            pdf = await openPdf(file);
             dom.pageCount.textContent = `${pdf.numPages} page${pdf.numPages === 1 ? '' : 's'}`;
             await renderPreview(pdf);
-            await destroyPdf(pdf);
             setStatus('PDF is ready. Choose Word text export or page images.', 'success');
         } catch (error) {
             dom.pageCount.textContent = 'Preview unavailable';
             clearPreviewCanvas();
             setStatus(messageFromError(error, 'The PDF preview could not be rendered. You can still try conversion.'), 'error');
+        } finally {
+            await destroyPdf(pdf);
+            setBusy(false);
         }
     }
 
@@ -139,6 +150,7 @@
         const hasPdfExtension = /\.pdf$/i.test(file.name || '');
         const hasPdfType = !file.type || file.type === 'application/pdf' || file.type === 'application/x-pdf';
         if (!hasPdfExtension || !hasPdfType) return 'Please choose a valid PDF file.';
+        if (!file.size) return 'This PDF is empty. Choose a PDF that contains document data.';
         if (file.size > MAX_FILE_SIZE) return `Choose a PDF under ${formatBytes(MAX_FILE_SIZE)}.`;
         return '';
     }
@@ -173,6 +185,10 @@
                 setStatus(`Extracted page ${pageNumber} of ${pdf.numPages}...`, 'success');
             }
 
+            if (!pages.some((page) => page.lines.length)) {
+                throw new Error('No selectable text was found. Image-only scans need the OCR Scanned PDF tool; Word text export cannot read the text in a photograph.');
+            }
+            const emptyPages = pages.filter((page) => !page.lines.length).map((page) => page.pageNumber);
             const html = buildWordDocument(pages, selectedFile.name);
             const blob = new Blob([html], { type: 'application/msword;charset=utf-8' });
             const filename = `${safeBaseName(selectedFile.name)}-text.doc`;
@@ -183,7 +199,8 @@
             const card = document.createElement('div');
             card.className = 'pdf-download-card';
             card.innerHTML = `
-                <p>The file contains extracted editable text with page breaks. It is not a pixel-perfect reconstruction of the original PDF.</p>
+                <p>This HTML-based .doc file contains extracted text with page breaks. It is not a native .docx file and does not preserve the original layout, images, or tables. A word processor may show a format warning or require import.</p>
+                ${emptyPages.length ? `<p>No selectable text was found on pages ${emptyPages.join(', ')}. Use <a href="/ocr-scanned-pdf/">OCR Scanned PDF</a> for those scans.</p>` : ''}
                 <a class="ai-button" href="${wordOutputUrl}" download="${escapeAttribute(filename)}">Download Word file</a>
             `;
             dom.outputBody.append(card);
@@ -216,20 +233,16 @@
             const mimeType = IMAGE_EXTENSIONS.has(dom.imageFormat.value) ? dom.imageFormat.value : 'image/png';
             const extension = IMAGE_EXTENSIONS.get(mimeType) || 'png';
             const scale = Number(dom.imageScale.value) || 1.5;
-            const totalPages = Math.min(pdf.numPages, MAX_IMAGE_PAGES);
+            if (pdf.numPages > MAX_IMAGE_PAGES) {
+                throw new Error(`This PDF has ${pdf.numPages} pages. Image export supports up to ${MAX_IMAGE_PAGES} pages; no pages were exported. Use Split PDF to create smaller documents first.`);
+            }
+            const totalPages = pdf.numPages;
             imageOutputs = [];
 
             dom.outputBody.innerHTML = '';
             const list = document.createElement('div');
             list.className = 'pdf-image-grid';
             dom.outputBody.append(list);
-
-            if (pdf.numPages > MAX_IMAGE_PAGES) {
-                const note = document.createElement('p');
-                note.className = 'pdf-output-note';
-                note.textContent = `This browser tool rendered the first ${MAX_IMAGE_PAGES} pages to protect device performance.`;
-                dom.outputBody.prepend(note);
-            }
 
             for (let pageNumber = 1; pageNumber <= totalPages; pageNumber += 1) {
                 if (jobId !== currentJob) return;
@@ -512,6 +525,9 @@ ${body}
     }
 
     function setBusy(isBusy) {
+        dom.input.disabled = isBusy;
+        dom.imageFormat.disabled = isBusy;
+        dom.imageScale.disabled = isBusy;
         dom.wordButton.disabled = isBusy || !selectedFile;
         dom.imageButton.disabled = isBusy || !selectedFile;
         dom.clearButton.disabled = isBusy;
