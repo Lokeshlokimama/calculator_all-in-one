@@ -4679,3 +4679,73 @@ button[aria-label*="Close"],
     justify-self: center;
     width: min(100%, 1080px);
 }
+
+/* Keep the homepage header and hero in flow, including short/zoomed viewports. */
+.home-page .navbar {
+    position: sticky;
+    flex-wrap: wrap;
+}
+
+.home-page .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+    min-height: 0;
+    padding: clamp(2rem, 5vw, 4rem) 5%;
+}
+
+.home-page .hero-content {
+    min-width: 0;
+    width: 100%;
+    max-width: 600px;
+    justify-self: center;
+}
+
+.home-page .hero-visual {
+    min-width: 0;
+    width: 100%;
+    height: clamp(280px, 28vw, 420px);
+    margin: 0;
+}
+
+.home-page .quick-start-strip {
+    margin: 1rem auto 1.5rem;
+}
+
+@media (min-width: 1201px) {
+    .home-page .navbar {
+        display: grid;
+        grid-template-columns: auto minmax(180px, 360px);
+        gap: 0.5rem 1.5rem;
+        padding: 0.75rem 5%;
+    }
+
+    .home-page .header-search {
+        min-width: 0;
+        width: 100%;
+        max-width: 360px;
+        margin: 0;
+    }
+
+    .home-page .navbar > nav {
+        grid-column: 1 / -1;
+        min-width: 0;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.35rem 1.2rem;
+    }
+
+    .home-page .hero {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        align-items: center;
+        gap: clamp(2rem, 4vw, 5rem);
+    }
+
+    .home-page .hero-content {
+        justify-self: start;
+    }
+
+    .home-page .hero h1 {
+        font-size: clamp(3rem, 4.2vw, 4.5rem);
+    }
+}
