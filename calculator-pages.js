@@ -333,6 +333,7 @@ const calculatorPage = (() => {
 
         const heightM = heightCm / 100;
         const bmi = weightKg / (heightM * heightM);
+        if (!Number.isFinite(bmi) || bmi <= 0) { showError('Measurements exceed the supported calculation range.'); return; }
         let category = 'Obese';
         if (bmi < 18.5) category = 'Underweight';
         else if (bmi < 25) category = 'Normal';
@@ -352,27 +353,28 @@ const calculatorPage = (() => {
             return;
         }
 
-        const dob = new Date(`${dobValue}T00:00:00`);
-        const now = new Date();
-        if (dob > now) {
-            showError('Date of birth cannot be in the future.');
+        const dob = new Date(`${dobValue}T00:00:00Z`);
+        const today = new Date();
+        const now = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+        if (!Number.isFinite(dob.getTime()) || dob.toISOString().slice(0, 10) !== dobValue || dob > now) {
+            showError('Enter a valid date of birth that is not in the future.');
             return;
         }
-
-        let years = now.getFullYear() - dob.getFullYear();
-        let months = now.getMonth() - dob.getMonth();
-        let days = now.getDate() - dob.getDate();
-
-        if (days < 0) {
-            months -= 1;
-            days += new Date(now.getFullYear(), now.getMonth(), 0).getDate();
-        }
-        if (months < 0) {
-            years -= 1;
-            months += 12;
-        }
-
-        const totalDays = Math.floor((now - dob) / 86400000);
+        const anniversary = months => {
+            const date = new Date(dob);
+            date.setUTCDate(1);
+            date.setUTCMonth(date.getUTCMonth() + months);
+            const end = new Date(date);
+            end.setUTCMonth(end.getUTCMonth() + 1, 0);
+            date.setUTCDate(Math.min(dob.getUTCDate(), end.getUTCDate()));
+            return date;
+        };
+        let wholeMonths = (now.getUTCFullYear() - dob.getUTCFullYear()) * 12 + now.getUTCMonth() - dob.getUTCMonth();
+        if (anniversary(wholeMonths) > now) wholeMonths--;
+        const years = Math.floor(wholeMonths / 12);
+        const months = wholeMonths % 12;
+        const days = Math.round((now - anniversary(wholeMonths)) / 86400000);
+        const totalDays = Math.round((now - dob) / 86400000);
         setText('age-result', `${years} years, ${months} months, ${days} days`);
         setText('age-days', `${totalDays.toLocaleString(undefined)} total days`);
     }
@@ -451,7 +453,8 @@ const calculatorPage = (() => {
         const monthlyRate = annualRate / 100 / 12;
         const maturity = monthlyRate === 0
             ? monthly * months
-            : monthly * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate) * (1 + monthlyRate);
+            : monthly * (Math.expm1(months * Math.log1p(monthlyRate)) / monthlyRate) * (1 + monthlyRate);
+        if (!Number.isFinite(maturity)) { showError('Investment exceeds the supported calculation range.'); return; }
         const invested = monthly * months;
         const returns = Math.max(0, maturity - invested);
 

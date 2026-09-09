@@ -350,24 +350,25 @@ function calcEMI() {
     const annualRate = parseFloat(document.getElementById('emi-rate').value);
     const months = parseFloat(document.getElementById('emi-tenure').value);
 
-    if (!amount || amount <= 0) {
+    if (!Number.isFinite(amount) || amount <= 0) {
         showFieldError('emi-amount', 'Enter loan amount');
         return;
     }
-    if (annualRate === null || Number.isNaN(annualRate) || annualRate < 0) {
+    if (!Number.isFinite(annualRate) || annualRate < 0 || annualRate > 100) {
         showFieldError('emi-rate', 'Enter interest rate');
         return;
     }
-    if (!months || months <= 0) {
-        showFieldError('emi-tenure', 'Enter tenure in months');
+    if (!Number.isInteger(months) || months <= 0 || months > 1200) {
+        showFieldError('emi-tenure', 'Enter 1 to 1200 whole months');
         return;
     }
 
     const monthlyRate = annualRate / 100 / 12;
     const emi = monthlyRate === 0
         ? amount / months
-        : amount * monthlyRate * Math.pow(1 + monthlyRate, months) / (Math.pow(1 + monthlyRate, months) - 1);
+        : amount * monthlyRate / -Math.expm1(-months * Math.log1p(monthlyRate));
     const totalPayable = emi * months;
+    if (!Number.isFinite(totalPayable)) { showFieldError('emi-amount', 'Amount exceeds the supported range'); return; }
     const totalInterest = Math.max(0, totalPayable - amount);
     const principalPercent = totalPayable > 0 ? (amount / totalPayable) * 100 : 0;
     const interestPercent = totalPayable > 0 ? (totalInterest / totalPayable) * 100 : 0;
@@ -396,15 +397,15 @@ function calcROI() {
     const finalValue = parseFloat(document.getElementById('roi-return')?.value);
     const costs = parseFloat(document.getElementById('roi-costs')?.value) || 0;
 
-    if (!invested || invested <= 0) {
+    if (!Number.isFinite(invested) || invested <= 0) {
         showFieldError('roi-invested', 'Enter an investment above 0');
         return;
     }
-    if (Number.isNaN(finalValue) || finalValue < 0) {
+    if (!Number.isFinite(finalValue) || finalValue < 0) {
         showFieldError('roi-return', 'Enter the final value');
         return;
     }
-    if (costs < 0) {
+    if (!Number.isFinite(costs) || costs < 0) {
         showFieldError('roi-costs', 'Costs cannot be negative');
         return;
     }
@@ -412,6 +413,7 @@ function calcROI() {
     const netProfit = finalValue - invested - costs;
     const roi = (netProfit / invested) * 100;
     const multiple = finalValue / invested;
+    if (![netProfit, roi, multiple].every(Number.isFinite)) { showFieldError('roi-invested', 'Values exceed the supported range'); return; }
 
     document.getElementById('roi-result').innerText = `ROI: ${roi.toFixed(2)}%`;
     setMoneyText('roi-profit', netProfit, { digits: 2 });
@@ -424,23 +426,24 @@ window.calcROI = calcROI;
 function calcTip() {
     const bill = parseFloat(document.getElementById('tip-bill')?.value);
     const rate = parseFloat(document.getElementById('tip-rate')?.value);
-    const people = Math.floor(parseFloat(document.getElementById('tip-people')?.value));
+    const people = Number(document.getElementById('tip-people')?.value);
 
-    if (!bill || bill <= 0) {
+    if (!Number.isFinite(bill) || bill < 0) {
         showFieldError('tip-bill', 'Enter a bill amount');
         return;
     }
-    if (Number.isNaN(rate) || rate < 0) {
+    if (!Number.isFinite(rate) || rate < 0) {
         showFieldError('tip-rate', 'Enter a tip percentage');
         return;
     }
-    if (!people || people < 1) {
-        showFieldError('tip-people', 'People must be at least 1');
+    if (!Number.isSafeInteger(people) || people < 1) {
+        showFieldError('tip-people', 'People must be a whole number of at least 1');
         return;
     }
 
     const tip = bill * (rate / 100);
     const total = bill + tip;
+    if (!Number.isFinite(total)) { showFieldError('tip-bill', 'Bill and tip exceed the supported range'); return; }
     const perPerson = total / people;
 
     setMoneyText('tip-result', perPerson, { prefix: 'Per person: ', digits: 2 });
@@ -466,13 +469,14 @@ function calcBMI() {
     const categoryEl = document.getElementById('bmi-category');
     const bar = document.getElementById('bmi-progress');
 
-    if (!height || height <= 0 || !weight || weight <= 0) {
+    if (![height, weight].every(Number.isFinite) || height <= 0 || weight <= 0) {
         showFieldError(!height || height <= 0 ? 'bmi-height' : 'bmi-weight', 'Enter valid height and weight');
         return;
     }
 
     const heightM = height / 100;
     const bmi = weight / (heightM * heightM);
+    if (!Number.isFinite(bmi) || bmi <= 0) { showFieldError('bmi-height', 'Measurements exceed the supported range'); return; }
     const category = getBmiCategory(bmi);
     const barPercent = Math.max(4, Math.min(100, ((bmi - 12) / 28) * 100));
 
@@ -1216,10 +1220,11 @@ function calcBMR() {
     const w = parseFloat(document.getElementById('bmr-weight').value);
     const h = parseFloat(document.getElementById('bmr-height').value);
 
-    if (!a || !w || !h) { showToast('Please enter all values'); return; }
+    if (![a, w, h].every(Number.isFinite) || a <= 0 || w <= 0 || h <= 0) { showToast('Enter positive, finite age, weight and height.'); return; }
 
     let bmr = (10 * w) + (6.25 * h) - (5 * a);
     bmr += (g === 'm') ? 5 : -161;
+    if (!Number.isFinite(bmr) || bmr <= 0) { showToast('Check your measurements; this estimate is outside the supported range.'); return; }
 
     document.getElementById('bmr-result').innerText = Math.round(bmr) + ' kcal/day';
     showToast('BMR Calculated!');
@@ -1229,7 +1234,7 @@ window.calcBMR = calcBMR;
 function calcWater() {
     const w = parseFloat(document.getElementById('water-weight').value);
     const act = parseFloat(document.getElementById('water-activity').value);
-    if (!w) { showToast('Please enter weight'); return; }
+    if (![w, act].every(Number.isFinite) || w <= 0 || act <= 0 || !Number.isFinite(w * 0.035 * act)) { showToast('Enter a valid positive weight and activity level.'); return; }
 
     const liters = (w * 0.035 * act).toFixed(1);
     document.getElementById('water-result').innerText = liters + ' Liters';
@@ -1251,7 +1256,7 @@ function calcIdealWeight() {
     const g = document.getElementById('iw-gender').value;
     const h = parseFloat(document.getElementById('iw-height').value);
     const unit = document.getElementById('iw-height-unit')?.value || 'cm';
-    if (!h || h <= 0) { showToast('Please enter height'); return; }
+    if (!Number.isFinite(h) || h <= 0) { showToast('Please enter a valid positive height'); return; }
 
     const baseWeight = g === 'm' ? 50 : 45.5;
     const heightInches = unit === 'in' ? h : h / 2.54;
@@ -1270,7 +1275,7 @@ window.calcIdealWeight = calcIdealWeight;
 function calcProtein() {
     const w = parseFloat(document.getElementById('protein-weight').value);
     const goal = parseFloat(document.getElementById('protein-goal').value);
-    if (!w) { showToast('Please enter weight'); return; }
+    if (![w, goal].every(Number.isFinite) || w <= 0 || goal <= 0 || !Number.isFinite(w * goal)) { showToast('Enter a valid positive weight and goal.'); return; }
 
     const grams = (w * goal).toFixed(1);
     document.getElementById('protein-result').innerText = grams + ' g/day';
@@ -1285,7 +1290,7 @@ function calcBodyFat() {
     const w = parseFloat(document.getElementById('bf-waist').value);
     const hip = parseFloat(document.getElementById('bf-hip').value);
 
-    if (!h || !n || !w || (g === 'f' && !hip)) { showToast('Please enter all values'); return; }
+    if (![h, n, w, ...(g === 'f' ? [hip] : [])].every(value => Number.isFinite(value) && value > 0)) { showToast('Enter positive, finite measurements.'); return; }
 
     let bf = 0;
     if (g === 'm') {
@@ -1371,9 +1376,10 @@ function calcSIP() {
     const annualRate = parseFloat(document.getElementById('sip-rate').value);
     const r = annualRate / 100 / 12;
     const n = parseFloat(document.getElementById('sip-years').value) * 12;
-    if (!P || P <= 0 || Number.isNaN(annualRate) || annualRate < 0 || !n || n <= 0) { showToast('Please enter all values'); return; }
+    if (![P, annualRate, n].every(Number.isFinite) || P <= 0 || annualRate < 0 || annualRate > 100 || n <= 0 || n > 1200) { showToast('Enter a positive investment, rate from 0 to 100%, and duration up to 100 years.'); return; }
 
-    const M = r === 0 ? P * n : P * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+    const M = r === 0 ? P * n : P * (Math.expm1(n * Math.log1p(r)) / r) * (1 + r);
+    if (!Number.isFinite(M)) { showToast('Investment exceeds the supported calculation range.'); return; }
     const invested = P * n;
     const returns = Math.max(0, M - invested);
 
@@ -1391,11 +1397,12 @@ function calcFD() {
     const citizenBump = parseFloat(document.getElementById('fd-citizen').value);
     const t = parseFloat(document.getElementById('fd-years').value);
 
-    if (!P || P <= 0 || Number.isNaN(r) || r < 0 || !t || t <= 0) { showToast('Please enter all values'); return; }
+    if (![P, r, citizenBump, t].every(Number.isFinite) || P <= 0 || r < 0 || r > 100 || citizenBump < 0 || citizenBump > 1 || t <= 0 || t > 100) { showToast('Enter a positive deposit, rate from 0 to 100%, and duration up to 100 years.'); return; }
 
     r = (r + citizenBump) / 100;
     const n = 4; // Quarterly compounding
     const A = P * Math.pow((1 + r / n), n * t);
+    if (!Number.isFinite(A)) { showToast('Deposit exceeds the supported calculation range.'); return; }
 
     const interest = Math.max(0, A - P);
 
@@ -1438,7 +1445,7 @@ function calcGST() {
     const rate = parseFloat(document.getElementById('gst-rate').value) / 100;
     const action = document.getElementById('gst-action').value;
 
-    if (!amt) { showToast('Please enter amount'); return; }
+    if (![amt, rate].every(Number.isFinite) || amt < 0 || rate < 0 || rate > 1 || !Number.isFinite(amt * (1 + rate))) { showToast('Enter a valid non-negative amount and tax rate.'); return; }
 
     let result = 0;
     if (action === 'add') {
@@ -1489,7 +1496,7 @@ window.calcSalary = calcSalary;
 function calcLeave() {
     const basic = parseFloat(document.getElementById('leave-basic').value);
     const days = parseFloat(document.getElementById('leave-days').value);
-    if (!basic || !days) { showToast('Please enter all values'); return; }
+    if (![basic, days].every(Number.isFinite) || basic < 0 || days < 0 || !Number.isFinite(basic / 30 * days)) { showToast('Enter valid non-negative salary and leave days.'); return; }
 
     const dailyWage = basic / 30;
     const result = dailyWage * days;
@@ -1977,26 +1984,36 @@ window.swapCurrencies = swapCurrencies;
 
 // --- Phase 2: Basic Daily Tools ---
 
+function calendarAgeParts(value, today = new Date()) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+    const dob = new Date(`${value}T00:00:00Z`);
+    if (!Number.isFinite(dob.getTime()) || dob.toISOString().slice(0, 10) !== value) return null;
+    const now = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+    if (dob > now) return null;
+    // Count whole calendar months, clamping an anniversary to the month's last day.
+    const anniversary = months => {
+        const date = new Date(dob);
+        date.setUTCDate(1);
+        date.setUTCMonth(date.getUTCMonth() + months);
+        const end = new Date(date);
+        end.setUTCMonth(end.getUTCMonth() + 1, 0);
+        date.setUTCDate(Math.min(dob.getUTCDate(), end.getUTCDate()));
+        return date;
+    };
+    let months = (now.getUTCFullYear() - dob.getUTCFullYear()) * 12 + now.getUTCMonth() - dob.getUTCMonth();
+    if (anniversary(months) > now) months--;
+    return { years: Math.floor(months / 12), months: months % 12,
+        days: Math.round((now - anniversary(months)) / 86400000),
+        totalDays: Math.round((now - dob) / 86400000) };
+}
+
 function calcAge() {
     const dobInput = document.getElementById('age-dob').value;
     if (!dobInput) { showToast('Please select DOB'); return; }
 
-    const dob = new Date(dobInput);
-    const now = new Date();
-
-    let years = now.getFullYear() - dob.getFullYear();
-    let months = now.getMonth() - dob.getMonth();
-    let days = now.getDate() - dob.getDate();
-
-    if (days < 0) {
-        months--;
-        const lastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-        days += lastMonth.getDate();
-    }
-    if (months < 0) {
-        years--;
-        months += 12;
-    }
+    const age = calendarAgeParts(dobInput);
+    if (!age) { showToast('Enter a valid date of birth that is not in the future.'); return; }
+    const { years, months, days } = age;
 
     document.getElementById('age-result').innerText = `${years} Yrs, ${months} Mos, ${days} Days`;
     showToast('Age Calculated!');
@@ -2019,11 +2036,12 @@ function calcDateDiff() {
 window.calcDateDiff = calcDateDiff;
 
 function calcTime() {
-    let h1 = parseFloat(document.getElementById('time-h1').value) || 0;
-    let m1 = parseFloat(document.getElementById('time-m1').value) || 0;
+    const raw = ['time-h1', 'time-m1', 'time-h2', 'time-m2'].map(id => document.getElementById(id).value.trim());
+    const [h1, m1, h2, m2] = raw.map(value => value === '' ? 0 : Number(value));
+    if (raw.every(value => value === '') || ![h1, m1, h2, m2].every(value => Number.isSafeInteger(value) && value >= 0) || m1 > 59 || m2 > 59 || !Number.isSafeInteger((h1 + h2) * 60 + m1 + m2)) {
+        showToast('Enter whole non-negative hours and minutes from 0 to 59.'); return;
+    }
     const op = document.getElementById('time-op').value;
-    let h2 = parseFloat(document.getElementById('time-h2').value) || 0;
-    let m2 = parseFloat(document.getElementById('time-m2').value) || 0;
 
     let totalM1 = (h1 * 60) + m1;
     let totalM2 = (h2 * 60) + m2;
@@ -2049,7 +2067,7 @@ window.calcTime = calcTime;
 function calcPct() {
     const a = parseFloat(document.getElementById('pct-a').value);
     const b = parseFloat(document.getElementById('pct-b').value);
-    if (!a || !b) { showToast('Please enter values'); return; }
+    if (![a, b].every(Number.isFinite) || !Number.isFinite((a / 100) * b)) { showToast('Enter finite percentage and base values within the supported range.'); return; }
 
     const result = (a / 100) * b;
     document.getElementById('pct-result').innerText = result.toFixed(2);
@@ -2182,7 +2200,7 @@ function addCgpaRow() {
     div.style.marginBottom = '0.5rem';
     div.innerHTML = `
         <input type="number" class="tool-input cgpa-credit" placeholder="Credits" style="flex:1;">
-        <input type="number" class="tool-input cgpa-grade" placeholder="Grade (1-10)" style="flex:1;">
+        <input type="number" class="tool-input cgpa-grade" placeholder="Grade (0-10)" aria-label="Grade (0-10)" min="0" max="10" style="flex:1;">
     `;
     container.appendChild(div);
 }
@@ -2197,13 +2215,13 @@ function calcCGPA() {
     for (let i = 0; i < credits.length; i++) {
         const c = parseFloat(credits[i].value);
         const g = parseFloat(grades[i].value);
-        if (c && g) {
-            totalCredits += c;
-            totalPoints += (c * g);
-        }
+        if (!credits[i].value.trim() && !grades[i].value.trim()) continue;
+        if (![c, g].every(Number.isFinite) || c <= 0 || g < 0 || g > 10) { showToast(`Subject ${i + 1}: enter positive credits and a grade from 0 to 10.`); return; }
+        totalCredits += c;
+        totalPoints += c * g;
     }
 
-    if (totalCredits === 0) {
+    if (totalCredits === 0 || !Number.isFinite(totalCredits) || !Number.isFinite(totalPoints)) {
         showToast('Please enter at least one subject');
         return;
     }
@@ -2220,29 +2238,19 @@ function calcAttendance() {
     const present = parseFloat(document.getElementById('att-present').value);
     const target = parseFloat(document.getElementById('att-target').value);
 
-    if (isNaN(total) || isNaN(present) || isNaN(target)) { showToast('Please enter all values'); return; }
+    if (!Number.isSafeInteger(total) || !Number.isSafeInteger(present) || total <= 0 || present < 0 || !Number.isFinite(target) || target <= 0 || target > 100) { showToast('Enter positive whole total classes, non-negative whole attended classes, and a target above 0% up to 100%.'); return; }
     if (present > total) { showToast('Attended cannot be > Total'); return; }
 
     const currentPct = (present / total) * 100;
 
     if (currentPct >= target) {
-        let bunks = 0;
-        let p = present;
-        let t = total;
-        while ((p / (t + 1)) * 100 >= target) {
-            t++;
-            bunks++;
-        }
+        const bunks = Math.max(0, Math.floor(present * 100 / target - total));
+        if (!Number.isSafeInteger(bunks)) { showToast('The calculated class count exceeds the supported range.'); return; }
         document.getElementById('att-result').innerHTML = `Current: ${currentPct.toFixed(1)}%<br><span style="color:#22c55e;">You can bunk ${bunks} more classes.</span>`;
     } else {
-        let attend = 0;
-        let p = present;
-        let t = total;
-        while ((p / t) * 100 < target) {
-            p++;
-            t++;
-            attend++;
-        }
+        if (target === 100) { document.getElementById('att-result').innerText = `Current: ${currentPct.toFixed(1)}%. Exactly 100% cannot be reached after a missed class by adding more classes.`; return; }
+        const attend = Math.max(0, Math.ceil((target * total - 100 * present) / (100 - target)));
+        if (!Number.isSafeInteger(attend)) { showToast('The calculated class count exceeds the supported range.'); return; }
         document.getElementById('att-result').innerHTML = `Current: ${currentPct.toFixed(1)}%<br><span style="color:#ef4444;">You must attend ${attend} more classes.</span>`;
     }
     showToast('Attendance Calculated!');
@@ -2569,10 +2577,11 @@ function calcDiscountTax() {
     const discount = parseFloat(document.getElementById('dt-discount').value) || 0;
     const tax = parseFloat(document.getElementById('dt-tax').value) || 0;
 
-    if (!price) { showToast('Please enter a price'); return; }
+    if (![price, discount, tax].every(Number.isFinite) || price < 0 || discount < 0 || discount > 100 || tax < 0 || tax > 100) { showToast('Enter a non-negative price, and discount/tax percentages from 0 to 100.'); return; }
 
     const afterDiscount = price - (price * (discount / 100));
     const finalPrice = afterDiscount + (afterDiscount * (tax / 100));
+    if (!Number.isFinite(finalPrice)) { showToast('Price exceeds the supported range.'); return; }
     const savings = price - afterDiscount;
     const taxAdded = finalPrice - afterDiscount;
 
@@ -3520,6 +3529,10 @@ function initAccessibleControlNames() {
     });
 }
 
+function isToolCategory(category) {
+    return ['all', 'basic', 'finance', 'electricity', 'health', 'math', 'geometry', 'education', 'web'].includes(category);
+}
+
 // Initialize when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
     initAccessibleControlNames();
@@ -3537,7 +3550,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const initialCategory = params.get('category');
     const initialSearch = params.get('search');
-    if (['all', 'basic', 'finance', 'electricity', 'health', 'education', 'web'].includes(initialCategory)) {
+    if (isToolCategory(initialCategory)) {
         filterCategory(initialCategory);
     } else if (initialSearch) {
         const searchInput = document.getElementById('tool-search');
@@ -3713,7 +3726,7 @@ function initHeroChart() {
 // --- GEOMETRY TOOLS ---
 function calcCircle() {
     const r = parseFloat(document.getElementById('circle-radius').value);
-    if (!r || r < 0) return showFieldError('circle-radius', 'Enter valid radius');
+    if (!Number.isFinite(r) || r <= 0 || !Number.isFinite(Math.PI * r * r)) return showFieldError('circle-radius', 'Enter a positive radius within the supported range');
     const area = Math.PI * r * r;
     const circ = 2 * Math.PI * r;
     setResultText('circle-result', `Area: ${formatCalcNumber(area, 2)}`, `Circumference: ${formatCalcNumber(circ, 2)}`);
@@ -3723,8 +3736,8 @@ window.calcCircle = calcCircle;
 function calcTriangle() {
     const b = parseFloat(document.getElementById('tri-base').value);
     const h = parseFloat(document.getElementById('tri-height').value);
-    if (!b || b < 0) return showFieldError('tri-base', 'Enter base');
-    if (!h || h < 0) return showFieldError('tri-height', 'Enter height');
+    if (!Number.isFinite(b) || b <= 0) return showFieldError('tri-base', 'Enter a positive base');
+    if (!Number.isFinite(h) || h <= 0 || !Number.isFinite(0.5 * b * h)) return showFieldError('tri-height', 'Enter a positive height within the supported range');
     const area = 0.5 * b * h;
     setResultText('triangle-result', `Area: ${formatCalcNumber(area, 2)}`, 'Triangle area calculated');
 }
@@ -3733,9 +3746,9 @@ window.calcTriangle = calcTriangle;
 function calcPythagorean() {
     const a = parseFloat(document.getElementById('pyth-a').value);
     const b = parseFloat(document.getElementById('pyth-b').value);
-    if (!a || a < 0) return showFieldError('pyth-a', 'Enter Side A');
-    if (!b || b < 0) return showFieldError('pyth-b', 'Enter Side B');
-    const c = Math.sqrt(a*a + b*b);
+    if (!Number.isFinite(a) || a <= 0) return showFieldError('pyth-a', 'Enter a positive Side A');
+    if (!Number.isFinite(b) || b <= 0 || !Number.isFinite(Math.hypot(a, b))) return showFieldError('pyth-b', 'Enter a positive Side B within the supported range');
+    const c = Math.hypot(a, b);
     setResultText('pythagorean-result', `Hypotenuse: ${formatCalcNumber(c, 2)}`, 'Calculated via a² + b² = c²');
 }
 window.calcPythagorean = calcPythagorean;
@@ -3773,7 +3786,7 @@ function calcVolume() {
     const a = parseFloat(document.getElementById('volume-a')?.value);
     const b = parseFloat(document.getElementById('volume-b')?.value);
 
-    if (!a || a <= 0) {
+    if (!Number.isFinite(a) || a <= 0) {
         showFieldError('volume-a', shape === 'cube' ? 'Enter side length' : 'Enter radius');
         return;
     }
@@ -3787,7 +3800,7 @@ function calcVolume() {
         volume = (4 / 3) * Math.PI * Math.pow(a, 3);
         detail = `radius ${formatCalcNumber(a, 2)}`;
     } else {
-        if (!b || b <= 0) {
+        if (!Number.isFinite(b) || b <= 0) {
             showFieldError('volume-b', 'Enter cylinder height');
             return;
         }
@@ -3795,6 +3808,7 @@ function calcVolume() {
         detail = `radius ${formatCalcNumber(a, 2)}, height ${formatCalcNumber(b, 2)}`;
     }
 
+    if (!Number.isFinite(volume)) { showFieldError('volume-a', 'Dimensions exceed the supported range'); return; }
     setResultText('volume-result', `Volume: ${formatCalcNumber(volume, 2)}`, detail);
     showToast('Volume calculated!');
 }
@@ -3931,15 +3945,16 @@ window.calcSIP = async function() {
     const annualRate = parseFloat(document.getElementById('sip-rate').value);
     const years = parseFloat(document.getElementById('sip-years').value);
     
-    if (!P || P <= 0 || Number.isNaN(annualRate) || annualRate < 0 || !years || years <= 0) {
-        showToast('Please enter all values', 'error');
+    if (![P, annualRate, years].every(Number.isFinite) || P <= 0 || annualRate < 0 || annualRate > 100 || years <= 0 || years > 100) {
+        showToast('Enter a positive investment, rate from 0 to 100%, and duration up to 100 years.', 'error');
         return;
     }
     
     const r = annualRate / 100 / 12;
     const n = years * 12;
     
-    const M = r === 0 ? P * n : P * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+    const M = r === 0 ? P * n : P * (Math.expm1(n * Math.log1p(r)) / r) * (1 + r);
+    if (!Number.isFinite(M)) { showToast('Investment exceeds the supported calculation range.'); return; }
     const invested = P * n;
     const estReturns = Math.max(0, M - invested);
     
@@ -3962,7 +3977,7 @@ window.calcSIP = async function() {
     for (let y = 1; y <= years; y++) {
         labels.push(`Yr ${y}`);
         const months = y * 12;
-        const totalVal = r === 0 ? P * months : P * ((Math.pow(1 + r, months) - 1) / r) * (1 + r);
+        const totalVal = r === 0 ? P * months : P * (Math.expm1(months * Math.log1p(r)) / r) * (1 + r);
         investedData.push(P * months);
         totalData.push(Math.round(totalVal));
     }
@@ -4026,14 +4041,15 @@ window.calcFD = async function() {
     const citizenBump = parseFloat(document.getElementById('fd-citizen').value);
     const years = parseFloat(document.getElementById('fd-years').value);
     
-    if (!P || P <= 0 || Number.isNaN(r) || r < 0 || !years || years <= 0) {
-        showToast('Please enter all values', 'error');
+    if (![P, r, citizenBump, years].every(Number.isFinite) || P <= 0 || r < 0 || r > 100 || citizenBump < 0 || citizenBump > 1 || years <= 0 || years > 100) {
+        showToast('Enter a positive deposit, rate from 0 to 100%, and duration up to 100 years.', 'error');
         return;
     }
     
     const totalRate = (r + citizenBump) / 100;
     const compoundFrequency = 4; // quarterly
     const A = P * Math.pow((1 + totalRate / compoundFrequency), compoundFrequency * years);
+    if (!Number.isFinite(A)) { showToast('Deposit exceeds the supported calculation range.'); return; }
     const interest = Math.max(0, A - P);
     
     setMoneyText('fd-result', A, { prefix: 'Maturity: ' });
@@ -5115,6 +5131,31 @@ window.removeInvoiceRow = removeInvoiceRow;
 
 function calculateInvoice() {
     const rows = document.querySelectorAll('.invoice-item-row');
+    const error = document.getElementById('invoice-error');
+    const fail = message => {
+        if (error) error.textContent = message + ' Correct the values before exporting.';
+        const total = document.getElementById('inv-preview-total');
+        if (total) { delete total.dataset.moneyValue; total.innerText = 'Invalid input'; }
+        return false;
+    };
+    if (error) error.textContent = '';
+    const numericFields = [...document.querySelectorAll('#calc-invoice input[type="number"]')];
+    for (const input of numericFields) {
+        const raw = input.value.trim();
+        if (input.validity?.badInput || (raw && (!Number.isFinite(Number(raw)) || Number(raw) < 0))) {
+            return fail('Invoice amounts and quantities must be finite, non-negative numbers.');
+        }
+    }
+    const taxRate = Number(document.getElementById('invoice-tax').value || 0);
+    const discountRate = Number(document.getElementById('invoice-discount').value || 0);
+    if (taxRate > 100 || discountRate > 100) return fail('Tax and discount must be between 0 and 100%.');
+    let checkedSubtotal = 0;
+    for (const row of rows) {
+        const qty = Number(row.querySelector('.inv-item-qty').value || 0);
+        const price = Number(row.querySelector('.inv-item-price').value || 0);
+        checkedSubtotal += qty * price;
+    }
+    if (!Number.isFinite(checkedSubtotal * (1 + taxRate / 100))) return fail('Invoice total exceeds the supported range.');
     let subtotal = 0;
     
     const previewItems = document.getElementById('inv-preview-items');
@@ -5138,9 +5179,6 @@ function calculateInvoice() {
         previewItems.appendChild(itemEl);
     });
     
-    const taxRate = parseFloat(document.getElementById('invoice-tax').value) || 0;
-    const discountRate = parseFloat(document.getElementById('invoice-discount').value) || 0;
-
     // Standard invoice order: discount reduces the subtotal first, tax applies to the discounted base.
     const discount = subtotal * (discountRate / 100);
     const taxableBase = subtotal - discount;
@@ -5175,12 +5213,13 @@ function calculateInvoice() {
     setMoneyText('inv-preview-tax', tax, { digits: 2 });
     setMoneyText('inv-preview-discount', discount, { digits: 2 });
     setMoneyText('inv-preview-total', totalDue, { digits: 2 });
+    return true;
 }
 window.calculateInvoice = calculateInvoice;
 
 // Export Invoice handler
 function exportInvoice(format) {
-    calculateInvoice(); // refresh values
+    if (!calculateInvoice()) { showToast('Correct the invoice inputs before exporting.'); return; }
     
     if (format === 'png') {
         triggerPNGDownload('invoice-report-wrapper', 'invoice-' + document.getElementById('inv-number').value + '.png');

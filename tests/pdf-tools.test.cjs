@@ -58,6 +58,22 @@ test('split page ranges retain requested order, deduplicate, and reject invalid 
   assert.deepEqual(Array.from(api.parsePageRanges('3,1-2,2', 3)), [3, 1, 2]);
   for (const range of ['', '0', '2-1', '4', 'one', '1.5']) assert.throws(() => api.parsePageRanges(range, 3));
 });
+
+test('PDF/image exact upload boundaries and merge counts', () => {
+  const api = suite();
+  assert.equal(api.validatePdfFiles([pdfFile({ size: 30 * 1024 * 1024 })]).length, 1);
+  assert.throws(() => api.validatePdfFiles([pdfFile({ size: 30 * 1024 * 1024 + 1 })]));
+  assert.equal(api.validatePdfFiles(Array.from({ length: 20 }, () => pdfFile()), { min: 2, max: 20 }).length, 20);
+  assert.throws(() => api.validatePdfFiles(Array.from({ length: 21 }, () => pdfFile()), { min: 2, max: 20 }));
+  for (const [extension, type] of [['jpg', 'image/jpeg'], ['jpeg', 'image/jpeg'], ['png', 'image/png'], ['webp', 'image/webp']]) {
+    const image = { name: `test.${extension}`, type, size: 12 * 1024 * 1024 };
+    assert.equal(api.validateImageFiles([image]).length, 1);
+    assert.throws(() => api.validateImageFiles([{ ...image, size: image.size + 1 }]));
+    assert.throws(() => api.validateImageFiles([{ ...image, size: 0 }]));
+    assert.equal(api.validateImageFiles(Array.from({ length: 40 }, () => image)).length, 40);
+    assert.throws(() => api.validateImageFiles(Array.from({ length: 41 }, () => image)));
+  }
+});
 test('compression refuses 41 pages before rendering; never exports only first 40', async () => {
   const api = suite(41);
   api.initCompressPdf();

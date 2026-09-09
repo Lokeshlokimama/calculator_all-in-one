@@ -986,7 +986,8 @@ body.ai-page::after {
     }
 }
 
-@media (min-width: 48rem) {
+/* Keep the compact menu until long PDF tool names fit without clipping. */
+@media (min-width: 60rem) {
     .ai-nav-links {
         display: flex;
     }

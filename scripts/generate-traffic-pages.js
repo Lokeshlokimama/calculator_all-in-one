@@ -480,7 +480,7 @@ function pageHtml(page) {
     <link rel="canonical" href="${url}">
     <meta property="og:type" content="website"><meta property="og:site_name" content="Calculator All-in-One"><meta property="og:title" content="${page.title}"><meta property="og:description" content="${page.description}"><meta property="og:url" content="${url}">
     <meta name="twitter:card" content="summary"><meta name="twitter:title" content="${page.title}"><meta name="twitter:description" content="${page.description}">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="stylesheet" href="/style.css?v=20260908">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="stylesheet" href="/style.css?v=20260909-qa">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-MRCMVF9545"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-MRCMVF9545');</script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9409281508068005" crossorigin="anonymous"></script>

@@ -42,7 +42,7 @@
         .hero-visual,.bg-grid,.particles,.gradient-blob{display:none!important}
         @media (min-width:1201px){.header-search{order:initial;flex:1;max-width:360px;margin:0 1.5rem}.mobile-menu{display:none}nav{display:flex}.hero{flex-direction:row;text-align:left;justify-content:flex-start;padding-top:80px}.hero-content{align-items:flex-start}h1{font-size:4.5rem}.hero-visual{display:flex!important}}
     </style>
-    <link rel="stylesheet" href="style.css?v=20260909-layout">
+    <link rel="stylesheet" href="style.css?v=20260909-qa">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet"></noscript>
     <script>
@@ -1613,15 +1613,15 @@
                         <div id="cgpa-inputs">
                             <div class="input-group" style="display:flex; gap:0.5rem; margin-bottom:0.5rem;">
                                 <input type="number" class="tool-input cgpa-credit" placeholder="Credits" style="flex:1;">
-                                <input type="number" class="tool-input cgpa-grade" placeholder="Grade (1-10)" style="flex:1;">
+                                <input type="number" class="tool-input cgpa-grade" placeholder="Grade (0-10)" style="flex:1;">
                             </div>
                             <div class="input-group" style="display:flex; gap:0.5rem; margin-bottom:0.5rem;">
                                 <input type="number" class="tool-input cgpa-credit" placeholder="Credits" style="flex:1;">
-                                <input type="number" class="tool-input cgpa-grade" placeholder="Grade (1-10)" style="flex:1;">
+                                <input type="number" class="tool-input cgpa-grade" placeholder="Grade (0-10)" style="flex:1;">
                             </div>
                             <div class="input-group" style="display:flex; gap:0.5rem; margin-bottom:0.5rem;">
                                 <input type="number" class="tool-input cgpa-credit" placeholder="Credits" style="flex:1;">
-                                <input type="number" class="tool-input cgpa-grade" placeholder="Grade (1-10)" style="flex:1;">
+                                <input type="number" class="tool-input cgpa-grade" placeholder="Grade (0-10)" style="flex:1;">
                             </div>
                         </div>
                         <button class="secondary-btn shine-btn" style="width:100%; margin-bottom:1rem; padding:0.5rem;" onclick="addCgpaRow()">Add Subject</button>
@@ -2711,6 +2711,7 @@
                     <div class="card-glow"></div>
                     <h3>Invoice Generator</h3>
                     <p>Generate professional, exportable invoices</p>
+                    <p id="invoice-error" role="alert" aria-live="polite"></p>
                     <div class="tool-ui invoice-layout">
                         <div class="invoice-editor-column">
                             <div class="invoice-section-heading">
@@ -2975,7 +2976,7 @@
     </div>
 
     <script src="qr-code-engine.js?v=20260812qr" defer></script>
-    <script src="script.js?v=20260908" defer></script>
+    <script src="script.js?v=20260909-qa" defer></script>
 
     <!-- Floating AI Assistant Widget -->
     <div id="ai-assistant-widget" class="ai-widget-container" style="position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 999; font-family: inherit;">

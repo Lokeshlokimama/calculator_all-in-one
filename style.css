@@ -4669,7 +4669,7 @@ button[aria-label*="Close"],
 /* Let the invoice's editor/preview columns adapt to the card's own width,
    so a narrower card stacks them instead of overflowing. */
 #calc-invoice .invoice-layout {
-    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr));
 }
 
 /* In filtered/search views the scientific card may be hidden, so the invoice
