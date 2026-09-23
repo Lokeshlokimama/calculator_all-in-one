@@ -21,10 +21,10 @@ const related = {
   ],
   finance: [
     ['/finance-calculators.html', 'Finance Calculators'],
-    ['/home-loan-emi-calculator-india/', 'Home Loan EMI India'],
+    ['/loan-calculator.html', 'Home Loan EMI India'],
     ['/emi-calculator-with-prepayment/', 'EMI Prepayment'],
     ['/sip-step-up-calculator/', 'SIP Step-Up'],
-    ['/gst-calculator-india/', 'GST India'],
+    ['/gst-calculator.html', 'GST India'],
     ['/emi-calculator.html', 'EMI Calculator'],
     ['/sip-calculator.html', 'SIP Calculator'],
     ['/gst-calculator.html', 'GST Calculator']
@@ -290,7 +290,8 @@ const pages = [
       </form>`,
     sections: [
       ['What a step-up SIP is', 'A step-up SIP increases the monthly investment amount at a fixed interval, commonly once per year. It can align investing with rising income while keeping a disciplined contribution habit.'],
-      ['How this estimate works', 'The calculator increases the monthly contribution at the start of each investment year and compounds each monthly contribution using the expected annual return converted to a monthly rate.'],
+      ['How this estimate works', 'Contributions are made at the beginning of each month. The monthly return is the entered nominal annual rate divided by 12, matching our regular SIP calculator. The contribution increases after every 12 deposits. This is a constant-return scenario, not a forecast of market performance.'],
+      ['Worked example', 'Starting at INR 1,000 per month, a 10% annual step-up and 0% return over 2 years deposits 12 × 1,000 plus 12 × 1,100 = INR 25,200. Estimated value is also INR 25,200, gain is zero and the final monthly contribution is INR 1,100. At zero step-up, the result matches the regular SIP calculator with the same inputs.'],
       ['Use conservative scenarios', 'Market returns are not guaranteed. Test lower return assumptions, inflation, expenses, and goal timing before treating a projection as achievable.'],
       ['Planning note', 'A higher step-up rate creates a much larger final monthly commitment. Make sure the future SIP remains realistic for income, expenses, and emergency savings.']
     ],
@@ -317,7 +318,7 @@ const pages = [
     form: `
       <form class="traffic-form" data-traffic-calc="gst-india">
         <label>Amount<input name="amount" type="number" min="0" step="0.01" value="1000" required></label>
-        <label>GST rate<select name="gstRate"><option value="0">0%</option><option value="5">5%</option><option value="12">12%</option><option value="18" selected>18%</option><option value="28">28%</option></select></label>
+        <label>Applicable GST rate (%)<input name="gstRate" type="number" min="0" max="100" step="any" value="18" required></label><p>Enter the rate applicable to your supply and date. This tool does not classify goods or services. <a href="https://cbic-gst.gov.in/gst-goods-services-rates.html" target="_blank" rel="noopener noreferrer">Check CBIC rates and notifications</a>.</p>
         <label>Mode<select name="mode"><option value="add">Add GST</option><option value="remove">Remove GST from total</option></select></label>
         <button class="glowing-btn demo-btn ripple-btn" type="submit">Calculate GST</button>
       </form>`,
@@ -480,7 +481,7 @@ function pageHtml(page) {
     <link rel="canonical" href="${url}">
     <meta property="og:type" content="website"><meta property="og:site_name" content="Calculator All-in-One"><meta property="og:title" content="${page.title}"><meta property="og:description" content="${page.description}"><meta property="og:url" content="${url}">
     <meta name="twitter:card" content="summary"><meta name="twitter:title" content="${page.title}"><meta name="twitter:description" content="${page.description}">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="stylesheet" href="/style.css?v=20260909-qa">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="stylesheet" href="/style.css?v=20260922-audit">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-MRCMVF9545"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-MRCMVF9545');</script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9409281508068005" crossorigin="anonymous"></script>
@@ -515,10 +516,12 @@ ${scripts}
 `;
 }
 
-for (const page of pages) {
+const consolidated = require('./consolidated-routes.json');
+const retained = pages.filter(page => !consolidated[`/${page.slug}/`]);
+for (const page of retained) {
   const dir = path.join(process.cwd(), page.slug);
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'index.html'), pageHtml(page), 'utf8');
 }
 
-console.log(`Generated ${pages.length} working tool pages. Run npm run build to refresh the sitemap and consolidated routes.`);
+console.log(`Generated ${retained.length} tool pages. Run npm run build to refresh the sitemap and consolidated routes.`);

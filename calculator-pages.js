@@ -316,6 +316,10 @@ const calculatorPage = (() => {
         const totalPayable = emi * months;
         const totalInterest = Math.max(0, totalPayable - principal);
 
+        if (![emi, totalPayable, totalInterest].every(Number.isFinite)) {
+            showError('Loan exceeds the supported calculation range.'); return;
+        }
+
         setMoneyText('emi-result', emi, 2);
         setMoneyText('emi-interest', totalInterest, 2);
         setMoneyText('emi-total', totalPayable, 2);
@@ -390,6 +394,7 @@ const calculatorPage = (() => {
         }
 
         const result = percentage / 100 * base;
+        if (!Number.isFinite(result)) { showError('Result exceeds the supported calculation range.'); return; }
         setText('percentage-result', formatNumber(result, 2));
         setText('percentage-equation', `${percentage}% of ${formatNumber(base, 2)} = ${formatNumber(result, 2)}`);
     }
@@ -408,6 +413,7 @@ const calculatorPage = (() => {
         const base = mode === 'add' ? amount : amount / (1 + rate);
         const gst = mode === 'add' ? amount * rate : amount - base;
         const finalAmount = mode === 'add' ? amount + gst : amount;
+        if (![base, gst, finalAmount].every(Number.isFinite)) { showError('Amount exceeds the supported calculation range.'); return; }
 
         setMoneyText('gst-base', base, 2);
         setMoneyText('gst-tax', gst, 2);
@@ -432,6 +438,9 @@ const calculatorPage = (() => {
             : principal * monthlyRate / -Math.expm1(-months * Math.log1p(monthlyRate));
         const totalPayment = monthlyPayment * months;
         const totalInterest = Math.max(0, totalPayment - principal);
+        if (![monthlyPayment, totalPayment, totalInterest].every(Number.isFinite)) {
+            showError('Loan exceeds the supported calculation range.'); return;
+        }
 
         setMoneyText('loan-payment', monthlyPayment, 2);
         setMoneyText('loan-interest', totalInterest, 2);
@@ -449,7 +458,8 @@ const calculatorPage = (() => {
             return;
         }
 
-        const months = years * 12;
+        const months = Math.round(years * 12);
+        if (Math.abs(years * 12 - months) > 1e-8 || months < 1) { showError('Enter a duration corresponding to whole monthly contributions.'); return; }
         const monthlyRate = annualRate / 100 / 12;
         const maturity = monthlyRate === 0
             ? monthly * months
@@ -465,16 +475,22 @@ const calculatorPage = (() => {
 
     async function fetchCurrencyRates(base) {
         const cached = currencyCache.get(base);
-        if (cached && cached.expiresAt > Date.now()) return cached;
+        if (cached && cached.expiresAt > Date.now() && Date.now() - cached.updatedTimestamp <= 72 * 3600000) return cached;
 
-        const response = await fetch(`${currencyApiBase}/${base}`);
+        const response = await fetch(`${currencyApiBase}/${base}`, { signal: AbortSignal.timeout(15000) });
         if (!response.ok) throw new Error('Currency service unavailable');
         const data = await response.json();
         if (data.result !== 'success' || !data.rates) throw new Error('Currency service returned no rates');
 
+        const timestamp = Number(data.time_last_update_unix) * 1000;
+        if (!Number.isFinite(timestamp) || timestamp <= 0 || timestamp > Date.now() + 300000) {
+            throw new Error('Currency service returned an invalid update date.');
+        }
+        if (Date.now() - timestamp > 72 * 3600000) throw new Error('Rates are more than 72 hours old. Please check another provider.');
         const payload = {
             rates: data.rates,
-            updatedAt: data.time_last_update_utc || new Date().toUTCString(),
+            updatedAt: new Date(timestamp).toUTCString(),
+            updatedTimestamp: timestamp,
             expiresAt: data.time_next_update_unix ? data.time_next_update_unix * 1000 : Date.now() + 43200000
         };
         currencyCache.set(base, payload);
@@ -501,6 +517,7 @@ const calculatorPage = (() => {
             const rate = data.rates[to];
             if (!Number.isFinite(rate) || rate <= 0) throw new Error('Selected currency is not available.');
             const converted = amount * rate;
+            if (!Number.isFinite(converted)) throw new Error('Converted amount exceeds the supported calculation range.');
             const formatted = new Intl.NumberFormat(undefined, {
                 style: 'currency',
                 currency: to,

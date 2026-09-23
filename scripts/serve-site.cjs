@@ -4,7 +4,7 @@ const path = require('node:path');
 const root = path.resolve(__dirname, '..', '.site-build');
 const manifest = new Set(require('./site-files.json'));
 const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.xml': 'application/xml', '.txt': 'text/plain', '.svg': 'image/svg+xml', '.jpeg': 'image/jpeg' };
-http.createServer((req, res) => {
+const server = http.createServer((req, res) => {
   let pathname;
   try { pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname); }
   catch { res.writeHead(400).end(); return; }
@@ -16,4 +16,4 @@ http.createServer((req, res) => {
   const valid = manifest.has(file) && fs.existsSync(path.join(root, file));
   res.writeHead(valid ? 200 : 404, { 'Content-Type': types[path.extname(valid ? file : '404.html')] || 'application/octet-stream', 'Cache-Control': 'no-store' });
   fs.createReadStream(path.join(root, valid ? file : '404.html')).pipe(res);
-}).listen(4173, '127.0.0.1', () => console.log('Local site: http://127.0.0.1:4173'));
+}).listen(Number(process.env.SITE_PORT || 4173), '127.0.0.1', () => console.log(`Local site: http://127.0.0.1:${server.address().port}`));

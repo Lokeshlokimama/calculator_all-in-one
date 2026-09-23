@@ -1310,10 +1310,12 @@ function calcBodyFat() {
 window.calcBodyFat = calcBodyFat;
 
 function parseLocalDateInput(value) {
-    if (!value) return null;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value || '')) return null;
     const parts = value.split('-').map(Number);
-    if (parts.length !== 3 || parts.some(Number.isNaN)) return null;
-    return new Date(parts[0], parts[1] - 1, parts[2]);
+    const date = new Date(0);
+    date.setFullYear(parts[0], parts[1] - 1, parts[2]);
+    date.setHours(0, 0, 0, 0);
+    return date.getFullYear() === parts[0] && date.getMonth() === parts[1] - 1 && date.getDate() === parts[2] ? date : null;
 }
 
 function addCalendarDays(date, days) {
@@ -1332,20 +1334,18 @@ function formatCalculatorDate(date) {
 }
 
 function diffCalendarDays(start, end) {
-    const startNoon = new Date(start.getFullYear(), start.getMonth(), start.getDate(), 12);
-    const endNoon = new Date(end.getFullYear(), end.getMonth(), end.getDate(), 12);
-    return Math.floor((endNoon - startNoon) / 86400000);
+    return Math.round((Date.UTC(end.getFullYear(), end.getMonth(), end.getDate()) - Date.UTC(start.getFullYear(), start.getMonth(), start.getDate())) / 86400000);
 }
 
 function calcDueDate() {
     const lmp = parseLocalDateInput(document.getElementById('due-lmp')?.value);
-    const cycleLength = parseInt(document.getElementById('due-cycle')?.value, 10);
+    const cycleLength = Number(document.getElementById('due-cycle')?.value);
 
     if (!lmp) {
         showFieldError('due-lmp', 'Select the first day of the last period');
         return;
     }
-    if (!cycleLength || cycleLength < 20 || cycleLength > 45) {
+    if (!Number.isInteger(cycleLength) || cycleLength < 20 || cycleLength > 45) {
         showFieldError('due-cycle', 'Use a cycle length from 20 to 45 days');
         return;
     }
@@ -1376,7 +1376,7 @@ function calcSIP() {
     const annualRate = parseFloat(document.getElementById('sip-rate').value);
     const r = annualRate / 100 / 12;
     const n = parseFloat(document.getElementById('sip-years').value) * 12;
-    if (![P, annualRate, n].every(Number.isFinite) || P <= 0 || annualRate < 0 || annualRate > 100 || n <= 0 || n > 1200) { showToast('Enter a positive investment, rate from 0 to 100%, and duration up to 100 years.'); return; }
+    if (![P, annualRate, n].every(Number.isFinite) || P <= 0 || annualRate < 0 || annualRate > 100 || n <= 0 || n > 1200 || Math.abs(n - Math.round(n)) > 1e-8) { showToast('Enter a positive investment, rate from 0 to 100%, and duration of 1 to 1200 whole months.'); return; }
 
     const M = r === 0 ? P * n : P * (Math.expm1(n * Math.log1p(r)) / r) * (1 + r);
     if (!Number.isFinite(M)) { showToast('Investment exceeds the supported calculation range.'); return; }
@@ -1431,6 +1431,7 @@ function calcRD() {
     const deposits = P * n;
     const maturity = recurringDepositMaturity(P, annualRate, n);
     const interest = maturity - deposits;
+    if (![deposits, maturity, interest].every(Number.isFinite)) { showToast('Deposit exceeds the supported calculation range.'); return; }
 
     setMoneyText('rd-result', maturity, { prefix: 'Maturity: ' });
     setMoneyText('rd-deposits', deposits);
@@ -1862,14 +1863,15 @@ function initializeMoneyDefaults() {
 
 function getCurrencyCache(base) {
     const memoryCache = currencyRateMemoryCache.get(base);
-    if (memoryCache && memoryCache.expiresAt > Date.now()) return memoryCache;
+    const fresh = entry => entry?.rates && Number.isFinite(entry.updatedTimestamp) && entry.updatedTimestamp > 0 && entry.updatedTimestamp <= Date.now() + 300000 && Date.now() - entry.updatedTimestamp <= 72 * 3600000 && entry.expiresAt > Date.now();
+    if (fresh(memoryCache)) return memoryCache;
 
     try {
         const saved = localStorage.getItem(CURRENCY_CACHE_PREFIX + base);
         if (!saved) return null;
 
         const parsed = JSON.parse(saved);
-        if (!parsed?.rates || parsed.expiresAt <= Date.now()) return null;
+        if (!fresh(parsed)) return null;
 
         currencyRateMemoryCache.set(base, parsed);
         return parsed;
@@ -1892,7 +1894,7 @@ async function fetchCurrencyRates(base) {
     const cached = getCurrencyCache(base);
     if (cached) return { ...cached, fromCache: true };
 
-    const res = await fetch(`${CURRENCY_API_BASE}/${base}`);
+    const res = await fetch(`${CURRENCY_API_BASE}/${base}`, { signal: AbortSignal.timeout(15000) });
     if (!res.ok) throw new Error(`Currency API returned ${res.status}`);
 
     const data = await res.json();
@@ -1900,6 +1902,10 @@ async function fetchCurrencyRates(base) {
         throw new Error(data['error-type'] || 'Currency API response failed');
     }
 
+    const timestamp = Number(data.time_last_update_unix) * 1000;
+    if (!Number.isFinite(timestamp) || timestamp <= 0 || timestamp > Date.now() + 300000 || Date.now() - timestamp > 72 * 60 * 60 * 1000) {
+        throw new Error('Exchange rates have a missing or stale update time. Please try again later.');
+    }
     const expiresAt = data.time_next_update_unix
         ? data.time_next_update_unix * 1000
         : Date.now() + CURRENCY_CACHE_TTL_MS;
@@ -1907,7 +1913,8 @@ async function fetchCurrencyRates(base) {
     const payload = {
         base,
         rates: data.rates,
-        updatedAt: data.time_last_update_utc || new Date().toUTCString(),
+        updatedAt: new Date(timestamp).toUTCString(),
+        updatedTimestamp: timestamp,
         expiresAt,
         provider: data.provider || 'https://www.exchangerate-api.com'
     };
@@ -1941,7 +1948,7 @@ async function calcCurrency() {
     const btn = document.getElementById('curr-btn');
     const resultEl = document.getElementById('curr-result');
 
-    if (!amt) { showToast('Please enter amount'); return; }
+    if (!Number.isFinite(amt) || amt <= 0) { showToast('Enter a positive, finite amount.'); return; }
 
     btn.innerText = "Fetching...";
     btn.disabled = true;
@@ -1951,9 +1958,10 @@ async function calcCurrency() {
         const data = await fetchCurrencyRates(from);
         const rate = data.rates[to];
 
-        if (!rate) throw new Error(`Currency ${to} is not supported`);
+        if (!Number.isFinite(rate) || rate <= 0) throw new Error(`Currency ${to} is not supported`);
 
         const result = amt * rate;
+        if (!Number.isFinite(result)) throw new Error('Converted amount exceeds the supported calculation range.');
         resultEl.innerText = formatCurrencyValue(result, to);
 
         const sourceLabel = data.fromCache ? 'cached live rate' : 'live rate';
@@ -2025,10 +2033,10 @@ function calcDateDiff() {
     const end = document.getElementById('date-end').value;
     if (!start || !end) { showToast('Please select dates'); return; }
 
-    const d1 = new Date(start);
-    const d2 = new Date(end);
-    const diffTime = Math.abs(d2 - d1);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const d1 = parseLocalDateInput(start);
+    const d2 = parseLocalDateInput(end);
+    if (!d1 || !d2) { showToast('Enter valid calendar dates.'); return; }
+    const diffDays = Math.abs(diffCalendarDays(d1, d2));
 
     document.getElementById('date-result').innerText = diffDays + ' Days';
     showToast('Difference Calculated!');
@@ -2096,14 +2104,15 @@ function simplifyFraction(num, den) {
 }
 
 function calcFraction() {
-    const aNum = parseInt(document.getElementById('frac-a-num')?.value, 10);
-    const aDen = parseInt(document.getElementById('frac-a-den')?.value, 10);
-    const bNum = parseInt(document.getElementById('frac-b-num')?.value, 10);
-    const bDen = parseInt(document.getElementById('frac-b-den')?.value, 10);
+    const integer = id => { const raw = document.getElementById(id)?.value?.trim(); return raw ? Number(raw) : NaN; };
+    const aNum = integer('frac-a-num');
+    const aDen = integer('frac-a-den');
+    const bNum = integer('frac-b-num');
+    const bDen = integer('frac-b-den');
     const op = document.getElementById('frac-op')?.value || 'add';
 
-    if ([aNum, aDen, bNum, bDen].some(Number.isNaN)) {
-        showToast('Enter all fraction numbers.', 'error');
+    if (![aNum, aDen, bNum, bDen].every(Number.isSafeInteger)) {
+        showToast('Enter whole fraction numbers within the safe integer range.', 'error');
         return;
     }
     if (aDen === 0 || bDen === 0) {
@@ -2131,6 +2140,7 @@ function calcFraction() {
         den = aDen * bNum;
     }
 
+    if (![num, den].every(Number.isSafeInteger)) { showToast('Fraction exceeds the supported exact integer range.'); return; }
     const simplified = simplifyFraction(num, den);
     const decimal = simplified.num / simplified.den;
     const resultText = simplified.den === 1
@@ -2154,11 +2164,11 @@ function calcQuadratic() {
     const b = parseFloat(document.getElementById('quad-b')?.value);
     const c = parseFloat(document.getElementById('quad-c')?.value);
 
-    if (!a || Number.isNaN(a)) {
+    if (!a || !Number.isFinite(a)) {
         showFieldError('quad-a', 'Coefficient a cannot be zero');
         return;
     }
-    if (Number.isNaN(b) || Number.isNaN(c)) {
+    if (![b, c].every(Number.isFinite)) {
         showToast('Enter coefficients b and c.', 'error');
         return;
     }
@@ -2166,6 +2176,7 @@ function calcQuadratic() {
     const discriminant = (b * b) - (4 * a * c);
     const vertexX = -b / (2 * a);
     const vertexY = (a * vertexX * vertexX) + (b * vertexX) + c;
+    if (![discriminant, vertexX, vertexY].every(Number.isFinite)) { showToast('Coefficients exceed the supported calculation range.'); return; }
     let rootText = '';
 
     if (discriminant > 0) {
@@ -2399,14 +2410,15 @@ function ipv4IntToString(value) {
 
 function calcSubnet() {
     const ip = parseIPv4Address(document.getElementById('subnet-ip')?.value);
-    const cidr = parseInt(document.getElementById('subnet-cidr')?.value, 10);
+    const cidrRaw = document.getElementById('subnet-cidr')?.value?.trim();
+    const cidr = cidrRaw ? Number(cidrRaw) : NaN;
     const resultEl = document.getElementById('subnet-result');
 
     if (ip === null) {
         showFieldError('subnet-ip', 'Enter a valid IPv4 address');
         return;
     }
-    if (Number.isNaN(cidr) || cidr < 0 || cidr > 32) {
+    if (!Number.isInteger(cidr) || cidr < 0 || cidr > 32) {
         showFieldError('subnet-cidr', 'CIDR must be from 0 to 32');
         return;
     }
@@ -2449,11 +2461,11 @@ function calcAspectRatio() {
     const targetWidth = parseFloat(targetWidthInput?.value);
     const targetHeight = parseFloat(targetHeightInput?.value);
 
-    if (!width || width <= 0) {
+    if (!Number.isFinite(width) || width <= 0 || width > 1e10) {
         showFieldError('aspect-width', 'Enter original width');
         return;
     }
-    if (!height || height <= 0) {
+    if (!Number.isFinite(height) || height <= 0 || height > 1e10) {
         showFieldError('aspect-height', 'Enter original height');
         return;
     }
@@ -2465,6 +2477,7 @@ function calcAspectRatio() {
     let scaledWidth = targetWidth;
     let scaledHeight = targetHeight;
     let scalePercent = 0;
+    if ([targetWidth,targetHeight].some(value => value > 1e10)) { showToast('Dimensions exceed the supported range.'); return; }
     if (targetWidth > 0) {
         scaledWidth = targetWidth;
         scaledHeight = (targetWidth * height) / width;
@@ -2600,7 +2613,7 @@ function readCalcNumber(id) {
 }
 
 function formatCalcNumber(value, digits = 2) {
-    if (!Number.isFinite(value)) return '0';
+    if (!Number.isFinite(value)) return 'Outside supported range';
     return Number(value.toFixed(digits)).toLocaleString(undefined, {
         maximumFractionDigits: digits
     });
@@ -2657,8 +2670,6 @@ async function calcElectricityBill() {
         if (window.elecChartInstance) window.elecChartInstance.destroy();
         
         const usageCost = bill;
-        const taxEst = bill * 0.18; // Mock 18% tax
-        const fixedCharge = 50; // Mock fixed charge
         
         try {
             await ensureChartLibrary();
@@ -2671,9 +2682,9 @@ async function calcElectricityBill() {
         window.elecChartInstance = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Usage', 'Tax/Duty', 'Fixed'],
+                labels: ['Usage cost only (fees and taxes excluded)'],
                 datasets: [{
-                    data: [usageCost, taxEst, fixedCharge],
+                    data: [usageCost],
                     backgroundColor: ['#facc15', '#ef4444', '#3b82f6'],
                     borderWidth: 0
                 }]
@@ -2723,6 +2734,7 @@ function calcSolarPanel() {
     if (!values) return;
 
     const efficiency = values['solar-efficiency'] / 100;
+    if (efficiency > 1) { showToast('Efficiency must not exceed 100%.'); return; }
     const panelWatts = (values['solar-kwh'] * 1000) / (values['solar-sun'] * efficiency);
     const panelKw = panelWatts / 1000;
     setResultText('solar-result', `${formatCalcNumber(panelKw, 2)} kW (${formatCalcNumber(panelWatts, 0)} W)`, 'Solar panel size calculated');
@@ -2730,6 +2742,7 @@ function calcSolarPanel() {
 window.calcSolarPanel = calcSolarPanel;
 
 function calcBackupHours(ah, voltage, load, efficiencyPercent) {
+    if (![ah, voltage, load, efficiencyPercent].every(Number.isFinite) || ah <= 0 || voltage <= 0 || load <= 0 || efficiencyPercent <= 0 || efficiencyPercent > 100) return NaN;
     return (ah * voltage * (efficiencyPercent / 100)) / load;
 }
 
@@ -2816,7 +2829,7 @@ function calcGeneratorSize() {
     if (!values) return;
 
     const margin = readCalcNumber('gen-margin') ?? 0;
-    if (margin < 0) {
+    if (margin < 0 || values['gen-pf'] > 1) {
         showToast('Please enter valid safety margin');
         return;
     }
@@ -3952,6 +3965,7 @@ window.calcSIP = async function() {
     
     const r = annualRate / 100 / 12;
     const n = years * 12;
+    if (Math.abs(n - Math.round(n)) > 1e-8 || n < 1) { showToast('Use a duration of whole monthly contributions.'); return; }
     
     const M = r === 0 ? P * n : P * (Math.expm1(n * Math.log1p(r)) / r) * (1 + r);
     if (!Number.isFinite(M)) { showToast('Investment exceeds the supported calculation range.'); return; }
@@ -4141,6 +4155,7 @@ window.calcRD = async function() {
     const deposits = P * months;
     const maturity = recurringDepositMaturity(P, annualRate, months);
     const interest = maturity - deposits;
+    if (![deposits, maturity, interest].every(Number.isFinite)) { showToast('Deposit exceeds the supported calculation range.'); return; }
     
     setMoneyText('rd-result', maturity, { prefix: 'Maturity: ' });
     setMoneyText('rd-deposits', deposits);
@@ -5055,9 +5070,9 @@ window.backspaceSci = backspaceSci;
 
 function factorialSci() {
     const display = document.getElementById('sci-display');
-    const num = parseFloat(sciExpression);
-    if (isNaN(num) || num < 0 || num % 1 !== 0) {
-        showToast('Factorial requires positive integer.', 'error');
+    const num = Number(sciExpression);
+    if (!sciExpression.trim() || !Number.isInteger(num) || num < 0 || num > 170) {
+        showToast('Factorial requires a whole number from 0 to 170.', 'error');
         return;
     }
     
@@ -5092,7 +5107,7 @@ function calculateSci() {
         if (!isFinite(result)) throw new Error('Infinity');
         
         history.innerText = sciExpression + ' =';
-        sciExpression = (Math.round(result * 1000000) / 1000000).toString();
+        sciExpression = Number(result.toFixed(6)).toString();
         display.innerText = sciExpression;
         showToast('Calculation Complete');
     } catch(e) {

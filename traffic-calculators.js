@@ -152,7 +152,7 @@
                     const annualReturn = Number(data.rate || 0) / 100;
                     const step = Number(data.step || 0) / 100;
                     const totalMonths = Math.max(1, Math.round(Number(data.years || 0) * 12));
-                    const monthlyRate = Math.pow(1 + annualReturn, 1 / 12) - 1;
+                    const monthlyRate = annualReturn / 12;
                     let invested = 0;
                     let value = 0;
                     for (let m = 0; m < totalMonths; m += 1) {
