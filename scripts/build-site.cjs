@@ -26,6 +26,16 @@ for (const [oldRoute, destination] of Object.entries(routes)) {
 }
 
 const htmlFiles = files.filter(file => file.endsWith('.html'));
+// Load the shared preference resolver before either calculator bundle.
+// India-specific retirement pages deliberately keep their explicit INR model.
+for (const file of htmlFiles) {
+  const filename = path.join(root, file);
+  const html = fs.readFileSync(filename, 'utf8');
+  if ((file === 'index.html' || /src="(?:script|calculator-pages)\.js/.test(html)) && !html.includes('src="/local-currency.js')) {
+    fs.writeFileSync(filename, html.replace('</head>', '<script src="/local-currency.js?v=20260924" defer></script>\n</head>')
+      .replace(/(<script src="(?:script|calculator-pages)\.js)[^"]*(" defer><\/script>)/g, '$1?v=20260924-currency$2'));
+  }
+}
 const indexed = htmlFiles.filter(file => {
   const html = fs.readFileSync(path.join(root, file), 'utf8');
   return !/name=["']robots["'][^>]+noindex/i.test(html) &&

@@ -235,6 +235,7 @@ function saveStoredDisplayCurrency(currency) {
     } catch {
         // Currency selection still works for this session if localStorage is blocked.
     }
+    window.LocalCurrency?.announce(currency);
 }
 
 function getDisplayCurrency() {
@@ -1794,7 +1795,7 @@ document.addEventListener('keydown', event => {
 });
 
 function populateCurrencySelects() {
-    selectedDisplayCurrency = getStoredDisplayCurrency() || document.getElementById('global-currency-select')?.dataset.defaultCurrency || 'USD';
+    selectedDisplayCurrency = window.LocalCurrency?.detect(CURRENCY_OPTIONS.map(item => item.code)).currency || getStoredDisplayCurrency() || 'USD';
     if (!CURRENCY_OPTIONS.some(({ code }) => code === selectedDisplayCurrency)) {
         selectedDisplayCurrency = 'USD';
     }

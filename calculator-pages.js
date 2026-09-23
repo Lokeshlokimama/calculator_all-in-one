@@ -46,6 +46,7 @@ const calculatorPage = (() => {
         } catch {
             // Keep the selected currency for this tab even if storage is unavailable.
         }
+        window.LocalCurrency?.announce(currency);
     };
 
     const getDisplayCurrency = () => selectedDisplayCurrency || getStoredDisplayCurrency() || 'USD';
@@ -236,7 +237,7 @@ const calculatorPage = (() => {
 
         const currencies = getSupportedCurrencyCodes();
         const stored = getStoredDisplayCurrency();
-        selectedDisplayCurrency = currencies.includes(stored) ? stored : 'USD';
+        selectedDisplayCurrency = window.LocalCurrency?.detect(currencies).currency || (currencies.includes(stored) ? stored : 'USD');
 
         selects.forEach((select) => {
             select.innerHTML = '';
