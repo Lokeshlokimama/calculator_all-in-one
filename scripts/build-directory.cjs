@@ -6,6 +6,11 @@ const escape = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g,
 const dedicated = { 'calc-emi':'emi-calculator.html', 'calc-bmi':'bmi-calculator.html', 'calc-sip':'sip-calculator.html', 'calc-age':'age-calculator.html', 'calc-pct':'percentage-calculator.html', 'calc-gst':'gst-calculator.html', 'calc-pass':'password-generator.html', 'calc-qr':'qr-code-generator.html', 'calc-curr':'currency-converter.html', 'calc-electricity-bill':'electricity-bill-calculator-india/' };
 const cards = [...source.matchAll(/<div id="(calc-[^"]+)" class="[^"]*tool-demo-card[^"]*" data-category="([^"]+)"[^>]*>[\s\S]*?<h3>([^<]+)<\/h3>[\s\S]*?<p[^>]*>([\s\S]*?)<\/p>/g)].map(m => ({id:m[1], category:m[2], title:m[3], description:m[4].replace(/<[^>]+>/g, '')}));
 if (cards.length < 40) throw new Error('Tool directory extraction unexpectedly lost cards');
+for (const [id, title, description, url] of [
+  ['calc-epf','EPF Savings Calculator','Project provident fund savings from actual EPF contributions.','epf-calculator.html'],
+  ['calc-eps','EPS Pension Calculator','Standard pension formula with explicit service and scope limits.','eps-pension-calculator.html'],
+  ['calc-nps','NPS Retirement Calculator','Corpus, annuity scenarios and inflation-adjusted savings.','nps-calculator.html']
+]) { dedicated[id] = url; cards.push({id, title, description, category:'finance'}); }
 const links = cards.map(c => `<a id="${c.id}" data-tool-link="true" data-category="${c.category}" href="/${dedicated[c.id] || 'tools.html#'+c.id}"><h3>${c.title}</h3><p>${c.description}</p><span>Open tool &rarr;</span></a>`).join('\n');
 const categories = [...new Set(cards.map(c=>c.category))];
 const html = `<!doctype html><html lang="en"><head>
