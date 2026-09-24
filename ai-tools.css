@@ -1061,7 +1061,14 @@ body.ai-page::after {
     background: var(--color-positive);
 }
 
+.pdf-converter-stage {
+    grid-template-columns: minmax(0, 1fr);
+    scroll-margin-top: 7rem;
+}
+
 .pdf-workbench {
+    /* The workbench follows both the introduction and the workflow steps. */
+    grid-column: 1 / -1;
     grid-template-columns: minmax(0, 1fr);
 }
 
@@ -1301,7 +1308,8 @@ body.ai-page::after {
 }
 
 @media (min-width: 60rem) {
-    .pdf-workbench {
+    /* Do not reserve a results column before a conversion has produced output. */
+    .pdf-workbench:has(.pdf-output-card:not([hidden])) {
         grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
     }
 }
