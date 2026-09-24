@@ -35,7 +35,14 @@
             note.style.cssText = 'font-size:12px;line-height:1.4;margin:8px 0;flex-basis:100%;color:inherit;';
             header.appendChild(note);
         }
-        note.textContent = `Display currency: ${info.currency} (${info.source}). Regional estimate, not GPS. Amounts are not exchange-converted.`;
+        const badge = note.querySelector('[data-currency-code]');
+        const detail = note.querySelector('[data-currency-detail]');
+        if (badge && detail) {
+            badge.textContent = info.currency;
+            detail.textContent = `${info.source}. Regional estimate, not GPS. Amounts are not exchange-converted.`;
+        } else {
+            note.textContent = `Display currency: ${info.currency} (${info.source}). Regional estimate, not GPS. Amounts are not exchange-converted.`;
+        }
     }
     root.LocalCurrency = {resolve, detect, announce};
     document.addEventListener('DOMContentLoaded', announce);
