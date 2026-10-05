@@ -1,6 +1,7 @@
 const email = 'contact@calculatorsallinone.com';
 const copyright = '<p class="copyright">© 2026 Calculator All-in-One. All rights reserved. Built for fast, accurate browser calculations.</p>';
 function standardizePublisher(html) {
+  html = html.replace(/\r\n/g, '\n');
   html = html.replace(/<!--\s*AdSense\b[\s\S]*?-->/gi, '')
     .replace(/<(p|div)\b[^>]*>\s*(?:Trust page )?checked for AdSense review\.?\s*<\/\1>/gi, '')
     .replace(/AdSense review note\.?\s*/gi, '')
