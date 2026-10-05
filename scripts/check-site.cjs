@@ -53,6 +53,17 @@ for (const [file, html] of pages) {
   }
 }
 const sitemap = fs.readFileSync(path.join(root, 'sitemap.xml'), 'utf8');
+// Guard the editorial requirement independently of interface labels and menus.
+const guides = fs.readdirSync(path.join(root, 'content', 'guides')).filter(file => file.endsWith('.md'));
+if (guides.length < 20) errors.push('Expected at least 20 substantive guides');
+for (const guide of guides) {
+  const target = fs.readFileSync(path.join(root, 'content', 'guides', guide), 'utf8').split(/\r?\n/)[0].trim();
+  const html = pages.get(target) || '';
+  const articles = [...html.matchAll(/<article\b[^>]*>([\s\S]*?)<\/article>/gi)].map(match => match[1]).join(' ');
+  const words = articles.replace(/<[^>]+>/g, ' ').replace(/&[^;\s]+;/g, ' ').trim().split(/\s+/).filter(Boolean).length;
+  if (words < 1000 || words > 1500) errors.push(`${target}: editorial content has ${words} words; expected 1000–1500`);
+  if ((html.match(/<!-- extended-guide:start -->/g) || []).length !== 1) errors.push(target + ': missing or repeated extended guide');
+}
 const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
 if (locations.length !== new Set(locations).size) errors.push('Duplicate sitemap URLs');
 for (const [file, html] of pages) {

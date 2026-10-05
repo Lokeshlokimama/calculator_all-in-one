@@ -46,6 +46,8 @@ for (const file of htmlFiles) {
       .replace(/(<script src="(?:script|calculator-pages)\.js)[^"]*(" defer><\/script>)/g, '$1?v=20260924-currency$2'));
   }
 }
+const { applyGuides } = require('./build-guides.cjs');
+console.log(`Expanded ${applyGuides(root)} tool guides`);
 const { applySiteTheme } = require('./apply-site-theme.cjs');
 console.log(`Themed ${applySiteTheme(root, files)}` + ' content pages');
 const indexed = htmlFiles.filter(file => {

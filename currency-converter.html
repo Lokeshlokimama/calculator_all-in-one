@@ -137,7 +137,19 @@
                 <article class="calculator-copy-card content-evidence source-note"><h2>Why your provider quote may differ</h2><p>The converter uses available reference-rate data for estimates. Banks, card issuers, payment apps, money exchangers, and transfer services can apply fees, spreads, taxes, and settlement-time rates, so the final provider quote remains the source of truth.</p></article><article class="calculator-copy-card related-card"><h2>Related calculators</h2><p>Continue with tools commonly used with the Currency Converter.</p><div class="related-calculators"><a href="gst-calculator.html">GST Calculator</a><a href="percentage-calculator.html">Percentage Calculator</a><a href="sip-calculator.html">SIP Calculator</a><a href="emi-calculator.html">EMI Calculator</a><a href="/">All calculators</a></div></article>
             </section>
         </section>
-    </main>
+    
+<!-- extended-guide:start -->
+<article class="calculator-copy-card content-card extended-guide"><h2>Read the rate as carefully as the amount</h2>
+<h3>Verify the conversion direction</h3>
+<p>Suppose an illustrative reference rate is 0.80 target units for one source unit. Converting 100 source units gives 80 target units. Converting 80 target units back with the reciprocal rate of 1.25 returns 100 source units before rounding. Using 0.80 in both directions would incorrectly produce 64. This example uses an invented rate to explain multiplication; it is not a quote for any currency pair today.</p>
+<p>Always read the displayed pair from left to right. A symbol alone can be ambiguous because several currencies share the dollar sign. Preserve the three-letter currency codes with a result you copy into a budget. Swapping the pair changes the question being answered; it does not merely change the result's visual label.</p>
+<h3>Compare a reference estimate with an actual quote</h3>
+<p>If a service says a recipient will receive 78 units for a total cost of 100 source units, the effective rate is 0.78. Against the hypothetical 0.80 reference rate, the difference is two target units. That difference could combine a rate margin and a separately charged fee. The converter does not identify the service's charging structure. Compare the total paid and the final amount received from the provider's own quote.</p>
+<p>The update timestamp matters when a rate comes from a cached response. A successful calculation does not mean that a fresh network request just completed. If the displayed information is too old for your task, wait for a new rate or obtain another current reference. Do not repeatedly switch currencies to make an outdated response look current.</p>
+<h3>Recover from an unavailable rate</h3>
+<p>Check the network connection and the amount first. Missing, invalid, stale, or non-finite rates should produce an error rather than a guessed conversion. Save the pair and the timestamp, not only the numerical result. The display-currency setting elsewhere on the site labels arithmetic amounts; changing that setting does not exchange or revalue an existing loan, salary, or invoice. Use this actual converter when your task requires a rate-based conversion between currencies.</p></article>
+<!-- extended-guide:end -->
+</main>
     <footer class="site-footer"><div class="footer-links" style="text-align: center; margin: 0 0 2rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem;"><a href="privacy.html">Privacy Policy</a><a href="about.html">About Us</a><a href="contact.html">Contact Us</a><a href="terms.html">Terms & Conditions</a><a href="disclaimer.html">Disclaimer</a></div><p class="maintainer-credit">This page is developed and maintained by <a href="mailto:support.aiagents@gmail.com">support.aiagents@gmail.com</a>.</p>
         <p class="copyright">&copy; 2026 Calculator All-in-One. All rights reserved.</p></footer>
     <script src="calculator-pages.js?v=20260924-currency" defer></script>

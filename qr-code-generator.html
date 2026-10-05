@@ -155,7 +155,19 @@
                 <article class="calculator-copy-card content-evidence source-note"><h2>What static QR codes can and cannot do</h2><p>The QR generator creates static payloads in the browser and explains scan testing, privacy, print size, and non-dynamic limitations. It does not provide scan analytics, editable redirects, payment confirmation, or account history.</p></article><article class="calculator-copy-card related-card"><h2>Related calculators</h2><p>Continue with tools commonly used with the QR Code Generator.</p><div class="related-calculators"><a href="password-generator.html">Password Generator</a><a href="currency-converter.html">Currency Converter</a><a href="percentage-calculator.html">Percentage Calculator</a><a href="age-calculator.html">Age Calculator</a><a href="/">All calculators</a></div></article>
             </section>
         </section>
-    </main>
+    
+<!-- extended-guide:start -->
+<article class="calculator-copy-card content-card extended-guide"><h2>Test what a QR code asks the scanner to do</h2>
+<h3>A readable image can still encode the wrong task</h3>
+<p>Imagine a restaurant preparing a menu sign. A text payload containing a menu address without its protocol may be displayed as plain text by some scanners. A complete HTTPS URL more clearly identifies the intended website action. Scan the generated image and inspect the decoded address before opening it. The generator cannot establish that the destination page exists or that the venue controls its contents.</p>
+<p>Different modes assemble different payloads. A contact mode asks a compatible scanner to offer contact information; a Wi-Fi mode provides network settings; a payment mode provides payment-related fields. These are not interchangeable just because the resulting images have the same square appearance. Choose the mode from the receiving task rather than from the look of the preview.</p>
+<h3>Plan the physical sign around the payload</h3>
+<p>Longer encoded text can require a denser symbol. A compact destination URL usually gives more printing flexibility than a paragraph placed directly inside the code. Leave the clear border around the symbol intact, avoid stretching the image into a rectangle, and keep decorative text outside the border. A preview that scans on a bright monitor is not proof that a small, glossy print will scan from across a room.</p>
+<p>Create a sample at the final physical size. Test it in the lighting and distance the audience will use, with more than one phone where possible. If the scanner struggles, increase the printed size and simplify the payload before adding decoration. The relevant test is the complete journey from camera to correct destination, not merely a successful download.</p>
+<h3>Keep a static code's lifecycle clear</h3>
+<p>A static code keeps the encoded text. Editing a destination field and generating a new image does not change old prints. A URL's server can change the page behind that address, but this generator does not provide a managed redirect account, scan analytics, or an editable subscription code. Keep the original payload with the artwork so another person can verify it during reprinting. If the address changes, replace the distributed sign or deliberately maintain the original destination.</p></article>
+<!-- extended-guide:end -->
+</main>
     <footer class="site-footer"><div class="footer-links" style="text-align: center; margin: 0 0 2rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem;"><a href="privacy.html">Privacy Policy</a><a href="about.html">About Us</a><a href="contact.html">Contact Us</a><a href="terms.html">Terms & Conditions</a><a href="disclaimer.html">Disclaimer</a></div><p class="maintainer-credit">This page is developed and maintained by <a href="mailto:support.aiagents@gmail.com">support.aiagents@gmail.com</a>.</p>
         <p class="copyright">&copy; 2026 Calculator All-in-One. All rights reserved.</p></footer>
     <script src="qr-code-engine.js?v=20260812qr" defer></script>
