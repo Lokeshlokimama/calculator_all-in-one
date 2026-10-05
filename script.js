@@ -3469,7 +3469,7 @@ const modalContent = {
     contact: {
         title: "Contact Us",
         body: `<p>If you have any suggestions, bug reports, or feature requests, please reach out to us at:</p>
-               <p style="margin-top:1rem; font-size:1.2rem; color:var(--primary);">support.aiagents@gmail.com</p>`
+               <p style="margin-top:1rem; font-size:1.2rem; color:var(--primary);">contact@calculatorsallinone.com</p>`
     },
     donate: {
         title: "Support The Platform",

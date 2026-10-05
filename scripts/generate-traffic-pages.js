@@ -412,7 +412,7 @@ function nav(current) {
 }
 
 function footer() {
-  return `<footer class="site-footer"><div class="footer-links"><a href="/">Home</a><a href="/qr-code-generator.html">QR Code Generator</a><a href="/pdf-converter/">PDF Converter</a><a href="/finance-calculators.html">Finance Calculators</a><a href="/utility-tools.html">Utility Tools</a><a href="/privacy.html">Privacy Policy</a><a href="/contact.html">Contact Us</a></div><p class="maintainer-credit">Developed and maintained by <a href="mailto:support.aiagents@gmail.com">support.aiagents@gmail.com</a>.</p><p class="copyright">&copy; 2026 Calculator All-in-One.</p></footer>`;
+  return `<footer class="site-footer"><div class="footer-links"><a href="/">Home</a><a href="/qr-code-generator.html">QR Code Generator</a><a href="/pdf-converter/">PDF Converter</a><a href="/finance-calculators.html">Finance Calculators</a><a href="/utility-tools.html">Utility Tools</a><a href="/privacy.html">Privacy Policy</a><a href="/contact.html">Contact Us</a></div><p class="copyright">© 2026 Calculator All-in-One. All rights reserved. Built for fast, accurate browser calculations.</p></footer>`;
 }
 
 function tool(page) {
@@ -449,7 +449,7 @@ function pageHtml(page) {
     url,
     description: page.description,
     isPartOf: { '@type': 'WebSite', name: 'Calculator All-in-One', url: site },
-    publisher: { '@type': 'Organization', name: 'Calculator All-in-One', email: 'support.aiagents@gmail.com', url: site },
+    publisher: { '@type': 'Organization', name: 'Calculator All-in-One', email: 'contact@calculatorsallinone.com', url: site },
     dateModified: today,
     isAccessibleForFree: true,
     ...(page.kind !== 'pdf' ? { applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } } : {})

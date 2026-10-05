@@ -17,6 +17,7 @@ function pageFile(url) {
 }
 for (const [file, html] of pages) {
   if (file.startsWith('google')) continue;
+  if (/support\.aiagents@gmail\.com|class="maintainer-credit"|<!--\s*AdSense\b/i.test(html)) errors.push(file + ': stale publisher branding or internal comment');
   const { adsenseLoader } = require('./publisher-safety.cjs');
   const withoutApprovedLoader = html.replace(adsenseLoader, '');
   if (/googletagmanager\.com|pagead2\.googlesyndication\.com|adsbygoogle/.test(withoutApprovedLoader)) errors.push(file + ': unexpected or duplicate ad/analytics loader');
@@ -25,6 +26,7 @@ for (const [file, html] of pages) {
   const moved = redirects[route];
   const expectsAdSpace = file !== '404.html' && !moved && !/name=["']robots["'][^>]*noindex/i.test(html);
   if (expectsAdSpace && !html.split('</head>')[0].includes(adsenseLoader)) errors.push(file + ': missing approved AdSense head code');
+  if (expectsAdSpace && !html.includes('Built for fast, accurate browser calculations.')) errors.push(file + ': missing standard publisher footer');
   if (!expectsAdSpace && html.includes(adsenseLoader)) errors.push(file + ': AdSense on non-content page');
   if (expectsAdSpace && !html.includes('id="ad-content-end"')) errors.push(file + ': missing reserved end-of-content ad space');
   if (!expectsAdSpace && html.includes('class="publisher-ad-space"')) errors.push(file + ': ad space on a non-content page');
@@ -42,7 +44,17 @@ for (const [file, html] of pages) {
     if (canonical !== base.href) errors.push(file + ': wrong canonical ' + canonical);
   }
   for (const match of html.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)) {
-    try { JSON.parse(match[1]); } catch { errors.push(file + ': invalid structured data'); }
+    try {
+      const data = JSON.parse(match[1]);
+      function checkPublisher(value) {
+        if (!value || typeof value !== 'object') return;
+        for (const key of ['publisher', 'author']) {
+          if (value[key] && (value[key]['@type'] !== 'Organization' || value[key].name !== 'Calculator All-in-One' || value[key].email !== 'contact@calculatorsallinone.com')) errors.push(file + ': nonstandard ' + key);
+        }
+        Object.values(value).forEach(checkPublisher);
+      }
+      checkPublisher(data);
+    } catch { errors.push(file + ': invalid structured data'); }
   }
   for (const match of html.matchAll(/\b(?:href|src)=["']([^"']+)["']/g)) {
     const raw = match[1].replace(/&amp;/g, '&');

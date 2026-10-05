@@ -3,6 +3,7 @@ const path = require('node:path');
 const files = require('./site-files.json');
 const routes = require('./consolidated-routes.json');
 const { removeOptionalLoaders, adsenseLoader } = require('./publisher-safety.cjs');
+const { standardizePublisher } = require('./publisher-brand.cjs');
 const root = path.resolve(__dirname, '..');
 const output = path.join(root, '.site-build');
 const site = 'https://calculatorsallinone.com';
@@ -30,7 +31,7 @@ const htmlFiles = files.filter(file => file.endsWith('.html'));
 for (const file of htmlFiles) {
   if (file.startsWith('google')) continue;
   const filename = path.join(root, file);
-  let html = removeOptionalLoaders(fs.readFileSync(filename, 'utf8'));
+  let html = standardizePublisher(removeOptionalLoaders(fs.readFileSync(filename, 'utf8')));
   if (file !== '404.html' && !/name="robots"[^>]*noindex/.test(html) && !html.includes('name="google-adsense-account"')) {
     html = html.replace('</head>', '<meta name="google-adsense-account" content="ca-pub-9409281508068005">\n</head>');
   }
