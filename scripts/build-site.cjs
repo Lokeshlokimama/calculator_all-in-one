@@ -50,6 +50,9 @@ const { applyGuides } = require('./build-guides.cjs');
 console.log(`Expanded ${applyGuides(root)} tool guides`);
 const { applySiteTheme } = require('./apply-site-theme.cjs');
 console.log(`Themed ${applySiteTheme(root, files)}` + ' content pages');
+const { applyAdSpaces } = require('./build-ad-spaces.cjs');
+const adSpaces = applyAdSpaces(root, files);
+console.log(`Reserved ${adSpaces.placements} ad spaces across ${adSpaces.pages} content pages`);
 const indexed = htmlFiles.filter(file => {
   const html = fs.readFileSync(path.join(root, file), 'utf8');
   return !/name=["']robots["'][^>]+noindex/i.test(html) &&

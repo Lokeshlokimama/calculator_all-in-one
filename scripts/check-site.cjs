@@ -21,6 +21,9 @@ for (const [file, html] of pages) {
   const route = '/' + file.replace(/index\.html$/, '');
   const base = new URL(route, site);
   const moved = redirects[route];
+  const expectsAdSpace = file !== '404.html' && !moved && !/name=["']robots["'][^>]*noindex/i.test(html);
+  if (expectsAdSpace && !html.includes('id="ad-content-end"')) errors.push(file + ': missing reserved end-of-content ad space');
+  if (!expectsAdSpace && html.includes('class="publisher-ad-space"')) errors.push(file + ': ad space on a non-content page');
   const ids = [...html.matchAll(/\sid=["']([^"']+)["']/g)].map(m => m[1]);
   if (new Set(ids).size !== ids.length) errors.push(file + ': duplicate element IDs');
   if ((html.match(/<h1\b/gi) || []).length !== 1) errors.push(file + ': expected one H1');
