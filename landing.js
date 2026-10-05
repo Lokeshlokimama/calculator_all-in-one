@@ -3,18 +3,18 @@
   const payment = document.getElementById('hero-payment');
   const amountValue = document.getElementById('hero-amount-value');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  const format = new Intl.NumberFormat('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  const money = value => new Intl.NumberFormat(document.getElementById('hero-language')?.value || 'en', {style:'currency', currency:document.getElementById('hero-currency')?.value || window.LocalCurrency?.detect().currency || 'USD', maximumFractionDigits:2}).format(value);
   const factor = (10 / 1200) / (1 - Math.pow(1 + 10 / 1200, -60));
   let displayed = Number(amount.value) * factor;
   let frame;
   function update() {
-    amountValue.textContent = Number(amount.value).toLocaleString('en-US');
+    amountValue.textContent = money(Number(amount.value));
     amount.style.setProperty('--progress', `${(amount.value - amount.min) / (amount.max - amount.min) * 100}%`);
     const target = Number(amount.value) * factor;
     cancelAnimationFrame(frame);
     if (reducedMotion.matches) {
       displayed = target;
-      payment.textContent = format.format(target);
+      payment.textContent = money(target);
       return;
     }
     const initial = displayed;
@@ -22,12 +22,13 @@
     function tick(now) {
       const progress = Math.min(1, (now - start) / 220);
       displayed = initial + (target - initial) * (1 - Math.pow(1 - progress, 3));
-      payment.textContent = format.format(displayed);
+      payment.textContent = money(displayed);
       if (progress < 1) frame = requestAnimationFrame(tick);
     }
     frame = requestAnimationFrame(tick);
   }
   amount.addEventListener('input', update);
+  document.addEventListener('hero-locale-change', update);
   update();
   if ('IntersectionObserver' in window && !reducedMotion.matches) {
     const observer = new IntersectionObserver(entries => {

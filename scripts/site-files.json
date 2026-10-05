@@ -83,6 +83,7 @@
   "whatsapp-qr-code-generator/index.html",
   "wifi-qr-code-generator/index.html",
   "landing.js",
+  "hero-locale.js",
   "site-theme.css",
   "site-theme.js"
 ]
