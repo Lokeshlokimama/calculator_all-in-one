@@ -1,12 +1,14 @@
 # Reserved advertising spaces
 
-The public build reserves 63 in-flow spaces across all 42 indexable content pages. Every content page has an end-of-content placement; the homepage and 20 extended guides each have a second placement. Error, compatibility-redirect and verification pages are excluded.
+The public build reserves 126 in-flow spaces across all 42 indexable content pages. Every content page has top, middle and bottom placements. On 20 extended guides, the middle placement sits beside the article on wide screens and stacks beneath it on smaller screens. Error, compatibility-redirect and verification pages are excluded.
 
 | Placement | Pages | Mount |
 |---|---|---|
+| Below hero | All 42 content pages | `#ad-content-top` |
 | End of content | All 42 content pages | `#ad-content-end` |
 | After featured section | Homepage | `#ad-after-featured` |
-| Between existing explanation and extended guide | 20 expanded guide pages | `#ad-between-guides` |
+| Beside extended guide | 20 expanded guide pages | `#ad-reading-sidebar` |
+| Between content sections | Remaining 21 pages | `#ad-content-middle` |
 
 Each space uses the visible label “Advertisements”, has its own explicit-width container, and stays in the normal document flow. Mounts reserve at least 90 px of height on desktop and 250 px on narrow screens. These are layout reservations, not an ad-size guarantee or a performance measurement with actual ads. A served unit can require additional height; it should expand rather than be clipped. No placement sits inside a calculator form, result, QR image, upload panel, or download control.
 
@@ -22,5 +24,6 @@ Placement references: [Google ad placement policies](https://support.google.com/
 
 ## Verification
 
-All 42 content pages were checked at 320 px and 1440 px (84 browser checks): no horizontal overflow, all mounts met their reserved heights, and no placement was nested inside a form or interactive tool panel. A second build retained 63 spaces without duplicates. Build, internal-link checks, article-length checks and all 72 automated tests passed. Actual served ads have not been tested.
+All 42 content pages were checked at 320 px and 1440 px (84 browser checks): no horizontal overflow, all mounts met their reserved heights, and no placement was nested inside a form or interactive tool panel. Repeated builds retained 126 spaces without duplicates. Narrow-screen mounts were also checked to be at least 250 px wide. Build, internal-link checks, article-length checks and all 72 automated tests passed. Actual served ads have not been tested.
+
 

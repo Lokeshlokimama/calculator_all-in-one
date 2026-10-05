@@ -18,7 +18,7 @@ function applyGuides(root) {
       }
       return `<p>${escape(block.replace(/\r?\n/g, ' '))}</p>`;
     }).join('\n');
-    let html = fs.readFileSync(filename, 'utf8').replace(/\n?<!-- extended-guide:start -->[\s\S]*?<!-- extended-guide:end -->\n?/g, '');
+    let html = require('./build-ad-spaces.cjs').unwrapReadingRow(fs.readFileSync(filename, 'utf8')).replace(/\n?<!-- extended-guide:start -->[\s\S]*?<!-- extended-guide:end -->\n?/g, '');
     if (!html.includes('</main>')) throw new Error('Missing main in ' + target);
     html = html.replace('</main>', `\n<!-- extended-guide:start -->\n<article class="calculator-copy-card content-card extended-guide">${body}</article>\n<!-- extended-guide:end -->\n</main>`);
     fs.writeFileSync(filename, html);

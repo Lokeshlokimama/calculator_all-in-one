@@ -4,3 +4,6 @@
 .publisher-ad-mount{display:block;box-sizing:border-box;width:100%;min-width:0;min-height:90px}
 .publisher-ad-mount>ins{display:block;width:100%;max-width:100%;min-width:0}
 @media(max-width:760px){.publisher-ad-space{max-width:100%;margin:48px auto;padding:12px}.publisher-ad-mount{min-height:250px}}
+.publisher-reading-row{display:grid;grid-template-columns:minmax(0,1fr) 336px;gap:32px;align-items:start;grid-column:1/-1;min-width:0;width:100%;margin:48px 0}.site-themed .publisher-reading-row>.extended-guide{grid-column:auto;margin:0}.publisher-reading-row>.publisher-ad-space{grid-column:2;margin:0;max-width:336px}.publisher-reading-row .publisher-ad-mount{min-height:250px}
+@media(max-width:1100px){.publisher-reading-row{grid-template-columns:minmax(0,1fr)}.publisher-reading-row>.publisher-ad-space{grid-column:1;margin:24px auto;max-width:336px}}
+@media(max-width:760px){.publisher-ad-space{padding-inline:0}}
