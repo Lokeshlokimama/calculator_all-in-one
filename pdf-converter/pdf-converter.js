@@ -138,7 +138,13 @@
         } catch (error) {
             dom.pageCount.textContent = 'Preview unavailable';
             clearPreviewCanvas();
-            setStatus(messageFromError(error, 'The PDF preview could not be rendered. You can still try conversion.'), 'error');
+            if (!pdf) {
+                selectedFile = null;
+                dom.dropzone.dataset.state = 'error';
+                setStatus(messageFromError(error, 'This PDF could not be opened. Choose another PDF or repair the original file.'), 'error');
+            } else {
+                setStatus(messageFromError(error, 'The PDF preview could not be rendered. You can still try conversion.'), 'error');
+            }
         } finally {
             await destroyPdf(pdf);
             setBusy(false);

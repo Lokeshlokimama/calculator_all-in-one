@@ -34,6 +34,7 @@
   "home-loan-emi-calculator-india/index.html",
   "images-to-pdf/index.html",
   "index.html",
+  "landing.css",
   "tools.html",
   "directory.js",
   "local-currency.js",
@@ -80,5 +81,8 @@
   "vcard-qr-code-generator/index.html",
   "west-bengal-electricity-bill-calculator/index.html",
   "whatsapp-qr-code-generator/index.html",
-  "wifi-qr-code-generator/index.html"
+  "wifi-qr-code-generator/index.html",
+  "landing.js",
+  "site-theme.css",
+  "site-theme.js"
 ]

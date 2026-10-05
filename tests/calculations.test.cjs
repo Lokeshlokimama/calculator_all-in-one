@@ -507,3 +507,53 @@ test('calendar matrix: valid birth dates always yield non-negative calendar comp
   // 1,560 candidate dates minus 176 impossible month/day combinations.
   assert.equal(checked, 1384);
 });
+
+test('toolbox electricity and EV overflow cannot become a zero monetary result', async () => {
+  const a = homepageFunctions(['readCalcNumber','requirePositiveInputs','calcElectricityBill'], {'bill-units':'1e308','bill-rate':100});
+  await a.context.calcElectricityBill();
+  assert.deepEqual(a.results, {});
+  assert.match(a.messages.at(-1)[0], /supported range/);
+  const b = homepageFunctions(['readCalcNumber','requirePositiveInputs','calcEvChargingCost'], {'ev-capacity':'1e308','ev-rate':100,'ev-percent':100});
+  b.context.calcEvChargingCost();
+  assert.deepEqual(b.results, {});
+  assert.match(b.messages.at(-1)[0], /supported range/);
+  b.nodes['ev-capacity'].value='50'; b.context.calcEvChargingCost();
+  assert.equal(b.results['ev-result'],5000);
+  b.nodes['ev-percent'].value='0'; b.context.calcEvChargingCost();
+  assert.equal(b.results['ev-result'],0);
+});
+
+test('unit conversion handles large finite results without overflow during display rounding', () => {
+  const {context,nodes,messages}=homepageFunctions(['convertUnit'],{'unit-type':'length','unit-val-1':'1e306','unit-sel-1':'m','unit-sel-2':'ft'});
+  vm.runInContext(read('script.js').match(/const units = \{[\s\S]*?\n\};/)[0],context);
+  context.convertUnit(1); assert.ok(Number.isFinite(Number(nodes['unit-val-2'].value)));
+  assert.ok(Math.abs(Number(nodes['unit-val-2'].value)/1e306-3.28084)<1e-5);
+  nodes['unit-val-1'].value='1e308'; context.convertUnit(1);
+  assert.equal(nodes['unit-val-2'].value,''); assert.match(messages.at(-1)[0],/supported range/);
+});
+
+test('generator and charging percent reject blank or non-finite entries instead of defaulting', () => {
+  for(const bad of ['', 'Infinity', 'NaN']) {
+    const a=homepageFunctions(['readCalcNumber','requirePositiveInputs','calcGeneratorSize'],{'gen-load':1000,'gen-pf':0.8,'gen-margin':bad});
+    a.context.calcGeneratorSize(); assert.match(a.messages.at(-1)[0],/valid safety margin/);
+    const b=homepageFunctions(['readCalcNumber','requirePositiveInputs','calcEvChargingCost'],{'ev-capacity':50,'ev-rate':5,'ev-percent':bad});
+    b.context.calcEvChargingCost(); assert.deepEqual(b.results,{}); assert.match(b.messages.at(-1)[0],/between 0 and 100/);
+  }
+});
+
+test('graph rejects missing and overflowing coefficients before drawing', async () => {
+  for(const [m,b] of [['',5],[2,''],['Infinity',5],['1e308',5]]) {
+    const {context,messages}=homepageFunctions(['plotGraph'],{'plot-m':m,'plot-b':b});
+    await context.plotGraph(); assert.match(messages.at(-1)[0],/finite slope/);
+  }
+});
+
+test('nutrition rejects non-finite weight and overflowing macro totals', async () => {
+  const a=homepageFunctions(['addFood'],{'food-search':'rice','food-grams':'Infinity'});
+  await a.context.addFood(); assert.match(a.messages.at(-1)[0],/valid weight/);
+  const b=homepageFunctions(['addFood'],{'food-search':'rice','food-grams':'1e308'});
+  b.context.resolveFoodNutrition=async()=>({carbs:Infinity,protein:1,fat:1,calories:Infinity});
+  b.context.totalMacros={carbs:0,protein:0,fat:0};
+  await b.context.addFood(); assert.match(b.messages.at(-1)[0],/supported range/);
+  assert.equal(b.context.totalMacros.carbs,0);
+});

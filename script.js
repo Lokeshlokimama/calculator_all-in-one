@@ -771,7 +771,7 @@ async function addFood() {
     const foodName = foodInput.value.trim();
     const grams = parseFloat(gramsInput.value);
 
-    if (!foodName || !grams || grams <= 0) {
+    if (!foodName || !Number.isFinite(grams) || grams <= 0) {
         showToast('Please enter a dish name and valid weight.');
         return;
     }
@@ -783,6 +783,12 @@ async function addFood() {
         return;
     }
 
+    if (![nutrition.carbs, nutrition.protein, nutrition.fat, nutrition.calories,
+        totalMacros.carbs + nutrition.carbs, totalMacros.protein + nutrition.protein,
+        totalMacros.fat + nutrition.fat].every(value => Number.isFinite(value) && value >= 0)) {
+        showToast('Nutrition amount exceeds the supported range.');
+        return;
+    }
     totalMacros.carbs += nutrition.carbs;
     totalMacros.protein += nutrition.protein;
     totalMacros.fat += nutrition.fat;
@@ -1209,7 +1215,8 @@ function convertUnit(source) {
 
     const baseVal = parseFloat(v1) / units[type][s1];
     const targetVal = baseVal * units[type][s2];
-    v2.value = (Math.round(targetVal * 100000) / 100000).toString();
+    if (!Number.isFinite(targetVal)) { v2.value = ''; showToast('Conversion exceeds the supported range.'); return; }
+    v2.value = Number(targetVal.toFixed(5)).toString();
 }
 window.convertUnit = convertUnit;
 
@@ -2660,6 +2667,7 @@ async function calcElectricityBill() {
     if (!values) return;
 
     const bill = values['bill-units'] * values['bill-rate'];
+    if (!Number.isFinite(bill)) { showFieldError('bill-units', 'Bill exceeds the supported range'); return; }
     setMoneyText('bill-result', bill, { digits: 2 });
     showToast('Electricity bill calculated');
 
@@ -2829,8 +2837,8 @@ function calcGeneratorSize() {
     ]);
     if (!values) return;
 
-    const margin = readCalcNumber('gen-margin') ?? 0;
-    if (margin < 0 || values['gen-pf'] > 1) {
+    const margin = readCalcNumber('gen-margin');
+    if (margin === null || margin < 0 || values['gen-pf'] > 1) {
         showToast('Please enter valid safety margin');
         return;
     }
@@ -2847,13 +2855,14 @@ function calcEvChargingCost() {
     ]);
     if (!values) return;
 
-    const chargePercent = readCalcNumber('ev-percent') ?? 100;
-    if (chargePercent < 0 || chargePercent > 100) {
+    const chargePercent = readCalcNumber('ev-percent');
+    if (chargePercent === null || chargePercent < 0 || chargePercent > 100) {
         showToast('Charge needed must be between 0 and 100');
         return;
     }
 
     const cost = values['ev-capacity'] * (chargePercent / 100) * values['ev-rate'];
+    if (!Number.isFinite(cost)) { showFieldError('ev-capacity', 'Charging cost exceeds the supported range'); return; }
     setMoneyText('ev-result', cost, { digits: 2 });
     showToast('EV charging cost calculated');
 }
@@ -3844,8 +3853,12 @@ function explainFormula() {
 window.explainFormula = explainFormula;
 
 async function plotGraph() {
-    const m = parseFloat(document.getElementById('plot-m').value) || 0;
-    const b = parseFloat(document.getElementById('plot-b').value) || 0;
+    const m = parseFloat(document.getElementById('plot-m').value);
+    const b = parseFloat(document.getElementById('plot-b').value);
+    if (![m, b, -10 * m + b, 10 * m + b].every(Number.isFinite)) {
+        showToast('Enter finite slope and intercept values within the supported range.');
+        return;
+    }
     const canvas = document.getElementById('plotter-chart');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');

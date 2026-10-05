@@ -1,0 +1,4565 @@
+{
+  "date": "2026-10-06",
+  "toolInventory": [
+    {
+      "actions": [
+        {
+          "action": "clearCalc()",
+          "text": "C"
+        },
+        {
+          "action": "appendCalc('/')",
+          "text": "/"
+        },
+        {
+          "action": "appendCalc('*')",
+          "text": "×"
+        },
+        {
+          "action": "appendCalc('-')",
+          "text": "-"
+        },
+        {
+          "action": "appendCalc('7')",
+          "text": "7"
+        },
+        {
+          "action": "appendCalc('8')",
+          "text": "8"
+        },
+        {
+          "action": "appendCalc('9')",
+          "text": "9"
+        },
+        {
+          "action": "appendCalc('+')",
+          "text": "+"
+        },
+        {
+          "action": "appendCalc('4')",
+          "text": "4"
+        },
+        {
+          "action": "appendCalc('5')",
+          "text": "5"
+        },
+        {
+          "action": "appendCalc('6')",
+          "text": "6"
+        },
+        {
+          "action": "appendCalc('1')",
+          "text": "1"
+        },
+        {
+          "action": "appendCalc('2')",
+          "text": "2"
+        },
+        {
+          "action": "appendCalc('3')",
+          "text": "3"
+        },
+        {
+          "action": "calculateResult()",
+          "text": "="
+        },
+        {
+          "action": "appendCalc('0')",
+          "text": "0"
+        },
+        {
+          "action": "appendCalc('.')",
+          "text": "."
+        }
+      ],
+      "id": "calc-standard",
+      "inputs": []
+    },
+    {
+      "actions": [
+        {
+          "action": "exportBMI('pdf')",
+          "text": "PDF 📄"
+        },
+        {
+          "action": "exportBMI('png')",
+          "text": "PNG 🖼️"
+        },
+        {
+          "action": "exportBMI('csv')",
+          "text": "CSV 📊"
+        },
+        {
+          "action": "calcBMI()",
+          "text": "Calculate BMI"
+        }
+      ],
+      "id": "calc-bmi",
+      "inputs": [
+        {
+          "id": "bmi-height",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "bmi-weight",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "exportEMI('pdf')",
+          "text": "PDF 📄"
+        },
+        {
+          "action": "exportEMI('png')",
+          "text": "PNG 🖼️"
+        },
+        {
+          "action": "exportEMI('csv')",
+          "text": "CSV 📊"
+        },
+        {
+          "action": "calcEMI()",
+          "text": "Calculate EMI"
+        }
+      ],
+      "id": "calc-emi",
+      "inputs": [
+        {
+          "id": "emi-amount",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "emi-rate",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "emi-tenure",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcROI()",
+          "text": "Calculate ROI"
+        }
+      ],
+      "id": "calc-roi",
+      "inputs": [
+        {
+          "id": "roi-invested",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "roi-return",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "roi-costs",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": "0"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcTip()",
+          "text": "Calculate Tip"
+        }
+      ],
+      "id": "calc-tip",
+      "inputs": [
+        {
+          "id": "tip-bill",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "tip-rate",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": "15"
+        },
+        {
+          "id": "tip-people",
+          "max": "",
+          "min": "1",
+          "options": [],
+          "type": "number",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "addFood()",
+          "text": "Calculate Nutrition"
+        }
+      ],
+      "id": "calc-calorie",
+      "inputs": [
+        {
+          "id": "food-search",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "text",
+          "value": ""
+        },
+        {
+          "id": "food-grams",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "generateWALink()",
+          "text": "Create Link"
+        }
+      ],
+      "id": "calc-wa",
+      "inputs": [
+        {
+          "id": "wa-country",
+          "max": "",
+          "min": "",
+          "options": [
+            "91",
+            "1",
+            "44",
+            "61",
+            "971"
+          ],
+          "type": "select-one",
+          "value": "91"
+        },
+        {
+          "id": "wa-phone",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "wa-msg",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "text",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "generateRealQR()",
+          "text": "Generate QR"
+        }
+      ],
+      "id": "calc-qr",
+      "inputs": [
+        {
+          "id": "qr-text",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "text",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "generatePassword()",
+          "text": "Generate"
+        }
+      ],
+      "id": "calc-pass",
+      "inputs": [
+        {
+          "id": "pwd-length",
+          "max": "32",
+          "min": "8",
+          "options": [],
+          "type": "range",
+          "value": "12"
+        },
+        {
+          "id": "pwd-upper",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "checkbox",
+          "value": "on"
+        },
+        {
+          "id": "pwd-numbers",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "checkbox",
+          "value": "on"
+        },
+        {
+          "id": "pwd-symbols",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "checkbox",
+          "value": "on"
+        }
+      ]
+    },
+    {
+      "actions": [],
+      "id": "calc-unit",
+      "inputs": [
+        {
+          "id": "unit-type",
+          "max": "",
+          "min": "",
+          "options": [
+            "length",
+            "weight"
+          ],
+          "type": "select-one",
+          "value": "length"
+        },
+        {
+          "id": "unit-val-1",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": "1"
+        },
+        {
+          "id": "unit-sel-1",
+          "max": "",
+          "min": "",
+          "options": [
+            "m",
+            "km",
+            "ft",
+            "mi"
+          ],
+          "type": "select-one",
+          "value": "m"
+        },
+        {
+          "id": "unit-val-2",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "unit-sel-2",
+          "max": "",
+          "min": "",
+          "options": [
+            "km",
+            "m",
+            "ft",
+            "mi"
+          ],
+          "type": "select-one",
+          "value": "km"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcBMR()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-bmr",
+      "inputs": [
+        {
+          "id": "bmr-gender",
+          "max": "",
+          "min": "",
+          "options": [
+            "m",
+            "f"
+          ],
+          "type": "select-one",
+          "value": "m"
+        },
+        {
+          "id": "bmr-age",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "bmr-weight",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "bmr-height",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcWater()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-water",
+      "inputs": [
+        {
+          "id": "water-weight",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "water-activity",
+          "max": "",
+          "min": "",
+          "options": [
+            "1",
+            "1.2",
+            "1.5"
+          ],
+          "type": "select-one",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcIdealWeight()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-ideal-weight",
+      "inputs": [
+        {
+          "id": "iw-gender",
+          "max": "",
+          "min": "",
+          "options": [
+            "m",
+            "f"
+          ],
+          "type": "select-one",
+          "value": "m"
+        },
+        {
+          "id": "iw-height",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "iw-height-unit",
+          "max": "",
+          "min": "",
+          "options": [
+            "cm",
+            "in"
+          ],
+          "type": "select-one",
+          "value": "cm"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcProtein()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-protein",
+      "inputs": [
+        {
+          "id": "protein-weight",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "protein-goal",
+          "max": "",
+          "min": "",
+          "options": [
+            "0.8",
+            "1.2",
+            "1.6",
+            "2.0"
+          ],
+          "type": "select-one",
+          "value": "0.8"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcBodyFat()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-body-fat",
+      "inputs": [
+        {
+          "id": "bf-gender",
+          "max": "",
+          "min": "",
+          "options": [
+            "m",
+            "f"
+          ],
+          "type": "select-one",
+          "value": "m"
+        },
+        {
+          "id": "bf-height",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "bf-neck",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "bf-waist",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "bf-hip",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcDueDate()",
+          "text": "Estimate Due Date"
+        }
+      ],
+      "id": "calc-due-date",
+      "inputs": [
+        {
+          "id": "due-lmp",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "date",
+          "value": ""
+        },
+        {
+          "id": "due-cycle",
+          "max": "45",
+          "min": "20",
+          "options": [],
+          "type": "number",
+          "value": "28"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcSIP()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-sip",
+      "inputs": [
+        {
+          "id": "sip-monthly",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "sip-rate",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "sip-years",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcFD()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-fd",
+      "inputs": [
+        {
+          "id": "fd-principal",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "fd-rate",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "fd-years",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "fd-citizen",
+          "max": "",
+          "min": "",
+          "options": [
+            "0",
+            "0.5"
+          ],
+          "type": "select-one",
+          "value": "0"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcRD()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-rd",
+      "inputs": [
+        {
+          "id": "rd-monthly",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "rd-rate",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "rd-months",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcGST()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-gst",
+      "inputs": [
+        {
+          "id": "gst-amount",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "gst-rate",
+          "max": "100",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": "18"
+        },
+        {
+          "id": "gst-action",
+          "max": "",
+          "min": "",
+          "options": [
+            "add",
+            "remove"
+          ],
+          "type": "select-one",
+          "value": "add"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcSalary()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-salary",
+      "inputs": [
+        {
+          "id": "sal-ctc",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "sal-basic-pct",
+          "max": "100",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "sal-monthly-tax",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": "0"
+        },
+        {
+          "id": "sal-other-deductions",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": "0"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcLeave()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-leave",
+      "inputs": [
+        {
+          "id": "leave-basic",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "leave-days",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "swapCurrencies()",
+          "text": "⇄"
+        },
+        {
+          "action": "calcCurrency()",
+          "text": "Convert"
+        }
+      ],
+      "id": "calc-curr",
+      "inputs": [
+        {
+          "id": "curr-amount",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": "1"
+        },
+        {
+          "id": "curr-from",
+          "max": "",
+          "min": "",
+          "options": [
+            "AED",
+            "AFN",
+            "ALL",
+            "AMD",
+            "ANG",
+            "AOA",
+            "ARS",
+            "AUD",
+            "AWG",
+            "AZN",
+            "BAM",
+            "BBD",
+            "BDT",
+            "BGN",
+            "BHD",
+            "BIF",
+            "BMD",
+            "BND",
+            "BOB",
+            "BRL",
+            "BSD",
+            "BTN",
+            "BWP",
+            "BYN",
+            "BZD",
+            "CAD",
+            "CDF",
+            "CHF",
+            "CLP",
+            "CNY",
+            "COP",
+            "CRC",
+            "CUP",
+            "CVE",
+            "CZK",
+            "DJF",
+            "DKK",
+            "DOP",
+            "DZD",
+            "EGP",
+            "ERN",
+            "ETB",
+            "EUR",
+            "FJD",
+            "FKP",
+            "FOK",
+            "GBP",
+            "GEL",
+            "GGP",
+            "GHS",
+            "GIP",
+            "GMD",
+            "GNF",
+            "GTQ",
+            "GYD",
+            "HKD",
+            "HNL",
+            "HRK",
+            "HTG",
+            "HUF",
+            "IDR",
+            "ILS",
+            "IMP",
+            "INR",
+            "IQD",
+            "IRR",
+            "ISK",
+            "JEP",
+            "JMD",
+            "JOD",
+            "JPY",
+            "KES",
+            "KGS",
+            "KHR",
+            "KID",
+            "KMF",
+            "KRW",
+            "KWD",
+            "KYD",
+            "KZT",
+            "LAK",
+            "LBP",
+            "LKR",
+            "LRD",
+            "LSL",
+            "LYD",
+            "MAD",
+            "MDL",
+            "MGA",
+            "MKD",
+            "MMK",
+            "MNT",
+            "MOP",
+            "MRU",
+            "MUR",
+            "MVR",
+            "MWK",
+            "MXN",
+            "MYR",
+            "MZN",
+            "NAD",
+            "NGN",
+            "NIO",
+            "NOK",
+            "NPR",
+            "NZD",
+            "OMR",
+            "PAB",
+            "PEN",
+            "PGK",
+            "PHP",
+            "PKR",
+            "PLN",
+            "PYG",
+            "QAR",
+            "RON",
+            "RSD",
+            "RUB",
+            "RWF",
+            "SAR",
+            "SBD",
+            "SCR",
+            "SDG",
+            "SEK",
+            "SGD",
+            "SHP",
+            "SLE",
+            "SLL",
+            "SOS",
+            "SRD",
+            "SSP",
+            "STN",
+            "SYP",
+            "SZL",
+            "THB",
+            "TJS",
+            "TMT",
+            "TND",
+            "TOP",
+            "TRY",
+            "TTD",
+            "TVD",
+            "TWD",
+            "TZS",
+            "UAH",
+            "UGX",
+            "USD",
+            "UYU",
+            "UZS",
+            "VES",
+            "VND",
+            "VUV",
+            "WST",
+            "XAF",
+            "XCD",
+            "XDR",
+            "XOF",
+            "XPF",
+            "YER",
+            "ZAR",
+            "ZMW",
+            "ZWL"
+          ],
+          "type": "select-one",
+          "value": "INR"
+        },
+        {
+          "id": "curr-to",
+          "max": "",
+          "min": "",
+          "options": [
+            "AED",
+            "AFN",
+            "ALL",
+            "AMD",
+            "ANG",
+            "AOA",
+            "ARS",
+            "AUD",
+            "AWG",
+            "AZN",
+            "BAM",
+            "BBD",
+            "BDT",
+            "BGN",
+            "BHD",
+            "BIF",
+            "BMD",
+            "BND",
+            "BOB",
+            "BRL",
+            "BSD",
+            "BTN",
+            "BWP",
+            "BYN",
+            "BZD",
+            "CAD",
+            "CDF",
+            "CHF",
+            "CLP",
+            "CNY",
+            "COP",
+            "CRC",
+            "CUP",
+            "CVE",
+            "CZK",
+            "DJF",
+            "DKK",
+            "DOP",
+            "DZD",
+            "EGP",
+            "ERN",
+            "ETB",
+            "EUR",
+            "FJD",
+            "FKP",
+            "FOK",
+            "GBP",
+            "GEL",
+            "GGP",
+            "GHS",
+            "GIP",
+            "GMD",
+            "GNF",
+            "GTQ",
+            "GYD",
+            "HKD",
+            "HNL",
+            "HRK",
+            "HTG",
+            "HUF",
+            "IDR",
+            "ILS",
+            "IMP",
+            "INR",
+            "IQD",
+            "IRR",
+            "ISK",
+            "JEP",
+            "JMD",
+            "JOD",
+            "JPY",
+            "KES",
+            "KGS",
+            "KHR",
+            "KID",
+            "KMF",
+            "KRW",
+            "KWD",
+            "KYD",
+            "KZT",
+            "LAK",
+            "LBP",
+            "LKR",
+            "LRD",
+            "LSL",
+            "LYD",
+            "MAD",
+            "MDL",
+            "MGA",
+            "MKD",
+            "MMK",
+            "MNT",
+            "MOP",
+            "MRU",
+            "MUR",
+            "MVR",
+            "MWK",
+            "MXN",
+            "MYR",
+            "MZN",
+            "NAD",
+            "NGN",
+            "NIO",
+            "NOK",
+            "NPR",
+            "NZD",
+            "OMR",
+            "PAB",
+            "PEN",
+            "PGK",
+            "PHP",
+            "PKR",
+            "PLN",
+            "PYG",
+            "QAR",
+            "RON",
+            "RSD",
+            "RUB",
+            "RWF",
+            "SAR",
+            "SBD",
+            "SCR",
+            "SDG",
+            "SEK",
+            "SGD",
+            "SHP",
+            "SLE",
+            "SLL",
+            "SOS",
+            "SRD",
+            "SSP",
+            "STN",
+            "SYP",
+            "SZL",
+            "THB",
+            "TJS",
+            "TMT",
+            "TND",
+            "TOP",
+            "TRY",
+            "TTD",
+            "TVD",
+            "TWD",
+            "TZS",
+            "UAH",
+            "UGX",
+            "USD",
+            "UYU",
+            "UZS",
+            "VES",
+            "VND",
+            "VUV",
+            "WST",
+            "XAF",
+            "XCD",
+            "XDR",
+            "XOF",
+            "XPF",
+            "YER",
+            "ZAR",
+            "ZMW",
+            "ZWL"
+          ],
+          "type": "select-one",
+          "value": "USD"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcAge()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-age",
+      "inputs": [
+        {
+          "id": "age-dob",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "date",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcDateDiff()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-date-diff",
+      "inputs": [
+        {
+          "id": "date-start",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "date",
+          "value": ""
+        },
+        {
+          "id": "date-end",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "date",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcTime()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-time",
+      "inputs": [
+        {
+          "id": "time-h1",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "time-m1",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "time-op",
+          "max": "",
+          "min": "",
+          "options": [
+            "+",
+            "-"
+          ],
+          "type": "select-one",
+          "value": "+"
+        },
+        {
+          "id": "time-h2",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "time-m2",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcPct()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-pct",
+      "inputs": [
+        {
+          "id": "pct-a",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "pct-b",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcFraction()",
+          "text": "Calculate Fraction"
+        }
+      ],
+      "id": "calc-fraction",
+      "inputs": [
+        {
+          "id": "frac-a-num",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "frac-a-den",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "frac-op",
+          "max": "",
+          "min": "",
+          "options": [
+            "add",
+            "subtract",
+            "multiply",
+            "divide"
+          ],
+          "type": "select-one",
+          "value": "add"
+        },
+        {
+          "id": "frac-b-num",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "frac-b-den",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcQuadratic()",
+          "text": "Solve Equation"
+        }
+      ],
+      "id": "calc-quadratic",
+      "inputs": [
+        {
+          "id": "quad-a",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "quad-b",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "quad-c",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "addCgpaRow()",
+          "text": "Add Subject"
+        },
+        {
+          "action": "calcCGPA()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-cgpa",
+      "inputs": [
+        {
+          "id": "",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcAttendance()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-att",
+      "inputs": [
+        {
+          "id": "att-total",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "att-present",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "att-target",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [],
+      "id": "calc-word",
+      "inputs": [
+        {
+          "id": "text-counter-input",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "textarea",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "convertCase('upper')",
+          "text": "UPPER"
+        },
+        {
+          "action": "convertCase('lower')",
+          "text": "lower"
+        },
+        {
+          "action": "convertCase('title')",
+          "text": "Title Case"
+        },
+        {
+          "action": "convertCase('camel')",
+          "text": "camelCase"
+        }
+      ],
+      "id": "calc-case",
+      "inputs": [
+        {
+          "id": "case-input",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "textarea",
+          "value": ""
+        },
+        {
+          "id": "case-output",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "textarea",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "processBase64('encode')",
+          "text": "Encode"
+        },
+        {
+          "action": "processBase64('decode')",
+          "text": "Decode"
+        }
+      ],
+      "id": "calc-base64",
+      "inputs": [
+        {
+          "id": "b64-input",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "textarea",
+          "value": ""
+        },
+        {
+          "id": "b64-output",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "textarea",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "convertBase()",
+          "text": "Convert Base"
+        }
+      ],
+      "id": "calc-base-converter",
+      "inputs": [
+        {
+          "id": "base-value",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "text",
+          "value": ""
+        },
+        {
+          "id": "base-from",
+          "max": "",
+          "min": "",
+          "options": [
+            "10",
+            "2",
+            "16",
+            "8"
+          ],
+          "type": "select-one",
+          "value": "10"
+        },
+        {
+          "id": "base-to",
+          "max": "",
+          "min": "",
+          "options": [
+            "2",
+            "10",
+            "16",
+            "8"
+          ],
+          "type": "select-one",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcSubnet()",
+          "text": "Calculate Subnet"
+        }
+      ],
+      "id": "calc-subnet",
+      "inputs": [
+        {
+          "id": "subnet-ip",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "text",
+          "value": ""
+        },
+        {
+          "id": "subnet-cidr",
+          "max": "32",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": "24"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcAspectRatio()",
+          "text": "Calculate Ratio"
+        }
+      ],
+      "id": "calc-aspect-ratio",
+      "inputs": [
+        {
+          "id": "aspect-width",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "aspect-height",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "aspect-target-width",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "aspect-target-height",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [],
+      "id": "calc-color",
+      "inputs": [
+        {
+          "id": "color-picker",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "color",
+          "value": "#000000"
+        },
+        {
+          "id": "color-hex",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "text",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "startStopwatch()",
+          "text": "Start"
+        }
+      ],
+      "id": "calc-sw",
+      "inputs": []
+    },
+    {
+      "actions": [
+        {
+          "action": "calcDiscountTax()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-discount-tax",
+      "inputs": [
+        {
+          "id": "dt-price",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "dt-discount",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "dt-tax",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcPower()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-power",
+      "inputs": [
+        {
+          "id": "power-voltage",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "power-current",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "exportElectricity('pdf')",
+          "text": "PDF 📄"
+        },
+        {
+          "action": "exportElectricity('png')",
+          "text": "PNG 🖼️"
+        },
+        {
+          "action": "exportElectricity('csv')",
+          "text": "CSV 📊"
+        },
+        {
+          "action": "calcElectricityBill()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-electricity-bill",
+      "inputs": [
+        {
+          "id": "bill-units",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "bill-rate",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcKwh()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-kwh",
+      "inputs": [
+        {
+          "id": "kwh-watts",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "kwh-hours",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcWattToUnit()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-watt-unit",
+      "inputs": [
+        {
+          "id": "wattunit-watts",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "wattunit-hours",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "wattunit-days",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": "30"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcSolarPanel()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-solar",
+      "inputs": [
+        {
+          "id": "solar-kwh",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "solar-sun",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": "5"
+        },
+        {
+          "id": "solar-efficiency",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": "80"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcInverterBackup()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-inverter",
+      "inputs": [
+        {
+          "id": "inv-ah",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "inv-voltage",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": "12"
+        },
+        {
+          "id": "inv-load",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "inv-efficiency",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": "85"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcUpsBackup()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-ups",
+      "inputs": [
+        {
+          "id": "ups-ah",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "ups-voltage",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": "12"
+        },
+        {
+          "id": "ups-load",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "ups-efficiency",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": "80"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcOhmsLaw()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-ohm",
+      "inputs": [
+        {
+          "id": "ohm-voltage",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "ohm-current",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "ohm-resistance",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "ohm-power",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcGeneratorSize()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-generator",
+      "inputs": [
+        {
+          "id": "gen-load",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "gen-pf",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": "0.8"
+        },
+        {
+          "id": "gen-margin",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": "25"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcEvChargingCost()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-ev",
+      "inputs": [
+        {
+          "id": "ev-capacity",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "ev-rate",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "ev-percent",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": "100"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcCircle()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-circle",
+      "inputs": [
+        {
+          "id": "circle-radius",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcTriangle()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-triangle",
+      "inputs": [
+        {
+          "id": "tri-base",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "tri-height",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcPythagorean()",
+          "text": "Calculate"
+        }
+      ],
+      "id": "calc-pythagorean",
+      "inputs": [
+        {
+          "id": "pyth-a",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "pyth-b",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "calcVolume()",
+          "text": "Calculate Volume"
+        }
+      ],
+      "id": "calc-volume",
+      "inputs": [
+        {
+          "id": "volume-shape",
+          "max": "",
+          "min": "",
+          "options": [
+            "cube",
+            "sphere",
+            "cylinder"
+          ],
+          "type": "select-one",
+          "value": "cube"
+        },
+        {
+          "id": "volume-a",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "volume-b",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [],
+      "id": "calc-formula-explainer",
+      "inputs": [
+        {
+          "id": "formula-select",
+          "max": "",
+          "min": "",
+          "options": [
+            "einstein",
+            "compound",
+            "newton"
+          ],
+          "type": "select-one",
+          "value": "einstein"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "plotGraph()",
+          "text": "Re-plot Graph"
+        }
+      ],
+      "id": "calc-equation-plotter",
+      "inputs": [
+        {
+          "id": "plot-m",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": "2"
+        },
+        {
+          "id": "plot-b",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "number",
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "actions": [],
+      "id": "calc-image-converter",
+      "inputs": [
+        {
+          "id": "img-upload",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "file",
+          "value": ""
+        },
+        {
+          "id": "img-format",
+          "max": "",
+          "min": "",
+          "options": [
+            "image/png",
+            "image/jpeg",
+            "image/webp"
+          ],
+          "type": "select-one",
+          "value": "image/png"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "generateUUIDs()",
+          "text": "Generate"
+        }
+      ],
+      "id": "calc-uuid",
+      "inputs": [
+        {
+          "id": "uuid-version",
+          "max": "",
+          "min": "",
+          "options": [
+            "4"
+          ],
+          "type": "select-one",
+          "value": "4"
+        },
+        {
+          "id": "uuid-count",
+          "max": "100",
+          "min": "1",
+          "options": [],
+          "type": "number",
+          "value": "1"
+        },
+        {
+          "id": "uuid-output",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "textarea",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "convertTimeZone()",
+          "text": "Convert Time"
+        }
+      ],
+      "id": "calc-timezone",
+      "inputs": [
+        {
+          "id": "tz-input-time",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "datetime-local",
+          "value": "2026-10-06T00:20"
+        },
+        {
+          "id": "tz-from",
+          "max": "",
+          "min": "",
+          "options": [
+            "UTC",
+            "Asia/Kolkata",
+            "America/New_York",
+            "America/Los_Angeles",
+            "Europe/London",
+            "Europe/Paris",
+            "Australia/Sydney",
+            "Asia/Tokyo"
+          ],
+          "type": "select-one",
+          "value": "Asia/Kolkata"
+        },
+        {
+          "id": "tz-to",
+          "max": "",
+          "min": "",
+          "options": [
+            "UTC",
+            "Asia/Kolkata",
+            "America/New_York",
+            "America/Los_Angeles",
+            "Europe/London",
+            "Europe/Paris",
+            "Australia/Sydney",
+            "Asia/Tokyo"
+          ],
+          "type": "select-one",
+          "value": "America/New_York"
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "convertMileage()",
+          "text": "Convert Mileage"
+        }
+      ],
+      "id": "calc-mileage",
+      "inputs": [
+        {
+          "id": "mileage-value",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "mileage-unit",
+          "max": "",
+          "min": "",
+          "options": [
+            "kml",
+            "l100",
+            "mpg-us",
+            "mpg-uk",
+            "kmkg",
+            "kmkwh",
+            "kwh100"
+          ],
+          "type": "select-one",
+          "value": "kml"
+        },
+        {
+          "id": "mileage-fuel-type",
+          "max": "",
+          "min": "",
+          "options": [
+            "petrol",
+            "diesel",
+            "cng",
+            "lpg",
+            "ev"
+          ],
+          "type": "select-one",
+          "value": "petrol"
+        },
+        {
+          "id": "mileage-distance",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": "100"
+        },
+        {
+          "id": "mileage-price",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "mileage-battery",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "action": "appendSci('sin(')",
+          "text": "sin"
+        },
+        {
+          "action": "appendSci('cos(')",
+          "text": "cos"
+        },
+        {
+          "action": "appendSci('tan(')",
+          "text": "tan"
+        },
+        {
+          "action": "appendSci('log(')",
+          "text": "log"
+        },
+        {
+          "action": "appendSci('ln(')",
+          "text": "ln"
+        },
+        {
+          "action": "appendSci('Math.PI')",
+          "text": "π"
+        },
+        {
+          "action": "appendSci('Math.E')",
+          "text": "e"
+        },
+        {
+          "action": "appendSci('^')",
+          "text": "^"
+        },
+        {
+          "action": "appendSci('sqrt(')",
+          "text": "√"
+        },
+        {
+          "action": "factorialSci()",
+          "text": "n!"
+        },
+        {
+          "action": "appendSci('(')",
+          "text": "("
+        },
+        {
+          "action": "appendSci(')')",
+          "text": ")"
+        },
+        {
+          "action": "clearSci()",
+          "text": "C"
+        },
+        {
+          "action": "backspaceSci()",
+          "text": "⌫"
+        },
+        {
+          "action": "appendSci('/')",
+          "text": "/"
+        },
+        {
+          "action": "appendSci('7')",
+          "text": "7"
+        },
+        {
+          "action": "appendSci('8')",
+          "text": "8"
+        },
+        {
+          "action": "appendSci('9')",
+          "text": "9"
+        },
+        {
+          "action": "appendSci('*')",
+          "text": "×"
+        },
+        {
+          "action": "appendSci('-')",
+          "text": "-"
+        },
+        {
+          "action": "appendSci('4')",
+          "text": "4"
+        },
+        {
+          "action": "appendSci('5')",
+          "text": "5"
+        },
+        {
+          "action": "appendSci('6')",
+          "text": "6"
+        },
+        {
+          "action": "appendSci('+')",
+          "text": "+"
+        },
+        {
+          "action": "calculateSci()",
+          "text": "="
+        },
+        {
+          "action": "appendSci('1')",
+          "text": "1"
+        },
+        {
+          "action": "appendSci('2')",
+          "text": "2"
+        },
+        {
+          "action": "appendSci('3')",
+          "text": "3"
+        },
+        {
+          "action": "appendSci('0')",
+          "text": "0"
+        },
+        {
+          "action": "appendSci('.')",
+          "text": "."
+        },
+        {
+          "action": "appendSci('%')",
+          "text": "%"
+        }
+      ],
+      "id": "calc-scientific",
+      "inputs": []
+    },
+    {
+      "actions": [
+        {
+          "action": "removeInvoiceRow(this)",
+          "text": "×"
+        },
+        {
+          "action": "addInvoiceRow()",
+          "text": "+ Add Item"
+        },
+        {
+          "action": "exportInvoice('pdf')",
+          "text": "PDF"
+        },
+        {
+          "action": "exportInvoice('png')",
+          "text": "PNG"
+        },
+        {
+          "action": "exportInvoice('csv')",
+          "text": "CSV"
+        },
+        {
+          "action": "calculateInvoice()",
+          "text": "Update Preview"
+        }
+      ],
+      "id": "calc-invoice",
+      "inputs": [
+        {
+          "id": "inv-from",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "text",
+          "value": ""
+        },
+        {
+          "id": "inv-to",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "text",
+          "value": ""
+        },
+        {
+          "id": "inv-number",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "text",
+          "value": "INV-001"
+        },
+        {
+          "id": "inv-date",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "date",
+          "value": "2026-10-05"
+        },
+        {
+          "id": "inv-due-date",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "date",
+          "value": ""
+        },
+        {
+          "id": "inv-notes",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "textarea",
+          "value": ""
+        },
+        {
+          "id": "",
+          "max": "",
+          "min": "",
+          "options": [],
+          "type": "text",
+          "value": ""
+        },
+        {
+          "id": "",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": "1"
+        },
+        {
+          "id": "",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": ""
+        },
+        {
+          "id": "invoice-tax",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": "18"
+        },
+        {
+          "id": "invoice-discount",
+          "max": "",
+          "min": "0",
+          "options": [],
+          "type": "number",
+          "value": "0"
+        }
+      ]
+    },
+    {
+      "actions": [],
+      "id": "pdf-converter-page",
+      "inputs": []
+    },
+    {
+      "actions": [],
+      "id": "images-to-pdf-page",
+      "inputs": []
+    },
+    {
+      "actions": [],
+      "id": "merge-pdf-page",
+      "inputs": []
+    },
+    {
+      "actions": [],
+      "id": "split-pdf-page",
+      "inputs": []
+    },
+    {
+      "actions": [],
+      "id": "compress-pdf-page",
+      "inputs": []
+    },
+    {
+      "actions": [],
+      "id": "pdf-password-helper-page",
+      "inputs": []
+    },
+    {
+      "actions": [],
+      "id": "ocr-scanned-pdf-page",
+      "inputs": []
+    }
+  ],
+  "calculatorRuns": [
+    {
+      "name": "bmi",
+      "values": {
+        "bmi-height": "175",
+        "bmi-weight": "70"
+      },
+      "expected": "22.9",
+      "actual": "BMI 22.9",
+      "pass": true
+    },
+    {
+      "name": "emi",
+      "values": {
+        "emi-amount": "500000",
+        "emi-rate": "10",
+        "emi-tenure": "60"
+      },
+      "expected": "10,624",
+      "actual": "₹10,624",
+      "pass": true,
+      "note": "Expected adjusted to displayed rounding/decimal formatting"
+    },
+    {
+      "name": "roi",
+      "values": {
+        "roi-invested": "1000",
+        "roi-return": "1300",
+        "roi-costs": "100"
+      },
+      "expected": "20",
+      "actual": "ROI: 20.00%",
+      "pass": true
+    },
+    {
+      "name": "tip",
+      "values": {
+        "tip-bill": "100",
+        "tip-rate": "15",
+        "tip-people": "2"
+      },
+      "expected": "57.50",
+      "actual": "Per person: ₹57.50",
+      "pass": true
+    },
+    {
+      "name": "bmr",
+      "values": {
+        "bmr-age": "30",
+        "bmr-weight": "70",
+        "bmr-height": "175"
+      },
+      "expected": "1649",
+      "actual": "1649 kcal/day",
+      "pass": true
+    },
+    {
+      "name": "water",
+      "values": {
+        "water-weight": "70"
+      },
+      "expected": "2.5",
+      "actual": "2.5 Liters",
+      "pass": true
+    },
+    {
+      "name": "ideal-weight",
+      "values": {
+        "iw-height": "175"
+      },
+      "expected": "70.5",
+      "actual": "70.5 kg",
+      "pass": true
+    },
+    {
+      "name": "protein",
+      "values": {
+        "protein-weight": "70"
+      },
+      "expected": "56",
+      "actual": "56.0 g/day",
+      "pass": true
+    },
+    {
+      "name": "body-fat",
+      "values": {
+        "bf-height": "175",
+        "bf-neck": "38",
+        "bf-waist": "88"
+      },
+      "expected": "19.2",
+      "actual": "19.2 %",
+      "pass": true
+    },
+    {
+      "name": "due-date",
+      "values": {
+        "due-lmp": "2026-01-01",
+        "due-cycle": "28"
+      },
+      "expected": "2026",
+      "actual": "Due date: Oct 8, 2026",
+      "pass": true
+    },
+    {
+      "name": "sip",
+      "values": {
+        "sip-monthly": "1000",
+        "sip-rate": "0",
+        "sip-years": "1"
+      },
+      "expected": "12,000",
+      "actual": "Maturity: ₹12,000",
+      "pass": true
+    },
+    {
+      "name": "fd",
+      "values": {
+        "fd-principal": "10000",
+        "fd-rate": "0",
+        "fd-years": "1"
+      },
+      "expected": "10,000",
+      "actual": "Maturity: ₹10,000",
+      "pass": true
+    },
+    {
+      "name": "rd",
+      "values": {
+        "rd-monthly": "1000",
+        "rd-rate": "0",
+        "rd-months": "12"
+      },
+      "expected": "12,000",
+      "actual": "Maturity: ₹12,000",
+      "pass": true
+    },
+    {
+      "name": "gst",
+      "values": {
+        "gst-amount": "1000",
+        "gst-rate": "18"
+      },
+      "expected": "1,180",
+      "actual": "₹1,180.00",
+      "pass": true
+    },
+    {
+      "name": "salary",
+      "values": {
+        "sal-ctc": "120000",
+        "sal-basic-pct": "40",
+        "sal-monthly-tax": "0",
+        "sal-other-deductions": "0"
+      },
+      "expected": "9,520",
+      "actual": "In-hand: ₹9,520 / month",
+      "pass": true
+    },
+    {
+      "name": "leave",
+      "values": {
+        "leave-basic": "30000",
+        "leave-days": "10"
+      },
+      "expected": "10,000",
+      "actual": "Payable: ₹10,000",
+      "pass": true
+    },
+    {
+      "name": "date-diff",
+      "values": {
+        "date-start": "2026-01-01",
+        "date-end": "2026-01-11"
+      },
+      "expected": "10",
+      "actual": "10 Days",
+      "pass": true
+    },
+    {
+      "name": "time",
+      "values": {
+        "time-h1": "1",
+        "time-m1": "45",
+        "time-h2": "0",
+        "time-m2": "30"
+      },
+      "expected": "2",
+      "actual": "2h 15m",
+      "pass": true
+    },
+    {
+      "name": "pct",
+      "values": {
+        "pct-a": "15",
+        "pct-b": "200"
+      },
+      "expected": "30",
+      "actual": "30.00",
+      "pass": true
+    },
+    {
+      "name": "fraction",
+      "values": {
+        "frac-a-num": "1",
+        "frac-a-den": "2",
+        "frac-b-num": "1",
+        "frac-b-den": "4"
+      },
+      "expected": "3/4",
+      "actual": "Result: 3/4",
+      "pass": true
+    },
+    {
+      "name": "quadratic",
+      "values": {
+        "quad-a": "1",
+        "quad-b": "-5",
+        "quad-c": "6"
+      },
+      "expected": "3",
+      "actual": "Roots: 3 and 2",
+      "pass": true
+    },
+    {
+      "name": "att",
+      "values": {
+        "att-total": "100",
+        "att-present": "80",
+        "att-target": "75"
+      },
+      "expected": "80",
+      "actual": "Current: 80.0%\n\nYou can bunk 6 more classes.",
+      "pass": true
+    },
+    {
+      "name": "base-converter",
+      "values": {
+        "base-value": "10"
+      },
+      "expected": "1010",
+      "actual": "Result: 1010 (Binary)",
+      "pass": true
+    },
+    {
+      "name": "subnet",
+      "values": {
+        "subnet-ip": "192.168.1.10",
+        "subnet-cidr": "24"
+      },
+      "expected": "192.168.1.0",
+      "actual": "Network\n192.168.1.0\nMask\n255.255.255.0\nBroadcast\n192.168.1.255\nUsable hosts\n254\nUsable range\n192.168.1.1 - 192.168.1.254",
+      "pass": true
+    },
+    {
+      "name": "aspect-ratio",
+      "values": {
+        "aspect-width": "1920",
+        "aspect-height": "1080",
+        "aspect-target-width": "1280"
+      },
+      "expected": "720",
+      "actual": "Scaled size: 1280 x 720",
+      "pass": true
+    },
+    {
+      "name": "discount-tax",
+      "values": {
+        "dt-price": "1000",
+        "dt-discount": "10",
+        "dt-tax": "18"
+      },
+      "expected": "1,062",
+      "actual": "₹1,062.00",
+      "pass": true
+    },
+    {
+      "name": "power",
+      "values": {
+        "power-voltage": "230",
+        "power-current": "2"
+      },
+      "expected": "460",
+      "actual": "460 W",
+      "pass": true
+    },
+    {
+      "name": "electricity-bill",
+      "values": {
+        "bill-units": "100",
+        "bill-rate": "5"
+      },
+      "expected": "500",
+      "actual": "₹500.00",
+      "pass": true
+    },
+    {
+      "name": "kwh",
+      "values": {
+        "kwh-watts": "1000",
+        "kwh-hours": "2"
+      },
+      "expected": "2",
+      "actual": "2 kWh",
+      "pass": true
+    },
+    {
+      "name": "watt-unit",
+      "values": {
+        "wattunit-watts": "100",
+        "wattunit-hours": "10",
+        "wattunit-days": "30"
+      },
+      "expected": "30",
+      "actual": "30 units",
+      "pass": true
+    },
+    {
+      "name": "solar",
+      "values": {
+        "solar-kwh": "10",
+        "solar-sun": "5",
+        "solar-efficiency": "80"
+      },
+      "expected": "2.5",
+      "actual": "2.5 kW (2,500 W)",
+      "pass": true,
+      "note": "Expected adjusted to displayed rounding/decimal formatting"
+    },
+    {
+      "name": "inverter",
+      "values": {
+        "inv-ah": "100",
+        "inv-voltage": "12",
+        "inv-load": "100",
+        "inv-efficiency": "85"
+      },
+      "expected": "10.2",
+      "actual": "10.2 hours (612 min)",
+      "pass": true,
+      "note": "Expected adjusted to displayed rounding/decimal formatting"
+    },
+    {
+      "name": "ups",
+      "values": {
+        "ups-ah": "100",
+        "ups-voltage": "12",
+        "ups-load": "100",
+        "ups-efficiency": "80"
+      },
+      "expected": "9.6",
+      "actual": "576 minutes (9.6 hr)",
+      "pass": true,
+      "note": "Expected adjusted to displayed rounding/decimal formatting"
+    },
+    {
+      "name": "ohm",
+      "values": {
+        "ohm-voltage": "12",
+        "ohm-current": "2"
+      },
+      "expected": "6",
+      "actual": "V: 12 V\nI: 2 A\nR: 6 Ohm\nP: 24 W",
+      "pass": true
+    },
+    {
+      "name": "generator",
+      "values": {
+        "gen-load": "1000",
+        "gen-pf": "0.8",
+        "gen-margin": "25"
+      },
+      "expected": "1.56",
+      "actual": "1.56 kVA",
+      "pass": true
+    },
+    {
+      "name": "ev",
+      "values": {
+        "ev-capacity": "50",
+        "ev-rate": "5",
+        "ev-percent": "100"
+      },
+      "expected": "250",
+      "actual": "₹250.00",
+      "pass": true
+    },
+    {
+      "name": "circle",
+      "values": {
+        "circle-radius": "1"
+      },
+      "expected": "3.14",
+      "actual": "Area: 3.14",
+      "pass": true
+    },
+    {
+      "name": "triangle",
+      "values": {
+        "tri-base": "10",
+        "tri-height": "5"
+      },
+      "expected": "25",
+      "actual": "Area: 25",
+      "pass": true
+    },
+    {
+      "name": "pythagorean",
+      "values": {
+        "pyth-a": "3",
+        "pyth-b": "4"
+      },
+      "expected": "5",
+      "actual": "Hypotenuse: 5",
+      "pass": true
+    },
+    {
+      "name": "volume",
+      "values": {
+        "volume-a": "3"
+      },
+      "expected": "27",
+      "actual": "Volume: 27",
+      "pass": true
+    },
+    {
+      "name": "timezone",
+      "values": {
+        "tz-input-time": "2026-01-01T12:00"
+      },
+      "expected": "2026",
+      "actual": "Thu, Jan 1, 2026, 01:30 AM EST\nFrom Thu, Jan 1, 2026, 12:00 PM GMT+5:30",
+      "pass": true
+    },
+    {
+      "name": "mileage",
+      "values": {
+        "mileage-value": "20",
+        "mileage-distance": "100",
+        "mileage-price": "100"
+      },
+      "expected": "500",
+      "actual": "100.0 km uses\n5.00 L\nTrip cost\n500.00\nCost per km\n5.00",
+      "pass": true
+    }
+  ],
+  "validationRuns": [
+    {
+      "fieldErrors": [
+        "Enter valid height and weight"
+      ],
+      "message": "Enter valid height and weight",
+      "name": "bmi"
+    },
+    {
+      "fieldErrors": [
+        "Enter loan amount"
+      ],
+      "message": "Enter loan amount",
+      "name": "emi"
+    },
+    {
+      "fieldErrors": [
+        "Enter an investment above 0"
+      ],
+      "message": "Enter an investment above 0",
+      "name": "roi"
+    },
+    {
+      "fieldErrors": [
+        "Enter a bill amount"
+      ],
+      "message": "Enter a bill amount",
+      "name": "tip"
+    },
+    {
+      "fieldErrors": [],
+      "message": "Enter positive, finite age, weight and height.",
+      "name": "bmr"
+    },
+    {
+      "fieldErrors": [],
+      "message": "Enter a valid positive weight and activity level.",
+      "name": "water"
+    },
+    {
+      "fieldErrors": [],
+      "message": "Please enter a valid positive height",
+      "name": "ideal-weight"
+    },
+    {
+      "fieldErrors": [],
+      "message": "Enter a valid positive weight and goal.",
+      "name": "protein"
+    },
+    {
+      "fieldErrors": [],
+      "message": "Enter positive, finite measurements.",
+      "name": "body-fat"
+    },
+    {
+      "fieldErrors": [
+        "Select the first day of the last period"
+      ],
+      "message": "Select the first day of the last period",
+      "name": "due-date"
+    },
+    {
+      "fieldErrors": [],
+      "message": "Enter a positive investment, rate from 0 to 100%, and duration up to 100 years.",
+      "name": "sip"
+    },
+    {
+      "fieldErrors": [],
+      "message": "Enter a positive deposit, rate from 0 to 100%, and duration up to 100 years.",
+      "name": "fd"
+    },
+    {
+      "fieldErrors": [],
+      "message": "Enter a positive deposit, annual rate from 0 to 100, and 1 to 1200 whole months.",
+      "name": "rd"
+    },
+    {
+      "fieldErrors": [],
+      "message": "Enter a valid non-negative amount and tax rate.",
+      "name": "gst"
+    },
+    {
+      "fieldErrors": [],
+      "message": "Enter annual CTC, a basic salary percentage from 0 to 100, and non-negative monthly deductions.",
+      "name": "salary"
+    },
+    {
+      "fieldErrors": [],
+      "message": "Enter valid non-negative salary and leave days.",
+      "name": "leave"
+    },
+    {
+      "fieldErrors": [],
+      "message": "Please select dates",
+      "name": "date-diff"
+    },
+    {
+      "fieldErrors": [],
+      "message": "Enter whole non-negative hours and minutes from 0 to 59.",
+      "name": "time"
+    },
+    {
+      "fieldErrors": [],
+      "message": "Enter finite percentage and base values within the supported range.",
+      "name": "pct"
+    },
+    {
+      "fieldErrors": [],
+      "message": "Enter whole fraction numbers within the safe integer range.",
+      "name": "fraction"
+    },
+    {
+      "fieldErrors": [
+        "Coefficient a cannot be zero"
+      ],
+      "message": "Coefficient a cannot be zero",
+      "name": "quadratic"
+    },
+    {
+      "fieldErrors": [],
+      "message": "Enter positive whole total classes, non-negative whole attended classes, and a target above 0% up to 100%.",
+      "name": "att"
+    },
+    {
+      "fieldErrors": [
+        "Enter a valid Decimal integer"
+      ],
+      "message": "Enter a valid Decimal integer",
+      "name": "base-converter"
+    },
+    {
+      "fieldErrors": [
+        "Enter a valid IPv4 address"
+      ],
+      "message": "Enter a valid IPv4 address",
+      "name": "subnet"
+    },
+    {
+      "fieldErrors": [
+        "Enter original width"
+      ],
+      "message": "Enter original width",
+      "name": "aspect-ratio"
+    },
+    {
+      "fieldErrors": [],
+      "message": "Enter a non-negative price, and discount/tax percentages from 0 to 100.",
+      "name": "discount-tax"
+    },
+    {
+      "fieldErrors": [
+        "Enter valid voltage"
+      ],
+      "message": "Enter valid voltage",
+      "name": "power"
+    },
+    {
+      "fieldErrors": [
+        "Enter valid units/kWh"
+      ],
+      "message": "Enter valid units/kWh",
+      "name": "electricity-bill"
+    },
+    {
+      "fieldErrors": [
+        "Enter valid appliance watts"
+      ],
+      "message": "Enter valid appliance watts",
+      "name": "kwh"
+    },
+    {
+      "fieldErrors": [
+        "Enter valid watts"
+      ],
+      "message": "Enter valid watts",
+      "name": "watt-unit"
+    },
+    {
+      "fieldErrors": [
+        "Enter valid daily usage"
+      ],
+      "message": "Enter valid daily usage",
+      "name": "solar"
+    },
+    {
+      "fieldErrors": [
+        "Enter valid battery Ah"
+      ],
+      "message": "Enter valid battery Ah",
+      "name": "inverter"
+    },
+    {
+      "fieldErrors": [
+        "Enter valid battery Ah"
+      ],
+      "message": "Enter valid battery Ah",
+      "name": "ups"
+    },
+    {
+      "fieldErrors": [],
+      "message": "Enter any two positive Ohm law values",
+      "name": "ohm"
+    },
+    {
+      "fieldErrors": [
+        "Enter valid total load watts"
+      ],
+      "message": "Enter valid total load watts",
+      "name": "generator"
+    },
+    {
+      "fieldErrors": [
+        "Enter valid battery capacity"
+      ],
+      "message": "Enter valid battery capacity",
+      "name": "ev"
+    },
+    {
+      "fieldErrors": [
+        "Enter a positive radius within the supported range"
+      ],
+      "message": "Enter a positive radius within the supported range",
+      "name": "circle"
+    },
+    {
+      "fieldErrors": [
+        "Enter a positive base"
+      ],
+      "message": "Enter a positive base",
+      "name": "triangle"
+    },
+    {
+      "fieldErrors": [
+        "Enter a positive Side A"
+      ],
+      "message": "Enter a positive Side A",
+      "name": "pythagorean"
+    },
+    {
+      "fieldErrors": [
+        "Enter side length"
+      ],
+      "message": "Enter side length",
+      "name": "volume"
+    },
+    {
+      "fieldErrors": [],
+      "message": "Please select a starting time.",
+      "name": "timezone"
+    },
+    {
+      "fieldErrors": [
+        "Enter mileage above 0"
+      ],
+      "message": "Enter mileage above 0",
+      "name": "mileage"
+    }
+  ],
+  "domainRuns": [
+    {
+      "input": "-1",
+      "message": "Enter valid height and weight",
+      "name": "bmi",
+      "result": "BMI 22.9"
+    },
+    {
+      "input": "0",
+      "message": "Enter valid height and weight",
+      "name": "bmi",
+      "result": "BMI 22.9"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter valid height and weight",
+      "name": "bmi",
+      "result": "BMI 22.9"
+    },
+    {
+      "input": "-1",
+      "message": "Enter loan amount",
+      "name": "emi",
+      "result": "₹10,624"
+    },
+    {
+      "input": "0",
+      "message": "Enter loan amount",
+      "name": "emi",
+      "result": "₹10,624"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter loan amount",
+      "name": "emi",
+      "result": "₹10,624"
+    },
+    {
+      "input": "-1",
+      "message": "Enter an investment above 0",
+      "name": "roi",
+      "result": "ROI: 20.00%"
+    },
+    {
+      "input": "0",
+      "message": "Enter an investment above 0",
+      "name": "roi",
+      "result": "ROI: 20.00%"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter an investment above 0",
+      "name": "roi",
+      "result": "ROI: 20.00%"
+    },
+    {
+      "input": "-1",
+      "message": "Enter a bill amount",
+      "name": "tip",
+      "result": "Per person: ₹57.50"
+    },
+    {
+      "input": "0",
+      "message": "Tip split calculated!",
+      "name": "tip",
+      "result": "Per person: ₹0.00"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter a bill amount",
+      "name": "tip",
+      "result": "Per person: ₹0.00"
+    },
+    {
+      "input": "-1",
+      "message": "Enter positive, finite age, weight and height.",
+      "name": "bmr",
+      "result": "1649 kcal/day"
+    },
+    {
+      "input": "0",
+      "message": "Enter positive, finite age, weight and height.",
+      "name": "bmr",
+      "result": "1649 kcal/day"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter positive, finite age, weight and height.",
+      "name": "bmr",
+      "result": "1649 kcal/day"
+    },
+    {
+      "input": "-1",
+      "message": "Enter a valid positive weight and activity level.",
+      "name": "water",
+      "result": "2.5 Liters"
+    },
+    {
+      "input": "0",
+      "message": "Enter a valid positive weight and activity level.",
+      "name": "water",
+      "result": "2.5 Liters"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter a valid positive weight and activity level.",
+      "name": "water",
+      "result": "2.5 Liters"
+    },
+    {
+      "input": "-1",
+      "message": "Please enter a valid positive height",
+      "name": "ideal-weight",
+      "result": "70.5 kg"
+    },
+    {
+      "input": "0",
+      "message": "Please enter a valid positive height",
+      "name": "ideal-weight",
+      "result": "70.5 kg"
+    },
+    {
+      "input": "1e309",
+      "message": "Please enter a valid positive height",
+      "name": "ideal-weight",
+      "result": "70.5 kg"
+    },
+    {
+      "input": "-1",
+      "message": "Enter a valid positive weight and goal.",
+      "name": "protein",
+      "result": "56.0 g/day"
+    },
+    {
+      "input": "0",
+      "message": "Enter a valid positive weight and goal.",
+      "name": "protein",
+      "result": "56.0 g/day"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter a valid positive weight and goal.",
+      "name": "protein",
+      "result": "56.0 g/day"
+    },
+    {
+      "input": "-1",
+      "message": "Enter positive, finite measurements.",
+      "name": "body-fat",
+      "result": "19.2 %"
+    },
+    {
+      "input": "0",
+      "message": "Enter positive, finite measurements.",
+      "name": "body-fat",
+      "result": "19.2 %"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter positive, finite measurements.",
+      "name": "body-fat",
+      "result": "19.2 %"
+    },
+    {
+      "input": "-1",
+      "message": "Enter a positive investment, rate from 0 to 100%, and duration up to 100 years.",
+      "name": "sip",
+      "result": "Maturity: ₹12,000"
+    },
+    {
+      "input": "0",
+      "message": "Enter a positive investment, rate from 0 to 100%, and duration up to 100 years.",
+      "name": "sip",
+      "result": "Maturity: ₹12,000"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter a positive investment, rate from 0 to 100%, and duration up to 100 years.",
+      "name": "sip",
+      "result": "Maturity: ₹12,000"
+    },
+    {
+      "input": "-1",
+      "message": "Enter a positive deposit, rate from 0 to 100%, and duration up to 100 years.",
+      "name": "fd",
+      "result": "Maturity: ₹10,000"
+    },
+    {
+      "input": "0",
+      "message": "Enter a positive deposit, rate from 0 to 100%, and duration up to 100 years.",
+      "name": "fd",
+      "result": "Maturity: ₹10,000"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter a positive deposit, rate from 0 to 100%, and duration up to 100 years.",
+      "name": "fd",
+      "result": "Maturity: ₹10,000"
+    },
+    {
+      "input": "-1",
+      "message": "Enter a positive deposit, annual rate from 0 to 100, and 1 to 1200 whole months.",
+      "name": "rd",
+      "result": "Maturity: ₹12,000"
+    },
+    {
+      "input": "0",
+      "message": "Enter a positive deposit, annual rate from 0 to 100, and 1 to 1200 whole months.",
+      "name": "rd",
+      "result": "Maturity: ₹12,000"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter a positive deposit, annual rate from 0 to 100, and 1 to 1200 whole months.",
+      "name": "rd",
+      "result": "Maturity: ₹12,000"
+    },
+    {
+      "input": "-1",
+      "message": "Enter a valid non-negative amount and tax rate.",
+      "name": "gst",
+      "result": "₹1,180.00"
+    },
+    {
+      "input": "0",
+      "message": "GST Calculated!",
+      "name": "gst",
+      "result": "₹0.00"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter a valid non-negative amount and tax rate.",
+      "name": "gst",
+      "result": "₹0.00"
+    },
+    {
+      "input": "-1",
+      "message": "Enter annual CTC, a basic salary percentage from 0 to 100, and non-negative monthly deductions.",
+      "name": "salary",
+      "result": "In-hand: ₹9,520 / month"
+    },
+    {
+      "input": "0",
+      "message": "Enter annual CTC, a basic salary percentage from 0 to 100, and non-negative monthly deductions.",
+      "name": "salary",
+      "result": "In-hand: ₹9,520 / month"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter annual CTC, a basic salary percentage from 0 to 100, and non-negative monthly deductions.",
+      "name": "salary",
+      "result": "In-hand: ₹9,520 / month"
+    },
+    {
+      "input": "-1",
+      "message": "Enter valid non-negative salary and leave days.",
+      "name": "leave",
+      "result": "Payable: ₹10,000"
+    },
+    {
+      "input": "0",
+      "message": "Leave Encashment Calculated!",
+      "name": "leave",
+      "result": "Payable: ₹0"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter valid non-negative salary and leave days.",
+      "name": "leave",
+      "result": "Payable: ₹0"
+    },
+    {
+      "input": "-1",
+      "message": "Enter positive whole total classes, non-negative whole attended classes, and a target above 0% up to 100%.",
+      "name": "att",
+      "result": "Current: 80.0%You can bunk 6 more classes."
+    },
+    {
+      "input": "0",
+      "message": "Enter positive whole total classes, non-negative whole attended classes, and a target above 0% up to 100%.",
+      "name": "att",
+      "result": "Current: 80.0%You can bunk 6 more classes."
+    },
+    {
+      "input": "1e309",
+      "message": "Enter positive whole total classes, non-negative whole attended classes, and a target above 0% up to 100%.",
+      "name": "att",
+      "result": "Current: 80.0%You can bunk 6 more classes."
+    },
+    {
+      "input": "-1",
+      "message": "Enter original width",
+      "name": "aspect-ratio",
+      "result": "Scaled size: 1280 x 720"
+    },
+    {
+      "input": "0",
+      "message": "Enter original width",
+      "name": "aspect-ratio",
+      "result": "Scaled size: 1280 x 720"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter original width",
+      "name": "aspect-ratio",
+      "result": "Scaled size: 1280 x 720"
+    },
+    {
+      "input": "-1",
+      "message": "Enter a non-negative price, and discount/tax percentages from 0 to 100.",
+      "name": "discount-tax",
+      "result": "₹1,062.00"
+    },
+    {
+      "input": "0",
+      "message": "Final Price Calculated!",
+      "name": "discount-tax",
+      "result": "₹0.00"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter a non-negative price, and discount/tax percentages from 0 to 100.",
+      "name": "discount-tax",
+      "result": "₹0.00"
+    },
+    {
+      "input": "-1",
+      "message": "Enter valid voltage",
+      "name": "power",
+      "result": "460 W"
+    },
+    {
+      "input": "0",
+      "message": "Enter valid voltage",
+      "name": "power",
+      "result": "460 W"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter valid voltage",
+      "name": "power",
+      "result": "460 W"
+    },
+    {
+      "input": "-1",
+      "message": "Enter valid units/kWh",
+      "name": "electricity-bill",
+      "result": "₹500.00"
+    },
+    {
+      "input": "0",
+      "message": "Enter valid units/kWh",
+      "name": "electricity-bill",
+      "result": "₹500.00"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter valid units/kWh",
+      "name": "electricity-bill",
+      "result": "₹500.00"
+    },
+    {
+      "input": "-1",
+      "message": "Enter valid appliance watts",
+      "name": "kwh",
+      "result": "2 kWh"
+    },
+    {
+      "input": "0",
+      "message": "Enter valid appliance watts",
+      "name": "kwh",
+      "result": "2 kWh"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter valid appliance watts",
+      "name": "kwh",
+      "result": "2 kWh"
+    },
+    {
+      "input": "-1",
+      "message": "Enter valid watts",
+      "name": "watt-unit",
+      "result": "30 units"
+    },
+    {
+      "input": "0",
+      "message": "Enter valid watts",
+      "name": "watt-unit",
+      "result": "30 units"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter valid watts",
+      "name": "watt-unit",
+      "result": "30 units"
+    },
+    {
+      "input": "-1",
+      "message": "Enter valid daily usage",
+      "name": "solar",
+      "result": "2.5 kW (2,500 W)"
+    },
+    {
+      "input": "0",
+      "message": "Enter valid daily usage",
+      "name": "solar",
+      "result": "2.5 kW (2,500 W)"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter valid daily usage",
+      "name": "solar",
+      "result": "2.5 kW (2,500 W)"
+    },
+    {
+      "input": "-1",
+      "message": "Enter valid battery Ah",
+      "name": "inverter",
+      "result": "10.2 hours (612 min)"
+    },
+    {
+      "input": "0",
+      "message": "Enter valid battery Ah",
+      "name": "inverter",
+      "result": "10.2 hours (612 min)"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter valid battery Ah",
+      "name": "inverter",
+      "result": "10.2 hours (612 min)"
+    },
+    {
+      "input": "-1",
+      "message": "Enter valid battery Ah",
+      "name": "ups",
+      "result": "576 minutes (9.6 hr)"
+    },
+    {
+      "input": "0",
+      "message": "Enter valid battery Ah",
+      "name": "ups",
+      "result": "576 minutes (9.6 hr)"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter valid battery Ah",
+      "name": "ups",
+      "result": "576 minutes (9.6 hr)"
+    },
+    {
+      "input": "-1",
+      "message": "Enter any two positive Ohm law values",
+      "name": "ohm",
+      "result": "\n        V: 12 V\n        I: 2 A\n        R: 6 Ohm\n        P: 24 W\n    "
+    },
+    {
+      "input": "0",
+      "message": "Enter any two positive Ohm law values",
+      "name": "ohm",
+      "result": "\n        V: 12 V\n        I: 2 A\n        R: 6 Ohm\n        P: 24 W\n    "
+    },
+    {
+      "input": "1e309",
+      "message": "Enter any two positive Ohm law values",
+      "name": "ohm",
+      "result": "\n        V: 12 V\n        I: 2 A\n        R: 6 Ohm\n        P: 24 W\n    "
+    },
+    {
+      "input": "-1",
+      "message": "Enter valid total load watts",
+      "name": "generator",
+      "result": "1.56 kVA"
+    },
+    {
+      "input": "0",
+      "message": "Enter valid total load watts",
+      "name": "generator",
+      "result": "1.56 kVA"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter valid total load watts",
+      "name": "generator",
+      "result": "1.56 kVA"
+    },
+    {
+      "input": "-1",
+      "message": "Enter valid battery capacity",
+      "name": "ev",
+      "result": "₹250.00"
+    },
+    {
+      "input": "0",
+      "message": "Enter valid battery capacity",
+      "name": "ev",
+      "result": "₹250.00"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter valid battery capacity",
+      "name": "ev",
+      "result": "₹250.00"
+    },
+    {
+      "input": "-1",
+      "message": "Enter a positive radius within the supported range",
+      "name": "circle",
+      "result": "Area: 3.14"
+    },
+    {
+      "input": "0",
+      "message": "Enter a positive radius within the supported range",
+      "name": "circle",
+      "result": "Area: 3.14"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter a positive radius within the supported range",
+      "name": "circle",
+      "result": "Area: 3.14"
+    },
+    {
+      "input": "-1",
+      "message": "Enter a positive base",
+      "name": "triangle",
+      "result": "Area: 25"
+    },
+    {
+      "input": "0",
+      "message": "Enter a positive base",
+      "name": "triangle",
+      "result": "Area: 25"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter a positive base",
+      "name": "triangle",
+      "result": "Area: 25"
+    },
+    {
+      "input": "-1",
+      "message": "Enter a positive Side A",
+      "name": "pythagorean",
+      "result": "Hypotenuse: 5"
+    },
+    {
+      "input": "0",
+      "message": "Enter a positive Side A",
+      "name": "pythagorean",
+      "result": "Hypotenuse: 5"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter a positive Side A",
+      "name": "pythagorean",
+      "result": "Hypotenuse: 5"
+    },
+    {
+      "input": "-1",
+      "message": "Enter side length",
+      "name": "volume",
+      "result": "Volume: 27"
+    },
+    {
+      "input": "0",
+      "message": "Enter side length",
+      "name": "volume",
+      "result": "Volume: 27"
+    },
+    {
+      "input": "1e309",
+      "message": "Enter side length",
+      "name": "volume",
+      "result": "Volume: 27"
+    },
+    {
+      "input": "-1",
+      "message": "Enter mileage above 0",
+      "name": "mileage",
+      "result": "Add mileage, distance, and price to estimate cost per trip."
+    },
+    {
+      "input": "0",
+      "message": "Enter mileage above 0",
+      "name": "mileage",
+      "result": "Add mileage, distance, and price to estimate cost per trip."
+    },
+    {
+      "input": "1e309",
+      "message": "Enter mileage above 0",
+      "name": "mileage",
+      "result": "Add mileage, distance, and price to estimate cost per trip."
+    }
+  ],
+  "extraRuns": [
+    {
+      "name": "standard",
+      "actual": "56"
+    },
+    {
+      "name": "scientific",
+      "actual": "120"
+    },
+    {
+      "name": "age",
+      "actual": "26 Yrs, 9 Mos, 5 Days"
+    },
+    {
+      "name": "word",
+      "actual": "2"
+    },
+    {
+      "name": "case",
+      "actual": "HELLO WORLD"
+    },
+    {
+      "name": "base64",
+      "actual": "SGVsbG8="
+    },
+    {
+      "name": "uuid",
+      "actual": "4f130f33-6120-4fa0-9b28-b94591597306\n25a94d7b-bbe7-49c3-9ac9-7c9a936c1e6b\n4139d482-d267-4eeb-81f8-83090e9227ad"
+    },
+    {
+      "name": "wa",
+      "actual": "https://wa.me/919876543210?text=Hello%20QA"
+    },
+    {
+      "name": "qr",
+      "actual": "PNG QR generated for https://example.com/qa"
+    },
+    {
+      "name": "pass",
+      "length": 12
+    },
+    {
+      "name": "unit",
+      "actual": "1"
+    },
+    {
+      "name": "cgpa",
+      "actual": "8.00 GPA"
+    },
+    {
+      "name": "invoice",
+      "actual": "₹1,062.00"
+    },
+    {
+      "name": "calorie",
+      "actual": "White Rice (Cooked) (100g)\nSaved estimate\n126 kcal | 28C | 3P | 0F"
+    },
+    {
+      "name": "formula-explainer",
+      "actual": "A = P(1 + r/n)^(nt)\n\nP = Principal amount\nr = Annual interest rate\nn = Compounds per year\nt = Time (years)"
+    },
+    {
+      "name": "curr",
+      "actual": "€88.89 for 100 USD; cached live rate timestamp displayed"
+    },
+    {
+      "name": "sw",
+      "actual": "00:00:20.64"
+    },
+    {
+      "name": "color",
+      "actual": "rgb(255, 255, 255)"
+    },
+    {
+      "name": "image-converter",
+      "actual": "1x1 PNG decoded into canvas and WebP conversion success toast; saved download unverified"
+    },
+    {
+      "name": "equation-plotter",
+      "actual": "m=2,b=5; chart canvas rendered 590x170"
+    }
+  ],
+  "fixedBrowser": [
+    {
+      "id": "calc-electricity-bill",
+      "actual": [
+        "Bill exceeds the supported range",
+        "Bill exceeds the supported range"
+      ]
+    },
+    {
+      "id": "calc-ev",
+      "actual": [
+        "Charging cost exceeds the supported range",
+        "Bill exceeds the supported range",
+        "Charging cost exceeds the supported range"
+      ]
+    },
+    {
+      "id": "calc-generator",
+      "actual": [
+        "Charging cost exceeds the supported range",
+        "Bill exceeds the supported range",
+        "Charging cost exceeds the supported range",
+        "Please enter valid safety margin"
+      ]
+    }
+  ],
+  "standaloneRuns": [
+    {
+      "path": "/emi-calculator.html",
+      "vals": {
+        "emi-amount": 500000,
+        "emi-rate": 10,
+        "emi-tenure": 60
+      },
+      "expected": "10,623.52",
+      "actual": "₹10,623.52",
+      "pass": true
+    },
+    {
+      "path": "/loan-calculator.html",
+      "vals": {
+        "loan-amount": 120000,
+        "loan-rate": 0,
+        "loan-years": 1
+      },
+      "expected": "10,000",
+      "actual": "₹10,000.00",
+      "pass": true
+    },
+    {
+      "path": "/bmi-calculator.html",
+      "vals": {
+        "bmi-height": 175,
+        "bmi-weight": 70
+      },
+      "expected": "22.9",
+      "actual": "22.9",
+      "pass": true
+    },
+    {
+      "path": "/percentage-calculator.html",
+      "vals": {
+        "percentage-value": 15,
+        "percentage-base": 200
+      },
+      "expected": "30",
+      "actual": "30.00",
+      "pass": true
+    },
+    {
+      "path": "/gst-calculator.html",
+      "vals": {
+        "gst-amount": 1000,
+        "gst-rate": 18
+      },
+      "expected": "1,180",
+      "actual": "₹1,180.00",
+      "pass": true
+    },
+    {
+      "path": "/sip-calculator.html",
+      "vals": {
+        "sip-monthly": 1000,
+        "sip-rate": 0,
+        "sip-years": 1
+      },
+      "expected": "12,000",
+      "actual": "₹12,000.00",
+      "pass": true
+    },
+    {
+      "path": "/age-calculator.html",
+      "vals": {
+        "age-dob": "2000-01-01"
+      },
+      "expected": "26 years",
+      "actual": "26 years, 9 months, 5 days",
+      "pass": true
+    },
+    {
+      "path": "/epf-calculator.html",
+      "vals": {
+        "opening": 0,
+        "years": 1,
+        "employee": 1000,
+        "employer": 0,
+        "rate": 0,
+        "growth": 0
+      },
+      "expected": "12,000",
+      "actual": "Projected corpus: ₹12,000.00\n\nNew contributions: ₹12,000.00\n\nEstimated interest: ₹0.00\n\nYear-by-year projection (rounded for display only)\nYear\tOpening\tContributions\tInterest / gain\tClosing\n1\t₹0.00\t₹12,000.00\t₹0.00\t₹12,000.00",
+      "pass": true
+    },
+    {
+      "path": "/eps-pension-calculator.html",
+      "vals": {
+        "salary": 15000,
+        "service": 10
+      },
+      "expected": "2,142",
+      "actual": "Formula monthly pension estimate: ₹2,142.86\n\nSalary used: ₹15,000.00\n\nConfirmed service used: 10 years\n\nImportant: Not an EPFO pension award. Eligibility, service and benefits require EPFO confirmation.",
+      "pass": true
+    },
+    {
+      "path": "/nps-calculator.html",
+      "vals": {
+        "opening": 0,
+        "years": 1,
+        "monthly": 1000,
+        "rate": 0,
+        "growth": 0,
+        "allocation": 40,
+        "annuityRate": 6,
+        "inflation": 0
+      },
+      "expected": "12,000",
+      "actual": "Projected corpus: ₹12,000.00\n\nNew contributions: ₹12,000.00\n\nEstimated gain or loss: ₹0.00\n\nScenario annuity purchase: ₹4,800.00\n\nScenario non-annuity portion (not a withdrawal entitlement): ₹7,200.00\n\nIllustrative monthly annuity before tax: ₹24.00\n\nCorpus in today’s purchasing power: ₹12,000.00\n\nYear-by-year projection (rounded for display only)\nYear\tOpening\tContributions\tInterest / gain\tClosing\n1\t₹0.00\t₹12,000.00\t₹0.00\t₹12,000.00",
+      "pass": true
+    },
+    {
+      "path": "/electricity-bill-calculator-india/",
+      "vals": {
+        "units": 0,
+        "unitRate": 7.5,
+        "fixed": 100,
+        "tax": 0
+      },
+      "expected": "100",
+      "actual": "ENERGY CHARGE\n₹0.00\nFIXED CHARGE\n₹100.00\nTAX / DUTY ESTIMATE\n₹0.00\nESTIMATED BILL\n₹100.00",
+      "pass": true
+    },
+    {
+      "path": "/emi-calculator-with-prepayment/",
+      "vals": {
+        "principal": 120000,
+        "rate": 0,
+        "years": 1,
+        "paidMonths": 0,
+        "prepay": 120000
+      },
+      "expected": "0",
+      "actual": "CURRENT EMI\n₹10,000.00\nESTIMATED BALANCE\n₹120,000.00\nPREPAYMENT APPLIED\n₹120,000.00\nBALANCE AFTER PREPAYMENT\n₹0.00\nMONTHS SAVED\n12 months\nESTIMATED INTEREST SAVED\n₹0.00",
+      "pass": true
+    },
+    {
+      "path": "/sip-step-up-calculator/",
+      "vals": {
+        "monthly": 1000,
+        "rate": 0,
+        "step": 0,
+        "years": 1
+      },
+      "expected": "12,000",
+      "actual": "TOTAL INVESTED\n₹12,000.00\nESTIMATED VALUE\n₹12,000.00\nESTIMATED GAIN\n₹0.00\nFINAL MONTHLY SIP\n₹1,000.00",
+      "pass": true
+    },
+    {
+      "path": "/currency-converter.html",
+      "actual": "$100.00",
+      "expected": "$100.00",
+      "pass": true
+    },
+    {
+      "path": "/password-generator.html",
+      "length": 16,
+      "expected": 16,
+      "pass": true
+    }
+  ],
+  "standaloneInvalid": [
+    {
+      "path": "/emi-calculator.html",
+      "state": {
+        "errors": [
+          "Enter a valid loan amount, annual interest rate, and tenure in months."
+        ],
+        "invalid": []
+      }
+    },
+    {
+      "path": "/loan-calculator.html",
+      "state": {
+        "errors": [
+          "Enter a valid principal amount, interest rate, and tenure in years."
+        ],
+        "invalid": []
+      }
+    },
+    {
+      "path": "/bmi-calculator.html",
+      "state": {
+        "errors": [
+          "Enter valid height in centimeters and weight in kilograms."
+        ],
+        "invalid": []
+      }
+    },
+    {
+      "path": "/percentage-calculator.html",
+      "state": {
+        "errors": [
+          "Enter a valid percentage and base value."
+        ],
+        "invalid": []
+      }
+    },
+    {
+      "path": "/gst-calculator.html",
+      "state": {
+        "errors": [
+          "Enter a valid amount and GST rate."
+        ],
+        "invalid": []
+      }
+    },
+    {
+      "path": "/sip-calculator.html",
+      "state": {
+        "errors": [
+          "Enter a valid monthly investment, expected return, and time period."
+        ],
+        "invalid": []
+      }
+    },
+    {
+      "path": "/age-calculator.html",
+      "state": {
+        "errors": [
+          "Select your date of birth."
+        ],
+        "invalid": []
+      }
+    },
+    {
+      "path": "/epf-calculator.html",
+      "state": {
+        "errors": [],
+        "invalid": [
+          {
+            "message": "Please fill out this field.",
+            "name": "opening"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/eps-pension-calculator.html",
+      "state": {
+        "errors": [],
+        "invalid": [
+          {
+            "message": "Please fill out this field.",
+            "name": "salary"
+          },
+          {
+            "message": "Please check this box if you want to proceed.",
+            "name": "scope"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/nps-calculator.html",
+      "state": {
+        "errors": [],
+        "invalid": [
+          {
+            "message": "Please fill out this field.",
+            "name": "opening"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/electricity-bill-calculator-india/",
+      "state": {
+        "errors": [
+          ""
+        ],
+        "invalid": [
+          {
+            "message": "Please fill out this field.",
+            "name": "units"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/emi-calculator-with-prepayment/",
+      "state": {
+        "errors": [
+          ""
+        ],
+        "invalid": [
+          {
+            "message": "Please fill out this field.",
+            "name": "principal"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/sip-step-up-calculator/",
+      "state": {
+        "errors": [
+          ""
+        ],
+        "invalid": [
+          {
+            "message": "Please fill out this field.",
+            "name": "monthly"
+          }
+        ]
+      }
+    }
+  ],
+  "mobileRuns": [
+    {
+      "path": "/emi-calculator.html",
+      "actual": "₹10,623.52",
+      "pass": true,
+      "layout": {
+        "viewport": 390,
+        "width": 375
+      }
+    },
+    {
+      "path": "/loan-calculator.html",
+      "actual": "₹10,000.00",
+      "pass": true,
+      "layout": {
+        "viewport": 390,
+        "width": 375
+      }
+    },
+    {
+      "path": "/bmi-calculator.html",
+      "actual": "22.9",
+      "pass": true,
+      "layout": {
+        "viewport": 390,
+        "width": 375
+      }
+    }
+  ]
+}

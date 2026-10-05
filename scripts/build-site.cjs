@@ -46,6 +46,8 @@ for (const file of htmlFiles) {
       .replace(/(<script src="(?:script|calculator-pages)\.js)[^"]*(" defer><\/script>)/g, '$1?v=20260924-currency$2'));
   }
 }
+const { applySiteTheme } = require('./apply-site-theme.cjs');
+console.log(`Themed ${applySiteTheme(root, files)}` + ' content pages');
 const indexed = htmlFiles.filter(file => {
   const html = fs.readFileSync(path.join(root, file), 'utf8');
   return !/name=["']robots["'][^>]+noindex/i.test(html) &&
@@ -69,3 +71,4 @@ for (const file of files) {
   fs.copyFileSync(path.join(root, file), destination);
 }
 console.log(`Built ${files.length} public files; ${indexed.length} indexable pages; ${Object.keys(routes).length} compatibility redirects.`);
+
