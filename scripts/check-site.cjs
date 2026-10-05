@@ -17,11 +17,15 @@ function pageFile(url) {
 }
 for (const [file, html] of pages) {
   if (file.startsWith('google')) continue;
-  if (/googletagmanager\.com|pagead2\.googlesyndication\.com|adsbygoogle/.test(html)) errors.push(file + ': optional tracking/ad loader must stay disabled until consent and placements are reviewed');
+  const { adsenseLoader } = require('./publisher-safety.cjs');
+  const withoutApprovedLoader = html.replace(adsenseLoader, '');
+  if (/googletagmanager\.com|pagead2\.googlesyndication\.com|adsbygoogle/.test(withoutApprovedLoader)) errors.push(file + ': unexpected or duplicate ad/analytics loader');
   const route = '/' + file.replace(/index\.html$/, '');
   const base = new URL(route, site);
   const moved = redirects[route];
   const expectsAdSpace = file !== '404.html' && !moved && !/name=["']robots["'][^>]*noindex/i.test(html);
+  if (expectsAdSpace && !html.split('</head>')[0].includes(adsenseLoader)) errors.push(file + ': missing approved AdSense head code');
+  if (!expectsAdSpace && html.includes(adsenseLoader)) errors.push(file + ': AdSense on non-content page');
   if (expectsAdSpace && !html.includes('id="ad-content-end"')) errors.push(file + ': missing reserved end-of-content ad space');
   if (!expectsAdSpace && html.includes('class="publisher-ad-space"')) errors.push(file + ': ad space on a non-content page');
   const ids = [...html.matchAll(/\sid=["']([^"']+)["']/g)].map(m => m[1]);
