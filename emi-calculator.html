@@ -1,14 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MRCMVF9545"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-MRCMVF9545');
-    </script>
+    
+    
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EMI Calculator Online | Loan EMI, Interest and Total Payment</title>
@@ -27,11 +22,11 @@
     <meta name="twitter:description" content="Free EMI calculator to estimate monthly loan payment, total interest, and total repayment for home, car, personal, or business loans.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://pagead2.googlesyndication.com">
+    
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="style.css?v=20260922-audit">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9409281508068005" crossorigin="anonymous"></script>
+    
     <script type="application/ld+json" data-managed-schema>
     {
       "@context": "https://schema.org",
@@ -112,6 +107,7 @@
     }
     </script>
 <script src="/local-currency.js?v=20260924" defer></script>
+<meta name="google-adsense-account" content="ca-pub-9409281508068005">
 </head>
 <body>
     <a class="skip-link" href="#calculator">Skip to calculator</a>
@@ -151,6 +147,15 @@
                     <div><span>Total Interest</span><strong id="emi-interest">$0</strong></div>
                     <div><span>Total Payable</span><strong id="emi-total">$0</strong></div>
                 </div>
+                <details id="emi-breakdown" hidden>
+                    <summary>Compare tenures and inspect the payment breakdown</summary>
+                    <p>Amounts below use the selected currency label, not exchange conversion. Each month starts with interest on the opening balance; the remainder repays principal. Calculations keep full precision, then display two decimals.</p>
+                    <p id="emi-comparison"></p>
+                    <div style="overflow-x:auto" tabindex="0" role="region" aria-label="Monthly loan schedule">
+                        <table><caption>Monthly principal, interest and remaining balance</caption><thead><tr><th scope="col">Month</th><th scope="col">Payment</th><th scope="col">Interest</th><th scope="col">Principal</th><th scope="col">Balance</th></tr></thead><tbody id="emi-schedule"></tbody></table>
+                    </div>
+                    <p>Excluded: fees, insurance, payment-date differences and rate changes. A lender may round each payment and adjust its final instalment. This is not a lender quotation.</p>
+                </details>
             </aside>
 
                                     <section class="calculator-copy enriched-calculator-copy">
@@ -175,6 +180,7 @@
         <p class="maintainer-credit">This page is developed and maintained by <a href="mailto:support.aiagents@gmail.com">support.aiagents@gmail.com</a>.</p>
         <p class="copyright">&copy; 2026 Calculator All-in-One. All rights reserved.</p>
     </footer>
-    <script src="calculator-pages.js?v=20260924-currency" defer></script>
+    <script src="loan-analysis.js?v=20261005" defer></script>
+    <script src="calculator-pages.js?v=20261005-analysis" defer></script>
 </body>
 </html>

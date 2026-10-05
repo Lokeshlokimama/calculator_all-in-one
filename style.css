@@ -3869,6 +3869,7 @@ button[aria-label*="Close"],
 
 .calculator-tool-card {
     /* Long forms and QR previews must scroll with the page, including short displays. */
+    min-width: 0;
     position: relative;
     top: auto;
     border: 1px solid var(--glass-border);
@@ -3887,8 +3888,17 @@ button[aria-label*="Close"],
     margin-bottom: 0.75rem;
 }
 
+#emi-breakdown { margin-top: 1.25rem; overflow-wrap: anywhere; }
+#emi-breakdown summary { cursor: pointer; padding-block: .75rem; color: #7dd3fc; font-weight: 700; }
+#emi-breakdown p { margin-block: .75rem; font-size: .95rem; }
+#emi-breakdown table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+#emi-breakdown th, #emi-breakdown td { padding: .65rem; text-align: right; white-space: nowrap; border-bottom: 1px solid #475569; }
+#emi-breakdown caption { text-align: left; padding-block: .75rem; }
+
 .calculator-page-form {
     display: grid;
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1rem;
 }
 
@@ -4556,7 +4566,7 @@ button[aria-label*="Close"],
     }
 
     .calculator-page-layout {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .calculator-tool-card {

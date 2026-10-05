@@ -17,6 +17,7 @@ function pageFile(url) {
 }
 for (const [file, html] of pages) {
   if (file.startsWith('google')) continue;
+  if (/googletagmanager\.com|pagead2\.googlesyndication\.com|adsbygoogle/.test(html)) errors.push(file + ': optional tracking/ad loader must stay disabled until consent and placements are reviewed');
   const route = '/' + file.replace(/index\.html$/, '');
   const base = new URL(route, site);
   const moved = redirects[route];

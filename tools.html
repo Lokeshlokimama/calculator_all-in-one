@@ -45,30 +45,7 @@
     <link rel="stylesheet" href="style.css?v=20260922-audit">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet"></noscript>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      window.gtag = window.gtag || function(){ window.dataLayer.push(arguments); };
-      (function(){
-        var runIdle = window.requestIdleCallback || function(callback){ return setTimeout(callback, 1200); };
-        function loadScript(src, attrs){
-          var script = document.createElement('script');
-          script.async = true;
-          script.src = src;
-          if (attrs) Object.keys(attrs).forEach(function(key){ script.setAttribute(key, attrs[key]); });
-          document.head.appendChild(script);
-        }
-        window.addEventListener('load', function(){
-          runIdle(function(){
-            loadScript('https://www.googletagmanager.com/gtag/js?id=G-MRCMVF9545');
-            window.gtag('js', new Date());
-            window.gtag('config', 'G-MRCMVF9545');
-          }, { timeout: 3000 });
-          setTimeout(function(){
-            loadScript('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9409281508068005', { crossorigin: 'anonymous' });
-          }, 3500);
-        }, { once: true });
-      })();
-    </script>
+    
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -176,6 +153,7 @@
     }
     </script>
 <script src="/local-currency.js?v=20260924" defer></script>
+<meta name="google-adsense-account" content="ca-pub-9409281508068005">
 </head>
 <body class="home-page">
     <a class="skip-link" href="#tools">Skip to calculators</a>

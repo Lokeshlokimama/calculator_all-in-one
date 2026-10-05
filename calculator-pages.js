@@ -110,6 +110,7 @@ const calculatorPage = (() => {
     };
 
     const refreshMoneyOutputs = () => {
+        if ($('emi-breakdown')) $('emi-breakdown').hidden = true;
         document.querySelectorAll('[data-money-value]').forEach((element) => {
             setMoneyText(element.id, Number(element.dataset.moneyValue || 0), Number(element.dataset.moneyDigits || 2));
         });
@@ -301,6 +302,7 @@ const calculatorPage = (() => {
 
     function calculateEmi() {
         clearError();
+        if ($('emi-breakdown')) $('emi-breakdown').hidden = true;
         const principal = readNumber('emi-amount');
         const annualRate = readNumber('emi-rate');
         const months = readNumber('emi-tenure');
@@ -324,6 +326,18 @@ const calculatorPage = (() => {
         setMoneyText('emi-result', emi, 2);
         setMoneyText('emi-interest', totalInterest, 2);
         setMoneyText('emi-total', totalPayable, 2);
+        if ($('emi-schedule') && window.LoanAnalysis) {
+            try {
+                const analysis = window.LoanAnalysis.analyze(principal, annualRate, months);
+                $('emi-schedule').innerHTML = analysis.rows.map(row => `<tr><th scope="row">${row.month}</th>${[row.payment,row.interest,row.principal,row.balance].map(value=>`<td>${formatNumber(value,2)}</td>`).join('')}</tr>`).join('');
+                const alternatives = [months - 12, months + 12].filter(term=>term>0&&term<=1200);
+                $('emi-comparison').textContent = alternatives.map(term=>{
+                    const other = window.LoanAnalysis.analyze(principal, annualRate, term);
+                    return `${term} months: payment ${formatMoney(other.payment,2)}, total interest ${formatMoney(other.interest,2)}.`;
+                }).join(' ') + ' Same principal and fixed rate; a lower payment can mean a higher total cost.';
+                $('emi-breakdown').hidden = false;
+            } catch { /* Existing payment totals remain usable if a schedule is outside range. */ }
+        }
     }
 
     function calculateBmi() {
@@ -982,6 +996,9 @@ const calculatorPage = (() => {
         updateCurrencyAffixes();
 
         document.querySelectorAll('[data-calculator-form]').forEach((form) => {
+            if (form.dataset.calculatorForm === 'emi') form.addEventListener('input', () => {
+                if ($('emi-breakdown')) $('emi-breakdown').hidden = true;
+            });
             form.addEventListener('submit', (event) => {
                 event.preventDefault();
                 handlers[form.dataset.calculatorForm]?.();

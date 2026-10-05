@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const files = require('./site-files.json');
 const routes = require('./consolidated-routes.json');
+const { removeOptionalLoaders } = require('./publisher-safety.cjs');
 const root = path.resolve(__dirname, '..');
 const output = path.join(root, '.site-build');
 const site = 'https://calculatorsallinone.com';
@@ -26,6 +27,15 @@ for (const [oldRoute, destination] of Object.entries(routes)) {
 }
 
 const htmlFiles = files.filter(file => file.endsWith('.html'));
+for (const file of htmlFiles) {
+  if (file.startsWith('google')) continue;
+  const filename = path.join(root, file);
+  let html = removeOptionalLoaders(fs.readFileSync(filename, 'utf8'));
+  if (file !== '404.html' && !/name="robots"[^>]*noindex/.test(html) && !html.includes('name="google-adsense-account"')) {
+    html = html.replace('</head>', '<meta name="google-adsense-account" content="ca-pub-9409281508068005">\n</head>');
+  }
+  fs.writeFileSync(filename, html);
+}
 // Load the shared preference resolver before either calculator bundle.
 // India-specific retirement pages deliberately keep their explicit INR model.
 for (const file of htmlFiles) {
@@ -48,6 +58,9 @@ const entries = indexed.map(file => {
 // Do not pretend all pages were editorially reviewed on the build date.
 fs.writeFileSync(path.join(root, 'sitemap.xml'),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.join('\n')}\n</urlset>\n`);
+// Rebuild the exact public allowlist; never retain stale artifacts or reports.
+if (output !== path.join(root, '.site-build')) throw new Error('Unsafe build output');
+fs.rmSync(output, { recursive: true, force: true });
 fs.mkdirSync(output, { recursive: true });
 for (const file of files) {
   const destination = path.resolve(output, file);
