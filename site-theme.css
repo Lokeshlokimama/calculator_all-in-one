@@ -67,6 +67,8 @@ html{background:#f2f0e9!important;scrollbar-color:#a49f8d #f2f0e9}.site-themed{b
     z-index: 300;
     background: #f2f0e9 !important;
     padding-block: 12px;
+    padding-inline: clamp(16px, 2vw, 32px);
+    box-sizing: border-box;
 }
 .site-themed .navbar nav { display: none; }
 .site-themed .navbar .mobile-menu { display: block; margin-left: auto; flex-shrink: 0; }
