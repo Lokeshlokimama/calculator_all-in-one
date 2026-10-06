@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: calculator-pdf-service
+    runtime: docker
+    plan: 1c-2g
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: ALLOWED_ORIGIN
+        value: https://calculatorsallinone.com

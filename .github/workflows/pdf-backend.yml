@@ -1,0 +1,16 @@
+name: PDF backend checks
+on:
+  push:
+    branches: [main]
+    paths: ['backend/**', '.github/workflows/pdf-backend.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -f backend/Dockerfile -t pdf-service-test .
+      - run: docker run --rm --memory=1g --cpus=2 -v "$PWD/backend/test_server.py:/app/test_server.py:ro" pdf-service-test python -m unittest -v test_server

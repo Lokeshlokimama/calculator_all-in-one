@@ -36,7 +36,7 @@
   form.className = 'global-tool-search';
   form.action = '/#tools';
   form.setAttribute('role', 'search');
-  form.innerHTML = '<label for="global-tool-query">Find a tool</label><input id="global-tool-query" name="search" type="search" placeholder="Search PDF, EMI, BMI…"><button type="submit">Search tools</button><a href="/convert-to-pdf/">Convert to PDF</a>';
+  form.innerHTML = '<label for="global-tool-query">Find a tool</label><input id="global-tool-query" name="search" type="search" placeholder="Search PDF, EMI, BMI…"><button type="submit">Search tools</button><a href="/convert-to-pdf/">Convert to PDF</a><a href="/pdf-tools/">All PDF tools</a>';
   document.querySelector('main')?.before(form);
 })();
 

@@ -88,6 +88,13 @@
   "convert-to-pdf/index.html",
   "convert-to-pdf/converter.js",
   "convert-to-pdf/converter.css",
+  "pdf-tools/index.html",
+  "pdf-tools/tools.js",
+  "pdf-tools/tools.css",
+  "pdf-service-config.js",
+  "pdf-workbench/index.html",
+  "pdf-workbench/workbench.js",
+  "pdf-workbench/workbench.css",
   "hero-locale.js",
   "site-theme.css",
   "site-theme.js"

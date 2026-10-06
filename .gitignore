@@ -7,3 +7,5 @@ node_modules/
 .hallmark/
 dist/
 *.docx
+__pycache__/
+*.pyc
