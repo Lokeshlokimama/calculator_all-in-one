@@ -85,6 +85,9 @@
   "whatsapp-qr-code-generator/index.html",
   "wifi-qr-code-generator/index.html",
   "landing.js",
+  "convert-to-pdf/index.html",
+  "convert-to-pdf/converter.js",
+  "convert-to-pdf/converter.css",
   "hero-locale.js",
   "site-theme.css",
   "site-theme.js"

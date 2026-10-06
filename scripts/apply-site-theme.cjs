@@ -3,6 +3,7 @@ const path = require('node:path');
 const { createHash } = require('node:crypto');
 function applySiteTheme(root, files) {
   const themeVersion = createHash('sha256').update(fs.readFileSync(path.join(root, 'site-theme.css'))).digest('hex').slice(0, 12);
+  const scriptVersion = createHash('sha256').update(fs.readFileSync(path.join(root, 'site-theme.js'))).digest('hex').slice(0, 12);
   let count = 0;
   for (const file of files) {
     if (!file.endsWith('.html') || file === 'index.html' || file.startsWith('google')) continue;
@@ -22,6 +23,7 @@ function applySiteTheme(root, files) {
     });
     if (!/href="\/site-theme\.css(?:\?[^"]*)?"/.test(html)) html = html.replace('</head>', '<link rel="stylesheet" href="/site-theme.css"><script defer src="/site-theme.js"></script>\n</head>');
     html = html.replace(/href="\/site-theme\.css(?:\?[^"]*)?"/g, `href="/site-theme.css?v=${themeVersion}"`);
+    html = html.replace(/src="\/site-theme\.js(?:\?[^"]*)?"/g, `src="/site-theme.js?v=${scriptVersion}"`);
     html = html.replace(/(<meta name="theme-color" content=")[^"]+/, '$1#f2f0e9');
     fs.writeFileSync(filename, html);
     count++;

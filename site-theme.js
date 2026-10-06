@@ -30,6 +30,16 @@
   sync();
 })();
 
+// Search the complete directory from any content page.
+(() => {
+  const form = document.createElement('form');
+  form.className = 'global-tool-search';
+  form.action = '/#tools';
+  form.setAttribute('role', 'search');
+  form.innerHTML = '<label for="global-tool-query">Find a tool</label><input id="global-tool-query" name="search" type="search" placeholder="Search PDF, EMI, BMI…"><button type="submit">Search tools</button><a href="/convert-to-pdf/">Convert to PDF</a>';
+  document.querySelector('main')?.before(form);
+})();
+
 // Close navigation with Escape or a click outside; return keyboard focus on Escape.
 (() => {
   const menus = [...document.querySelectorAll('.mobile-menu, .ai-nav-mobile, .pdf-nav-tools')];

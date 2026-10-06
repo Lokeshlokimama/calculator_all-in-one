@@ -18,3 +18,4 @@ body{isolation:isolate}.ambient-background{position:fixed;inset:0;z-index:-1;ove
     .site-header nav { padding-top: 0; }
 }
 main [id] { scroll-margin-top: 150px; }
+.global-tool-search{width:min(1200px,calc(100% - 48px));margin:20px auto;display:flex;align-items:center;flex-wrap:wrap;gap:12px}.global-tool-search label{font-weight:600}.global-tool-search input{flex:1;min-width:140px;padding:12px;border:1px solid #aaa99d;background:#fffefa}.global-tool-search button{min-height:44px;padding:10px 16px;background:#242622;color:white;border:0}.global-tool-search a{color:#873318}

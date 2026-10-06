@@ -1,4 +1,10 @@
 (() => {
+  const toolSearch = document.createElement('form');
+  toolSearch.className = 'global-tool-search';
+  toolSearch.action = '/#tools';
+  toolSearch.setAttribute('role', 'search');
+  toolSearch.innerHTML = '<label for="global-tool-query">Find a tool</label><input id="global-tool-query" name="search" type="search" placeholder="Search PDF, Word, EMI…"><button type="submit">Search tools</button><a href="/convert-to-pdf/">Convert to PDF</a>';
+  document.querySelector('main')?.before(toolSearch);
   const amount = document.getElementById('hero-amount');
   const payment = document.getElementById('hero-payment');
   const amountValue = document.getElementById('hero-amount-value');
