@@ -3,7 +3,7 @@
   const payment = document.getElementById('hero-payment');
   const amountValue = document.getElementById('hero-amount-value');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  const money = value => new Intl.NumberFormat(document.getElementById('hero-language')?.value || 'en', {style:'currency', currency:document.getElementById('hero-currency')?.value || window.LocalCurrency?.detect().currency || 'USD', maximumFractionDigits:2}).format(value);
+  const money = value => new Intl.NumberFormat('en', {style:'currency', currency:document.getElementById('hero-currency')?.value || window.LocalCurrency?.detect().currency || 'USD', maximumFractionDigits:2}).format(value);
   const factor = (10 / 1200) / (1 - Math.pow(1 + 10 / 1200, -60));
   let displayed = Number(amount.value) * factor;
   let frame;
