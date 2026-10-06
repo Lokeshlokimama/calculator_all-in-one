@@ -1,6 +1,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
+const { createHash } = require('node:crypto');
 function applySiteTheme(root, files) {
+  const themeVersion = createHash('sha256').update(fs.readFileSync(path.join(root, 'site-theme.css'))).digest('hex').slice(0, 12);
   let count = 0;
   for (const file of files) {
     if (!file.endsWith('.html') || file === 'index.html' || file.startsWith('google')) continue;
@@ -18,7 +20,8 @@ function applySiteTheme(root, files) {
       if (/class=["']/i.test(attributes)) return '<body' + attributes.replace(/class=(["'])(.*?)\1/i, (_, quote, classes) => `class=${quote}${classes} site-themed${quote}`) + '>';
       return `<body class="site-themed"${attributes}>`;
     });
-    if (!html.includes('href="/site-theme.css"')) html = html.replace('</head>', '<link rel="stylesheet" href="/site-theme.css"><script defer src="/site-theme.js"></script>\n</head>');
+    if (!/href="\/site-theme\.css(?:\?[^"]*)?"/.test(html)) html = html.replace('</head>', '<link rel="stylesheet" href="/site-theme.css"><script defer src="/site-theme.js"></script>\n</head>');
+    html = html.replace(/href="\/site-theme\.css(?:\?[^"]*)?"/g, `href="/site-theme.css?v=${themeVersion}"`);
     html = html.replace(/(<meta name="theme-color" content=")[^"]+/, '$1#f2f0e9');
     fs.writeFileSync(filename, html);
     count++;
