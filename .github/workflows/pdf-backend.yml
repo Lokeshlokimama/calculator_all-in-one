@@ -13,4 +13,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: docker build -f backend/Dockerfile -t pdf-service-test .
-      - run: docker run --rm --memory=1g --cpus=2 -v "$PWD/backend/test_server.py:/app/test_server.py:ro" pdf-service-test python -m unittest -v test_server
+      - run: docker run --rm --memory=512m --cpus=1 -v "$PWD/backend/test_server.py:/app/test_server.py:ro" pdf-service-test python -m unittest -v test_server

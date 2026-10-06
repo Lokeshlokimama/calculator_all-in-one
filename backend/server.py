@@ -13,8 +13,8 @@ import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pypdf import PdfReader, PdfWriter
 
-MAX_BYTES = 20 * 1024 * 1024
-JOBS = threading.BoundedSemaphore(2)
+MAX_BYTES = 10 * 1024 * 1024
+JOBS = threading.BoundedSemaphore(1)
 ORIGIN = os.environ.get('ALLOWED_ORIGIN', 'https://calculatorsallinone.com')
 TOOLS = {'office-to-pdf', 'repair', 'protect', 'unlock', 'pdfa', 'pdf-to-word', 'pdf-to-excel', 'pdf-to-powerpoint', 'markdown', 'compare', 'redact'}
 
@@ -31,13 +31,13 @@ def decode_file(item, folder, stem):
     suffix = Path(name).suffix.lower()
     encoded = item.get('data', '')
     if not isinstance(encoded, str) or len(encoded) > (MAX_BYTES * 4 // 3 + 8):
-        raise ValueError('File limit: 20 MB.')
+        raise ValueError('File limit: 10 MB.')
     try:
         data = base64.b64decode(encoded, validate=True)
     except (ValueError, binascii.Error) as error:
         raise ValueError('Invalid file data.') from error
     if not data or len(data) > MAX_BYTES:
-        raise ValueError('Choose a non-empty file smaller than 20 MB.')
+        raise ValueError('Choose a non-empty file smaller than 10 MB.')
     if suffix not in {'.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.odt', '.ods', '.odp', '.rtf'}:
         raise ValueError('Unsupported file type.')
     source = folder / (stem + suffix)
@@ -51,8 +51,8 @@ def reader(source, password=''):
         doc = PdfReader(source, strict=False)
         if doc.is_encrypted and not doc.decrypt(password):
             raise ValueError('A correct password is required. This service does not bypass protection.')
-        if not 1 <= len(doc.pages) <= 300:
-            raise ValueError('Page limit: 300.')
+        if not 1 <= len(doc.pages) <= 100:
+            raise ValueError('Page limit: 100.')
         return doc
     except ValueError:
         raise
@@ -237,7 +237,7 @@ class Handler(BaseHTTPRequestHandler):
             return self.reply(429, b'{"error":"Service busy. Try again shortly."}')
         try:
             length = int(self.headers.get('Content-Length', '0'))
-            if not 0 < length <= 58 * 1024 * 1024:
+            if not 0 < length <= 29 * 1024 * 1024:
                 raise ValueError('Request size limit exceeded.')
             if self.headers.get('Content-Type','').split(';')[0] != 'application/json':
                 raise ValueError('Use JSON file data.')
