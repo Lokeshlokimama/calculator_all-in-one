@@ -86,3 +86,33 @@ html{background:#f2f0e9!important;scrollbar-color:#a49f8d #f2f0e9}.site-themed{b
 }
 .site-themed #local-currency-note { margin: 0; font-size: 11px; line-height: 1.4; }
 .site-themed main [id] { scroll-margin-top: 210px; }
+/* Give the calculator assistant the same readable surfaces as the tools. */
+.site-themed #ai-chat-window {
+    background: #f9f8f3 !important;
+    border: 1px solid #aaa99d !important;
+    color: #242622;
+    width: min(360px, calc(100vw - 32px)) !important;
+    height: min(440px, calc(100dvh - 100px)) !important;
+    box-shadow: 0 12px 32px #24262226 !important;
+    backdrop-filter: none !important;
+}
+.site-themed :is(.ai-chat-header, .ai-chat-input-wrapper) {
+    background: #e7e9d7 !important;
+    color: #242622 !important;
+    border-color: #cfcec4 !important;
+}
+.site-themed #ai-chat-log { min-height: 0; }
+.site-themed .ai-msg.bot {
+    background: #efeee5 !important;
+    color: #242622 !important;
+    border: 1px solid #cfcec4;
+}
+.site-themed .ai-msg.bot :is(strong, a) { color: #873318 !important; }
+.site-themed .ai-msg.user { background: #a23b1c !important; color: #fff !important; }
+.site-themed .ai-msg { overflow-wrap: anywhere; }
+.site-themed #ai-chat-input { min-width: 0; width: 0; margin: 0; }
+.site-themed #ai-chat-window .close-chat { color: #242622 !important; min-width: 44px; }
+.site-themed #ai-widget-btn { background: #a23b1c !important; box-shadow: 0 4px 14px #24262226 !important; }
+@media (max-width: 760px) {
+    .site-themed #ai-assistant-widget { right: 16px !important; bottom: 16px !important; }
+}
