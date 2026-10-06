@@ -11,3 +11,10 @@ body{isolation:isolate}.ambient-background{position:fixed;inset:0;z-index:-1;ove
 .motion-toggle{min-height:44px}.popular a{min-height:36px;display:inline-flex;align-items:center}a.header-link{min-height:44px;display:inline-flex;align-items:center}.site-header nav a{min-height:44px;display:inline-flex;align-items:center}@media(max-width:760px){input,select{font-size:16px}.motion-toggle{position:relative;right:auto;bottom:auto;margin:16px auto;width:max-content}.motion-toggle[hidden]{display:none!important}.popular a{min-height:44px}}
 .hero-locale{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0 8px;position:relative;z-index:3}.hero-locale label{display:flex;flex-direction:column;gap:5px;font-size:11px;font-weight:600}.hero-locale select{min-height:44px;min-width:120px;max-width:100%;padding:9px 30px 9px 12px;border:1px solid #aaa99d;border-radius:3px;background:#f9f8f3;color:#242622;font:14px "Segoe UI",sans-serif}.hero-region-note{font-size:11px;color:#64665d;margin:0 0 18px;max-width:380px}.live-result output{overflow-wrap:anywhere}.hero-copy[lang]:not([lang=en]) h1{letter-spacing:-1px}@media(max-width:760px){.hero-locale select{font-size:16px}}
 .hero[lang]:not([lang=en]) h1{font-size:clamp(36px,5vw,72px);letter-spacing:-1px;overflow-wrap:anywhere}.hero .primary{max-width:100%;overflow-wrap:anywhere}
+/* Keep homepage navigation visible when browsing the long directory. */
+.site-header { position: sticky; top: 0; z-index: 300; background: #f2f0e9; }
+@media (max-width: 760px) {
+    .site-header { padding-block: 10px; gap: 10px; min-height: 0; }
+    .site-header nav { padding-top: 0; }
+}
+main [id] { scroll-margin-top: 150px; }
