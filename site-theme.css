@@ -10,3 +10,19 @@ html{background:#f2f0e9!important;scrollbar-color:#a49f8d #f2f0e9}.site-themed{b
 .site-themed>header>nav{gap:20px;flex-wrap:wrap}.site-themed>header>nav a{font-size:12px;color:#45473e;text-decoration:none;white-space:nowrap}.site-themed .theme-added-menu{display:none}.site-themed .theme-added-menu .mobile-menu-panel{position:absolute;top:calc(100% + 8px);right:0;padding:8px}.site-themed .modal-content{background:#f9f8f3;border:1px solid #cfcec4;border-radius:3px;color:#242622}.site-themed .modal-content :is(h2,h3,strong){color:#242622}.site-themed .modal-content p{color:#5d6055}@media(max-width:760px){.site-themed>header>nav{display:none}.site-themed .theme-added-menu{display:block}}
 .site-themed .extended-guide{grid-column:1/-1;width:100%;margin:24px 0;min-width:0}.site-themed .extended-guide p{max-width:78ch;overflow-wrap:anywhere}.site-themed .extended-guide h2{font-size:28px;line-height:1.25}.site-themed .extended-guide h3{font-size:20px;margin-top:28px;line-height:1.4}
 .ymyl-disclaimer{margin:20px 0;padding:16px;border-left:3px solid #a55735;background:#f2ede3;color:#45483e;font-size:14px;line-height:1.65;overflow-wrap:anywhere}.ymyl-disclaimer strong{display:block;margin-bottom:4px;color:#242622}
+/* Keep the toolbox aligned with the shared header at every desktop width. */
+.site-themed > main:not([class]) {
+    margin-inline: auto;
+    min-width: 0;
+}
+.site-themed > main:not([class]) > section {
+    min-width: 0;
+}
+@media (min-width: 1600px) {
+    .site-themed > main:not([class]),
+    .site-themed :is(.navbar, .ai-nav-shell),
+    .site-themed > header {
+        width: min(1440px, calc(100% - 96px));
+        max-width: 1440px;
+    }
+}
