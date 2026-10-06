@@ -29,6 +29,8 @@ for (const [oldRoute, destination] of Object.entries(routes)) {
   fs.writeFileSync(path.join(root, oldRoute, 'index.html'), html);
 }
 
+// Serve the legacy privacy URL with the complete policy and its primary canonical.
+fs.copyFileSync(path.join(root, 'privacy.html'), path.join(root, 'privacy-policy.html'));
 const htmlFiles = files.filter(file => file.endsWith('.html'));
 for (const file of htmlFiles) {
   if (file.startsWith('google')) continue;
@@ -62,6 +64,7 @@ const { applyAdSpaces } = require('./build-ad-spaces.cjs');
 const adSpaces = applyAdSpaces(root, files);
 console.log(`Reserved ${adSpaces.placements} ad spaces across ${adSpaces.pages} content pages`);
 const indexed = htmlFiles.filter(file => {
+  if (file === 'privacy-policy.html') return false;
   const html = fs.readFileSync(path.join(root, file), 'utf8');
   return !/name=["']robots["'][^>]+noindex/i.test(html) &&
     file !== '404.html' && !file.startsWith('google');

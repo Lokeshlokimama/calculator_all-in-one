@@ -41,7 +41,8 @@ for (const [file, html] of pages) {
   } else if (file !== '404.html') {
     if (!/<meta name="description" content="[^"]+"/.test(html)) errors.push(file + ': missing description');
     const canonical = html.match(/rel="canonical" href="([^"]+)"/)?.[1];
-    if (canonical !== base.href) errors.push(file + ': wrong canonical ' + canonical);
+    const expectedCanonical = file === 'privacy-policy.html' ? site + '/privacy.html' : base.href;
+    if (canonical !== expectedCanonical) errors.push(file + ': wrong canonical ' + canonical);
   }
   for (const match of html.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)) {
     try {
@@ -88,7 +89,7 @@ if (locations.length !== new Set(locations).size) errors.push('Duplicate sitemap
 for (const [file, html] of pages) {
   if (file === '404.html' || file.startsWith('google')) continue;
   const url = site + '/' + file.replace(/index\.html$/, '');
-  const indexable = !/name="robots"[^>]*noindex/.test(html);
+  const indexable = file !== 'privacy-policy.html' && !/name="robots"[^>]*noindex/.test(html);
   if (locations.includes(url) !== indexable) errors.push('Sitemap mismatch: ' + file);
 }
 const expectedAds = 'google.com, pub-9409281508068005, DIRECT, f08c47fec0942fa0';
