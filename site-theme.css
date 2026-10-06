@@ -26,3 +26,37 @@ html{background:#f2f0e9!important;scrollbar-color:#a49f8d #f2f0e9}.site-themed{b
         max-width: 1440px;
     }
 }
+/* Complete the light palette for legacy toolbox components. */
+.site-themed .quick-start-strip {
+    background: #e7e9d7;
+    border: 1px solid #c4cbb5;
+    border-radius: 3px;
+    box-shadow: none;
+}
+.site-themed .quick-start-grid a {
+    background: #f9f8f3;
+    border: 1px solid #cfcec4;
+    border-radius: 3px;
+    color: #242622;
+}
+.site-themed .quick-start-grid a:is(:hover, :focus-visible) {
+    background: #f7ddcc;
+    border-color: #a23b1c;
+}
+.site-themed :is(.calc-display, .electricity-result) {
+    background: #e9eedb !important;
+    color: #242622 !important;
+    border-color: #c4cbb5 !important;
+    box-shadow: none;
+}
+.site-themed .calc-display::before { display: none; }
+.site-themed #hero-live-chart { background: #e7e9d7 !important; }
+.site-themed .stat-item :is(h2, .counter) {
+    background: none;
+    color: #a23b1c !important;
+    -webkit-text-fill-color: currentColor;
+}
+.site-themed .card-glow { display: none; }
+.site-themed main :is(button, .glowing-btn, .ai-button, .traffic-btn):not(.secondary-btn):not(.category-btn) :is(span, strong) {
+    color: #fff !important;
+}
