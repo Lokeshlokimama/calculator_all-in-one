@@ -1,0 +1,1300 @@
+[
+  {
+    "page": "404.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": {
+      "page": "404.html",
+      "destination": "http://127.0.0.1:4175/404.html",
+      "checks": [
+        {
+          "overflow": false,
+          "panels": [
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card full",
+              "padding": "26px",
+              "radius": "3px"
+            }
+          ],
+          "width": 1440
+        },
+        {
+          "overflow": false,
+          "panels": [
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card full",
+              "padding": "26px",
+              "radius": "3px"
+            }
+          ],
+          "width": 390
+        },
+        {
+          "overflow": false,
+          "panels": [
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card full",
+              "padding": "26px",
+              "radius": "3px"
+            }
+          ],
+          "width": 320
+        }
+      ]
+    }
+  },
+  {
+    "page": "about.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": {
+      "page": "about.html",
+      "destination": "http://127.0.0.1:4175/about.html",
+      "checks": [
+        {
+          "overflow": false,
+          "panels": [
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card full",
+              "padding": "26px",
+              "radius": "3px"
+            }
+          ],
+          "width": 1440
+        },
+        {
+          "overflow": false,
+          "panels": [
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card full",
+              "padding": "26px",
+              "radius": "3px"
+            }
+          ],
+          "width": 390
+        },
+        {
+          "overflow": false,
+          "panels": [
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card full",
+              "padding": "26px",
+              "radius": "3px"
+            }
+          ],
+          "width": 320
+        }
+      ]
+    }
+  },
+  {
+    "page": "privacy-policy.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": {
+      "page": "privacy-policy.html",
+      "destination": "http://127.0.0.1:4175/privacy-policy.html",
+      "checks": [
+        {
+          "overflow": false,
+          "panels": [
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            }
+          ],
+          "width": 1440
+        },
+        {
+          "overflow": false,
+          "panels": [
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            }
+          ],
+          "width": 390
+        },
+        {
+          "overflow": false,
+          "panels": [
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "content-card",
+              "padding": "26px",
+              "radius": "3px"
+            }
+          ],
+          "width": 320
+        }
+      ]
+    }
+  },
+  {
+    "page": "age-calculator.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "calculator-tool-card",
+      "calculator-copy-card",
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": {
+      "page": "age-calculator.html",
+      "destination": "http://127.0.0.1:4175/age-calculator.html",
+      "checks": [
+        {
+          "overflow": false,
+          "panels": [
+            {
+              "class": "calculator-copy-card intro-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card formula-box",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card example-box",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card benefits-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card content-evidence source-note",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card related-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card content-card extended-guide",
+              "padding": "26px",
+              "radius": "3px"
+            }
+          ],
+          "width": 1440
+        },
+        {
+          "overflow": false,
+          "panels": [
+            {
+              "class": "calculator-copy-card intro-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card formula-box",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card example-box",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card benefits-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card content-evidence source-note",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card related-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card content-card extended-guide",
+              "padding": "26px",
+              "radius": "3px"
+            }
+          ],
+          "width": 390
+        },
+        {
+          "overflow": false,
+          "panels": [
+            {
+              "class": "calculator-copy-card intro-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card formula-box",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card example-box",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card benefits-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card content-evidence source-note",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card related-card",
+              "padding": "26px",
+              "radius": "3px"
+            },
+            {
+              "class": "calculator-copy-card content-card extended-guide",
+              "padding": "26px",
+              "radius": "3px"
+            }
+          ],
+          "width": 320
+        }
+      ]
+    }
+  },
+  {
+    "page": "andhra-pradesh-electricity-bill-calculator/index.html",
+    "redirect": true,
+    "themed": false,
+    "squareCardCandidates": [],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "bescom-electricity-bill-calculator/index.html",
+    "redirect": true,
+    "themed": false,
+    "squareCardCandidates": [],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "bmi-calculator.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "calculator-tool-card",
+      "calculator-copy-card",
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "bulk-qr-code-generator/index.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "traffic-panel",
+      "calculator-copy-card",
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "compress-pdf-to-100kb/index.html",
+    "redirect": true,
+    "themed": false,
+    "squareCardCandidates": [],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "compress-pdf/index.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "ai-hero-proof",
+      "privacy-panel",
+      "checker-stage",
+      "checker-workbench",
+      "upload-card",
+      "result-card",
+      "ai-info-card"
+    ],
+    "unpaddedStageCandidate": true,
+    "browser": null
+  },
+  {
+    "page": "contact.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "currency-converter.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "calculator-tool-card",
+      "calculator-copy-card",
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "delhi-electricity-bill-calculator/index.html",
+    "redirect": true,
+    "themed": false,
+    "squareCardCandidates": [],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "disclaimer.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "editorial-standards.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "electricity-bill-calculator-india/index.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "traffic-panel",
+      "calculator-copy-card",
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "electricity-calculators.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "emi-calculator-with-prepayment/index.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "traffic-panel",
+      "calculator-copy-card",
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "emi-calculator.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "calculator-tool-card",
+      "calculator-copy-card",
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "finance-calculators.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "geometry-calculators.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "gst-calculator-india/index.html",
+    "redirect": true,
+    "themed": false,
+    "squareCardCandidates": [],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "gst-calculator.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "calculator-tool-card",
+      "calculator-copy-card",
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "gujarat-electricity-bill-calculator/index.html",
+    "redirect": true,
+    "themed": false,
+    "squareCardCandidates": [],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "health-calculators.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "home-loan-emi-calculator-india/index.html",
+    "redirect": true,
+    "themed": false,
+    "squareCardCandidates": [],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "images-to-pdf/index.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "ai-hero-proof",
+      "checker-stage",
+      "checker-workbench",
+      "upload-card",
+      "result-card",
+      "privacy-panel",
+      "ai-info-card"
+    ],
+    "unpaddedStageCandidate": true,
+    "browser": null
+  },
+  {
+    "page": "index.html",
+    "redirect": false,
+    "themed": false,
+    "squareCardCandidates": [],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "tools.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "result-card",
+      "traffic-path-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "epf-calculator.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "calculator-copy-card",
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "eps-pension-calculator.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "nps-calculator.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "calculator-copy-card",
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "jpg-to-pdf/index.html",
+    "redirect": true,
+    "themed": false,
+    "squareCardCandidates": [],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "kerala-electricity-bill-calculator/index.html",
+    "redirect": true,
+    "themed": false,
+    "squareCardCandidates": [],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "loan-calculator.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "calculator-tool-card",
+      "calculator-copy-card",
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "math-calculators.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "merge-pdf/index.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "ai-hero-proof",
+      "checker-stage",
+      "checker-workbench",
+      "upload-card",
+      "result-card",
+      "privacy-panel",
+      "ai-info-card"
+    ],
+    "unpaddedStageCandidate": true,
+    "browser": null
+  },
+  {
+    "page": "msedcl-electricity-bill-calculator/index.html",
+    "redirect": true,
+    "themed": false,
+    "squareCardCandidates": [],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "ocr-scanned-pdf/index.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "ai-hero-proof",
+      "privacy-panel",
+      "checker-stage",
+      "checker-workbench",
+      "upload-card",
+      "result-card",
+      "ai-info-card"
+    ],
+    "unpaddedStageCandidate": true,
+    "browser": null
+  },
+  {
+    "page": "password-generator.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "calculator-tool-card",
+      "calculator-copy-card",
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "pdf-converter/index.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "ai-hero-proof",
+      "checker-stage",
+      "checker-workbench",
+      "upload-card",
+      "pdf-mode-card",
+      "result-card",
+      "ai-info-card",
+      "privacy-panel",
+      "ai-tool-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "pdf-password-helper/index.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "ai-hero-proof",
+      "checker-stage",
+      "checker-workbench",
+      "upload-card",
+      "result-card",
+      "privacy-panel",
+      "ai-info-card"
+    ],
+    "unpaddedStageCandidate": true,
+    "browser": null
+  },
+  {
+    "page": "pdf-to-jpg/index.html",
+    "redirect": true,
+    "themed": false,
+    "squareCardCandidates": [],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "pdf-to-word/index.html",
+    "redirect": true,
+    "themed": false,
+    "squareCardCandidates": [],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "percentage-calculator.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "calculator-tool-card",
+      "calculator-copy-card",
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "privacy.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "punjab-electricity-bill-calculator/index.html",
+    "redirect": true,
+    "themed": false,
+    "squareCardCandidates": [],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "qr-code-generator.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "calculator-tool-card",
+      "calculator-copy-card",
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "rajasthan-electricity-bill-calculator/index.html",
+    "redirect": true,
+    "themed": false,
+    "squareCardCandidates": [],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "sip-calculator.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "calculator-tool-card",
+      "calculator-copy-card",
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "sip-step-up-calculator/index.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "traffic-panel",
+      "calculator-copy-card",
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "split-pdf/index.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "ai-hero-proof",
+      "checker-stage",
+      "checker-workbench",
+      "upload-card",
+      "result-card",
+      "privacy-panel",
+      "ai-info-card"
+    ],
+    "unpaddedStageCandidate": true,
+    "browser": null
+  },
+  {
+    "page": "telangana-electricity-bill-calculator/index.html",
+    "redirect": true,
+    "themed": false,
+    "squareCardCandidates": [],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "terms.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "tneb-electricity-bill-calculator/index.html",
+    "redirect": true,
+    "themed": false,
+    "squareCardCandidates": [],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "upi-qr-code-generator/index.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "traffic-panel",
+      "calculator-copy-card",
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "utility-tools.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "uttar-pradesh-electricity-bill-calculator/index.html",
+    "redirect": true,
+    "themed": false,
+    "squareCardCandidates": [],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "vcard-qr-code-generator/index.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "traffic-panel",
+      "calculator-copy-card",
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "west-bengal-electricity-bill-calculator/index.html",
+    "redirect": true,
+    "themed": false,
+    "squareCardCandidates": [],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "whatsapp-qr-code-generator/index.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "traffic-panel",
+      "calculator-copy-card",
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "wifi-qr-code-generator/index.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "traffic-panel",
+      "calculator-copy-card",
+      "content-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "convert-to-pdf/index.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "ai-tool-card",
+      "ai-info-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "pdf-tools/index.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "ai-tool-card",
+      "ai-info-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  },
+  {
+    "page": "pdf-workbench/index.html",
+    "redirect": false,
+    "themed": true,
+    "squareCardCandidates": [
+      "ai-tool-card",
+      "ai-info-card"
+    ],
+    "unpaddedStageCandidate": false,
+    "browser": null
+  }
+]

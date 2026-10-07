@@ -1,0 +1,608 @@
+[
+  {
+    "page": "404.html",
+    "destination": "http://127.0.0.1:4175/404.html",
+    "checks": [
+      {
+        "overflow": false,
+        "panels": [
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card full",
+            "padding": "26px",
+            "radius": "3px"
+          }
+        ],
+        "width": 1440
+      },
+      {
+        "overflow": false,
+        "panels": [
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card full",
+            "padding": "26px",
+            "radius": "3px"
+          }
+        ],
+        "width": 390
+      },
+      {
+        "overflow": false,
+        "panels": [
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card full",
+            "padding": "26px",
+            "radius": "3px"
+          }
+        ],
+        "width": 320
+      }
+    ]
+  },
+  {
+    "page": "about.html",
+    "destination": "http://127.0.0.1:4175/about.html",
+    "checks": [
+      {
+        "overflow": false,
+        "panels": [
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card full",
+            "padding": "26px",
+            "radius": "3px"
+          }
+        ],
+        "width": 1440
+      },
+      {
+        "overflow": false,
+        "panels": [
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card full",
+            "padding": "26px",
+            "radius": "3px"
+          }
+        ],
+        "width": 390
+      },
+      {
+        "overflow": false,
+        "panels": [
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card full",
+            "padding": "26px",
+            "radius": "3px"
+          }
+        ],
+        "width": 320
+      }
+    ]
+  },
+  {
+    "page": "privacy-policy.html",
+    "destination": "http://127.0.0.1:4175/privacy-policy.html",
+    "checks": [
+      {
+        "overflow": false,
+        "panels": [
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          }
+        ],
+        "width": 1440
+      },
+      {
+        "overflow": false,
+        "panels": [
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          }
+        ],
+        "width": 390
+      },
+      {
+        "overflow": false,
+        "panels": [
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "content-card",
+            "padding": "26px",
+            "radius": "3px"
+          }
+        ],
+        "width": 320
+      }
+    ]
+  },
+  {
+    "page": "age-calculator.html",
+    "destination": "http://127.0.0.1:4175/age-calculator.html",
+    "checks": [
+      {
+        "overflow": false,
+        "panels": [
+          {
+            "class": "calculator-copy-card intro-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card formula-box",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card example-box",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card benefits-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card content-evidence source-note",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card related-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card content-card extended-guide",
+            "padding": "26px",
+            "radius": "3px"
+          }
+        ],
+        "width": 1440
+      },
+      {
+        "overflow": false,
+        "panels": [
+          {
+            "class": "calculator-copy-card intro-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card formula-box",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card example-box",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card benefits-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card content-evidence source-note",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card related-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card content-card extended-guide",
+            "padding": "26px",
+            "radius": "3px"
+          }
+        ],
+        "width": 390
+      },
+      {
+        "overflow": false,
+        "panels": [
+          {
+            "class": "calculator-copy-card intro-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card formula-box",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card example-box",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card benefits-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card content-evidence source-note",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card related-card",
+            "padding": "26px",
+            "radius": "3px"
+          },
+          {
+            "class": "calculator-copy-card content-card extended-guide",
+            "padding": "26px",
+            "radius": "3px"
+          }
+        ],
+        "width": 320
+      }
+    ]
+  }
+]
