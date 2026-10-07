@@ -90,6 +90,20 @@ html{background:#f2f0e9!important;scrollbar-color:#a49f8d #f2f0e9}.site-themed{b
 .global-tool-search label { font-weight: 600; }
 .global-tool-search input { flex: 1; min-width: 140px; margin: 0; }
 .global-tool-search a { white-space: nowrap; }
+/* Keep the PDF introduction and controls comfortably inside their surfaces. */
+.site-themed.pdf-page .pdf-converter-stage {
+    padding: clamp(20px, 3vw, 36px);
+    border-radius: 16px !important;
+}
+.site-themed.pdf-page :is(.pdf-upload-card, .pdf-workbench, .pdf-mode-card, .pdf-converter-stage .result-card) {
+    border-radius: 12px !important;
+}
+.site-themed.pdf-page .pdf-quick-steps > div {
+    border-radius: 10px !important;
+}
+.site-themed.pdf-page .upload-dropzone {
+    border-radius: 10px;
+}
 /* Give the calculator assistant the same readable surfaces as the tools. */
 .site-themed #ai-chat-window {
     background: #f9f8f3 !important;
