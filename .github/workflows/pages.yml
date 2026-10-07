@@ -21,6 +21,13 @@ jobs:
         with:
           node-version: '22'
       - run: npm run verify
+      - name: Stamp deployment commit
+        run: node -e "require('node:fs').writeFileSync('.site-build/deployment.json', JSON.stringify({commit:process.env.GITHUB_SHA}) + '\n')"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-verification
+          path: .site-build/
+          include-hidden-files: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .site-build
@@ -34,6 +41,29 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-verification
+          path: .site-build/
       - name: Deploy website artifact
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Verify live deployment matches this release
+        id: live-verification
+        run: node scripts/verify-live.cjs
+        env:
+          EXPECTED_SHA: ${{ github.sha }}
+          DEPLOYMENT_URL: https://calculatorsallinone.com
+      - name: Record deployment and verification status
+        if: always()
+        env:
+          DEPLOYMENT_OUTCOME: ${{ steps.deployment.outcome }}
+          VERIFICATION_OUTCOME: ${{ steps.live-verification.outcome }}
+        run: |
+          echo "Commit: $GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
+          echo "Pages deployment: $DEPLOYMENT_OUTCOME" >> "$GITHUB_STEP_SUMMARY"
+          echo "Live release verification: $VERIFICATION_OUTCOME" >> "$GITHUB_STEP_SUMMARY"
