@@ -50,7 +50,7 @@ for (const [file, html] of pages) {
       function checkPublisher(value) {
         if (!value || typeof value !== 'object') return;
         for (const key of ['publisher', 'author']) {
-          if (value[key] && (value[key]['@type'] !== 'Organization' || value[key].name !== 'Calculator All-in-One' || value[key].email !== 'contact@calculatorsallinone.com')) errors.push(file + ': nonstandard ' + key);
+          if (value[key] && (value[key]['@type'] !== 'Organization' || value[key].name !== 'Calculator All-in-One' || value[key].email !== 'calculators@proton.me')) errors.push(file + ': nonstandard ' + key);
         }
         Object.values(value).forEach(checkPublisher);
       }

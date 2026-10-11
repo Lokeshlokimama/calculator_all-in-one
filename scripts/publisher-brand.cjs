@@ -1,4 +1,4 @@
-const email = 'contact@calculatorsallinone.com';
+const email = 'calculators@proton.me';
 const copyright = '<p class="copyright">© 2026 Calculator All-in-One. All rights reserved. Built for fast, accurate browser calculations.</p>';
 function standardizePublisher(html) {
   html = html.replace(/\r\n/g, '\n');
