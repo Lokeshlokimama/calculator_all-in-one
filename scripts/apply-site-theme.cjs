@@ -2,8 +2,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { createHash } = require('node:crypto');
 function applySiteTheme(root, files) {
-  const themeVersion = createHash('sha256').update(fs.readFileSync(path.join(root, 'site-theme.css'))).digest('hex').slice(0, 12);
-  const scriptVersion = createHash('sha256').update(fs.readFileSync(path.join(root, 'site-theme.js'))).digest('hex').slice(0, 12);
+  const version = file => createHash('sha256').update(fs.readFileSync(path.join(root, file), 'utf8').replace(/\r\n/g, '\n')).digest('hex').slice(0, 12);
+  const themeVersion = version('site-theme.css');
+  const scriptVersion = version('site-theme.js');
   let count = 0;
   for (const file of files) {
     if (!file.endsWith('.html') || file === 'index.html' || file.startsWith('google')) continue;

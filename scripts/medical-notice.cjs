@@ -1,7 +1,7 @@
 const medicalNotice = '<div class="ymyl-disclaimer" data-medical-notice><strong>Medical Notice:</strong> This tool provides general physiological benchmarks based on standard reference tables and does not constitute clinical diagnostic advice. Always consult a qualified medical professional for health evaluations.</div>';
 function applyMedicalNotice(html, file) {
   if (!['bmi-calculator.html', 'tools.html', 'health-calculators.html'].includes(file)) return html;
-  html = html.replace(/<div class="ymyl-disclaimer" data-medical-notice>[\s\S]*?<\/div>/g, '');
+  html = html.replace(/(?:\r?\n)?<div class="ymyl-disclaimer" data-medical-notice>[\s\S]*?<\/div>/g, '');
   if (file === 'tools.html') {
     let count = 0;
     html = html.replace(/(<div\b[^>]*class="[^"]*tool-demo-card[^"]*"[^>]*data-category="health"[^>]*>[\s\S]*?<\/h3>\s*<p>[\s\S]*?<\/p>)/g, match => { count++; return match + '\n' + medicalNotice; });

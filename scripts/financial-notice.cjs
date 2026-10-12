@@ -2,7 +2,7 @@ const financialNotice = '<div class="ymyl-disclaimer"><strong>Financial Notice:<
 const financialNoticePages = ['emi-calculator.html', 'loan-calculator.html', 'emi-calculator-with-prepayment/index.html'];
 function applyFinancialNotice(html, file) {
   if (!financialNoticePages.includes(file)) return html;
-  html = html.replace(/<div class="ymyl-disclaimer">[\s\S]*?<\/div>/g, '');
+  html = html.replace(/(?:\r?\n)?<div class="ymyl-disclaimer">[\s\S]*?<\/div>/g, '');
   const start = html.search(/<aside\b[^>]*class="(?:calculator-tool-card|traffic-tool-card)"/);
   const end = html.indexOf('</form>', start);
   if (start < 0 || end < 0) throw new Error('Missing loan calculator form: ' + file);

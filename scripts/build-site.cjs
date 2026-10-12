@@ -35,7 +35,8 @@ const htmlFiles = files.filter(file => file.endsWith('.html'));
 for (const file of htmlFiles) {
   if (file.startsWith('google')) continue;
   const filename = path.join(root, file);
-  let html = standardizePublisher(removeOptionalLoaders(fs.readFileSync(filename, 'utf8')));
+  let html = standardizePublisher(removeOptionalLoaders(fs.readFileSync(filename, 'utf8')))
+    .replace(/\s*<\/head>/i, '\n</head>');
   html = applyFinancialNotice(html, file);
   html = applyMedicalNotice(html, file);
   if (file !== '404.html' && !/name="robots"[^>]*noindex/.test(html) && !html.includes('name="google-adsense-account"')) {
