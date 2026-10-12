@@ -785,7 +785,7 @@ const calculatorPage = (() => {
         return value.length > 140 ? `${value.slice(0, 140)}...` : value;
     }
 
-    function renderQrFields() {
+    function renderQrFields(focusInput = false) {
         const typeSelect = $('qr-type');
         const fieldsContainer = $('qr-fields');
         if (!typeSelect || !fieldsContainer) return;
@@ -812,7 +812,7 @@ const calculatorPage = (() => {
         }).join('');
 
         const firstInput = fieldsContainer.querySelector('input:not([type="checkbox"]), textarea, select');
-        firstInput?.focus();
+        if (focusInput) firstInput?.focus();
     }
 
     function getQrFieldValues(config) {
@@ -955,7 +955,7 @@ const calculatorPage = (() => {
         const typeSelect = $('qr-type');
         if (typeSelect) {
             typeSelect.addEventListener('change', () => {
-                renderQrFields();
+                renderQrFields(true);
                 setText('qr-copy-status', '');
             });
             renderQrFields();

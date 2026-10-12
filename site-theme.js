@@ -18,7 +18,7 @@
   let paused = false;
   function sync() {
     document.body.classList.toggle('theme-paused', paused || reduced.matches || document.hidden);
-    button.hidden = reduced.matches;
+    button.hidden = true;
     button.textContent = paused ? '▷ Resume effects' : 'Ⅱ Pause effects';
     button.setAttribute('aria-label', paused ? 'Resume background animation' : 'Pause background animation');
     button.setAttribute('aria-pressed', String(paused));
@@ -32,11 +32,12 @@
 
 // Search the complete directory from any content page.
 (() => {
+  document.querySelector('header .header-search')?.remove();
   const form = document.createElement('form');
   form.className = 'global-tool-search';
   form.action = '/#tools';
   form.setAttribute('role', 'search');
-  form.innerHTML = '<label for="global-tool-query">Find a tool</label><input id="global-tool-query" name="search" type="search" placeholder="Search PDF, EMI, BMI…"><button type="submit">Search tools</button><a href="/convert-to-pdf/">Convert to PDF</a><a href="/pdf-tools/">All PDF tools</a>';
+  form.innerHTML = '<label for="global-tool-query">Find a tool</label><input id="global-tool-query" name="search" type="search" autocomplete="off" placeholder="Search PDF, EMI, BMI…"><button type="submit">Search tools</button><a href="/convert-to-pdf/">Convert to PDF</a><a href="/pdf-tools/">All PDF tools</a>';
   document.querySelector('main')?.before(form);
 })();
 

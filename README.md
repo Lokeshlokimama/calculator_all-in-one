@@ -13,3 +13,7 @@ Edit generated tool content in `scripts/generate-traffic-pages.js`. Consolidated
 GitHub Pages publishes the repository's main branch. Pushes to a feature branch alone do not update the live site. CI runs `npm run verify` on pushes and pull requests. Every Pages deployment automatically runs `node scripts/verify-live.cjs` against the exact uploaded `.site-build` artifact and checks its live commit marker. The workflow retries propagation mismatches and fails if the live release cannot be verified. Its summary reports deployment and live verification separately. For a manual comparison, build first and run the same script; set `EXPECTED_SHA` only when the build includes the matching `deployment.json` marker.
 
 Tests check specific behaviors and known failures. They are not a certification of every calculator or a guarantee of AdSense approval. See `REPAIR-REPORT.md` and `AUDIT-INVENTORY.md` for the 22–23 September repair evidence, limits, and release checklist. Regenerate the inventory with `node scripts/audit-inventory.cjs` after building. Earlier work is recorded separately in `ADSENSE-REMEDIATION.md`.
+
+## Required review
+
+Use `WEBSITE-QA-CHECKLIST.md` as the only master checklist before every task and release. It includes all-page UI/UX, links, functional checks and main deployment verification. Historical audit reports are evidence only; do not maintain additional checklists.
