@@ -16,6 +16,8 @@ These are recurring requirements, not a claim that every possible device/input h
 - [ ] Use truthful currency and language options. Do not claim exchange conversion or unavailable translation. Verify branding and About, Contact, Privacy, Terms and Disclaimer. Contact email: calculators@proton.me.
 - [ ] Review explanatory depth, originality, categories, examples and limitations. Word counts, testing and ad scripts do not guarantee AdSense approval.
 - [ ] Preserve one approved AdSense loader and top/middle/bottom reserved spaces. Desktop side placements must stack on phones. Ad delivery is separate from installation.
+- [ ] Preserve exactly one analytics loader on every public content page across redesigns and rebuilds; exclude redirects, ownership verification and error pages. Verify the deployed measurement ID against GA4 Admin > Data streams and the intended domain/property. Test accept/decline and saved privacy choices, confirm page_view delivery in Tag Assistant and Realtime after acceptance, and distinguish missing tracking from a real traffic decline. Never send calculator inputs, QR payloads, passwords or uploaded file contents as analytics events.
+
 - [ ] Keep PDF tools discoverable in search and navigation. Check supported/unsupported, empty/corrupt/oversized inputs, preview, clear, page limits and exports. Reopen downloaded PDFs to verify page count, dimensions, content and saved form values.
 - [ ] State Office rendering limits honestly. Exclude AI PDF features and never require an AI key. Keep backend tools unavailable until HTTPS service and real outputs are verified; require upload consent, password validation, temporary cleanup and busy/error feedback.
 - [ ] Use the owner's free Render plan; do not enable paid compute/upgrades without permission. Test health, cold-start feedback and server outputs with synthetic files before claiming backend readiness.
@@ -113,3 +115,14 @@ All 18 redirect paths: `/andhra-pradesh-electricity-bill-calculator/`, `/bescom-
 - The 8 October homepage review passed 76 automated tests and homepage interactions only. It did not certify the other pages. “Show all” persistence, focus scrolling, labels, contrast and font connections were fixed then.
 - Backend conversions depend on free-service availability, limits and real downloaded outputs. AI features remain excluded. No financial, medical, legal, engineering or regulatory entitlement is certified by these tests.
 - Historical QA/audit reports remain read-only records; all new concerns and completion status go only in this master checklist.
+
+## Analytics restoration — 14 October 2026
+
+- [x] Reviewed the cause: publisher cleanup stripped Google Analytics and the build only restored AdSense. Restored a shared consent-controlled analytics loader using the existing generator ID G-MRCMVF9545, with build/lint coverage to detect missing and duplicate installation.
+- [x] Updated privacy disclosures and added accept/decline controls with a footer preferences button.
+- [x] Build and lint passed for 100 public files and 66 HTML endpoints. All 78 tests passed, including consent defaults, acceptance, decline, persistence, blocked storage and duplicate-loader coverage. The HTTP test required local-network permissions after sandbox EACCES.
+- [x] Browser-checked all 47 content/error pages at 320, 390 and 1440 px (141 screenshots) and all 18 redirects. Banner/buttons remain in the viewport, touch targets are at least 44 px and pages have no horizontal overflow. Acceptance, decline, reload persistence and changing preferences passed. Evidence: .qa-analytics/browser.json and screenshots/. External Google requests were intercepted locally, so Google receipt remains a live check. A first OCR-page wait timed out; the full rerun passed.
+- [ ] Confirm G-MRCMVF9545 belongs to the intended website/property; the supplied screenshot shows the property name aiagesnts.
+- [ ] Publish and verify the live release and analytics.js against the deployment artifact. The Pages workflow checks every public file and commit marker. Record live browser collection evidence after deployment.\n- [ ] Confirm Google receipt in Tag Assistant and GA4 Realtime using the owner account; a browser request alone does not prove reporting in the intended property.
+
+- [x] Release link audit: 84 unique internal URLs and all 25 external URLs succeeded; 2,141 URL occurrences audited. Evidence: .qa-all-pages/links.json. Private browser evidence and temporary scripts are excluded from the release manifest.

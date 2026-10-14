@@ -97,5 +97,6 @@
   "pdf-workbench/workbench.css",
   "hero-locale.js",
   "site-theme.css",
-  "site-theme.js"
+  "site-theme.js",
+  "analytics.js"
 ]

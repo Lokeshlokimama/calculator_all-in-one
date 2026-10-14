@@ -6,4 +6,6 @@ function removeOptionalLoaders(html) {
     .replace(/<link\b[^>]*(?:googletagmanager\.com|pagead2\.googlesyndication\.com)[^>]*>/gi, '')
     .replace(/<!-- Google tag \(gtag\.js\) -->/g, '');
 }
-module.exports = { removeOptionalLoaders, adsenseLoader };
+const analyticsLoader = '<script defer src="/analytics.js"></script>';
+const measurementId = 'G-MRCMVF9545';
+module.exports = { removeOptionalLoaders, adsenseLoader, analyticsLoader, measurementId };

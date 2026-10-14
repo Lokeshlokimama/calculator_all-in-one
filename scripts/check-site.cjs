@@ -18,13 +18,15 @@ function pageFile(url) {
 for (const [file, html] of pages) {
   if (file.startsWith('google')) continue;
   if (/support\.aiagents@gmail\.com|class="maintainer-credit"|<!--\s*AdSense\b/i.test(html)) errors.push(file + ': stale publisher branding or internal comment');
-  const { adsenseLoader } = require('./publisher-safety.cjs');
+  const { adsenseLoader, analyticsLoader } = require('./publisher-safety.cjs');
   const withoutApprovedLoader = html.replace(adsenseLoader, '');
   if (/googletagmanager\.com|pagead2\.googlesyndication\.com|adsbygoogle/.test(withoutApprovedLoader)) errors.push(file + ': unexpected or duplicate ad/analytics loader');
   const route = '/' + file.replace(/index\.html$/, '');
   const base = new URL(route, site);
   const moved = redirects[route];
   const expectsAdSpace = file !== '404.html' && !moved && !/name=["']robots["'][^>]*noindex/i.test(html);
+  if (html.split(analyticsLoader).length - 1 !== (expectsAdSpace ? 1 : 0)) errors.push(file + ': missing or duplicate analytics loader, or tracking on excluded page');
+  if (expectsAdSpace && !html.split('</head>')[0].includes(analyticsLoader)) errors.push(file + ': analytics loader outside head');
   if (expectsAdSpace && !html.split('</head>')[0].includes(adsenseLoader)) errors.push(file + ': missing approved AdSense head code');
   if (expectsAdSpace && !html.includes('Built for fast, accurate browser calculations.')) errors.push(file + ': missing standard publisher footer');
   if (!expectsAdSpace && html.includes(adsenseLoader)) errors.push(file + ': AdSense on non-content page');
