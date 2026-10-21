@@ -9,10 +9,21 @@
     const supported = /\.(docx|xlsx|pptx|jpe?g|png|webp|txt|md|csv|json|html?)$/i;
     let revision = 0;
     let imageUrl;
-    let zipPromise;
+    let pdfUrl;
+    let officeDownload;
+    let request;
+    const consent = document.getElementById('office-upload-consent');
+    const uploadOptions = document.getElementById('office-upload-options');
+    const isOffice = file => /\.(docx|xlsx|pptx)$/i.test(file?.name || '');
     const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     function reset() {
         revision++;
+        request?.abort();
+        request = null;
+        officeDownload = null;
+        if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+        pdfUrl = null;
+        preview.removeAttribute('src');
         save.disabled = true;
         section.hidden = true;
         preview.removeAttribute('srcdoc');
@@ -27,87 +38,52 @@
     }
     input.addEventListener('change', () => {
         reset();
+        consent.checked = false;
+        uploadOptions.hidden = !isOffice(input.files[0]);
+        prepare.textContent = isOffice(input.files[0]) ? 'Convert to PDF' : 'Prepare preview';
+        save.textContent = isOffice(input.files[0]) ? 'Download PDF' : 'Print / Save as PDF';
         try { validate(input.files[0]); prepare.disabled = false; status.textContent = 'Ready to prepare: ' + input.files[0].name; }
         catch (error) { prepare.disabled = true; status.textContent = error.message; }
     });
     document.getElementById('clear-file').addEventListener('click', () => {
-        reset(); input.value = ''; prepare.disabled = true; input.disabled = false;
+        reset(); uploadOptions.hidden = true; consent.checked = false; prepare.textContent = 'Prepare preview'; save.textContent = 'Print / Save as PDF'; input.value = ''; prepare.disabled = true; input.disabled = false;
         status.textContent = 'Choose a supported file to begin.';
     });
-    function loadZip() {
-        if (!zipPromise) zipPromise = new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
-            script.onload = () => window.JSZip ? resolve(window.JSZip) : reject(new Error('Office parser unavailable.'));
-            script.onerror = () => reject(new Error('Cannot load the Office parser. Check your connection and try again.'));
-            document.head.append(script);
-        }).catch(error => { zipPromise = null; throw error; });
-        return zipPromise;
-    }
-    function xml(text) {
-        const doc = new DOMParser().parseFromString(text, 'application/xml');
-        if (doc.getElementsByTagName('parsererror').length) throw new Error('The document contains invalid XML.');
-        return doc;
-    }
-    const nodes = (doc, name) => [...doc.getElementsByTagNameNS('*', name)];
-    const texts = node => nodes(node, 't').map(n => n.textContent).join('');
-    async function office(file, extension) {
-        const Zip = await loadZip();
-        let zip;
-        try { zip = await Zip.loadAsync(file); }
-        catch { throw new Error('The Office file is damaged, encrypted or not a supported document.'); }
-        const entries = Object.values(zip.files);
-        if (entries.length > 2000 || entries.reduce((sum, entry) => sum + (entry._data?.uncompressedSize || 0), 0) > 30 * 1024 * 1024) throw new Error('This document is too complex to preview safely. Export it from its original application.');
-        async function read(name) {
-            const entry = zip.file(name);
-            if (!entry) throw new Error('Missing document content. The file may be damaged or use a different format.');
-            return xml(await entry.async('string'));
+    async function convertOffice(file, current) {
+        if (!consent.checked) throw new Error('Confirm upload permission before converting this document.');
+        const endpoint = (window.PDFServiceConfig?.endpoint || '').replace(/\/$/, '');
+        if (!/^https:\/\//.test(endpoint)) throw new Error('Document conversion is unavailable. Export to PDF from the original application.');
+        request = new AbortController();
+        const signal = AbortSignal.any([request.signal, AbortSignal.timeout(210000)]);
+        status.textContent = 'Connecting to document conversion. Free hosting may take about a minute to wake up…';
+        const health = await fetch(endpoint + '/health', {signal});
+        if (!health.ok || !(await health.json()).tools?.includes('office-to-pdf')) throw new Error('Document conversion is unavailable. Try again later or export from the original application.');
+        const encoded = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(String(reader.result).split(',')[1]);
+            reader.onerror = () => reject(new Error('Cannot read the selected file.'));
+            reader.readAsDataURL(file);
+        });
+        if (current !== revision || signal.aborted) return;
+        status.textContent = 'Converting the original document to PDF…';
+        const response = await fetch(endpoint + '/process', {
+            method: 'POST', headers: {'Content-Type': 'application/json'}, signal,
+            body: JSON.stringify({tool: 'office-to-pdf', file: {name: file.name, data: encoded}, options: {}})
+        });
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({}));
+            throw new Error(error.error || 'Document conversion failed. No text-only replacement was created.');
         }
-        if (extension === 'docx') return nodes(await read('word/document.xml'), 'p').map(p => '<p>' + escape(texts(p)) + '</p>').join('');
-        if (extension === 'pptx') {
-            const presentation = await read('ppt/presentation.xml');
-            const relations = nodes(await read('ppt/_rels/presentation.xml.rels'), 'Relationship');
-            let output = '';
-            for (const [i, slide] of nodes(presentation, 'sldId').entries()) {
-                if (i >= 100) throw new Error('Limit: 100 slides.');
-                const relation = relations.find(r => r.getAttribute('Id') === slide.getAttribute('r:id'));
-                const target = relation?.getAttribute('Target');
-                if (!target || !/^slides\/slide\d+\.xml$/.test(target)) throw new Error('Unsupported slide reference.');
-                output += '<section class="page"><h2>Slide ' + (i + 1) + '</h2>' + nodes(await read('ppt/' + target), 'p').map(p => '<p>' + escape(texts(p)) + '</p>').join('') + '</section>';
-            }
-            return output;
-        }
-        const shared = zip.file('xl/sharedStrings.xml') ? nodes(await read('xl/sharedStrings.xml'), 'si').map(texts) : [];
-        const workbook = await read('xl/workbook.xml');
-        const relations = nodes(await read('xl/_rels/workbook.xml.rels'), 'Relationship');
-        let output = '';
-        for (const [index, sheet] of nodes(workbook, 'sheet').entries()) {
-            if (index >= 30) throw new Error('Limit: 30 worksheets.');
-            const relation = relations.find(r => r.getAttribute('Id') === sheet.getAttribute('r:id'));
-            const target = relation?.getAttribute('Target')?.replace(/^\/xl\//, '');
-            if (!target || !/^worksheets\/sheet\d+\.xml$/.test(target)) throw new Error('Unsupported worksheet reference.');
-            const rows = nodes(await read('xl/' + target), 'row');
-            if (rows.length > 2000) throw new Error('Limit: 2,000 rows per worksheet.');
-            output += '<section class="page"><h2>' + escape(sheet.getAttribute('name')) + '</h2><table>';
-            for (const row of rows) {
-                const cells = nodes(row, 'c');
-                output += '<tr>';
-                let column = 0;
-                for (const cell of cells) {
-                    const letters = cell.getAttribute('r')?.match(/^[A-Z]+/)?.[0] || 'A';
-                    const position = [...letters].reduce((n, c) => n * 26 + c.charCodeAt(0) - 64, 0);
-                    if (position > 50) throw new Error('Limit: 50 columns. Export wide sheets from Excel.');
-                    while (++column < position) output += '<td></td>';
-                    const value = nodes(cell, 'v')[0]?.textContent || '';
-                    const type = cell.getAttribute('t');
-                    const content = type === 's' ? shared[Number(value)] || '' : type === 'inlineStr' ? texts(cell) : value;
-                    output += '<td>' + escape(content) + '</td>';
-                }
-                output += '</tr>';
-            }
-            output += '</table></section>';
-        }
-        return output;
+        const blob = await response.blob();
+        if (!(await blob.slice(0, 5).text()).startsWith('%PDF-')) throw new Error('The service did not return a valid PDF.');
+        if (current !== revision) return;
+        pdfUrl = URL.createObjectURL(blob);
+        officeDownload = file.name.replace(/\.[^.]+$/, '') + '.pdf';
+        preview.onload = null;
+        preview.src = pdfUrl;
+        section.hidden = false;
+        save.disabled = false;
+        status.textContent = 'PDF ready. Download the converted file directly. Review fonts, tables, images and page breaks; an exact match is not guaranteed.';
     }
     prepare.addEventListener('click', async () => {
         reset(); const current = revision;
@@ -116,7 +92,7 @@
             const file = input.files[0]; validate(file);
             const extension = file.name.split('.').pop().toLowerCase();
             let content;
-            if (/^(docx|xlsx|pptx)$/.test(extension)) content = await office(file, extension);
+            if (isOffice(file)) { await convertOffice(file, current); return; }
             else if (/^(jpg|jpeg|png|webp)$/.test(extension)) {
                 imageUrl = URL.createObjectURL(file);
                 content = '<img alt="Selected image" src="' + imageUrl + '">';
@@ -142,8 +118,16 @@
             };
             preview.srcdoc = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + escape(file.name) + '</title><style>body{font:16px/1.5 Arial,sans-serif;color:#222;padding:24px}p,pre{white-space:pre-wrap;overflow-wrap:anywhere}table{border-collapse:collapse;width:100%;table-layout:fixed}td{border:1px solid #bbb;padding:5px;overflow-wrap:anywhere}img{max-width:100%;max-height:90vh;object-fit:contain}.page+.page{break-before:page}@media print{body{padding:0}img{max-height:250mm}@page{margin:15mm}}</style></head><body>' + content + '</body></html>';
             section.hidden = false;
-        } catch (error) { if (current === revision) status.textContent = 'Unable to convert: ' + error.message; }
+        } catch (error) { if (current === revision) status.textContent = 'Unable to convert: ' + (error.name === 'TimeoutError' ? 'The service timed out. Try again or export from the original application.' : error.message); }
         finally { if (current === revision) { prepare.disabled = false; input.disabled = false; } }
     });
-    save.addEventListener('click', () => { preview.contentWindow.focus(); preview.contentWindow.print(); });
+    save.addEventListener('click', () => {
+        if (save.disabled) return;
+        if (officeDownload && pdfUrl) {
+            const link = document.createElement('a');
+            link.href = pdfUrl; link.download = officeDownload;
+            document.body.append(link); link.click(); link.remove();
+        } else { preview.contentWindow.focus(); preview.contentWindow.print(); }
+    });
+    window.addEventListener('beforeunload', reset);
 })();

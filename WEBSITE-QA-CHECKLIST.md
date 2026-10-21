@@ -126,3 +126,13 @@ All 18 redirect paths: `/andhra-pradesh-electricity-bill-calculator/`, `/bescom-
 - [x] Published analytics commit 6d4e1b9 to main. Pages deployment and its exact-artifact verification succeeded: https://github.com/Lokeshlokimama/calculator_all-in-one/actions/runs/38577859268. Independent live verification matched all 100 public files and the commit marker. Live Edge browser acceptance sent page_view for G-MRCMVF9545 to analytics.google.com with HTTP 204; decline plus reload removed the Google loader. Evidence: .qa-analytics/live.json and live-390.png. Checklist evidence follow-up must pass the same Pages deployment gate.\n- [ ] Confirm Google receipt in Tag Assistant and GA4 Realtime using the owner account; a browser request alone does not prove reporting in the intended property.
 
 - [x] Release link audit: 84 unique internal URLs and all 25 external URLs succeeded; 2,141 URL occurrences audited. Evidence: .qa-all-pages/links.json. Private browser evidence and temporary scripts are excluded from the release manifest.
+
+## Document conversion fidelity — 21 October 2026
+
+- [ ] Owner requires unchanged document text and original layout, fonts, tables, images, headers/footers, pagination and links. Do not claim an exact match without comparison against the original application output.
+- Changed Office conversion on /convert-to-pdf/ from destructive text extraction/browser printing to the existing Office backend with explicit upload consent and direct PDF download. No text-only fallback on errors. Original-application export remains necessary for a strict 1:1 requirement; LibreOffice may substitute fonts or render features differently.
+- [ ] Verify consent, successful PDF download, unavailable service, invalid output, clear/stale requests and responsive layout. The user's failing document has not been supplied, so its fidelity is unverified. Changes are local until published and live-verified.
+
+- Validation: build and lint passed; all 82 tests passed (four new Office regression tests cover upload consent, backend PDF download, errors/invalid output and clearing pending work). Browser consent rejection verified with a synthetic DOCX; no overflow at 320, 390 or 1440 px. Evidence: `.qa-office-fidelity/responsive.json`, `converter.png`. Actual hosted conversion through this new page and the owner’s document fidelity remain unverified; no publishing performed.
+
+- Publishing converter fix to main at owner request. Release includes converter code/page, catalogue wording, regression tests and this concern only; unrelated SEO work remains local. Exact original-document fidelity remains unverified. Deployment result is tracked by the Pages workflow with full live-artifact verification.
