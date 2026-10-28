@@ -99,5 +99,12 @@
   "site-theme.css",
   "site-theme.js",
   "analytics.js",
-  "roi-calculator.html"
+  "roi-calculator.html",
+  "tip-calculator.html",
+  "fd-calculator.html",
+  "rd-calculator.html",
+  "salary-calculator.html",
+  "leave-encashment-calculator.html",
+  "discount-and-tax-calculator.html",
+  "invoice-generator.html"
 ]

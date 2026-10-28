@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Invoice Generator | Create and Download an Invoice as PDF</title>
+    <meta name="description" content="Create a simple invoice with line items, discount and tax, preview it live, and download it as a PDF, PNG or CSV. Runs in your browser.">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Calculator All-in-One">
+    <meta name="theme-color" content="#fafbff">
+    <link rel="canonical" href="https://calculatorsallinone.com/invoice-generator.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Calculator All-in-One">
+    <meta property="og:title" content="Free Invoice Generator | Create and Download an Invoice as PDF">
+    <meta property="og:description" content="Create a simple invoice with line items, discount and tax, preview it live, and download it as a PDF, PNG or CSV. Runs in your browser.">
+    <meta property="og:url" content="https://calculatorsallinone.com/invoice-generator.html">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Free Invoice Generator | Create and Download an Invoice as PDF">
+    <meta name="twitter:description" content="Create a simple invoice with line items, discount and tax, preview it live, and download it as a PDF, PNG or CSV. Runs in your browser.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css?v=20260922-audit">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json" data-managed-schema>
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Invoice Generator",
+  "url": "https://calculatorsallinone.com/invoice-generator.html",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Any",
+  "description": "Create a simple invoice with line items, discount and tax, preview it live, and download it as a PDF, PNG or CSV. Runs in your browser.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Calculator All-in-One",
+    "url": "https://calculatorsallinone.com/",
+    "email": "calculators@proton.me"
+  }
+}
+</script>
+    <script type="application/ld+json" data-managed-schema>
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is this invoice generator free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, with no sign-up and no watermark."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are my invoice details stored?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The invoice is assembled in your browser. The PDF and PNG export libraries are loaded from a public CDN, but your invoice data is not sent to this site."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I add GST?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can add a single tax percentage. A full GST tax invoice needs extra fields such as GSTIN, HSN/SAC and the CGST/SGST or IGST split."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I apply a fixed-amount discount?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The discount field takes a percentage, and negative line amounts are not accepted. Convert the amount instead: amount &divide; subtotal &times; 100. For 1,000 off a 31,000 subtotal, enter 3.2258."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does the total show &ldquo;Invalid input&rdquo;?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A quantity, rate, tax or discount is negative or out of range. Tax and discount must be between 0 and 100%."
+      }
+    }
+  ]
+}
+</script>
+    <script type="application/ld+json" data-managed-schema>
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://calculatorsallinone.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Finance calculators",
+      "item": "https://calculatorsallinone.com/finance-calculators.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Invoice Generator",
+      "item": "https://calculatorsallinone.com/invoice-generator.html"
+    }
+  ]
+}
+</script>
+<script defer src="/analytics.js"></script>
+<meta name="google-adsense-account" content="ca-pub-9409281508068005">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9409281508068005" crossorigin="anonymous"></script>
+<script src="/local-currency.js?v=20260924" defer></script>
+<link rel="stylesheet" href="/site-theme.css?v=780f24af51c6"><script defer src="/site-theme.js?v=d3d604d781dd"></script>
+<link rel="stylesheet" href="/ad-spaces.css">
+</head>
+<body class="site-themed standalone-tool-page">
+    <a class="skip-link" href="#calculator">Skip to calculator</a>
+    <header class="navbar">
+        <a href="/" class="logo" style="text-decoration: none;">Calculator All-in-One</a>
+        <form class="header-search calculator-search" role="search" data-site-search><input type="search" name="search" placeholder="Search calculators..." aria-label="Search calculators"><button type="submit">Search</button><small>Search all calculators</small></form>
+        <nav><a href="/#tools">All Tools</a><a href="/?category=finance#tools">Finance</a><a href="/?category=health#tools">Health</a><a href="/?category=electricity#tools">Electricity</a><a href="about.html">About</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy</a></nav>
+        <details class="mobile-menu"><summary>Menu</summary><div class="mobile-menu-panel"><a href="/#tools">All Tools</a><a href="/?category=finance#tools">Finance</a><a href="/?category=health#tools">Health</a><a href="/?category=electricity#tools">Electricity</a><a href="about.html">About Us</a><a href="contact.html">Contact Us</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms and Conditions</a><a href="disclaimer.html">Disclaimer</a></div></details>
+    </header>
+
+    <main class="calculator-page-main">
+        <section class="calculator-page-layout">
+            <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><a href="/finance-calculators.html">Finance calculators</a><span aria-hidden="true">/</span><span aria-current="page">Invoice Generator</span></nav>
+            <div class="calculator-page-hero">
+                <div class="page-kicker">Business Tool</div>
+                <h1>Invoice Generator</h1>
+                <p>Create a clean invoice for freelance work or a small sale in a couple of minutes, with totals worked out for you and a PDF to send.</p>
+            </div>
+<!-- publisher-ad-space:content-top:start -->
+<aside class="publisher-ad-space" aria-label="Advertisements" data-ad-placement="content-top"><p class="publisher-ad-label">Advertisements</p><div class="publisher-ad-mount" id="ad-content-top"><!-- Reserved ad-unit mount. Configure ad delivery separately before inserting a provider unit. --></div></aside>
+<!-- publisher-ad-space:content-top:end -->
+
+            <div class="review-strip"><strong>Published by Calculator All-in-One</strong><span>Method: discount on subtotal, then tax on the discounted amount</span><a href="/editorial-standards.html">Methods and limitations</a></div>
+            <aside class="calculator-tool-card" id="calculator">
+                <h2>Build your invoice</h2>
+                <div id="calc-invoice" class="standalone-widget tool-demo-card   invoice-generator-card" data-category="finance"><p id="invoice-error" role="alert" aria-live="polite"></p>
+                    <div class="tool-ui invoice-layout">
+                        <div class="invoice-editor-column">
+                            <div class="invoice-section-heading">
+                                <h4>Invoice details</h4>
+                            </div>
+                            <div class="input-group invoice-client-fields" style="flex-direction: column; gap: 0.5rem;">
+                                <div class="invoice-field">
+                                    <label for="inv-from">From</label>
+                                    <input type="text" class="tool-input" id="inv-from" placeholder="Your name / business" autocomplete="organization" oninput="calculateInvoice()">
+                                </div>
+                                <div class="invoice-field">
+                                    <label for="inv-to">Bill to</label>
+                                    <input type="text" class="tool-input" id="inv-to" placeholder="Client name" autocomplete="name" oninput="calculateInvoice()">
+                                </div>
+                                <div class="invoice-field">
+                                    <label for="inv-number">Invoice no.</label>
+                                    <input type="text" class="tool-input" id="inv-number" placeholder="e.g. INV-001" value="INV-001" oninput="calculateInvoice()">
+                                </div>
+                                <div class="invoice-field">
+                                    <label for="inv-date">Invoice date</label>
+                                    <input type="date" class="tool-input" id="inv-date" onchange="calculateInvoice()">
+                                </div>
+                                <div class="invoice-field">
+                                    <label for="inv-due-date">Due date <span style="color:#64748b; font-weight:400;">(optional)</span></label>
+                                    <input type="date" class="tool-input" id="inv-due-date" onchange="calculateInvoice()">
+                                </div>
+                                <div class="invoice-field">
+                                    <label for="inv-notes">Notes <span style="color:#64748b; font-weight:400;">(optional)</span></label>
+                                    <textarea class="tool-input" id="inv-notes" rows="2" placeholder="Payment terms, bank/UPI details, thank-you note..." oninput="calculateInvoice()"></textarea>
+                                </div>
+                            </div>
+
+                        <div class="invoice-items-editor" style="margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+                            <h4 style="color:#fff; font-size: 0.9rem; margin-bottom: 0.5rem;">Items</h4>
+                            <div class="invoice-items-head" aria-hidden="true">
+                                <span>Description</span>
+                                <span>Qty</span>
+                                <span>Rate</span>
+                                <span></span>
+                            </div>
+                            <div id="invoice-items-container">
+                                <div class="invoice-item-row" style="display: flex; gap: 0.4rem; margin-bottom: 0.4rem; width:100%;">
+                                    <input type="text" class="tool-input inv-item-desc" placeholder="Description" aria-label="Item description" style="flex: 2; min-width: 0;" oninput="calculateInvoice()">
+                                    <input type="number" class="tool-input inv-item-qty" placeholder="Qty" aria-label="Quantity" min="0" step="1" value="1" style="flex: 0.7; min-width: 0;" oninput="calculateInvoice()">
+                                    <input type="number" class="tool-input inv-item-price" placeholder="Rate" aria-label="Rate" min="0" step="0.01" style="flex: 1.2; min-width: 0;" oninput="calculateInvoice()">
+                                    <button class="secondary-btn" onclick="removeInvoiceRow(this)" aria-label="Remove item" style="padding: 0 0.5rem; min-height:40px; border-radius:8px; margin:0; flex: 0.4;">×</button>
+                                </div>
+                            </div>
+                            <button class="secondary-btn shine-btn" onclick="addInvoiceRow()" style="width: 100%; padding: 0.4rem; font-size: 0.85rem; border-radius: 8px; margin-top: 0.5rem; margin-bottom: 0;">+ Add Item</button>
+                        </div>
+
+                        <div class="invoice-section-heading invoice-adjustment-heading">
+                            <h4>Adjustments</h4>
+                        </div>
+                        <div class="input-group invoice-adjustments" style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                            <div class="input-wrapper invoice-field" style="flex: 1;">
+                                <label for="invoice-tax">Tax</label>
+                                <input type="number" class="tool-input" id="invoice-tax" placeholder="Tax Rate" min="0" step="0.01" value="18" oninput="calculateInvoice()">
+                                <span class="input-suffix">%</span>
+                            </div>
+                            <div class="input-wrapper invoice-field" style="flex: 1;">
+                                <label for="invoice-discount">Discount</label>
+                                <input type="number" class="tool-input" id="invoice-discount" placeholder="Discount" min="0" step="0.01" value="0" oninput="calculateInvoice()">
+                                <span class="input-suffix">%</span>
+                            </div>
+                        </div>
+
+                        </div>
+
+                        <div class="invoice-preview-column">
+                        <div class="invoice-section-heading">
+                            <h4>Preview</h4>
+                        </div>
+                        <div id="invoice-report-wrapper" style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1rem; margin-top: 1.2rem; text-align: left; font-size: 0.85rem; color:#e2e8f0;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem;">
+                                <strong id="inv-preview-from" style="color:var(--primary);">Your business</strong>
+                                <span id="inv-preview-num" style="color:#a3a3a3;">INV-001</span>
+                            </div>
+                            <div style="margin-bottom: 0.8rem; font-size: 0.8rem; color:#a3a3a3;">
+                                To: <span id="inv-preview-to" style="color:#fff;">Client</span><br>
+                                Date: <span id="inv-preview-date">&mdash;</span><span id="inv-preview-due-wrap" hidden><br>Due: <span id="inv-preview-due"></span></span>
+                            </div>
+                            <div id="inv-preview-items" style="border-top:1px solid rgba(255,255,255,0.1); border-bottom:1px solid rgba(255,255,255,0.1); padding: 0.5rem 0; margin-bottom: 0.8rem; display: flex; flex-direction: column; gap:0.25rem;">
+                                <!-- Preview items go here -->
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:0.25rem; text-align:right;">
+                                <div>Subtotal: <span id="inv-preview-subtotal" style="font-weight:600;">$0.00</span></div>
+                                <div style="color:var(--success);">Discount: <span id="inv-preview-discount">$0.00</span></div>
+                                <div style="color:var(--accent);">Tax: <span id="inv-preview-tax">$0.00</span></div>
+                                <div style="font-size:1.05rem; margin-top:0.25rem; font-weight:700; color:#fff;">Total: <span id="inv-preview-total">$0.00</span></div>
+                            </div>
+                            <div id="inv-preview-notes-wrap" hidden style="margin-top:0.8rem; padding-top:0.6rem; border-top:1px solid rgba(255,255,255,0.1); font-size:0.78rem; color:#a3a3a3; white-space:pre-wrap;"><span style="color:#e2e8f0; font-weight:600;">Notes:</span> <span id="inv-preview-notes"></span></div>
+                        </div>
+
+                        <div class="invoice-actions" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                            <div style="display: flex; gap: 0.4rem;">
+                                <button class="secondary-btn" onclick="exportInvoice('pdf')" style="flex:1; font-size:0.8rem; padding:0.5rem; margin:0; border-radius:8px; min-height:36px;">PDF 📄</button>
+                                <button class="secondary-btn" onclick="exportInvoice('png')" style="flex:1; font-size:0.8rem; padding:0.5rem; margin:0; border-radius:8px; min-height:36px;">PNG 🖼️</button>
+                                <button class="secondary-btn" onclick="exportInvoice('csv')" style="flex:1; font-size:0.8rem; padding:0.5rem; margin:0; border-radius:8px; min-height:36px;">CSV 📊</button>
+                            </div>
+                            <button class="glowing-btn demo-btn ripple-btn" onclick="calculateInvoice()" style="width:100%; margin-top:0.25rem;">Update Preview</button>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+            </aside>
+            <section class="calculator-copy enriched-calculator-copy">
+                <article class="calculator-copy-card intro-card"><h2>What this tool does</h2><p>Fill in who the invoice is from and to, an invoice number and date, an optional due date and notes, and one line per item with a description, quantity and rate. The preview updates as you type and shows the subtotal, discount, tax and total due. When it looks right, download it as a PDF or PNG to send, or as a CSV for your records.</p><p>Everything is built in your browser. The invoice details are not uploaded to this site&rsquo;s server.</p></article>
+                <article class="calculator-copy-card formula-box"><h2>How the totals are calculated</h2><p>Line total = Quantity &times; Rate</p><p>Subtotal = sum of all line totals</p><p>Discount = Subtotal &times; Discount %</p><p>Taxable amount = Subtotal &minus; Discount</p><p>Tax = Taxable amount &times; Tax %</p><p>Total due = Taxable amount + Tax</p><p>The discount is applied before tax, which is the order used on standard GST and VAT invoices.</p></article>
+                <article class="calculator-copy-card example-box"><h2>Worked example</h2><p>A freelancer bills a client for:</p><ul><li>Website design, 1 &times; 25,000 = 25,000</li><li>Hosting, 12 months &times; 500 = 6,000</li></ul><p>Subtotal 31,000. A 10% discount takes off 3,100, leaving 27,900 taxable. 18% tax on that is 5,022, so the <strong>total due is 32,922</strong>.</p></article>
+                <article class="calculator-copy-card"><h2>Is this a GST tax invoice?</h2><p>Not on its own. A GST-registered business in India must show specific details on a tax invoice, including the supplier&rsquo;s GSTIN, the recipient&rsquo;s GSTIN for B2B sales, HSN or SAC codes, place of supply, and the tax split into CGST and SGST, or IGST for inter-state supplies. This generator applies one tax percentage and has no separate fields for those.</p><p>You can include GSTIN and HSN details in the &ldquo;From&rdquo;, &ldquo;Bill to&rdquo; and item description fields, but for regular GST billing an accounting or billing tool that produces compliant invoices is the safer choice. This tool suits freelancers, unregistered small businesses, quotes and pro-forma invoices.</p></article>
+<!-- publisher-ad-space:content-middle:start -->
+<aside class="publisher-ad-space" aria-label="Advertisements" data-ad-placement="content-middle"><p class="publisher-ad-label">Advertisements</p><div class="publisher-ad-mount" id="ad-content-middle"><!-- Reserved ad-unit mount. Configure ad delivery separately before inserting a provider unit. --></div></aside>
+<!-- publisher-ad-space:content-middle:end -->
+
+                <article class="calculator-copy-card"><h2>Tips for a clear invoice</h2><ul><li>Use a numbering pattern you will keep, such as INV-2026-001, and never reuse a number.</li><li>Always set a due date and write the payment method in the notes: bank details, UPI ID or a payment link.</li><li>Describe each line so the client can match it to the work agreed.</li><li>Check the downloaded PDF before sending it.</li></ul></article>
+                <article class="calculator-copy-card"><h2>Limitations</h2><p>One tax rate applies to every line, and the discount is a percentage of the subtotal. There is no logo upload, multiple tax rates or saved client list. Data is not saved between visits, so download your invoice before closing the page.</p></article>
+                <article class="calculator-copy-card"><h2>FAQs</h2><div class="faq-list"><details><summary>Is this invoice generator free?</summary><p>Yes, with no sign-up and no watermark.</p></details><details><summary>Are my invoice details stored?</summary><p>No. The invoice is assembled in your browser. The PDF and PNG export libraries are loaded from a public CDN, but your invoice data is not sent to this site.</p></details><details><summary>Can I add GST?</summary><p>You can add a single tax percentage. A full GST tax invoice needs extra fields such as GSTIN, HSN/SAC and the CGST/SGST or IGST split.</p></details><details><summary>Can I apply a fixed-amount discount?</summary><p>The discount field takes a percentage, and negative line amounts are not accepted. Convert the amount instead: amount &divide; subtotal &times; 100. For 1,000 off a 31,000 subtotal, enter 3.2258.</p></details><details><summary>Why does the total show &amp;ldquo;Invalid input&amp;rdquo;?</summary><p>A quantity, rate, tax or discount is negative or out of range. Tax and discount must be between 0 and 100%.</p></details></div></article>
+                <article class="calculator-copy-card"><h2>Related tools</h2><p class="related-links"><a href="/discount-and-tax-calculator.html">Discount and Tax Calculator</a> <a href="/gst-calculator.html">GST Calculator</a> <a href="/upi-qr-code-generator/">UPI QR Code Generator</a> <a href="/finance-calculators.html">All finance calculators</a></p></article>
+            </section>
+        </section>
+
+<!-- publisher-ad-space:content-end:start -->
+<aside class="publisher-ad-space" aria-label="Advertisements" data-ad-placement="content-end"><p class="publisher-ad-label">Advertisements</p><div class="publisher-ad-mount" id="ad-content-end"><!-- Reserved ad-unit mount. Configure ad delivery separately before inserting a provider unit. --></div></aside>
+<!-- publisher-ad-space:content-end:end -->
+</main>
+
+    <footer class="site-footer">
+        <div class="footer-links" style="text-align: center; margin: 0 0 2rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem;">
+            <a href="privacy.html">Privacy Policy</a><a href="about.html">About Us</a><a href="contact.html">Contact Us</a><a href="terms.html">Terms & Conditions</a><a href="disclaimer.html">Disclaimer</a>
+        </div>
+
+        <p class="copyright">© 2026 Calculator All-in-One. All rights reserved. Built for fast, accurate browser calculations.</p>
+    </footer>
+    <script src="script.js?v=20260924-currency" defer></script>
+</body>
+</html>

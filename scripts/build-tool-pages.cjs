@@ -101,7 +101,7 @@ function page(spec, widget, specsById) {
     return '';
   }).filter(Boolean);
   related.push(`<a href="/${spec.hub}">All ${esc(spec.hubName.toLowerCase())}</a>`);
-  const scripts = [spec.needsQrEngine ? '    <script src="qr-code-engine.js?v=20260812qr" defer></script>' : '', '    <script src="script.js?v=20260924-currency" defer></script>'].filter(Boolean).join('\n');
+  const scripts = [(spec.needsQrEngine || /qrcode|qr-code|QRCode/.test(widget)) ? '    <script src="qr-code-engine.js?v=20260812qr" defer></script>' : '', '    <script src="script.js?v=20260924-currency" defer></script>'].filter(Boolean).join('\n');
 
   return `<!DOCTYPE html>
 <html lang="en">

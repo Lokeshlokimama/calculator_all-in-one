@@ -166,3 +166,8 @@ html{background:#fafbff!important;scrollbar-color:#a49f8d #fafbff}.site-themed{b
 .site-themed .standalone-widget .tool-ui{background:none!important;border:0!important;padding:0!important;box-shadow:none!important}
 .site-themed .standalone-widget .field-label{display:block;margin:12px 0 6px;font-weight:600;font-size:.9rem;color:#18243d}
 .site-themed .related-links{display:flex;flex-wrap:wrap;gap:10px 18px}
+/* Invoice preview on the light standalone page (inline styles were written for the dark tools.html theme). */
+.site-themed .standalone-widget #invoice-report-wrapper{background:#f7f9fd!important;border:1px solid #e2e6ef!important;color:#18243d!important}
+.site-themed .standalone-widget #invoice-report-wrapper :is(div,span,strong,small,p){color:#18243d!important;border-color:#e2e6ef!important}
+.site-themed .standalone-widget #invoice-report-wrapper #inv-preview-from{color:#3459ec!important}
+.site-themed .standalone-widget #invoice-report-wrapper #inv-preview-num{color:#59657b!important}
