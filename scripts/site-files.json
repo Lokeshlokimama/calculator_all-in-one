@@ -98,5 +98,6 @@
   "hero-locale.js",
   "site-theme.css",
   "site-theme.js",
-  "analytics.js"
+  "analytics.js",
+  "roi-calculator.html"
 ]
