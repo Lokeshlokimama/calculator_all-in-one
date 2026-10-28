@@ -32,11 +32,10 @@ const related = {
   electricity: [
     ['/electricity-calculators.html', 'Electricity Calculators'],
     ['/electricity-bill-calculator-india/', 'Electricity Bill India'],
-    ['/#calc-electricity-bill', 'Homepage Electricity Bill'],
-    ['/#calc-kwh', 'kWh Calculator'],
-    ['/#calc-watt-unit', 'Watt to Unit'],
-    ['/#calc-solar', 'Solar Panel Size'],
-    ['/#calc-inverter', 'Inverter Backup']
+    ['/kwh-calculator.html', 'kWh Calculator'],
+    ['/watt-to-unit-calculator.html', 'Watt to Unit'],
+    ['/solar-panel-size-calculator.html', 'Solar Panel Size'],
+    ['/inverter-battery-backup-calculator.html', 'Inverter Backup']
   ]
 };
 
