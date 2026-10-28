@@ -17,7 +17,7 @@ for (const [id, title, description, url] of [
   ['all-pdf-tools','All PDF Tools','Search organize, edit, convert and security tools.','pdf-tools/'],
   ['pdf-page-editor','PDF Page Editor','Rotate, crop, watermark, number, organize and fill forms.','pdf-workbench/']
 ]) { dedicated[id] = url; cards.push({id, title, description, category:id.startsWith('calc-')?'finance':'files'}); }
-const links = cards.map(c => `<a id="${c.id}" data-tool-link="true" data-category="${c.category}" aria-label="${escape(c.title + ': ' + c.description)}" href="/${dedicated[c.id] || 'tools.html#'+c.id}"><h3>${c.title}</h3><p>${c.description}</p><span class="tool-category">${escape(c.category)}</span></a>`).join('\n');
+const links = cards.map(c => `<a id="${c.id}" data-tool-link="true" data-category="${c.category}" href="/${dedicated[c.id] || 'tools.html#'+c.id}"><h3>${c.title}</h3><p>${c.description}</p><span class="tool-category">${escape(c.category)}</span></a>`).join('\n');
 const categories = [...new Set(cards.map(c=>c.category))];
 const html = fs.readFileSync(path.join(__dirname, 'landing-template.html'), 'utf8')
   .replaceAll('{{COUNT}}', String(cards.length))

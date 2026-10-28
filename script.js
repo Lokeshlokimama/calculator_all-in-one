@@ -5944,7 +5944,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
         const savedLang = localStorage.getItem('calculator-lang-preference');
-        if (savedLang && LANGUAGE_OPTIONS.some(option => option.code === savedLang)) {
+        if (!document.querySelector('[data-language-picker]')) {
+            // Language switching was retired: content is English-only. Clear any stale choice.
+            if (savedLang) localStorage.removeItem('calculator-lang-preference');
+        } else if (savedLang && LANGUAGE_OPTIONS.some(option => option.code === savedLang)) {
             setTimeout(() => {
                 changeLanguage(savedLang);
             }, 100);
