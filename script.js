@@ -2331,7 +2331,17 @@ function processBase64(action) {
     if (!input) { showToast('Enter some text first'); return; }
 
     try {
-        let result = action === 'encode' ? btoa(input) : atob(input);
+        // UTF-8 safe: btoa/atob alone only handle Latin-1, which breaks Hindi, Tamil, emoji, etc.
+        let result;
+        if (action === 'encode') {
+            const bytes = new TextEncoder().encode(input);
+            let binary = '';
+            for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+            result = btoa(binary);
+        } else {
+            const binary = atob(input.replace(/\s+/g, ''));
+            result = new TextDecoder('utf-8', { fatal: true }).decode(Uint8Array.from(binary, c => c.charCodeAt(0)));
+        }
         document.getElementById('b64-output').value = result;
         showToast(action === 'encode' ? 'Encoded!' : 'Decoded!');
     } catch (e) {
