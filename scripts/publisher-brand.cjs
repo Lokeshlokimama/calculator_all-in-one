@@ -1,4 +1,7 @@
 const email = 'calculators@proton.me';
+// Named owner shown on every page (AdSense / publisher identity requirement).
+const owner = { '@type': 'Person', name: 'Kumara Samigari Lokesh', jobTitle: 'Senior Middleware Administrator', address: { '@type': 'PostalAddress', addressLocality: 'Chennai', addressRegion: 'Tamil Nadu', addressCountry: 'IN' }, url: 'https://calculatorsallinone.com/about.html#owner', sameAs: ['https://github.com/Lokeshlokimama'] };
+const maintainerStrip = '<strong>Maintained by <a href="/about.html#owner">Kumara Samigari Lokesh</a></strong>';
 const copyright = '<p class="copyright">© 2026 Calculator All-in-One. All rights reserved. Built for fast, accurate browser calculations.</p>';
 function standardizePublisher(html) {
   html = html.replace(/\r\n/g, '\n');
@@ -8,6 +11,7 @@ function standardizePublisher(html) {
     .replace(/support\.aiagents@gmail\.com/g, email)
     .replace(/<p\b[^>]*class="maintainer-credit"[^>]*>[\s\S]*?<\/p>/gi, '')
     .replace(/<p\b[^>]*class="copyright"[^>]*>[\s\S]*?<\/p>/gi, copyright);
+  html = html.replace(/<strong>Published by Calculator All-in-One<\/strong>/g, maintainerStrip);
   html = html.replace(/<footer\b[^>]*>[\s\S]*?<\/footer>/gi, footer => {
     footer = footer.replace(/<span>\s*(?:©|&copy;)\s*2026 Calculator All-in-One\.?\s*<\/span>/gi, '');
     return footer.includes('class="copyright"') ? footer : footer.replace('</footer>', copyright + '</footer>');
@@ -18,7 +22,7 @@ function standardizePublisher(html) {
     function visit(value) {
       if (!value || typeof value !== 'object') return;
       for (const key of ['publisher', 'author']) {
-        if (value[key]) value[key] = { '@type': 'Organization', name: 'Calculator All-in-One', url: 'https://calculatorsallinone.com/', email };
+        if (value[key]) value[key] = { '@type': 'Organization', name: 'Calculator All-in-One', url: 'https://calculatorsallinone.com/', email, founder: owner };
       }
       Object.values(value).forEach(visit);
     }

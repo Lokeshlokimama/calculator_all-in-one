@@ -150,7 +150,7 @@ ${schemas}
                 <h1>${esc(spec.h1)}</h1>
                 <p>${spec.lede}</p>
             </div>
-            <div class="review-strip"><strong>Published by Calculator All-in-One</strong><span>Method: ${esc(spec.method || 'see formula below')}</span><a href="/editorial-standards.html">Methods and limitations</a></div>
+            <div class="review-strip"><strong>Maintained by <a href="/about.html#owner">Kumara Samigari Lokesh</a></strong><span>Method: ${esc(spec.method || 'see formula below')}</span><a href="/editorial-standards.html">Methods and limitations</a></div>
             <aside class="calculator-tool-card" id="calculator">
                 <h2>${esc(spec.toolHeading || 'Enter your numbers')}</h2>
                 ${widget}
