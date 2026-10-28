@@ -2218,7 +2218,7 @@ function addCgpaRow() {
     div.style.gap = '0.5rem';
     div.style.marginBottom = '0.5rem';
     div.innerHTML = `
-        <input type="number" class="tool-input cgpa-credit" placeholder="Credits" style="flex:1;">
+        <input type="number" class="tool-input cgpa-credit" placeholder="Credits" aria-label="Credits" min="0" style="flex:1;">
         <input type="number" class="tool-input cgpa-grade" placeholder="Grade (0-10)" aria-label="Grade (0-10)" min="0" max="10" style="flex:1;">
     `;
     container.appendChild(div);

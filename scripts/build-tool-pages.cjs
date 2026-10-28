@@ -67,6 +67,9 @@ function adaptWidget(widget, spec) {
     const label = `<label class="field-label" for="${id}">${esc(clean)}</label>`;
     return wrapper ? label + wrapper + control : label + control;
   });
+  // Controls without an id (e.g. repeated rows) get an accessible name from their placeholder.
+  html = html.replace(/<(input|textarea)\b(?![^>]*\bid=)(?![^>]*aria-label=)([^>]*placeholder="([^"]+)"[^>]*)>/g,
+    (all, tag, attrs, ph) => `<${tag} aria-label="${ph}"${attrs}>`);
   return html;
 }
 
