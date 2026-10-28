@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Size Calculator | kVA from Load, Power Factor and Margin</title>
+    <meta name="description" content="Estimate the generator size in kVA for a total load in watts, using power factor and a safety margin, with guidance on motor starting loads.">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Calculator All-in-One">
+    <meta name="theme-color" content="#fafbff">
+    <link rel="canonical" href="https://calculatorsallinone.com/generator-size-calculator.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Calculator All-in-One">
+    <meta property="og:title" content="Generator Size Calculator | kVA from Load, Power Factor and Margin">
+    <meta property="og:description" content="Estimate the generator size in kVA for a total load in watts, using power factor and a safety margin, with guidance on motor starting loads.">
+    <meta property="og:url" content="https://calculatorsallinone.com/generator-size-calculator.html">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Generator Size Calculator | kVA from Load, Power Factor and Margin">
+    <meta name="twitter:description" content="Estimate the generator size in kVA for a total load in watts, using power factor and a safety margin, with guidance on motor starting loads.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css?v=20260922-audit">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json" data-managed-schema>
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Generator Size Calculator (kVA)",
+  "url": "https://calculatorsallinone.com/generator-size-calculator.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "description": "Estimate the generator size in kVA for a total load in watts, using power factor and a safety margin, with guidance on motor starting loads.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Calculator All-in-One",
+    "url": "https://calculatorsallinone.com/",
+    "email": "calculators@proton.me"
+  }
+}
+</script>
+    <script type="application/ld+json" data-managed-schema>
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the difference between kVA and kW?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "kW is real power; kVA is apparent power. kW = kVA &times; power factor."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is power factor 0.8?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is the standard rating point for most generator sets."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much safety margin should I use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "20&ndash;25% is common. Use more if you expect to add load later or have large motors."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can a 5 kVA generator run a 1.5 ton AC?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Usually yes for running load, but check its starting current; inverter ACs start more gently than fixed-speed ones."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this work for three-phase generators?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It gives the total kVA, but the load must also be balanced across phases."
+      }
+    }
+  ]
+}
+</script>
+    <script type="application/ld+json" data-managed-schema>
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://calculatorsallinone.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Electricity calculators",
+      "item": "https://calculatorsallinone.com/electricity-calculators.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Generator Size Calculator (kVA)",
+      "item": "https://calculatorsallinone.com/generator-size-calculator.html"
+    }
+  ]
+}
+</script>
+<script defer src="/analytics.js"></script>
+<meta name="google-adsense-account" content="ca-pub-9409281508068005">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9409281508068005" crossorigin="anonymous"></script>
+<script src="/local-currency.js?v=20260924" defer></script>
+<link rel="stylesheet" href="/site-theme.css?v=780f24af51c6"><script defer src="/site-theme.js?v=d3d604d781dd"></script>
+<link rel="stylesheet" href="/ad-spaces.css">
+</head>
+<body class="site-themed standalone-tool-page">
+    <a class="skip-link" href="#calculator">Skip to calculator</a>
+    <header class="navbar">
+        <a href="/" class="logo" style="text-decoration: none;">Calculator All-in-One</a>
+        <form class="header-search calculator-search" role="search" data-site-search><input type="search" name="search" placeholder="Search calculators..." aria-label="Search calculators"><button type="submit">Search</button><small>Search all calculators</small></form>
+        <nav><a href="/#tools">All Tools</a><a href="/?category=finance#tools">Finance</a><a href="/?category=health#tools">Health</a><a href="/?category=electricity#tools">Electricity</a><a href="about.html">About</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy</a></nav>
+        <details class="mobile-menu"><summary>Menu</summary><div class="mobile-menu-panel"><a href="/#tools">All Tools</a><a href="/?category=finance#tools">Finance</a><a href="/?category=health#tools">Health</a><a href="/?category=electricity#tools">Electricity</a><a href="about.html">About Us</a><a href="contact.html">Contact Us</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms and Conditions</a><a href="disclaimer.html">Disclaimer</a></div></details>
+    </header>
+
+    <main class="calculator-page-main">
+        <section class="calculator-page-layout">
+            <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><a href="/electricity-calculators.html">Electricity calculators</a><span aria-hidden="true">/</span><span aria-current="page">Generator Size Calculator (kVA)</span></nav>
+            <div class="calculator-page-hero">
+                <div class="page-kicker">Electricity Calculator</div>
+                <h1>Generator Size Calculator (kVA)</h1>
+                <p>Convert the total load you need to run into a generator rating in kVA, with a margin so the generator is not running flat out.</p>
+            </div>
+<!-- publisher-ad-space:content-top:start -->
+<aside class="publisher-ad-space" aria-label="Advertisements" data-ad-placement="content-top"><p class="publisher-ad-label">Advertisements</p><div class="publisher-ad-mount" id="ad-content-top"><!-- Reserved ad-unit mount. Configure ad delivery separately before inserting a provider unit. --></div></aside>
+<!-- publisher-ad-space:content-top:end -->
+
+            <div class="review-strip"><strong>Published by Calculator All-in-One</strong><span>Method: kVA = watts ÷ (PF × 1,000) × (1 + margin)</span><a href="/editorial-standards.html">Methods and limitations</a></div>
+            <aside class="calculator-tool-card" id="calculator">
+                <h2>Enter your numbers</h2>
+                <div id="calc-generator" class="standalone-widget tool-demo-card  " data-category="electricity"><div class="tool-ui">
+                        <div class="input-group">
+                            <label class="field-label" for="gen-load">Total running load (W)</label><div class="input-wrapper">
+                                <input type="number" class="tool-input" id="gen-load" placeholder="Total Load">
+                                <span class="input-suffix">W</span>
+                            </div>
+                            <label class="field-label" for="gen-pf">Power factor (0–1)</label><div class="input-wrapper">
+                                <input type="number" class="tool-input" id="gen-pf" placeholder="Power Factor" value="0.8" step="0.01">
+                                <span class="input-suffix">PF</span>
+                            </div>
+                            <label class="field-label" for="gen-margin">Safety margin (%)</label><div class="input-wrapper">
+                                <input type="number" class="tool-input" id="gen-margin" placeholder="Safety Margin" value="25">
+                                <span class="input-suffix">%</span>
+                            </div>
+                        </div>
+                        <div class="calc-display" id="gen-result" style="font-size:1.2rem; min-height:40px; margin-bottom:1rem;">0 kVA</div>
+                        <button class="glowing-btn demo-btn ripple-btn" onclick="calcGeneratorSize()" style="width:100%;">Calculate</button>
+                    </div>
+
+    </div>
+            </aside>
+            <section class="calculator-copy enriched-calculator-copy">
+                <article class="calculator-copy-card intro-card"><h2>What this calculator does</h2><p>Generators are rated in kVA (apparent power), while appliances are usually rated in watts (real power). Enter the total wattage you need to run at once, the load&rsquo;s power factor, and a safety margin. The calculator returns the generator size in kVA.</p></article>
+                <article class="calculator-copy-card formula-box"><h2>Formula used</h2><p>kVA = Load (W) &divide; (Power factor &times; 1,000) &times; (1 + Margin &divide; 100)</p><p>Most generators in India are rated at a power factor of 0.8, which is why 0.8 is the default.</p></article>
+                <article class="calculator-copy-card example-box"><h2>Worked example</h2><p>A small shop needs 5,000 W of running load. With a power factor of 0.8 and a 25% safety margin:</p><ul><li>kVA = 5,000 &divide; (0.8 &times; 1,000) &times; 1.25 = <strong>7.81 kVA</strong></li></ul><p>You would choose the next standard size up, such as a 10 kVA set, especially if any motors are on the list.</p></article>
+                <article class="calculator-copy-card"><h2>Starting load: the part people miss</h2><p>Motors draw several times their running current for a moment when they start. AC compressors, water pumps, refrigerators, lifts and air compressors can need 3&ndash;7 times their running watts at start-up. If the generator cannot supply this surge, the motor stalls or the generator trips.</p><p>A practical approach: add up the running watts of everything, then add the extra starting watts of the single largest motor (since motors rarely start at the same instant). Enter that total as the load, or increase the safety margin.</p></article>
+                <article class="calculator-copy-card"><h2>Understanding each input</h2><ul><li><strong>Total load</strong> &mdash; the sum of the watts that will run together.</li><li><strong>Power factor</strong> &mdash; 0.8 is the standard rating assumption; it must be between 0 and 1.</li><li><strong>Safety margin</strong> &mdash; 20&ndash;25% is common so the generator runs at about 75&ndash;80% of capacity, which is better for fuel use and engine life.</li></ul></article>
+<!-- publisher-ad-space:content-middle:start -->
+<aside class="publisher-ad-space" aria-label="Advertisements" data-ad-placement="content-middle"><p class="publisher-ad-label">Advertisements</p><div class="publisher-ad-mount" id="ad-content-middle"><!-- Reserved ad-unit mount. Configure ad delivery separately before inserting a provider unit. --></div></aside>
+<!-- publisher-ad-space:content-middle:end -->
+
+                <article class="calculator-copy-card"><h2>Limitations</h2><p>This gives a first estimate. Three-phase balancing, altitude and temperature derating, cable runs and changeover switch sizing all affect the final choice. For a building or commercial installation, have an electrician or the generator supplier do a load study.</p></article>
+                <article class="calculator-copy-card"><h2>Common mistakes</h2><ul><li>Treating kVA and kW as the same: a 10 kVA generator at 0.8 PF supplies 8 kW.</li><li>Ignoring motor starting surges.</li><li>Sizing for the whole connected load when only part of it runs during an outage.</li></ul></article>
+                <article class="calculator-copy-card"><h2>FAQs</h2><div class="faq-list"><details><summary>What is the difference between kVA and kW?</summary><p>kW is real power; kVA is apparent power. kW = kVA &times; power factor.</p></details><details><summary>Why is power factor 0.8?</summary><p>It is the standard rating point for most generator sets.</p></details><details><summary>How much safety margin should I use?</summary><p>20&ndash;25% is common. Use more if you expect to add load later or have large motors.</p></details><details><summary>Can a 5 kVA generator run a 1.5 ton AC?</summary><p>Usually yes for running load, but check its starting current; inverter ACs start more gently than fixed-speed ones.</p></details><details><summary>Does this work for three-phase generators?</summary><p>It gives the total kVA, but the load must also be balanced across phases.</p></details></div></article>
+                <article class="calculator-copy-card"><h2>Related tools</h2><p class="related-links"><a href="/power-calculator.html">Power Calculator (Watts from Volts and Amps)</a> <a href="/inverter-battery-backup-calculator.html">Inverter Battery Backup Calculator</a> <a href="/kwh-calculator.html">kWh Calculator</a> <a href="/electricity-calculators.html">All electricity calculators</a></p></article>
+            </section>
+        </section>
+
+<!-- publisher-ad-space:content-end:start -->
+<aside class="publisher-ad-space" aria-label="Advertisements" data-ad-placement="content-end"><p class="publisher-ad-label">Advertisements</p><div class="publisher-ad-mount" id="ad-content-end"><!-- Reserved ad-unit mount. Configure ad delivery separately before inserting a provider unit. --></div></aside>
+<!-- publisher-ad-space:content-end:end -->
+</main>
+
+    <footer class="site-footer">
+        <div class="footer-links" style="text-align: center; margin: 0 0 2rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem;">
+            <a href="privacy.html">Privacy Policy</a><a href="about.html">About Us</a><a href="contact.html">Contact Us</a><a href="terms.html">Terms & Conditions</a><a href="disclaimer.html">Disclaimer</a>
+        </div>
+
+        <p class="copyright">© 2026 Calculator All-in-One. All rights reserved. Built for fast, accurate browser calculations.</p>
+    </footer>
+    <script src="script.js?v=20260924-currency" defer></script>
+</body>
+</html>

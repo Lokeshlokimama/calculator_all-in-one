@@ -63,7 +63,8 @@ function adaptWidget(widget, spec) {
     const ph = (control.match(/placeholder="([^"]*)"/) || [])[1];
     const name = labels[id] || ph || (control.match(/aria-label="([^"]*)"/) || [])[1];
     if (!name) return all;
-    const label = `<label class="field-label" for="${id}">${esc(name)}</label>`;
+    const clean = name.replace(/:\s*$/, '');
+    const label = `<label class="field-label" for="${id}">${esc(clean)}</label>`;
     return wrapper ? label + wrapper + control : label + control;
   });
   return html;

@@ -106,5 +106,14 @@
   "salary-calculator.html",
   "leave-encashment-calculator.html",
   "discount-and-tax-calculator.html",
-  "invoice-generator.html"
+  "invoice-generator.html",
+  "power-calculator.html",
+  "kwh-calculator.html",
+  "watt-to-unit-calculator.html",
+  "solar-panel-size-calculator.html",
+  "inverter-battery-backup-calculator.html",
+  "ups-backup-time-calculator.html",
+  "ohms-law-calculator.html",
+  "generator-size-calculator.html",
+  "ev-charging-cost-calculator.html"
 ]
