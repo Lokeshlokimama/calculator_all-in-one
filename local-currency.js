@@ -29,11 +29,14 @@
         const info = typeof currency === 'string' ? {currency, source:'manual choice'} : detect();
         let note = document.getElementById('local-currency-note');
         if (!note) {
+            // Insert below the content (footer) rather than the header: adding a line to the
+            // header after load pushed the whole page down (layout shift ~0.13).
+            const footer = document.querySelector('footer');
             const header = document.querySelector('header');
-            if (!header) return;
+            if (!footer && !header) return;
             note = document.createElement('p'); note.id = 'local-currency-note'; note.setAttribute('role','status');
-            note.style.cssText = 'font-size:12px;line-height:1.4;margin:8px 0;flex-basis:100%;color:inherit;';
-            header.appendChild(note);
+            note.style.cssText = 'font-size:12px;line-height:1.4;margin:8px 0;flex-basis:100%;color:inherit;text-align:center;';
+            if (footer) footer.prepend(note); else header.appendChild(note);
         }
         const badge = note.querySelector('[data-currency-code]');
         const detail = note.querySelector('[data-currency-detail]');
